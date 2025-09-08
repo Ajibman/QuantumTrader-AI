@@ -1,3 +1,7 @@
+modules/ → Python scripts and any .md files
+docs/    → Markdown files
+logs/    → For lots
+
 import os
 import shutil
 from datetime import datetime
