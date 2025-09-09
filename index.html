@@ -49,16 +49,33 @@
 </head>
 <body>
 
-  <!-- Banner -->
-  <div class="banner">WORK-IN-PROGRESS</div>
+<!-- New static footer logo -->
+  <footer style="margin-top: 50px; padding: 20px;">
+    <img id="qtai-logo" src="assets/qtai_logo.png" alt="QT AI Logo" width="180" height="180">
+    <p style="margin-top: 10px; font-weight: bold; font-size: 1.4em;">
+      QuantumTrader-AI
+    </p>
+  </footer>
 
-  <div class="logo-container">
-    <img src="assets/globe.gif" alt="QT AI Rotating Globe">
-  </div>
+  <script>
+    // Trigger rotation on Nov 9, 2025
+    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
+    const now = new Date();
 
-  <h1>QuantumTrader-AI (V2)</h1>
-  <p>Turning Vision into Market Reality</p>
-  <p>Built with Patience, Discipline, and Integrity</p>
+    if (now >= rolloutDate) {
+      const logo = document.getElementById("qtai-logo");
+      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
+    }
 
+    // Rotation keyframes
+    const styleSheet = document.createElement("style");
+    styleSheet.innerHTML = `
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+  </script>
 </body>
 </html>
