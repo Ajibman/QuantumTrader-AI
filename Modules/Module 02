@@ -1,1 +1,23 @@
 
+# Module 02 – Data Processing
+
+This module is responsible for handling, cleaning, and structuring raw data before it enters the Quantum Trader AI system.
+
+## Purpose
+- Collects raw data streams from multiple sources (markets, economic indicators, social sentiment, geopolitical feeds).
+- Cleans, normalizes, and validates data for consistency.
+- Structures data into formats usable by later modules.
+
+## Inputs
+- Market feeds (prices, volumes, order books).
+- News & sentiment feeds (structured/unstructured text).
+- Economic and geopolitical indicators.
+
+## Outputs
+- Structured datasets ready for Module 03 (Market Analysis).
+- Error logs and fallback mechanisms for invalid/missing data.
+- Data quality reports.
+
+## Links to Other Modules
+- **Module 01 (Core Foundations)** → Uses Peace Index filters to adjust preprocessing.
+- **Module 03 (Market Analysis)** → Direct consumer of processed data.
