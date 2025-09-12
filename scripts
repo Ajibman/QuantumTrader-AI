@@ -1,4 +1,6 @@
- #!/bin/bash
+ git- update
+
+#!/bin/bash
 set -e
 
 # --- Logging & setup ---
@@ -17,15 +19,33 @@ generate_module() {
 
     echo "⚙️ Generating Module $module..."
 
-    # Backup existing file if present
+    # Temporary file for new content
+    local tmpfile
+    tmpfile=$(mktemp)
+
+    # Example generation logic (placeholder)
+    echo "# Auto-generated Module $module" > "$tmpfile"
+    echo "print('Module $module initialized')" >> "$tmpfile"
+
+    # If target exists, compare checksums
     if [[ -f "$target" ]]; then
+        local old_hash new_hash
+        old_hash=$(sha256sum "$target" | awk '{print $1}')
+        new_hash=$(sha256sum "$tmpfile" | awk '{print $1}')
+
+        if [[ "$old_hash" == "$new_hash" ]]; then
+            echo "⏩ No change detected for Module $module (skipping)"
+            rm "$tmpfile"
+            return 0
+        fi
+
+        # Backup old version
         cp "$target" "$BACKUP_DIR/module_${module}_$(date +'%Y%m%d_%H%M%S').py"
         echo "🗂️ Backed up existing $target"
     fi
 
-    # Example generation logic (placeholder)
-    echo "# Auto-generated Module $module" > "$target"
-    echo "print('Module $module initialized')" >> "$target"
+    # Replace with new version
+    mv "$tmpfile" "$target"
 
     if [[ $? -ne 0 ]]; then
         echo "❌ Failed to generate Module $module"
