@@ -3,12 +3,13 @@ git - create
 generate_all_modules() {
   log_and_echo "[START] Master Generator Script Running..."
 
-  # Modules 01-05
+  # Modules 01-06
   module01_scan
   module02_environment
   module03_defense_protocol
   module04_api_algorithms
   module05_high_risk_pi
+  module06_noise_peace
 
   # Placeholder for Modules 06-15
   log_and_echo "[INFO] Modules 06-15 will be generated here..."
