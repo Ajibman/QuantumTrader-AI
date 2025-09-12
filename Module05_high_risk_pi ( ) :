@@ -1,0 +1,21 @@
+git - create
+
+generate_all_modules() {
+  log_and_echo "[START] Master Generator Script Running..."
+
+  # Modules 01-05
+  module01_scan
+  module02_environment
+  module03_defense_protocol
+  module04_api_algorithms
+  module05_high_risk_pi
+
+  # Placeholder for Modules 06-15
+  log_and_echo "[INFO] Modules 06-15 will be generated here..."
+
+  # Trigger archive if needed
+  current_hour=$(date +"%H")
+  if (( current_hour % 12 == 0 )); then
+    archive_logs
+  fi
+}
