@@ -1,4 +1,4 @@
-hit create
+git create
 
 #!/usr/bin/env bash
 set -euo pipefail
