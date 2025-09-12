@@ -1,22 +1,78 @@
 git - setup
 
-modules/
-  module01/api/app.py
-  module01/README.md
-  ...
-  module15/api/app.py
-  module15/README.md
-tests/
-  module01/test_module01.py
-  ...
-  module15/test_module15.py
+ #!/usr/bin/env bash
+set -euo pipefail
 
-# local venv setup
-./scripts/setup_local.sh
-source venv/bin/activate
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
 
-# run pytest on all modules
-pytest -q
+mkdir -p modules
 
-chmod +x scripts/generate_all_modules.sh
-./scripts/generate_all_modules.sh
+for i in $(seq -w 1 15); do
+  MODULE="module$i"
+  TARGET="$ROOT/modules/$MODULE/api"
+  mkdir -p "$TARGET" "$ROOT/tests/$MODULE"
+
+  # Flask API stub
+  cat > "$TARGET/app.py" <<EOF
+from flask import Flask, jsonify, request, Blueprint
+
+bp = Blueprint("$MODULE", __name__)
+
+@bp.route("/$MODULE/health", methods=["GET"])
+def health():
+    return jsonify({ "module": "$MODULE", "status": "ok" })
+
+@bp.route("/$MODULE/ping", methods=["POST"])
+def ping():
+    data = request.json or {}
+    return jsonify({ "received": data })
+
+def create_app():
+    app = Flask(__name__)
+    app.register_blueprint(bp)
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(host="0.0.0.0", port=5000)
+EOF
+
+  # README per module
+  cat > "$ROOT/modules/$MODULE/README.md" <<EOF
+# $MODULE
+
+API stub for **$MODULE** in QT AI.
+- Health check: \`GET /$MODULE/health\`
+- Ping: \`POST /$MODULE/ping\`
+EOF
+
+  # Pytest test file
+  cat > "$ROOT/tests/$MODULE/test_${MODULE}.py" <<EOF
+import json
+import pytest
+from modules.$MODULE.api.app import create_app
+
+@pytest.fixture
+def client():
+    app = create_app()
+    app.testing = True
+    return app.test_client()
+
+def test_health(client):
+    res = client.get("/$MODULE/health")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data["status"] == "ok"
+
+def test_ping(client):
+    res = client.post("/$MODULE/ping", json={"hello": "QT AI"})
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "received" in data
+EOF
+
+  echo "$MODULE scaffolded."
+done
+
+echo "✅ All 15 modules generated with API stubs + README + tests."
