@@ -25,12 +25,16 @@ rotate_logs() {
 
     mv "$LOG_FILE" "$rotated_file" 2>/dev/null
     echo "$now" > "$last_rotate_file"
-    echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
 
     # Gather stats
     local size=$(du -h "$rotated_file" | cut -f1)
 
     # Update archive index
     echo "$timestamp -> $rotated_file | $lines lines | $size" >> "$INDEX_FILE"
+
+    # Print summary to console
+    echo "📦 Archive created: $rotated_file"
+    echo "   ├─ Entries: $lines"
+    echo "   └─ Size: $size"
   fi
 }
