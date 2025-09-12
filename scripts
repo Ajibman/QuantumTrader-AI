@@ -1,77 +1,95 @@
 git - update
 
-#!/bin/bash
-# Master Generator Script for QT AI Modules
-# Extended with login monitoring, echo, auto-logging, 12-hour log rotation, and archive index
+ #!/bin/bash
+# ======================================
+# Quantum Trader AI - Master Generator Script
+# Enhanced version with monitoring, logging & archiving
+# ======================================
 
 LOG_DIR="logs"
-LOG_FILE="$LOG_DIR/commands.log"
-INDEX_FILE="$LOG_DIR/index.txt"
+ARCHIVE_DIR="$LOG_DIR/archives"
+mkdir -p "$ARCHIVE_DIR"
 
-# Ensure logs directory exists
-mkdir -p "$LOG_DIR"
+# --------------------------------------
+# Archive function (12-hourly snapshots)
+# --------------------------------------
+archive_logs() {
+  timestamp=$(date +"%Y%m%d_%H%M%S")
+  archive_file="$ARCHIVE_DIR/archive_$timestamp.tar.gz"
+  tar -czf "$archive_file" "$LOG_DIR"/*.log 2>/dev/null
+  echo "[ARCHIVE] Logs archived at $archive_file"
+}
 
-# Rotate logs every 12 hours
-rotate_logs() {
-  local now=$(date +%s)
-  local last_rotate_file="$LOG_DIR/.last_rotate"
-
-  # If file doesn’t exist, create it
-  if [[ ! -f "$last_rotate_file" ]]; then
-    echo "$now" > "$last_rotate_file"
+# --------------------------------------
+# Improved Archive Listing
+# --------------------------------------
+list_archives() {
+  echo "======================================"
+  echo "  QT AI Master Generator Archives"
+  echo "======================================"
+  echo ""
+  
+  if [ ! -d "$ARCHIVE_DIR" ]; then
+    echo "No archives directory found yet."
     return
   fi
 
-  local last_rotate=$(cat "$last_rotate_file")
-  local elapsed=$(( (now - last_rotate) / 3600 )) # elapsed hours
+  echo "Available archives in $ARCHIVE_DIR:"
+  echo ""
 
-  if (( elapsed >= 12 )); then
-    local timestamp=$(date '+%Y%m%d_%H%M%S')
-    local rotated_file="$LOG_DIR/commands_$timestamp.log"
+  # Nicely formatted list: Date | Size | Filename
+  ls -lh --time-style=long-iso "$ARCHIVE_DIR" | awk 'NR>1 {print $6, $7, " | ", $5, " | ", $9}'
 
-    mv "$LOG_FILE" "$rotated_file" 2>/dev/null
-    echo "$now" > "$last_rotate_file"
-    echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
+  echo ""
+  echo "Legend:"
+  echo "  Date & Time | Size | Filename"
+  echo "======================================"
+}
 
-    # Update archive index
-    echo "$timestamp -> $rotated_file" >> "$INDEX_FILE"
+# --------------------------------------
+# Monitor logins & echo commands
+# --------------------------------------
+monitor_activity() {
+  echo "[MONITOR] Monitoring user logins and commands..."
+  last -a | head -n 5
+
+  echo ""
+  echo "[MONITOR] Recent commands executed:"
+  history | tail -n 10
+}
+
+# --------------------------------------
+# Main generator loop
+# --------------------------------------
+generate_all_modules() {
+  echo "[START] Master Generator Script Running..."
+  
+  # Example of generating a module
+  echo "[GEN] Creating modules..."
+  echo "Module created at $(date)" >> "$LOG_DIR/module_gen.log"
+  
+  # Trigger archive every 12 hours (placeholder)
+  # In practice, you might use cron to schedule this
+  current_hour=$(date +"%H")
+  if (( current_hour % 12 == 0 )); then
+    archive_logs
   fi
 }
 
-# Function to log and echo commands
-log_and_echo() {
-  rotate_logs
-  local msg="$1"
-  echo "$msg" | tee -a "$LOG_FILE"
-}
-
-echo "🔵 QT AI Master Generator Script Started"
-echo "📂 Logging commands to $LOG_FILE"
-echo "📑 Archive index: $INDEX_FILE"
-
-# Normal module generation
-generate_modules() {
-  log_and_echo "⚙️ Generating all QT AI modules..."
-  # Placeholder: actual generation steps
-  sleep 1
-  log_and_echo "✅ All modules generated successfully."
-}
-
-# Watch mode for continuous login monitoring
-watch_mode() {
-  log_and_echo "👀 Watch mode activated: monitoring login and command codes..."
-  while true; do
-    # Simulate login monitoring with timestamp
-    log_and_echo "⏱️ Login check at $(date '+%Y-%m-%d %H:%M:%S')"
-    # Echo all command codes (stub)
-    log_and_echo "💻 Command executed: [placeholder_command_code]"
-    sleep 5
-  done
-}
-
-# Parse arguments
-if [[ "$1" == "--watch" ]]; then
-  watch_mode
-else
-  generate_modules
-fi
+# --------------------------------------
+# Command-line options
+# --------------------------------------
+case "$1" in
+  --run)
+    generate_all_modules
+    ;;
+  --monitor)
+    monitor_activity
+    ;;
+  --archives)
+    list_archives
+    ;;
+  --help|*)
+    echo "Usage: $0 [--run | --monitor | --archives]"
+    ;;
+esac
