@@ -1,0 +1,54 @@
+git - create
+
+# --------------------------------------
+# Module 03: Defense Protocol
+# --------------------------------------
+module03_defense_protocol() {
+  log_and_echo "[MODULE 03] Initializing Defense Protocol..."
+  
+  # Simulated security checks (replace with real threat detection logic)
+  for i in {1..5}; do
+    log_and_echo "[MODULE 03] Security checkpoint $i: All secure"
+    sleep 1  # simulate processing
+  done
+
+  # Simulated alert example
+  threat_detected=false  # set to true to simulate an alert
+  if [ "$threat_detected" = true ]; then
+    log_and_echo "[MODULE 03] ⚠️ Threat detected! Initiating countermeasures..."
+  else
+    log_and_echo "[MODULE 03] No threats detected at $(date)"
+  fi
+
+  log_and_echo "[MODULE 03] Defense Protocol completed at $(date)"
+}
+
+generate_all_modules() {
+  log_and_echo "[START] Master Generator Script Running..."
+
+  # Modules 01-03
+  module01_scan
+  module02_environment
+  module03_defense_protocol
+
+  # Placeholder for Modules 04-15
+  log_and_echo "[INFO] Modules 04-15 will be generated here..."
+
+  # Trigger archive if needed
+  current_hour=$(date +"%H")
+  if (( current_hour % 12 == 0 )); then
+    archive_logs
+  fi
+}
+
+watch_mode() {
+  log_and_echo "[WATCH MODE] Monitoring login, Module 01-03 scans..."
+  while true; do
+    log_and_echo "[WATCH - MODULE 01] Live scan data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 02] Live sensor data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 03] Defense protocol status: All secure"
+    log_and_echo "[WATCH] Login check at $(date '+%Y-%m-%d %H:%M:%S')"
+    sleep 5
+  done
+}
+
