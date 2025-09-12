@@ -1,76 +1,46 @@
- git- update
+ git - update
 
 #!/bin/bash
-set -e
+# Master Generator Script for QT AI
+# Enhancements: --watch mode, perpetual monitoring, command echoing
 
-# --- Logging & setup ---
-LOG_DIR="$(dirname "$0")/../logs"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/generate_all_modules_$(date +'%Y%m%d_%H%M%S').log"
-exec > >(tee -a "$LOG_FILE") 2>&1
+set -euo pipefail
 
-BACKUP_DIR="$(dirname "$0")/../backups"
-mkdir -p "$BACKUP_DIR"
+echo "🚀 Master Generator Script starting..."
 
-# --- Functions ---
-generate_module() {
-    local module=$1
-    local target="modules/module_${module}.py"
-
-    echo "⚙️ Generating Module $module..."
-
-    # Temporary file for new content
-    local tmpfile
-    tmpfile=$(mktemp)
-
-    # Example generation logic (placeholder)
-    echo "# Auto-generated Module $module" > "$tmpfile"
-    echo "print('Module $module initialized')" >> "$tmpfile"
-
-    # If target exists, compare checksums
-    if [[ -f "$target" ]]; then
-        local old_hash new_hash
-        old_hash=$(sha256sum "$target" | awk '{print $1}')
-        new_hash=$(sha256sum "$tmpfile" | awk '{print $1}')
-
-        if [[ "$old_hash" == "$new_hash" ]]; then
-            echo "⏩ No change detected for Module $module (skipping)"
-            rm "$tmpfile"
-            return 0
-        fi
-
-        # Backup old version
-        cp "$target" "$BACKUP_DIR/module_${module}_$(date +'%Y%m%d_%H%M%S').py"
-        echo "🗂️ Backed up existing $target"
-    fi
-
-    # Replace with new version
-    mv "$tmpfile" "$target"
-
-    if [[ $? -ne 0 ]]; then
-        echo "❌ Failed to generate Module $module"
-        return 1
-    else
-        echo "✅ Module $module generated successfully"
-        return 0
-    fi
+# Log executed commands
+log_command() {
+    echo "[EXEC] $*"
+    "$@"
 }
 
-# --- Argument parsing ---
-if [[ $# -eq 1 && "$1" =~ ^[0-9]+$ ]]; then
-    # Selective generation
-    generate_module "$1" || exit 1
-    exit 0
+# Function to generate modules
+generate_modules() {
+    echo "🔧 Generating all modules..."
+    for module in module01 module02 module03 module04 module05 \
+                  module06 module07 module08 module09 module10 \
+                  module11 module12 module13 module14 module15; do
+        if [ -x "./$module/generate.sh" ]; then
+            log_command "./$module/generate.sh"
+        else
+            echo "⚠️  Skipping $module (no generate.sh found)"
+        fi
+    done
+}
+
+# Watch mode
+if [[ "${1:-}" == "--watch" ]]; then
+    echo "👀 Watch mode enabled: monitoring login sessions & re-running on changes"
+    while true; do
+        # Echo login users
+        who | awk '{print "[LOGIN] " $0}'
+        # Run generation cycle
+        generate_modules
+        echo "⏳ Sleeping 60s before next cycle..."
+        sleep 60
+    done
+else
+    # One-time run
+    generate_modules
+    echo "✅ Master Generator Script completed successfully."
 fi
-
-# --- Full generation ---
-echo "🚀 Starting full module generation cycle"
-
-for module in {01..15}; do
-    generate_module "$module" || {
-        echo "⚠️ Skipping Module $module due to error"
-        continue
-    }
-done
-
-echo "✅ Full module generation cycle complete"
