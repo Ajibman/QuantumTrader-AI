@@ -1,22 +1,46 @@
  git - update
 
-#!/bin/bash
+ #!/bin/bash
 # Master Generator Script for QT AI Modules
-# Extended with login monitoring, echo, and auto-logging
+# Extended with login monitoring, echo, auto-logging, and 12-hour log rotation
 
-LOG_FILE="logs/commands.log"
+LOG_DIR="logs"
+LOG_FILE="$LOG_DIR/commands.log"
 
 # Ensure logs directory exists
-mkdir -p logs
+mkdir -p "$LOG_DIR"
 
-echo "🔵 QT AI Master Generator Script Started"
-echo "📂 Logging commands to $LOG_FILE"
+# Rotate logs every 12 hours
+rotate_logs() {
+  local now=$(date +%s)
+  local last_rotate_file="$LOG_DIR/.last_rotate"
+
+  # If file doesn’t exist, create it
+  if [[ ! -f "$last_rotate_file" ]]; then
+    echo "$now" > "$last_rotate_file"
+    return
+  fi
+
+  local last_rotate=$(cat "$last_rotate_file")
+  local elapsed=$(( (now - last_rotate) / 3600 )) # elapsed hours
+
+  if (( elapsed >= 12 )); then
+    local timestamp=$(date '+%Y%m%d_%H%M%S')
+    mv "$LOG_FILE" "$LOG_DIR/commands_$timestamp.log" 2>/dev/null
+    echo "$now" > "$last_rotate_file"
+    echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
+  fi
+}
 
 # Function to log and echo commands
 log_and_echo() {
+  rotate_logs
   local msg="$1"
   echo "$msg" | tee -a "$LOG_FILE"
 }
+
+echo "🔵 QT AI Master Generator Script Started"
+echo "📂 Logging commands to $LOG_FILE"
 
 # Normal module generation
 generate_modules() {
