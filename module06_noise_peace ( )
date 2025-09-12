@@ -1,0 +1,63 @@
+git - create
+
+# --------------------------------------
+# Module 06: Noise Reduction & Community Peace
+# --------------------------------------
+module06_noise_peace() {
+  log_and_echo "[MODULE 06] Starting Noise Reduction & Community Peace Enforcement..."
+
+  # Simulated noise checks (religious loudspeakers, construction, etc.)
+  noise_sources=("Religious Loudspeaker" "Construction Site" "Traffic" "Factory")
+  for source in "${noise_sources[@]}"; do
+    log_and_echo "[MODULE 06] Checking noise source: $source - Status: Acceptable"
+    sleep 0.5  # simulate monitoring time
+  done
+
+  # Simulated enforcement actions
+  enforcement_required=false  # change to true to simulate intervention
+  if [ "$enforcement_required" = true ]; then
+    log_and_echo "[MODULE 06] ⚠️ Noise violation detected! Initiating enforcement..."
+  else
+    log_and_echo "[MODULE 06] Noise levels within acceptable limits"
+  fi
+
+  log_and_echo "[MODULE 06] Module 06 completed at $(date)"
+}
+
+generate_all_modules() {
+  log_and_echo "[START] Master Generator Script Running..."
+
+  # Modules 01-06
+  module01_scan
+  module02_environment
+  module03_defense_protocol
+  module04_api_algorithms
+  module05_high_risk_pi
+  module06_noise_peace
+
+  # Placeholder for Modules 07-15
+  log_and_echo "[INFO] Modules 07-15 will be generated here..."
+
+  # Trigger archive if needed
+  current_hour=$(date +"%H")
+  if (( current_hour % 12 == 0 )); then
+    archive_logs
+  fi
+}
+
+watch_mode() {
+  log_and_echo "[WATCH MODE] Monitoring login, Modules 01-06..."
+  while true; do
+    log_and_echo "[WATCH - MODULE 01] Live scan data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 02] Live sensor data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 03] Defense protocol status: All secure"
+    log_and_echo "[WATCH - MODULE 04] API & Algorithm builder running..."
+    log_and_echo "[WATCH - MODULE 05] Peace Index monitoring active..."
+    log_and_echo "[WATCH - MODULE 06] Noise & community peace monitoring active..."
+    log_and_echo "[WATCH] Login check at $(date '+%Y-%m-%d %H:%M:%S')"
+    sleep 5
+  done
+}
+
+
+
