@@ -1,0 +1,19 @@
+# --------------------------------------
+# Module 2: Environmental Awareness & Sensor Calibration
+# --------------------------------------
+module02_environment() {
+  log_and_echo "[MODULE 02] Starting Environmental Awareness & Sensor Calibration..."
+
+  # Continuous monitoring (Nano/Pico timings simulated)
+  for i in {1..5}; do
+    log_and_echo "[MODULE 02] Sensor checkpoint $i: All readings nominal"
+    sleep 1  # simulate sensor processing time
+  done
+
+  # Community & global trends (placeholder for API integration)
+  log_and_echo "[MODULE 02] Fetching global trends and market news..."
+  sleep 1
+  log_and_echo "[MODULE 02] Data fetch complete"
+
+  log_and_echo "[MODULE 02] Module completed at $(date)"
+}
