@@ -1,17 +1,6 @@
  git - update
 
- #!/bin/bash
-# Master Generator Script for QT AI Modules
-# Extended with login monitoring, echo, auto-logging, 12-hour log rotation, and archive index
-
-LOG_DIR="logs"
-LOG_FILE="$LOG_DIR/commands.log"
-INDEX_FILE="$LOG_DIR/index.txt"
-
-# Ensure logs directory exists
-mkdir -p "$LOG_DIR"
-
-# Rotate logs every 12 hours
+ # Rotate logs every 12 hours
 rotate_logs() {
   local now=$(date +%s)
   local last_rotate_file="$LOG_DIR/.last_rotate"
@@ -27,51 +16,17 @@ rotate_logs() {
 
   if (( elapsed >= 12 )); then
     local timestamp=$(date '+%Y%m%d_%H%M%S')
-    local rotated_file="$LOG_DIR/commands_$timestamp.log"
+    local rotated_fiBBCle="$LOG_DIR/commands_$timestamp.log"
 
     mv "$LOG_FILE" "$rotated_file" 2>/dev/null
     echo "$now" > "$last_rotate_file"
     echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
 
+    # Gather stats
+    local lines=$(wc -l < "$rotated_file" | xargs)
+    local size=$(du -h "$rotated_file" | cut -f1)
+
     # Update archive index
-    echo "$timestamp -> $rotated_file" >> "$INDEX_FILE"
+    echo "$timestamp -> $rotated_file | $lines lines | $size" >> "$INDEX_FILE"
   fi
 }
-
-# Function to log and echo commands
-log_and_echo() {
-  rotate_logs
-  local msg="$1"
-  echo "$msg" | tee -a "$LOG_FILE"
-}
-
-echo "🔵 QT AI Master Generator Script Started"
-echo "📂 Logging commands to $LOG_FILE"
-echo "📑 Archive index: $INDEX_FILE"
-
-# Normal module generation
-generate_modules() {
-  log_and_echo "⚙️ Generating all QT AI modules..."
-  # Placeholder: actual generation steps
-  sleep 1
-  log_and_echo "✅ All modules generated successfully."
-}
-
-# Watch mode for continuous login monitoring
-watch_mode() {
-  log_and_echo "👀 Watch mode activated: monitoring login and command codes..."
-  while true; do
-    # Simulate login monitoring with timestamp
-    log_and_echo "⏱️ Login check at $(date '+%Y-%m-%d %H:%M:%S')"
-    # Echo all command codes (stub)
-    log_and_echo "💻 Command executed: [placeholder_command_code]"
-    sleep 5
-  done
-}
-
-# Parse arguments
-if [[ "$1" == "--watch" ]]; then
-  watch_mode
-else
-  generate_modules
-fi
