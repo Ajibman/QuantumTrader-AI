@@ -1,0 +1,41 @@
+git - create
+
+# --------------------------------------
+# Module 08: False Narratives & Misinformation Detection
+# --------------------------------------
+module08_misinformation() {
+  log_and_echo "[MODULE 08] Starting False Narratives & Misinformation Detection..."
+
+  # Simulated media monitoring across platforms
+  media_sources=("Facebook" "X.com" "WhatsApp" "Instagram" "Google News" "Radio" "TV")
+  for source in "${media_sources[@]}"; do
+    log_and_echo "[MODULE 08] Monitoring source: $source - Status: Clean"
+    sleep 0.5  # simulate monitoring time
+  done
+
+  # Simulated misinformation detection
+  misinformation_detected=false  # change to true to simulate detection
+  if [ "$misinformation_detected" = true ]; then
+    log_and_echo "[MODULE 08] ⚠️ False narrative detected! Initiating countermeasures..."
+  else
+    log_and_echo "[MODULE 08] No false narratives detected at $(date)"
+  fi
+
+  log_and_echo "[MODULE 08] Module 08 completed at $(date)"
+}
+
+watch_mode() {
+  log_and_echo "[WATCH MODE] Monitoring login, Modules 01-08..."
+  while true; do
+    log_and_echo "[WATCH - MODULE 01] Live scan data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 02] Live sensor data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 03] Defense protocol status: All secure"
+    log_and_echo "[WATCH - MODULE 04] API & Algorithm builder running..."
+    log_and_echo "[WATCH - MODULE 05] Peace Index monitoring active..."
+    log_and_echo "[WATCH - MODULE 06] Noise & community peace monitoring active..."
+    log_and_echo "[WATCH - MODULE 07] Corruption & transparency monitoring active..."
+    log_and_echo "[WATCH - MODULE 08] Misinformation monitoring active..."
+    log_and_echo "[WATCH] Login check at $(date '+%Y-%m-%d %H:%M:%S')"
+    sleep 5
+  done
+}
