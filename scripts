@@ -16,14 +16,18 @@ rotate_logs() {
 
   if (( elapsed >= 12 )); then
     local timestamp=$(date '+%Y%m%d_%H%M%S')
-    local rotated_fiBBCle="$LOG_DIR/commands_$timestamp.log"
+    local rotated_file="$LOG_DIR/commands_$timestamp.log"
+
+    # Add footer before rotating
+    local lines=$(wc -l < "$LOG_FILE" | xargs)
+    echo "" >> "$LOG_FILE"
+    echo "=== Log closed at $timestamp | $lines entries ===" >> "$LOG_FILE"
 
     mv "$LOG_FILE" "$rotated_file" 2>/dev/null
     echo "$now" > "$last_rotate_file"
     echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
 
     # Gather stats
-    local lines=$(wc -l < "$rotated_file" | xargs)
     local size=$(du -h "$rotated_file" | cut -f1)
 
     # Update archive index
