@@ -2,10 +2,11 @@
 
  #!/bin/bash
 # Master Generator Script for QT AI Modules
-# Extended with login monitoring, echo, auto-logging, and 12-hour log rotation
+# Extended with login monitoring, echo, auto-logging, 12-hour log rotation, and archive index
 
 LOG_DIR="logs"
 LOG_FILE="$LOG_DIR/commands.log"
+INDEX_FILE="$LOG_DIR/index.txt"
 
 # Ensure logs directory exists
 mkdir -p "$LOG_DIR"
@@ -26,9 +27,14 @@ rotate_logs() {
 
   if (( elapsed >= 12 )); then
     local timestamp=$(date '+%Y%m%d_%H%M%S')
-    mv "$LOG_FILE" "$LOG_DIR/commands_$timestamp.log" 2>/dev/null
+    local rotated_file="$LOG_DIR/commands_$timestamp.log"
+
+    mv "$LOG_FILE" "$rotated_file" 2>/dev/null
     echo "$now" > "$last_rotate_file"
     echo "♻️ Log rotated at $timestamp" | tee -a "$LOG_FILE"
+
+    # Update archive index
+    echo "$timestamp -> $rotated_file" >> "$INDEX_FILE"
   fi
 }
 
@@ -41,6 +47,7 @@ log_and_echo() {
 
 echo "🔵 QT AI Master Generator Script Started"
 echo "📂 Logging commands to $LOG_FILE"
+echo "📑 Archive index: $INDEX_FILE"
 
 # Normal module generation
 generate_modules() {
