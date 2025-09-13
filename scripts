@@ -1,6 +1,4 @@
-git - update
-
- #!/bin/bash
+#!/bin/bash
 # ======================================
 # Quantum Trader AI - Master Generator Script
 # Enhanced version with monitoring, logging & archiving
