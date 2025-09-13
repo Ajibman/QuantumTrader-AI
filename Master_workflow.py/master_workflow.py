@@ -182,4 +182,34 @@ structure = self_structure()
 pprint.pprint(structure)
 EOF
 
+from master_generator import CCLM, self_structure
+import pprint
 
+def run_simulation(n=1):
+    """
+    Run simulation under a scaled CCLMⁿ mode.
+    Displays self_structure for diagnostic purposes.
+    """
+    # Scale CCLM
+    cclm = CCLM()
+    cclm.scale(n)
+    mode = cclm.current_mode()
+    
+    print(f"[Simulation] Running under {mode}")
+
+    # Fetch and display self_structure
+    structure = self_structure()
+    print("\n[Simulation] AT AI Self-Structure Snapshot:")
+    pprint.pprint(structure)
+
+    # Placeholder for actual simulation logic
+    # e.g., market events, peace index changes, algorithm testing
+    return mode, structure
+
+>>> run_simulation(0)
+[Simulation] Running under Seed State 🌱
+[Simulation] AT AI Self-Structure Snapshot:
+{ 'governance': 'CCLM²™ supervises all modules and enforces discipline & integrity',
+  'modules': { ... },
+  'repo2': { ... }
+}
