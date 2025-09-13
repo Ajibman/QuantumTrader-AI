@@ -243,3 +243,52 @@ def live_structure_view(n=1, refresh_interval=5):
 # Example usage
 if __name__ == "__main__":
     live_structure_view(n=1, refresh_interval=10)
+
+from master_generator import CCLM, self_structure
+import pprint
+import threading
+import time
+
+def live_dashboard(n=1, refresh_interval=5):
+    """
+    Live dashboard running in a separate thread to monitor self_structure and CCLM mode.
+    """
+    cclm = CCLM()
+    try:
+        while True:
+            cclm.scale(n)
+            mode = cclm.current_mode()
+            structure = self_structure()
+            
+            print("\033c", end="")  # Clear terminal
+            print(f"[Operational Dashboard] CCLM Mode: {mode}")
+            print("[Operational Dashboard] AT AI Self-Structure Snapshot:")
+            pprint.pprint(structure)
+            
+            time.sleep(refresh_interval)
+    except KeyboardInterrupt:
+        print("\n[Dashboard] Live self-structure view stopped.")
+
+def run_simulation(n=1, refresh_interval=5, duration=30):
+    """
+    Runs Module 12 simulation with live dashboard monitoring.
+    - n: CCLM scaling
+    - refresh_interval: dashboard refresh in seconds
+    - duration: total simulation run time in seconds
+    """
+    # Start live dashboard in a separate thread
+    dashboard_thread = threading.Thread(target=live_dashboard, args=(n, refresh_interval), daemon=True)
+    dashboard_thread.start()
+    
+    # Simulation logic placeholder
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        # Here we would simulate events, market fluctuations, peace index updates, etc.
+        print(f"[Simulation] Running events under CCLM mode {n}...")
+        time.sleep(2)
+    
+    print("[Simulation] Completed.")
+
+# Example run
+if __name__ == "__main__":
+    run_simulation(n=1, refresh_interval=5, duration=20)
