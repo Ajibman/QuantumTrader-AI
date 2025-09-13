@@ -54,3 +54,36 @@ fetchDashboardData();
 // Refresh historical logs every 30 seconds
 setInterval(fetchDashboardLogs, 30000);
 fetchDashboardLogs();
+
+let allLogs = [];
+
+async function fetchDashboardLogs() {
+    try {
+        const response = await fetch('http://localhost:5000/dashboard_logs');
+        allLogs = await response.json();
+        displayLogs(allLogs); // initial display
+    } catch (error) {
+        console.error('Error fetching dashboard logs:', error);
+    }
+}
+
+function displayLogs(logs) {
+    document.getElementById('dashboard_logs').textContent = JSON.stringify(logs, null, 2);
+}
+
+// Apply filters
+document.getElementById('apply-filter').addEventListener('click', () => {
+    const dateFilter = document.getElementById('filter-date').value;
+    const peaceFilter = parseFloat(document.getElementById('filter-peace').value) || 0;
+
+    const filteredLogs = allLogs.filter(log => {
+        const logDate = log.timestamp.split('T')[0];
+        return (!dateFilter || logDate === dateFilter) && (log.peace_index >= peaceFilter);
+    });
+
+    displayLogs(filteredLogs);
+});
+
+// Initial fetch and refresh
+fetchDashboardLogs();
+setInterval(fetchDashboardLogs, 30000);
