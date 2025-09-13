@@ -1,4 +1,54 @@
 #!/bin/bash
+# Master Generator Script for QuantumTrader-AI
+# Backend-only mode + verification tool
+
+set -e
+
+REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$REPO_DIR"
+
+show_help() {
+  echo "Usage: $0 [--generate | --verify]"
+  echo
+  echo "Options:"
+  echo "  --generate   Run all module generation tasks (Modules 1–15) + verify sync."
+  echo "  --verify     Verify if local branch is in sync with GitHub."
+  echo "  --help       Show this message."
+}
+
+generate_modules() {
+  echo "⚙️  Running module generation (Modules 1–15)..."
+  # Placeholder for your 15 module scripts
+  for i in {1..15}; do
+    echo "  → Generating Module $i..."
+    # ./repo2/modules/module$i.sh  # when module scripts are ready
+  done
+  echo "✅ Generation complete."
+
+  # Run sync verification after generation
+  verify_sync
+}
+
+verify_sync() {
+  echo "🔍 Verifying sync with GitHub (origin/main)..."
+  git fetch origin
+  if git log HEAD..origin/main --oneline | grep .; then
+    echo "⚠️  Local branch is BEHIND origin/main. Please pull latest."
+  elif git log origin/main..HEAD --oneline | grep .; then
+    echo "⚠️  Local branch is AHEAD of origin/main. Please push changes."
+  else
+    echo "✅ Local and origin/main are in perfect sync."
+  fi
+}
+
+case "$1" in
+  --generate) generate_modules ;;
+  --verify) verify_sync ;;
+  --help|"") show_help ;;
+  *) echo "❌ Unknown option: $1"; show_help; exit 1 ;;
+esac
+
+#!/bin/bash
 # ======================================
 # Quantum Trader AI - Master Generator Script
 # Enhanced version with monitoring, logging & archiving
