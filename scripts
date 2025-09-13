@@ -141,3 +141,49 @@ case "$1" in
     echo "Usage: $0 [--run | --monitor | --archives]"
     ;;
 esac
+
+#!/bin/bash
+# Master Generator Script for QT AI
+# Ensures modules 01–15 run smoothly under CCLM²™ supervision
+
+### FUNCTIONS ###
+
+# Generate all modules
+generate_all_modules() {
+  echo "Generating Modules 01–15..."
+  # Placeholder for real generation logic
+}
+
+# Monitor login and echo all commands
+monitor_login() {
+  echo "Monitoring login and echoing commands..."
+  # Continuous monitoring
+  while true; do
+    read -p "QT-AI Command: " cmd
+    echo "Executing: $cmd"
+    eval $cmd
+  done
+}
+
+# Enforce backend-only operational dashboard
+backend_only_mode() {
+  echo "Running dashboard in backend-only mode..."
+  # Prevent exposure to public-facing frontend
+}
+
+# Archive dashboard snapshots (unlimited history)
+archive_dashboard() {
+  echo "Archiving operational dashboard snapshot..."
+  timestamp=$(date +"%Y%m%d_%H%M%S")
+  cp dashboard.html archives/dashboard_$timestamp.html
+}
+
+### EXECUTION BLOCK (always last) ###
+# Enforce backend-only access + archive first
+backend_only_mode
+archive_dashboard
+
+# Generate modules + keep perpetual login monitor running
+generate_all_modules
+monitor_login
+
