@@ -75,3 +75,12 @@ def dashboard_data():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
+
+@app.route('/dashboard_logs')
+def dashboard_logs():
+    logs = []
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, 'r') as f:
+            for line in f:
+                logs.append(json.loads(line))
+    return jsonify(logs)
