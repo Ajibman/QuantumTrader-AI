@@ -1,0 +1,73 @@
+# --------------------------------------
+# Module 14: Visual Map Integration & Global Peace Index
+# --------------------------------------
+module14_visual_map() {
+  log_and_echo "[MODULE 14] Starting Visual Map Integration & Global Peace Index Display..."
+
+  # Simulated map display
+  map_type="Shutterstock MacArthur projection"
+  log_and_echo "[MODULE 14] Loading global map: $map_type"
+
+  # Simulated Peace Index data
+  countries=("USA" "UK" "France" "Germany" "China" "India" "Nigeria" "Brazil")
+  for country in "${countries[@]}"; do
+    pi_value=$(( RANDOM % 100 ))  # generate a 0-99 Peace Index
+    log_and_echo "[MODULE 14] $country - Peace Index: $pi_value"
+  done
+
+  # Simulate click interaction for user
+  log_and_echo "[MODULE 14] User click interaction enabled: displays country-specific Peace Index details"
+
+  log_and_echo "[MODULE 14] Module 14 completed at $(date)"
+}
+
+generate_all_modules() {
+  log_and_echo "[START] Master Generator Script Running..."
+
+  # Modules 01-14
+  module01_scan
+  module02_environment
+  module03_defense_protocol
+  module04_api_algorithms
+  module05_high_risk_pi
+  module06_noise_peace
+  module07_corruption_transparency
+  module08_misinformation
+  module09_phoenix_integration
+  module10_qusecs
+  module11_forecasting
+  module12_simulation
+  module13_alerts
+  module14_visual_map
+
+  # Placeholder for Module 15
+  log_and_echo "[INFO] Module 15 will be generated here..."
+
+  # Trigger archive if needed
+  current_hour=$(date +"%H")
+  if (( current_hour % 12 == 0 )); then
+    archive_logs
+  fi
+}
+
+watch_mode() {
+  log_and_echo "[WATCH MODE] Monitoring login, Modules 01-14..."
+  while true; do
+    log_and_echo "[WATCH - MODULE 01] Live scan data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 02] Live sensor data: [placeholder]"
+    log_and_echo "[WATCH - MODULE 03] Defense protocol status: All secure"
+    log_and_echo "[WATCH - MODULE 04] API & Algorithm builder running..."
+    log_and_echo "[WATCH - MODULE 05] Peace Index monitoring active..."
+    log_and_echo "[WATCH - MODULE 06] Noise & community peace monitoring active..."
+    log_and_echo "[WATCH - MODULE 07] Corruption & transparency monitoring active..."
+    log_and_echo "[WATCH - MODULE 08] Misinformation monitoring active..."
+    log_and_echo "[WATCH - MODULE 09] Phoenix App data integration active..."
+    log_and_echo "[WATCH - MODULE 10] Qu-SecS™ Watchdog/Gatekeeper active..."
+    log_and_echo "[WATCH - MODULE 11] Forecasting & prediction active..."
+    log_and_echo "[WATCH - MODULE 12] Simulation scenarios running..."
+    log_and_echo "[WATCH - MODULE 13] Real-time alerts & notifications active..."
+    log_and_echo "[WATCH - MODULE 14] Visual map & Peace Index active..."
+    log_and_echo "[WATCH] Login check at $(date '+%Y-%m-%d %H:%M:%S')"
+    sleep 5
+  done
+}
