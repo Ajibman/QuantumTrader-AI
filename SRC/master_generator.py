@@ -64,3 +64,15 @@ async function fetchStructure() {
 // Refresh every 5 seconds
 setInterval(fetchStructure, 5000);
 fetchStructure();
+
+from flask import Flask, jsonify
+from master_generator import self_structure
+
+app = Flask(__name__)
+
+@app.route('/self_structure')
+def get_self_structure():
+    return jsonify(self_structure())
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=False)
