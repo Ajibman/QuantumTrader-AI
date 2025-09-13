@@ -1,3 +1,5 @@
+git - create and run
+
 #!/bin/bash
 # =====================================================
 # QT AI Repo2 Health Check & Dashboard
