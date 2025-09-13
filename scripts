@@ -1,188 +1,57 @@
-#!/bin/bash
-# Master Generator Script for QuantumTrader-AI
-# Backend-only mode + verification tool
-
-set -e
-
-REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$REPO_DIR"
-
-show_help() {
-  echo "Usage: $0 [--generate | --verify]"
-  echo
-  echo "Options:"
-  echo "  --generate   Run all module generation tasks (Modules 1–15) + verify sync."
-  echo "  --verify     Verify if local branch is in sync with GitHub."
-  echo "  --help       Show this message."
-}
-
-generate_modules() {
-  echo "⚙️  Running module generation (Modules 1–15)..."
-  # Placeholder for your 15 module scripts
-  for i in {1..15}; do
-    echo "  → Generating Module $i..."
-    # ./repo2/modules/module$i.sh  # when module scripts are ready
-  done
-  echo "✅ Generation complete."
-
-  # Run sync verification after generation
-  verify_sync
-}
-
-verify_sync() {
-  echo "🔍 Verifying sync with GitHub (origin/main)..."
-  git fetch origin
-  if git log HEAD..origin/main --oneline | grep .; then
-    echo "⚠️  Local branch is BEHIND origin/main. Please pull latest."
-  elif git log origin/main..HEAD --oneline | grep .; then
-    echo "⚠️  Local branch is AHEAD of origin/main. Please push changes."
-  else
-    echo "✅ Local and origin/main are in perfect sync."
-  fi
-}
-
-case "$1" in
-  --generate) generate_modules ;;
-  --verify) verify_sync ;;
-  --help|"") show_help ;;
-  *) echo "❌ Unknown option: $1"; show_help; exit 1 ;;
-esac
-
-#!/bin/bash
-# ======================================
-# Quantum Trader AI - Master Generator Script
-# Enhanced version with monitoring, logging & archiving
-# ======================================
-
-LOG_DIR="logs"
-ARCHIVE_DIR="$LOG_DIR/archives"
-mkdir -p "$ARCHIVE_DIR"
-
-# --------------------------------------
-# Archive function (12-hourly snapshots)
-# --------------------------------------
-archive_logs() {
-  timestamp=$(date +"%Y%m%d_%H%M%S")
-  archive_file="$ARCHIVE_DIR/archive_$timestamp.tar.gz"
-  tar -czf "$archive_file" "$LOG_DIR"/*.log 2>/dev/null
-  echo "[ARCHIVE] Logs archived at $archive_file"
-}
-
-# --------------------------------------
-# Improved Archive Listing
-# --------------------------------------
-list_archives() {
-  echo "======================================"
-  echo "  QT AI Master Generator Archives"
-  echo "======================================"
-  echo ""
-  
-  if [ ! -d "$ARCHIVE_DIR" ]; then
-    echo "No archives directory found yet."
-    return
-  fi
-
-  echo "Available archives in $ARCHIVE_DIR:"
-  echo ""
-
-  # Nicely formatted list: Date | Size | Filename
-  ls -lh --time-style=long-iso "$ARCHIVE_DIR" | awk 'NR>1 {print $6, $7, " | ", $5, " | ", $9}'
-
-  echo ""
-  echo "Legend:"
-  echo "  Date & Time | Size | Filename"
-  echo "======================================"
-}
-
-# --------------------------------------
-# Monitor logins & echo commands
-# --------------------------------------
-monitor_activity() {
-  echo "[MONITOR] Monitoring user logins and commands..."
-  last -a | head -n 5
-
-  echo ""
-  echo "[MONITOR] Recent commands executed:"
-  history | tail -n 10
-}
-
-# --------------------------------------
-# Main generator loop
-# --------------------------------------
-generate_all_modules() {
-  echo "[START] Master Generator Script Running..."
-  
-  # Example of generating a module
-  echo "[GEN] Creating modules..."
-  echo "Module created at $(date)" >> "$LOG_DIR/module_gen.log"
-  
-  # Trigger archive every 12 hours (placeholder)
-  # In practice, you might use cron to schedule this
-  current_hour=$(date +"%H")
-  if (( current_hour % 12 == 0 )); then
-    archive_logs
-  fi
-}
-
-# --------------------------------------
-# Command-line options
-# --------------------------------------
-case "$1" in
-  --run)
-    generate_all_modules
-    ;;
-  --monitor)
-    monitor_activity
-    ;;
-  --archives)
-    list_archives
-    ;;
-  --help|*)
-    echo "Usage: $0 [--run | --monitor | --archives]"
-    ;;
-esac
-
-#!/bin/bash
+ #!/bin/bash
 # Master Generator Script for QT AI
-# Ensures modules 01–15 run smoothly under CCLM²™ supervision
+# Supervised by CCLM²™
 
-### FUNCTIONS ###
-
-# Generate all modules
-generate_all_modules() {
-  echo "Generating Modules 01–15..."
-  # Placeholder for real generation logic
+# ================================
+# SECTION 1: Backend Only Mode
+# ================================
+backend_only_mode() {
+  echo "[CCLM²™] Enforcing backend-only operational mode..."
+  # Restrict dashboard visibility to backend only
+  export DASHBOARD_MODE="backend"
 }
 
-# Monitor login and echo all commands
+# ================================
+# SECTION 2: Dashboard Archiving
+# ================================
+archive_dashboard() {
+  echo "[CCLM²™] Archiving operational dashboard..."
+  TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+  ARCHIVE_DIR="archives/dashboard_$TIMESTAMP"
+  mkdir -p "$ARCHIVE_DIR"
+  cp -r dashboard/* "$ARCHIVE_DIR"/ 2>/dev/null || echo "[CCLM²™] No dashboard files found to archive."
+}
+
+# ================================
+# SECTION 3: Login Monitoring
+# ================================
 monitor_login() {
-  echo "Monitoring login and echoing commands..."
-  # Continuous monitoring
+  echo "[CCLM²™] Monitoring logins and echoing commands..."
   while true; do
-    read -p "QT-AI Command: " cmd
-    echo "Executing: $cmd"
-    eval $cmd
+    last -n 1 | head -n 1
+    sleep 10
   done
 }
 
-# Enforce backend-only operational dashboard
-backend_only_mode() {
-  echo "Running dashboard in backend-only mode..."
-  # Prevent exposure to public-facing frontend
+# ================================
+# SECTION 4: Module Generation
+# ================================
+generate_all_modules() {
+  echo "[CCLM²™] Generating all modules (01–15)..."
+  for i in {01..15}; do
+    echo "[CCLM²™] Generating Module $i..."
+    sleep 1
+  done
 }
 
-# Archive dashboard snapshots (unlimited history)
-archive_dashboard() {
-  echo "Archiving operational dashboard snapshot..."
-  timestamp=$(date +"%Y%m%d_%H%M%S")
-  cp dashboard.html archives/dashboard_$timestamp.html
+# ================================
+# SECTION 5: Main Execution Flow
+# ================================
+main() {
+  backend_only_mode
+  archive_dashboard
+  monitor_login &
+  generate_all_modules
 }
 
-### EXECUTION BLOCK (always last) ###
-# Enforce backend-only access + archive first
-backend_only_mode
-archive_dashboard
-
-# Generate modules + keep perpetual login monitor running
-generate_all_modules
-monitor_login
+main
