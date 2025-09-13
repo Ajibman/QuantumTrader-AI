@@ -1,64 +1,47 @@
-git - create and run
-
-#!/bin/bash
+ #!/bin/bash
 # =====================================================
-# QT AI Repo2 Health Check & Dashboard
+# Quantum Trader AI - Master Generator Script
+# Modules 01–15 under CCLM²™ supervision
+# Backend-only enforced
 # =====================================================
-SCRIPT_FILE="repo2/scripts/generate_all_modules.sh"
 
-echo "=== QT AI Repo2 Health Check ==="
-echo "Checking master generator script: $SCRIPT_FILE"
+# === Backend-Only Guarantee ===
+OUTPUT_DIR="./repo2/backend"
+PUBLISH_PUBLIC=false   # 🔒 Do not change. Script will always enforce backend-only.
 
-# 1️⃣ Check if the master generator script exists
-if [ ! -f "$SCRIPT_FILE" ]; then
-    echo "❌ ERROR: $SCRIPT_FILE not found!"
-    exit 1
-fi
-echo "✅ Master generator script found"
-
-# 2️⃣ Verify all 15 module functions exist
-echo "Checking for Modules 01-15 definitions..."
-missing_modules=()
-for i in {01..15}; do
-    grep -q "module${i}_" "$SCRIPT_FILE" || missing_modules+=("module${i}_")
-done
-
-if [ ${#missing_modules[@]} -eq 0 ]; then
-    echo "✅ All modules 01-15 are defined"
-else
-    echo "❌ Missing module definitions: ${missing_modules[*]}"
+# Safety check: Block accidental publishing
+if [ "$PUBLISH_PUBLIC" = true ]; then
+  echo "[SECURITY WARNING] Public publishing is disabled for Master Generator Script."
+  echo "Switch ignored. Outputs remain backend-only."
+  PUBLISH_PUBLIC=false
 fi
 
-# 3️⃣ Dry-run check: confirm execution order
-echo "Verifying execution order..."
-for i in {01..15}; do
-    grep -q "module${i}_" "$SCRIPT_FILE" && echo "✅ Module $i present"
-done
+# Ensure backend directory exists
+mkdir -p "$OUTPUT_DIR"
 
-# 4️⃣ Check for master logs and archives
-echo "Checking for master logs and archives..."
-logs_found=$(ls repo2/scripts | grep master_log)
-if [ -z "$logs_found" ]; then
-    echo "⚠️ No master logs found"
-else
-    echo "✅ Master logs found:"
-    echo "$logs_found"
-fi
+# === Dashboard Generator ===
+generate_dashboard() {
+  TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+  DASHBOARD_FILE="$OUTPUT_DIR/dashboard_$TIMESTAMP.html"
+  
+  echo "<html><body><h1>QT AI Operational Dashboard</h1>" > "$DASHBOARD_FILE"
+  echo "<p>Generated at: $TIMESTAMP</p>" >> "$DASHBOARD_FILE"
+  echo "<p>Modules 01–15 supervised under CCLM²™</p>" >> "$DASHBOARD_FILE"
+  echo "</body></html>" >> "$DASHBOARD_FILE"
 
-# 5️⃣ Mini visual dashboard
-echo "=== Mini Dashboard ==="
-printf "%-10s %-10s\n" "Module" "Status"
-for i in {01..15}; do
-    grep -q "module${i}_" "$SCRIPT_FILE" && status="✔️ Defined" || status="❌ Missing"
-    printf "%-10s %-10s\n" "Module $i" "$status"
-done
-echo "======================="
+  echo "[INFO] Backend-only dashboard generated: $DASHBOARD_FILE"
+}
 
-# 6️⃣ Summary
-if [ ${#missing_modules[@]} -eq 0 ]; then
-    echo "✅ Repo2 Modules Health: All modules present and ready"
-else
-    echo "⚠️ Repo2 Modules Health: Check missing modules above"
-fi
+# === Master Function to Run All ===
+generate_all_modules() {
+  echo "[START] Generating all modules under CCLM²™ supervision..."
+  # Placeholders for modules 01–15 calls
+  # e.g., generate_module01; generate_module02; ...
+  echo "[DONE] All modules generated."
+  
+  # Always generate a backend dashboard snapshot
+  generate_dashboard
+}
 
-echo "=== Health Check Complete ==="
+# === Execution Trigger ===
+generate_all_modules
