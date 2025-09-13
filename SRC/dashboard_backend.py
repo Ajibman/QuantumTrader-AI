@@ -1,3 +1,4 @@
+threading.Thread(target=export_logs, daemon=True).start()
 from flask import Flask, jsonify
 from master_generator import self_structure, CCLM
 import random
