@@ -87,3 +87,22 @@ document.getElementById('apply-filter').addEventListener('click', () => {
 // Initial fetch and refresh
 fetchDashboardLogs();
 setInterval(fetchDashboardLogs, 30000);
+
+document.getElementById('apply-filter').addEventListener('click', () => {
+    const dateFilter = document.getElementById('filter-date').value;
+    const peaceFilter = parseFloat(document.getElementById('filter-peace').value) || 0;
+    const cclmFilter = document.getElementById('filter-cclm').value.trim();
+    const moduleFilter = document.getElementById('filter-module').value.trim().toLowerCase();
+
+    const filteredLogs = allLogs.filter(log => {
+        const logDate = log.timestamp.split('T')[0];
+        const matchesDate = !dateFilter || logDate === dateFilter;
+        const matchesPeace = log.peace_index >= peaceFilter;
+        const matchesCCLM = !cclmFilter || log.cclm_mode.toString().includes(cclmFilter);
+        const matchesModule = !moduleFilter || log.simulation_events.some(e => e.event.toLowerCase().includes(moduleFilter));
+
+        return matchesDate && matchesPeace && matchesCCLM && matchesModule;
+    });
+
+    displayLogs(filteredLogs);
+});
