@@ -84,3 +84,39 @@ def dashboard_logs():
             for line in f:
                 logs.append(json.loads(line))
     return jsonify(logs)
+
+import threading
+import time
+import json
+import csv
+from datetime import datetime
+import os
+
+EXPORT_DIR = 'exports'
+if not os.path.exists(EXPORT_DIR):
+    os.makedirs(EXPORT_DIR)
+
+def export_logs():
+    while True:
+        if os.path.exists(LOG_FILE):
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # JSON export
+            with open(LOG_FILE, 'r') as f:
+                logs = [json.loads(line) for line in f]
+            json_path = os.path.join(EXPORT_DIR, f'dashboard_logs_{timestamp}.json')
+            with open(json_path, 'w') as f:
+                json.dump(logs, f, indent=2)
+
+            # CSV export
+            if logs:
+                headers = logs[0].keys()
+                csv_path = os.path.join(EXPORT_DIR, f'dashboard_logs_{timestamp}.csv')
+                with open(csv_path, 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(headers)
+                    for log in logs:
+                        row = [json.dumps(log[h]) if isinstance(log[h], (list, dict)) else log[h] for h in headers]
+                        writer.writerow(row)
+
+        time.sleep(43200)  # every 12 hours
