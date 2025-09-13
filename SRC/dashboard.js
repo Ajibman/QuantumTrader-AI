@@ -85,3 +85,32 @@ async function fetchDashboardLogs() {
         console.error('Error fetching dashboard logs:', error);
     }
 }
+
+function initCharts() {
+    const peaceCtx = document.getElementById('peaceIndexChart').getContext('2d');
+    const cclmCtx = document.getElementById('cclmModeChart').getContext('2d');
+    const moduleCtx = document.getElementById('moduleEventChart').getContext('2d');
+
+    const zoomOptions = {
+        pan: { enabled: true, mode: 'x', modifierKey: 'ctrl' },
+        zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
+    };
+
+    peaceChart = new Chart(peaceCtx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Peace Index', data: [], borderColor: 'lime', fill: false }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { zoom: zoomOptions } }
+    });
+
+    cclmChart = new Chart(cclmCtx, {
+        type: 'bar',
+        data: { labels: [], datasets: [{ label: 'CCLM Mode Frequency', data: [], backgroundColor: 'cyan' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { zoom: zoomOptions } }
+    });
+
+    moduleChart = new Chart(moduleCtx, {
+        type: 'bar',
+        data: { labels: [], datasets: [{ label: 'Module 12 Events', data: [], backgroundColor: 'orange' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { zoom: zoomOptions } }
+    });
+}
