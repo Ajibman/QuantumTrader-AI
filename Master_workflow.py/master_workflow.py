@@ -166,3 +166,20 @@ def self_structure():
 if __name__ == "__main__":
     import pprint
     pprint.pprint(self_structure())
+
+
+#!/bin/bash
+# Operational Dashboard Backend - Query AT AI Structure
+
+echo "Fetching AT AI self-structure..."
+
+# Call the Python self_structure sensor
+python3 - <<EOF
+from src.master_generator import self_structure
+import pprint
+
+structure = self_structure()
+pprint.pprint(structure)
+EOF
+
+
