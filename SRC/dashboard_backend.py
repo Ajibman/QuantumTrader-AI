@@ -121,3 +121,17 @@ def export_logs():
                         writer.writerow(row)
 
         time.sleep(43200)  # every 12 hours
+
+import glob
+
+EXPORT_DIR = 'exports'
+MAX_DAYS = 90  # Keep exports for 90 days
+
+def cleanup_old_exports():
+    while True:
+        now = time.time()
+        for filepath in glob.glob(os.path.join(EXPORT_DIR, '*')):
+            if os.stat(filepath).st_mtime < now - MAX_DAYS * 86400:  # 86400 seconds in a day
+                os.remove(filepath)
+                print(f"Deleted old export: {filepath}")
+        time.sleep(86400)  # Run cleanup daily
