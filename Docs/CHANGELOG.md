@@ -75,3 +75,30 @@ echo "✅ CHANGELOG.md updated with $VERSION_TAG"
 git add "$CHANGELOG_FILE"
 git commit -m "docs(changelog): auto-update ($VERSION_TAG)" || echo "⚠️ Nothing to commit"
 git push origin main || echo "⚠️ Push failed, check branch or remote"
+
+#!/bin/bash
+
+TEST_MODE=true   # Set to false when ready for real pushes
+
+generate_changelog_entry() {
+    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "- Update recorded at $TIMESTAMP" >> docs/CHANGELOG.md
+    echo "[TEST MODE] Changelog updated: $TIMESTAMP"
+}
+
+archive_dashboard() {
+    TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
+    cp repo2/scripts/operational_dashboard.sh "archives/dashboard_$TIMESTAMP.sh"
+    echo "[TEST MODE] Dashboard archived: dashboard_$TIMESTAMP.sh"
+}
+
+if [ "$TEST_MODE" = true ]; then
+    generate_changelog_entry
+    archive_dashboard
+else
+    generate_changelog_entry
+    archive_dashboard
+    git add docs/CHANGELOG.md archives/
+    git commit -m "chore: auto-archive dashboard + update changelog"
+    git push
+fi
