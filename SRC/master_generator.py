@@ -46,3 +46,21 @@ def run_simulation(n=1):
 
 >>> run_simulation(999999)
 [Simulation] Running under Cosmic Orchestration 🌌
+
+
+async function fetchStructure() {
+  try {
+    // Backend endpoint to fetch JSON from Python
+    const response = await fetch('http://localhost:5000/self_structure');
+    const data = await response.json();
+
+    // Display pretty JSON
+    document.getElementById('structure').textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    document.getElementById('structure').textContent = 'Error fetching structure: ' + error;
+  }
+}
+
+// Refresh every 5 seconds
+setInterval(fetchStructure, 5000);
+fetchStructure();
