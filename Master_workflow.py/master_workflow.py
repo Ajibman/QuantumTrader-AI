@@ -213,3 +213,33 @@ def run_simulation(n=1):
   'modules': { ... },
   'repo2': { ... }
 }
+
+from master_generator import self_structure, CCLM
+import pprint
+import time
+
+def live_structure_view(n=1, refresh_interval=5):
+    """
+    Displays AT AI self-structure in real-time with CCLM scaling mode.
+    refresh_interval in seconds
+    """
+    cclm = CCLM()
+    
+    try:
+        while True:
+            cclm.scale(n)
+            mode = cclm.current_mode()
+            structure = self_structure()
+            
+            print("\033c", end="")  # Clear terminal
+            print(f"[Operational Dashboard] CCLM Mode: {mode}")
+            print("[Operational Dashboard] AT AI Self-Structure Snapshot:")
+            pprint.pprint(structure)
+            
+            time.sleep(refresh_interval)
+    except KeyboardInterrupt:
+        print("\n[Dashboard] Live self-structure view stopped.")
+
+# Example usage
+if __name__ == "__main__":
+    live_structure_view(n=1, refresh_interval=10)
