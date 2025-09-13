@@ -24,3 +24,26 @@
 ### Notes
 - This version is for internal use only (backend visibility).
 - All commits preserved via Git history for traceability.
+
+# --- Auto-update CHANGELOG.md ---
+CHANGELOG_FILE="docs/CHANGELOG.md"
+VERSION_TAG="v$(date +'%Y.%m.%d-%H%M')"
+
+# Ensure changelog exists
+mkdir -p docs
+if [ ! -f "$CHANGELOG_FILE" ]; then
+  echo "# Changelog" > "$CHANGELOG_FILE"
+  echo "" >> "$CHANGELOG_FILE"
+  echo "All notable changes to this project will be documented in this file." >> "$CHANGELOG_FILE"
+  echo "" >> "$CHANGELOG_FILE"
+fi
+
+# Append new entry
+{
+  echo "## [$VERSION_TAG] - $(date +'%Y-%m-%d')"
+  echo "### Changed"
+  echo "- Automated generation/update from Master Generator Script"
+  echo ""
+} >> "$CHANGELOG_FILE"
+
+echo "✅ CHANGELOG.md updated with $VERSION_TAG"
