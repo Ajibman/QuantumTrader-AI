@@ -1,113 +1,139 @@
- <!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quantum Trader AI</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
+    :root {
+      --bg: #0f1720;
+      --card: #0b1220;
+      --accent: #ffb703;
+      --muted: #cbd5e1;
     }
-
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--muted);}
+    .page {min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:3rem 1rem;}
+    header {width:100%;max-width:960px;position:relative;margin-bottom:2rem;}
+    .brand {text-align:center;color:var(--muted);}
+    .coming-soon {
+      position:absolute; top:16px; right:16px;
+      background:var(--accent); color:#000; padding:8px 14px;
+      border-radius:20px; font-weight:700; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.35);
     }
-
-    .logo-container {
-      margin-top: 80px;
-    }
-
-    .logo-container img {
-      width: 250px;
-      height: auto;
-    }
-
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
-    }
-
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
-    }
-
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
-    }
-
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .logo-grid {display:flex;flex-direction:column;gap:12px;align-items:center;}
+    img.logo {width:200px;max-width:70vw;border-radius:6px;display:block;}
+    h1 {margin:.4rem 0 .2rem 0;color:#e6eef8;}
+    p.tag {margin:0 0 1rem 0;color:#9fb0c8}
+    /* Modal */
+    .modal-overlay {display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1200;align-items:center;justify-content:center;padding:20px;}
+    .modal {background:#fff;color:#0b1220;border-radius:10px;max-width:1100px;width:100%;max-height:90vh;overflow:auto;padding:18px;box-shadow:0 12px 30px rgba(2,6,23,.6);}
+    .modal-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .btn-close {background:#eee;border:0;padding:6px 10px;border-radius:6px;cursor:pointer;}
+    #worldMapImage {max-width:100%;height:auto;display:none;border-radius:6px;border:1px solid #ddd}
+    #placeholder {text-align:center;padding:22px;color:#333;display:none}
+    .loader {text-align:center;padding:18px;color:#666;display:none}
+    @media(min-width:760px){
+      .logo-grid{flex-direction:row;gap:24px}
     }
   </style>
 </head>
 <body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <h1>🌍 Quantum Trader AI</h1>
+        <p class="tag"><i>Built with Patience, Discipline and Integrity</i></p>
+      </div>
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+      <!-- Top-right "Coming Soon" -->
+      <button class="coming-soon" id="comingSoonBtn" aria-controls="comingSoonModal" aria-expanded="false" onclick="openComingSoon()">
+        Coming Soon
+      </button>
+    </header>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
+    <main style="width:100%;max-width:960px;">
+      <div class="logo-grid" role="list" aria-label="QT AI logos">
+        <img class="logo" src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo" />
+        <img class="logo" src="assets/qtai-logo-ori.png"  alt="QT AI Ori Logo" />
+        <img class="logo" src="assets/qtai-logo-seal.png" alt="QT AI Seal Logo" />
+        <img class="logo" src="assets/qtai-rotatelogo.png" alt="QT AI Rotating Logo"/>
+        <img class="logo" src="assets/qtai-rotatelogo2.png" alt="QT AI Rotating Logo 2"/>
+      </div>
+
+      <section style="margin-top:24px;color:var(--muted);text-align:center;">
+        <p>QT AI — Turning Vision into Market Reality</p>
+      </section>
+    </main>
   </div>
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
+  <!-- Modal (Coming Soon / Global Health Map) -->
+  <div id="comingSoonModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <div>
+          <strong id="modalTitle">Global Health — MacArthur Projection</strong>
+          <div style="font-size:13px;color:#555">(Will display on launch date — Nov 09, 2025)</div>
+        </div>
+        <div>
+          <button class="btn-close" aria-label="Close modal" onclick="closeModal()">Close</button>
+        </div>
+      </div>
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
+      <div id="loader" class="loader">Loading map…</div>
+
+      <!-- If present, map image should be named: assets/qtai-world-map-macarthur.png -->
+      <img id="worldMapImage" alt="Global health map (MacArthur projection)">
+
+      <div id="placeholder">
+        <p style="font-weight:600;margin-bottom:8px">Global health map will appear here at launch (Nov 09, 2025)</p>
+        <p>Please upload the MacArthur-projection image:</p>
+        <code>assets/qtai-world-map-macarthur.png</code>
+        <p style="margin-top:10px;color:#666;font-size:13px">If you already uploaded it, refresh the page. This modal will display the map when the file is available.</p>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+    // recommended map filename (place this file in assets/):
+    const MAP_SRC = 'assets/qtai-world-map-macarthur.png';
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
+    function openComingSoon() {
+      const overlay = document.getElementById('comingSoonModal');
+      const img = document.getElementById('worldMapImage');
+      const placeholder = document.getElementById('placeholder');
+      const loader = document.getElementById('loader');
+
+      overlay.style.display = 'flex';
+      document.getElementById('comingSoonBtn').setAttribute('aria-expanded','true');
+
+      // reset
+      img.style.display = 'none';
+      placeholder.style.display = 'none';
+      loader.style.display = 'block';
+
+      // Preload image to detect availability
+      const tester = new Image();
+      tester.onload = function() {
+        loader.style.display = 'none';
+        img.src = MAP_SRC;
+        img.style.display = 'block';
+      };
+      tester.onerror = function() {
+        loader.style.display = 'none';
+        placeholder.style.display = 'block';
+      };
+      tester.src = MAP_SRC;
     }
+
+    function closeModal() {
+      document.getElementById('comingSoonModal').style.display = 'none';
+      document.getElementById('comingSoonBtn').setAttribute('aria-expanded','false');
+    }
+
+    // Close with ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
   </script>
 </body>
 </html>
