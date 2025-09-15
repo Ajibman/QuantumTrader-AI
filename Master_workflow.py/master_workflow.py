@@ -1,3 +1,54 @@
+import sys
+import re
+
+def check_and_fix_markdown(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    errors = []
+    fixed_lines = []
+
+    for i, line in enumerate(lines, start=1):
+        original = line
+        modified = line
+
+        # Fix: add missing space after #
+        if re.match(r"^#+[^ ]", line):
+            modified = re.sub(r"^(#+)([^ ])", r"\1 \2", line)
+            if modified != line:
+                errors.append((i, "Fixed: Heading missing space after #"))
+
+        # Detect broken links (cannot auto-fix)
+        if "](" in line and not re.search(r"\[.*\]\(.*\)", line):
+            errors.append((i, "Broken link syntax (manual fix required)"))
+
+        # Fix: bullet points missing space
+        if line.strip().startswith("-") and not line.strip().startswith("- "):
+            modified = line.replace("-", "- ", 1)
+            if modified != line:
+                errors.append((i, "Fixed: Bullet missing space"))
+
+        fixed_lines.append(modified)
+
+    # Save corrected file
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.writelines(fixed_lines)
+
+    if errors:
+        print("⚠️ Issues found:\n")
+        for err in errors:
+            line_num, msg = err
+            print(f"Line {line_num}: {msg}")
+            print(f"👉 Use your editor’s 'Go to Line {line_num}' to jump directly.\n")
+    else:
+        print("✅ No Markdown errors found. All good!")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python md_checker.py <markdown-file>")
+    else:
+        check_and_fix_markdown(sys.argv[1])
+
 ---
 
 ### 📄 `docs/ROADMAP.md`
