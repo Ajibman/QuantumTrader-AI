@@ -1,3 +1,15 @@
+SESSION_OPTIONS = {
+    "30s": 30,
+    "60s": 60,
+    "5m": 5 * 60,
+    "10m": 10 * 60,
+    "15m": 15 * 60,
+    "20m": 20 * 60,
+    "24h": 24 * 3600,
+    "48h": 48 * 3600,
+    "72h": 72 * 3600
+}
+
 """
 TraderLab™ Module — QuantumTrader AI
 Launch: November 09, 2025
