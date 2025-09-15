@@ -1,3 +1,12 @@
+from flask import render_template
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html',
+        username=current_user.email,
+        session_id=str(uuid4()),
+        timestamp=datetime.utcnow().isoformat())
+
 # master_generator.py
 
 class CCLM:
