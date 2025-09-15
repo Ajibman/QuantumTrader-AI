@@ -1,1 +1,27 @@
+name: Backup Index (repo2)
 
+on:
+  push:
+    paths:
+      - "index.html"   # Only run when index.html changes
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Ensure backup folder exists
+        run: mkdir -p repo2/backup
+
+      - name: Copy index.html to backup location
+        run: cp index.html repo2/backup/index.html
+
+      - name: Commit and push backup
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add repo2/backup/index.html
+          git commit -m "Auto-backup index.html -> repo2/backup/index.html"
+          git push
