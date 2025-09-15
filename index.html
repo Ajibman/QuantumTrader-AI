@@ -3,110 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
+  <title>Quantum Trader AI</title>
   <style>
-
-       body {
+    body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
       margin: 0;
       padding: 0;
+      text-align: center;
+      background-color: #0a0a0a;
+      color: #fff;
     }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
-    }
-
-    .logo-container {
-      margin-top: 80px;
-    }
-
-    .logo-container img {
-      width: 250px;
-      height: auto;
-    }
-
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
-    }
-
-    footer {
-      margin-top: 50px;
+    header {
       padding: 20px;
-      background-color: #ffffff;
+      background: #111;
+      border-bottom: 2px solid #333;
     }
 
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
+    .rotating {
+      animation: spin 12s linear infinite;
     }
 
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
+    @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
-
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo-seal.png" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
-  </div>
-
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
-
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
-
-  <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
-
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
+    .logo-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 20px 0;
     }
 
-  </script>
+    footer {
+      padding: 20px;
+      background: #111;
+      border-top: 2px solid #333;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top header with rotating logo -->
+  <header>
+    <img src="assets/qtai-rotatelogo.png" alt="QT AI Rotating Logo" class="rotating" width="150" />
+    <h1>Quantum Trader AI</h1>
+  </header>
+
+  <!-- Globe logo as centerpiece -->
+  <section>
+    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo" width="200" />
+    <h2>Turning Vision into Market Reality</h2>
+  </section>
+
+  <!-- Row for Ori + Seal logos -->
+  <section class="logo-row">
+    <img src="assets/qtai-logo-ori.png" alt="QT AI Ori Logo" width="150" />
+    <img src="assets/qtai-logo-seal.png" alt="QT AI Seal Logo" width="150" />
+  </section>
+
+  <!-- Alternate rotating logo (extra version) -->
+  <section>
+    <img src="assets/qtai-rotatelogo2.png" alt="QT AI Rotating Logo 2" class="rotating" width="150" />
+  </section>
+
+  <footer>
+    <p>🚀 Built with Patience, Discipline and Integrity</p>
+    <p>© 2025 Quantum Trader AI. All rights reserved.</p>
+  </footer>
 </body>
 </html>
