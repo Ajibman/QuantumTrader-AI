@@ -1,3 +1,18 @@
+<!-- Inserted into header or absolute overlay -->
+<div id="session-watermark" style="
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  opacity: 0.18;
+  font-size: 12px;
+  pointer-events: none;
+  color: rgba(255,255,255,0.9);
+  z-index: 99999;
+">
+  <!-- server should inject these values per session -->
+  USER: {{username}} | SID: {{session_id}} | {{timestamp}}
+</div>
+ 
  <!DOCTYPE html>
 <html lang="en">
 <head>
