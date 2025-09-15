@@ -293,3 +293,28 @@ def run_simulation(n=1, refresh_interval=5, duration=30):
 if __name__ == "__main__":
     run_simulation(n=1, refresh_interval=5, duration=20)
 
+# Quantum Trader AI — TraderLab™ CHANGELOG  
+
+## [vX.X] - YYYY-MM-DD  
+### Added  
+- Initial release of `TraderLab.py` packaged in `releases/TraderLab_vX.X.zip`  
+
+### Changed  
+- Updated `TraderLab/README.md` with usage instructions  
+- Synced documentation in `docs/CHANGELOG.md`  
+
+### Notes  
+- This release remains dormant until activation onNNovember 09, 2025.
+
+# Quantum Trader AI — TraderLab™ CHANGELOG  
+
+## [vX.X] - YYYY-MM-DD  
+### Added  
+- Initial release of `TraderLab.py` packaged in `releases/TraderLab_vX.X.zip`  
+
+### Changed  
+- Updated `TraderLab/README.md` with usage instructions  
+- Synced documentation in `docs/CHANGELOG.md`  
+
+### Notes  
+- This release remains dormant until activation on November 09, 2025.
