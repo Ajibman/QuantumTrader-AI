@@ -1,3 +1,38 @@
+---
+
+### 📄 `docs/ROADMAP.md`
+```markdown
+# TraderLab™ Roadmap
+
+This roadmap outlines planned milestones for TraderLab™, aligned with the development of Quantum Trader AI (QT AI).
+
+---
+
+## ✅ v1.0 (Current)
+- Initial release of TraderLab.py
+- Includes version verification + dormancy functionality
+- Packaged release: TraderLab_v1.0.zip
+
+---
+
+## 🚧 Upcoming Versions
+
+### v1.1
+- Add enhanced logging for verification process
+- Improve error handling
+
+### v2.0
+- Full integration with QT AI core modules
+- Support for secure cloud verification
+- Multi-language documentation
+
+---
+
+## Long-Term Vision
+- Establish TraderLab™ as the foundation of all release cycles for QT AI
+- Automated build pipeline for continuous delivery
+- Extend verification into distributed environments
+
 modules/ → Python scripts and any .md files
 docs/    → Markdown files
 logs/    → For lots
