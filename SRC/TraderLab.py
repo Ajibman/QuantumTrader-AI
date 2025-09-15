@@ -1,3 +1,50 @@
+#!/usr/bin/env python3
+# CPilot.py — Quantum Trader AI : TraderLab™ Module
+# Status: Dormant until November 09, 2025
+# Author: Olagoke Ajibulu
+
+import time
+from datetime import datetime
+
+# --- Configurations ---
+LAUNCH_DATE = datetime(2025, 11, 9, 0, 0, 0)  # Activation time
+SESSION_CYCLE = 30  # seconds
+DISPLAY_PHASE = 20  # seconds
+
+
+def dormant_mode():
+    """Show dormancy state before launch."""
+    print("🚀 CPilot is in dormant mode. Awaiting activation on Nov 09, 2025...")
+
+
+def active_cycle():
+    """Run a 30-second trading session cycle with a 20-second display phase."""
+    print("\n🔄 Starting trading session...")
+    
+    # Phase 1: Display Phase
+    print(f"📊 Displaying market data for {DISPLAY_PHASE} seconds...")
+    time.sleep(DISPLAY_PHASE)
+    
+    # Phase 2: Trade/Decision Phase
+    remaining = SESSION_CYCLE - DISPLAY_PHASE
+    print(f"🤖 Executing trading decisions for {remaining} seconds...")
+    time.sleep(remaining)
+    
+    print("✅ Session complete. Preparing for next cycle.")
+
+
+def main():
+    now = datetime.now()
+    if now < LAUNCH_DATE:
+        dormant_mode()
+    else:
+        while True:
+            active_cycle()
+
+
+if __name__ == "__main__":
+    main()
+
 # CPilot™ — Quantum Trader AI Commercial Pilot
 
 CPilot™ (Commercial Pilot) is the **autonomous trading engine** of the Quantum Trader AI project.  
