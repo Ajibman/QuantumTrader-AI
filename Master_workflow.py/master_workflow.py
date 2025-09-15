@@ -292,3 +292,4 @@ def run_simulation(n=1, refresh_interval=5, duration=30):
 # Example run
 if __name__ == "__main__":
     run_simulation(n=1, refresh_interval=5, duration=20)
+
