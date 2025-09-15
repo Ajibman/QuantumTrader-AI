@@ -1,3 +1,47 @@
+# CPilot™ — Quantum Trader AI Commercial Pilot
+
+CPilot™ (Commercial Pilot) is the **autonomous trading engine** of the Quantum Trader AI project.  
+It manages trading sessions across multiple timeframes, with the initial **30-second cycle** prepared as the foundation.
+
+---
+
+## Status
+🚦 **Dormant until November 09, 2025**
+
+- CPilot.py exists in **skeleton form**.
+- All logic is placeholder/dummy until activation.
+- November 09, 2025 → full trading logic goes live.
+
+---
+
+## Session Cycle
+CPilot sessions can be launched in different durations:
+
+- **30s** → default and initial test cycle  
+- **60s, 5m, 10m, 15m, 20m**  
+- **24h, 48h, 72h**  
+
+> Currently only **30s cycle** is in the skeleton.
+
+---
+
+## Mission
+CPilot is designed to:
+- Operate securely within Quantum Trader AI (QT AI).
+- Trade with **discipline, patience, and integrity**.
+- Support the **traceable currency of peace** that underpins QT AI’s vision.
+
+---
+
+## Next Steps
+- Wire up the trading core after November 09, 2025.
+- Connect to `TraderLab` modules for strategy execution.
+- Synchronize with CCLM²™ supervision layer.
+
+---
+
+**Note:** CPilot is part of the *TraderLab* but is not yet ready. It will remain dormant until the official rollout date.
+
 SESSION_OPTIONS = {
     "30s": 30,
     "60s": 60,
