@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuantumTrader-AI</title>
   <style>
+
+   <!-- Inserted into header or absolute overlay -->
+<div id="session-watermark" style="
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  opacity: 0.18;
+  font-size: 12px;
+  pointer-events: none;
+  color: rgba(255,255,255,0.9);
+  z-index: 99999;
+">
+  <!-- server should inject these values per session -->
+  USER: {{username}} | SID: {{session_id}} | {{timestamp}}
+</div>
+   
     body {
       font-family: Arial, sans-serif;
       text-align: center;
@@ -106,21 +122,6 @@
       logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
     }
 
-   <!-- Inserted into header or absolute overlay -->
-<div id="session-watermark" style="
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  opacity: 0.18;
-  font-size: 12px;
-  pointer-events: none;
-  color: rgba(255,255,255,0.9);
-  z-index: 99999;
-">
-  <!-- server should inject these values per session -->
-  USER: {{username}} | SID: {{session_id}} | {{timestamp}}
-</div>
-   
   </script>
 </body>
 </html>
