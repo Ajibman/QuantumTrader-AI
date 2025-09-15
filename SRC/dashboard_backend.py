@@ -1,3 +1,64 @@
+import UIKit
+
+class TraderLabViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        view.backgroundColor = .white
+        let label = UILabel()
+        label.text = "TraderLab™ Active — Screenshots Detected!"
+        label.textAlignment = .center
+        label.frame = view.bounds
+        view.addSubview(label)
+
+        // Detect screenshot attempt
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(userDidScreenshot),
+            name: UIApplication.userDidTakeScreenshotNotification,
+            object: nil
+        )
+    }
+
+    @objc func userDidScreenshot() {
+        // Blur screen when screenshot detected
+        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blur.frame = view.bounds
+        view.addSubview(blur)
+
+        // Example: force logout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            exit(0) // force-close app (harsh but secure)
+        }
+    }
+}
+
+package com.qtai.traderlab
+
+import android.os.Bundle
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
+
+class TraderLabActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // Block screenshots + screen recording
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+
+        super.onCreate(savedInstanceState)
+
+        val textView = TextView(this)
+        textView.text = "🚫 Screenshots & Recording Disabled in TraderLab™"
+        textView.textSize = 20f
+        textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+
+        setContentView(textView)
+    }
+}
+
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
