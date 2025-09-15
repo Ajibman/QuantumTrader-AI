@@ -1,0 +1,65 @@
+# TraderLab™ Security Layer
+
+This folder contains **screenshot and screen recording protection** for Android & iOS.  
+
+- Android: Prevents screenshots & recording (shows black screen).
+- iOS: Detects screenshots, blurs the screen, and closes session.
+
+⚠️ These modules are **dormant** and not yet integrated with `TraderLab.py`.  
+They will be **activated on November 09, 2025**.
+
+// TraderLab™ Secure Layer - Dormant until 09 Nov 2025
+
+import UIKit
+
+class SecureViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // 🚨 Screenshot detection
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(userDidScreenshot),
+            name: UIApplication.userDidTakeScreenshotNotification,
+            object: nil
+        )
+    }
+
+    @objc func userDidScreenshot() {
+        // Blur + optional logout
+        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blur.frame = view.bounds
+        view.addSubview(blur)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            exit(0) // terminate session
+        }
+    }
+}
+
+// TraderLab™ Secure Layer - Dormant until 09 Nov 2025
+
+import UIKit
+
+class SecureViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // 🚨 Screenshot detection
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(userDidScreenshot),
+            name: UIApplication.userDidTakeScreenshotNotification,
+            object: nil
+        )
+    }
+
+    @objc func userDidScreenshot() {
+        // Blur + optional logout
+        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blur.frame = view.bounds
+        view.addSubview(blur)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            exit(0) // terminate session
+        }
+    }
+}
