@@ -1,3 +1,42 @@
+import time
+
+# CPilot™ Trading Session Cycles
+CYCLES = {
+    "1_minute": 60,
+    "5_minutes": 5 * 60,
+    "10_minutes": 10 * 60,
+    "15_minutes": 15 * 60,
+    "30_minutes": 30 * 60,
+    "24_hours": 24 * 60 * 60,
+    "48_hours": 48 * 60 * 60,
+    "72_hours": 72 * 60 * 60,
+}
+
+def run_session(cycle_name: str):
+    """
+    Run a trading session for the specified cycle.
+    Auto-closes trades at the end of the period.
+    """
+    if cycle_name not in CYCLES:
+        raise ValueError(f"Unknown cycle: {cycle_name}")
+
+    duration = CYCLES[cycle_name]
+    print(f"🚀 CPilot™ session started: {cycle_name} ({duration} seconds)")
+
+    # --- display phase (mockup for now) ---
+    print("📊 Market data streaming...")
+
+    # --- execution phase (mockup for now) ---
+    time.sleep(duration)
+
+    # --- close session ---
+    print(f"✅ CPilot™ session ended: {cycle_name}")
+    print("📈 Trades closed, report generated.")
+
+if __name__ == "__main__":
+    # Example: run a 1-minute session
+    run_session("1_minute")
+
 """
 TraderLab™ Module — QuantumTrader AI
 Launch: November 09, 2025
