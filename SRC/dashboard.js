@@ -1,3 +1,60 @@
+import sys
+import re
+
+def check_and_fix_markdown(file_path, show_lines=False):
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    errors = []
+    fixed_lines = []
+
+    for i, line in enumerate(lines, start=1):
+        original = line.rstrip("\n")
+        modified = original
+
+        # Fix: add missing space after #
+        if re.match(r"^#+[^ ]", original):
+            modified = re.sub(r"^(#+)([^ ])", r"\1 \2", original)
+            if modified != original:
+                errors.append((i, "Fixed: Heading missing space after #", original, modified))
+
+        # Detect broken links (cannot auto-fix)
+        if "](" in original and not re.search(r"\[.*\]\(.*\)", original):
+            errors.append((i, "Broken link syntax (manual fix required)", original, original))
+
+        # Fix: bullet points missing space
+        if original.strip().startswith("-") and not original.strip().startswith("- "):
+            modified = original.replace("-", "- ", 1)
+            if modified != original:
+                errors.append((i, "Fixed: Bullet missing space", original, modified))
+
+        fixed_lines.append(modified + "\n")
+
+    # Save corrected file
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.writelines(fixed_lines)
+
+    if errors:
+        print("⚠️ Issues found:\n")
+        for err in errors:
+            line_num, msg, old, new = err
+            print(f"Line {line_num}: {msg}")
+            if show_lines:
+                print(f"   ❌ Before: {old}")
+                print(f"   ✅ After : {new}\n")
+            else:
+                print(f"👉 Use your editor’s 'Go to Line {line_num}'\n")
+    else:
+        print("✅ No Markdown errors found. All good!")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python md_checker.py <markdown-file> [--show-lines]")
+    else:
+        file_path = sys.argv[1]
+        show_lines = "--show-lines" in sys.argv
+        check_and_fix_markdown(file_path, show_lines)
+
 async function fetchDashboardData() {
     try {
         const response = await fetch('http://localhost:5000/dashboard_data');
