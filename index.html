@@ -73,16 +73,13 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-  </style>
-</head>
-<body>
 
   <!-- Banner -->
   <div class="banner">Coming Soon</div>
 
   <!-- Main logo with caption -->
   <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
+    <img id="qtai-logo-seal.png" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
     <p>Built with discipline, patience and integrity</p>
   </div>
 
@@ -108,6 +105,22 @@
       logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
       logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
     }
+
+   <!-- Inserted into header or absolute overlay -->
+<div id="session-watermark" style="
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  opacity: 0.18;
+  font-size: 12px;
+  pointer-events: none;
+  color: rgba(255,255,255,0.9);
+  z-index: 99999;
+">
+  <!-- server should inject these values per session -->
+  USER: {{username}} | SID: {{session_id}} | {{timestamp}}
+</div>
+   
   </script>
 </body>
 </html>
