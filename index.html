@@ -57,6 +57,14 @@
             overflow: hidden;
         }
 
+        #intentions-header {
+            text-align: right;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            color: #555;
+            background-color: #f9f9f9;
+        }
+
         #public-intentions iframe {
             width: 100%;
             min-height: 600px;
@@ -87,8 +95,28 @@
 
     <!-- Public Intentions Section (pulling from backup index) -->
     <div id="public-intentions">
+        <div id="intentions-header">
+            Last Updated: <span id="backup-timestamp">Loading...</span>
+        </div>
         <iframe src="./backup/index/index.html" title="Public Intentions" id="intentions-iframe" scrolling="yes"></iframe>
     </div>
+
+    <script>
+        // Dynamically fetch the last modified date of the backup index
+        fetch('./backup/index/index.html', { method: 'HEAD' })
+            .then(response => {
+                const lastModified = response.headers.get('Last-Modified');
+                if (lastModified) {
+                    document.getElementById('backup-timestamp').textContent = new Date(lastModified).toLocaleString();
+                } else {
+                    document.getElementById('backup-timestamp').textContent = 'Unavailable';
+                }
+            })
+            .catch(err => {
+                console.warn('Could not fetch backup timestamp', err);
+                document.getElementById('backup-timestamp').textContent = 'Unavailable';
+            });
+    </script>
 
 </body>
 </html>
