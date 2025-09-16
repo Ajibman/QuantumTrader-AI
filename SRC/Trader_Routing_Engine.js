@@ -1,3 +1,60 @@
+node Trader_Routing_Engine.js --selfheal-test
+
+ls -lah ./backup
+
+less ./backup/backup-<timestamp>-0.js
+
+// --- Self-heal test mode ---
+// Run with: node Trader_Routing_Engine.js --selfheal-test
+if (process.argv.includes('--selfheal-test')) {
+  (async () => {
+    try {
+      logger.info('[ENGINE] Running self-heal test...');
+      const result = await global.selfHealer.runNow();
+      if (result) {
+        logger.info('[ENGINE] ✅ Self-heal test PASSED (engine integrity OK or restored).');
+      } else {
+        logger.error('[ENGINE] ❌ Self-heal test FAILED (issues remain).');
+      }
+      process.exit(0); // exit after test
+    } catch (err) {
+      logger.error(`[ENGINE] Self-heal test error: ${err.message}`);
+      process.exit(1);
+    }
+  })();
+}
+
+require('dotenv').config();
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { EventEmitter } = require('events');
+
+// Import logger (already part of your setup)
+const logger = require('./logger');
+
+// 🕊 Self-healing module
+const selfHeal = require('./selfHeal');
+
+(async () => {
+  try {
+    // Start self-heal monitor before anything else
+    const healer = await selfHeal.startSelfHeal();
+    global.selfHealer = healer; // optional global access
+    logger.info('[ENGINE] Self-heal system initialized.');
+  } catch (err) {
+    logger.error(`[ENGINE] Failed to start self-heal: ${err.message}`);
+  }
+})();
+
+const selfHeal = require('./selfHeal');
+
+(async () => {
+  const healer = await selfHeal.startSelfHeal();
+  global.selfHealer = healer; // optional: so you can call healer.runNow() anywhere
+})();
+
 QT_AI_STREAM_URL=https://staging.qt-ai.com/api
 QT_AI_ENVIRONMENT=staging
 // Trader_Routing_Engine.js
