@@ -1,3 +1,9 @@
+ // start the monitor early — await to ensure initial heal happens before heavy work
+  const healer = await selfHeal.startSelfHeal();
+  // optional: expose healer to global for admin control:
+  global.selfHealer = healer;
+})();
+
 // --- Self-Healing Integrity Module ---
 import fs from 'fs';
 import crypto from 'crypto';
