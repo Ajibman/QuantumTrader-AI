@@ -1,76 +1,69 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      background-color: #0a0a0a;
-      color: #fff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Trader AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
 
-    header {
-      padding: 20px;
-      background: #111;
-      border-bottom: 2px solid #333;
-    }
+        #header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-    .rotating {
-      animation: spin 12s linear infinite;
-    }
+        #header img {
+            max-height: 60px;
+        }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+        #coming-soon-container {
+            text-align: center;
+            margin: 40px 0;
+        }
 
-    .logo-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin: 20px 0;
-    }
+        #coming-soon-container img {
+            max-width: 200px;
+            height: auto;
+        }
 
-    footer {
-      padding: 20px;
-      background: #111;
-      border-top: 2px solid #333;
-      margin-top: 40px;
-    }
-  </style>
+        #main-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-  <!-- Top header with rotating logo -->
-  <header>
-    <img src="assets/qtai-rotatelogo.png" alt="QT AI Rotating Logo" class="rotating" width="150" />
-    <h1>Quantum Trader AI</h1>
-  </header>
 
-  <!-- Globe logo as centerpiece -->
-  <section>
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo" width="200" />
-    <h2>Turning Vision into Market Reality</h2>
-  </section>
+    <!-- Header with 3 existing logos -->
+    <div id="header">
+        <img src="./Assets/logo1.png" alt="Logo 1">
+        <img src="./Assets/logo2.png" alt="Logo 2">
+        <img src="./Assets/logo3.png" alt="Logo 3">
+    </div>
 
-  <!-- Row for Ori + Seal logos -->
-  <section class="logo-row">
-    <img src="assets/qtai-logo-ori.png" alt="QT AI Ori Logo" width="150" />
-    <img src="assets/qtai-logo-seal.png" alt="QT AI Seal Logo" width="150" />
-  </section>
+    <!-- Coming Soon Logo -->
+    <div id="coming-soon-container">
+        <img src="./Assets/coming-soon-logo.png" alt="Quantum Trader AI Coming Soon Logo">
+    </div>
 
-  <!-- Alternate rotating logo (extra version) -->
-  <section>
-    <img src="assets/qtai-rotatelogo2.png" alt="QT AI Rotating Logo 2" class="rotating" width="150" />
-  </section>
+    <!-- Main Content -->
+    <div id="main-content">
+        <p>Quantum Trader AI is preparing for launch. Stay tuned for the official rollout!</p>
+        <!-- Any additional existing content goes here -->
+    </div>
 
-  <footer>
-    <p>🚀 Built with Patience, Discipline and Integrity</p>
-    <p>© 2025 Quantum Trader AI. All rights reserved.</p>
-  </footer>
 </body>
 </html>
