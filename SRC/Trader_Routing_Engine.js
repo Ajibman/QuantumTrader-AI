@@ -1,4 +1,146 @@
 // === Trader_Routing_Engine.js ===
+// QT AI Visitor/Trader Access & Bubble Routing (with API scoring)
+
+import axios from "axios"; // Use axios/fetch for API calls
+
+class VisitorTrader {
+  constructor(id, actions = [], statements = [], patterns = []) {
+    this.id = id;
+    this.actions = actions;
+    this.statements = statements;
+    this.patterns = patterns;
+    this.intentionScore = null;
+    this.accessLevel = null;
+  }
+}
+
+// Thresholds (can be tuned dynamically by QT AI analytics)
+const thresholds = {
+  peace: 0.8,
+  emotional: 0.75,
+  genomP: 0.85
+};
+
+// === QT AI API Integration ===
+// Replace with real QT AI endpoints
+async function fetchScore(visitor, dimension) {
+  try {
+    const response = await axios.post(`https://qt-ai/api/score/${dimension}`, {
+      id: visitor.id,
+      actions: visitor.actions,
+      statements: visitor.statements,
+      patterns: visitor.patterns
+    });
+    return response.data.score; // Expect float between 0.0 - 1.0
+  } catch (err) {
+    console.error(`[ERROR] Failed to fetch ${dimension} score:`, err.message);
+    return 0.0; // Safe fallback
+  }
+}
+
+// === Step 1: Assess Intention ===
+async function assessIntention(visitor) {
+  const peaceScore = await fetchScore(visitor, "peace");
+  const emotionalScore = await fetchScore(visitor, "emotional");
+  const genomPScore = await fetchScore(visitor, "genomP");
+
+  if (
+    peaceScore >= thresholds.peace &&
+    emotionalScore >= thresholds.emotional &&
+    genomPScore >= thresholds.genomP
+  ) {
+    visitor.intentionScore = "Peaceful & Constructive";
+  } else if (peaceScore < thresholds.peace && emotionalScore < thresholds.emotional) {
+    visitor.intentionScore = "Confused/Disoriented";
+  } else {
+    visitor.intentionScore = "Resistant/Unstable";
+  }
+
+  return visitor.intentionScore;
+}
+
+// === Step 2: Route User ===
+function routeUser(visitor) {
+  switch (visitor.intentionScore) {
+    case "Peaceful & Constructive":
+      visitor.accessLevel = "TraderLab™ + CPilot™";
+      grantTraderLabAccess(visitor);
+      break;
+
+    case "Confused/Disoriented":
+      visitor.accessLevel = "Guidance Modules";
+      assignGuidance(visitor);
+      break;
+
+    case "Resistant/Unstable":
+      visitor.accessLevel = "Games Pavilion";
+      assignGames(visitor);
+      break;
+  }
+  return visitor.accessLevel;
+}
+
+// === Step 3: Re-Evaluation Loop ===
+async function reevaluate(visitor) {
+  await assessIntention(visitor);
+  routeUser(visitor);
+  return visitor.accessLevel;
+}
+
+// === QT AI Action Hooks ===
+function grantTraderLabAccess(visitor) {
+  console.log(`[ACCESS GRANTED] ${visitor.id} → TraderLab™ + CPilot™`);
+}
+
+function assignGuidance(visitor) {
+  console.log(`[GUIDANCE] ${visitor.id} → Supportive Guidance Modules`);
+}
+
+function assignGames(visitor) {
+  console.log(`[GAMES] ${visitor.id} → Emotional Intelligence Pavilion`);
+}
+
+// === QT AI Data Stream Connector ===
+function connectToQTStream(stream) {
+  stream.on("visitorEvent", async (data) => {
+    const visitor = new VisitorTrader(data.id, data.actions, data.statements, data.patterns);
+
+    await assessIntention(visitor);
+    routeUser(visitor);
+
+    // Continuous re-evaluation (loop with real data updates)
+    setInterval(async () => {
+      await reevaluate(visitor);
+    }, 5000); // every 5s
+  });
+}
+
+// === Example: Mock Stream for Testing ===
+class MockStream {
+  constructor() {
+    this.handlers = {};
+  }
+  on(event, handler) {
+    this.handlers[event] = handler;
+  }
+  emit(event, data) {
+    if (this.handlers[event]) this.handlers[event](data);
+  }
+}
+
+// Simulated visitor stream
+const qtStream = new MockStream();
+connectToQTStream(qtStream);
+
+// Simulated event injection
+qtStream.emit("visitorEvent", {
+  id: "QT-Visitor-001",
+  actions: ["trade_attempt", "research_click"],
+  statements: ["I want to trade ethically"],
+  patterns: ["calm", "consistent"]
+});
+
+// === Trader_Routing_Engine.js ===
 // QT AI Visitor/Trader Access & Bubble Routing
 
 class VisitorTrader {
