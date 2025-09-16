@@ -1,3 +1,166 @@
+// === Trader_Routing_Engine.js ===
+// QT AI Visitor/Trader Access & Bubble Routing (with Chained Audit Logger)
+
+import axios from "axios";
+import AuditLogger from "./auditLogger.js"; // <-- bring in the chained logger
+
+// Initialize audit logger
+const auditLogger = new AuditLogger("./audit_log.json");
+
+// === VisitorTrader Model ===
+class VisitorTrader {
+  constructor(id, actions = [], statements = [], patterns = []) {
+    this.id = id;
+    this.actions = actions;
+    this.statements = statements;
+    this.patterns = patterns;
+    this.intentionScore = null;
+    this.accessLevel = null;
+  }
+}
+
+// Thresholds
+const thresholds = {
+  peace: 0.8,
+  emotional: 0.75,
+  genomP: 0.85,
+};
+
+// === API Integration with QT AI ===
+async function fetchScore(visitor, dimension) {
+  try {
+    const response = await axios.post(`https://qt-ai/api/score/${dimension}`, {
+      id: visitor.id,
+      actions: visitor.actions,
+      statements: visitor.statements,
+      patterns: visitor.patterns,
+    });
+    return response.data.score;
+  } catch (err) {
+    console.error(`[ERROR] Failed to fetch ${dimension} score:`, err.message);
+    auditLogger.writeLog(visitor, "API_ERROR", { dimension, error: err.message });
+    return 0.0;
+  }
+}
+
+// === Step 1: Assess Intention ===
+async function assessIntention(visitor) {
+  const peaceScore = await fetchScore(visitor, "peace");
+  const emotionalScore = await fetchScore(visitor, "emotional");
+  const genomPScore = await fetchScore(visitor, "genomP");
+
+  if (
+    peaceScore >= thresholds.peace &&
+    emotionalScore >= thresholds.emotional &&
+    genomPScore >= thresholds.genomP
+  ) {
+    visitor.intentionScore = "Peaceful & Constructive";
+  } else if (peaceScore < thresholds.peace && emotionalScore < thresholds.emotional) {
+    visitor.intentionScore = "Confused/Disoriented";
+  } else {
+    visitor.intentionScore = "Resistant/Unstable";
+  }
+
+  auditLogger.writeLog(visitor, "ASSESS_INTENTION", {
+    peaceScore,
+    emotionalScore,
+    genomPScore,
+  });
+
+  return visitor.intentionScore;
+}
+
+// === Step 2: Route User ===
+function routeUser(visitor) {
+  switch (visitor.intentionScore) {
+    case "Peaceful & Constructive":
+      visitor.accessLevel = "TraderLab™ + CPilot™";
+      grantTraderLabAccess(visitor);
+      break;
+
+    case "Confused/Disoriented":
+      visitor.accessLevel = "Guidance Modules";
+      assignGuidance(visitor);
+      break;
+
+    case "Resistant/Unstable":
+      visitor.accessLevel = "Games Pavilion";
+      assignGames(visitor);
+      break;
+  }
+
+  auditLogger.writeLog(visitor, "ROUTE_USER", { newAccess: visitor.accessLevel });
+  return visitor.accessLevel;
+}
+
+// === Step 3: Re-Evaluation ===
+async function reevaluate(visitor) {
+  await assessIntention(visitor);
+  routeUser(visitor);
+  auditLogger.writeLog(visitor, "REEVALUATE", { reevaluated: true });
+  return visitor.accessLevel;
+}
+
+// === Access Handlers ===
+function grantTraderLabAccess(visitor) {
+  console.log(`[ACCESS GRANTED] ${visitor.id} → TraderLab™ + CPilot™`);
+}
+
+function assignGuidance(visitor) {
+  console.log(`[GUIDANCE] ${visitor.id} → Supportive Guidance Modules`);
+}
+
+function assignGames(visitor) {
+  console.log(`[GAMES] ${visitor.id} → Emotional Intelligence Pavilion`);
+}
+
+// === Stream Connector ===
+function connectToQTStream(stream) {
+  stream.on("visitorEvent", async (data) => {
+    const visitor = new VisitorTrader(data.id, data.actions, data.statements, data.patterns);
+
+    await assessIntention(visitor);
+    routeUser(visitor);
+
+    // Continuous reevaluation every 5s
+    setInterval(async () => {
+      await reevaluate(visitor);
+    }, 5000);
+  });
+}
+
+// === Example Mock Stream ===
+class MockStream {
+  constructor() {
+    this.handlers = {};
+  }
+  on(event, handler) {
+    this.handlers[event] = handler;
+  }
+  emit(event, data) {
+    if (this.handlers[event]) this.handlers[event](data);
+  }
+}
+
+const qtStream = new MockStream();
+connectToQTStream(qtStream);
+
+// Simulated visitor
+qtStream.emit("visitorEvent", {
+  id: "QT-Visitor-001",
+  actions: ["trade_attempt", "research_click"],
+  statements: ["I want to trade ethically"],
+  patterns: ["calm", "consistent"],
+});
+
+// === Optional: run verification at startup ===
+const verification = auditLogger.verifyLog();
+if (!verification.valid) {
+  console.error("[AUDIT] Verification FAILED:", verification.problems);
+} else {
+  console.log(`[AUDIT] Ledger verified OK (${verification.totalEntries} entries).`);
+}
+
 // === AuditLogger (Self-Verifying Chained Ledger) ===
 // Usage: See bottom for example usage
 import crypto from "crypto";
