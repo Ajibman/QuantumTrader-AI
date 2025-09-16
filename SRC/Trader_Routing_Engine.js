@@ -1,3 +1,174 @@
+// === AuditLogger (Self-Verifying Chained Ledger) ===
+// Usage: See bottom for example usage
+import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+
+class AuditLogger {
+  /**
+   * @param {string} logFile - path to log file (JSON array). Defaults to ./audit_log.json
+   */
+  constructor(logFile = "audit_log.json") {
+    this.logFile = path.resolve(logFile);
+    // Initialize file if missing
+    if (!fs.existsSync(this.logFile)) {
+      fs.writeFileSync(this.logFile, JSON.stringify([], null, 2));
+    }
+  }
+
+  // Create SHA-256 hash of an object (deterministic ordering)
+  static computeHash(obj) {
+    // Stable stringify: keys sorted to ensure deterministic hashing
+    const stableStringify = (o) => {
+      if (o === null || typeof o !== "object") return JSON.stringify(o);
+      if (Array.isArray(o)) return "[" + o.map(stableStringify).join(",") + "]";
+      const keys = Object.keys(o).sort();
+      return "{" + keys.map((k) => JSON.stringify(k) + ":" + stableStringify(o[k])).join(",") + "}";
+    };
+    const str = stableStringify(obj);
+    return crypto.createHash("sha256").update(str).digest("hex");
+  }
+
+  // Read all logs (returns array)
+  _readLogs() {
+    const raw = fs.readFileSync(this.logFile, "utf8");
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      throw new Error(`Failed to parse audit log file: ${err.message}`);
+    }
+  }
+
+  // Write logs array back to file atomically
+  _writeLogs(logs) {
+    const tmp = this.logFile + ".tmp";
+    fs.writeFileSync(tmp, JSON.stringify(logs, null, 2));
+    fs.renameSync(tmp, this.logFile); // atomic-ish replace
+  }
+
+  // Get previous entry hash (or null if none)
+  _getPreviousHash(logs) {
+    if (!logs || logs.length === 0) return null;
+    return logs[logs.length - 1].entryHash || null;
+  }
+
+  // Create and append a new chained log entry
+  writeLog(visitor, action, details = {}) {
+    const logs = this._readLogs();
+
+    const entryCore = {
+      timestamp: new Date().toISOString(),
+      visitorId: visitor?.id ?? null,
+      intentionScore: visitor?.intentionScore ?? null,
+      accessLevel: visitor?.accessLevel ?? null,
+      action,
+      details,
+    };
+
+    const previousHash = this._getPreviousHash(logs); // may be null
+    const entry = {
+      ...entryCore,
+      previousHash, // link in the chain
+    };
+
+    // entryHash is hash of entry object including previousHash to chain
+    entry.entryHash = AuditLogger.computeHash(entry);
+
+    logs.push(entry);
+    this._writeLogs(logs);
+
+    console.log(`[AUDIT] Logged action for ${entry.visitorId} : ${action}`);
+    return entry.entryHash;
+  }
+
+  // Verify integrity of the entire log file; returns { valid: bool, problems: [] }
+  verifyLog() {
+    const logs = this._readLogs();
+    const problems = [];
+
+    for (let i = 0; i < logs.length; i++) {
+      const entry = logs[i];
+      // Recompute hash of entry excluding entryHash (we need to reconstruct object same way)
+      const entryToHash = {
+        timestamp: entry.timestamp,
+        visitorId: entry.visitorId,
+        intentionScore: entry.intentionScore,
+        accessLevel: entry.accessLevel,
+        action: entry.action,
+        details: entry.details,
+        previousHash: entry.previousHash === undefined ? null : entry.previousHash,
+      };
+      const recomputedHash = AuditLogger.computeHash(entryToHash);
+
+      if (recomputedHash !== entry.entryHash) {
+        problems.push({
+          index: i,
+          reason: "ENTRY_HASH_MISMATCH",
+          expected: entry.entryHash,
+          recomputed: recomputedHash,
+        });
+      }
+
+      // Verify chain: entry.previousHash must match prior entry.entryHash (or null for first)
+      if (i === 0) {
+        if (entry.previousHash !== null && entry.previousHash !== undefined) {
+          problems.push({
+            index: i,
+            reason: "FIRST_ENTRY_PREVIOUSHASH_NOT_NULL",
+            previousHash: entry.previousHash,
+          });
+        }
+      } else {
+        const prev = logs[i - 1];
+        if (entry.previousHash !== prev.entryHash) {
+          problems.push({
+            index: i,
+            reason: "CHAIN_BROKEN",
+            expectedPreviousHash: prev.entryHash,
+            actualPreviousHash: entry.previousHash,
+          });
+        }
+      }
+    }
+
+    return {
+      valid: problems.length === 0,
+      problems,
+      totalEntries: logs.length,
+    };
+  }
+
+  // Optional: export subset of logs for auditing (by visitorId, time range, action etc.)
+  query({ visitorId = null, action = null, from = null, to = null } = {}) {
+    const logs = this._readLogs();
+    return logs.filter((e) => {
+      if (visitorId && e.visitorId !== visitorId) return false;
+      if (action && e.action !== action) return false;
+      if (from && new Date(e.timestamp) < new Date(from)) return false;
+      if (to && new Date(e.timestamp) > new Date(to)) return false;
+      return true;
+    });
+  }
+}
+
+// === Example usage (standalone) ===
+// Uncomment to test locally
+/*
+const logger = new AuditLogger("./audit_log.json");
+
+// Fake visitor object shape expected by caller
+const visitor = { id: "QT-Visitor-001", intentionScore: "Peaceful & Constructive", accessLevel: "TraderLab™ + CPilot™" };
+logger.writeLog(visitor, "ASSESS_INTENTION", { peaceScore: 0.92, emotionalScore: 0.88, genomPScore: 0.91 });
+logger.writeLog(visitor, "ROUTE_USER", { newAccess: "TraderLab™ + CPilot™" });
+
+// Verify file
+const verification = logger.verifyLog();
+console.log("Verification:", verification);
+*/
+
+// Export for external require/import
+export default AuditLogger;
+
 // === Trader_Routing_Engine.js ===
 // QT AI Visitor/Trader Access & Bubble Routing (with API scoring + Secure Audit Logging)
 
