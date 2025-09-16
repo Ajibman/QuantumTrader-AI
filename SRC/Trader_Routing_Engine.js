@@ -1,4 +1,542 @@
 // === Trader_Routing_Engine.js ===
+// Quantum Trader AI - Bubble Routing Engine with Live Stream + Chained Audit + Central Sync
+// © Olagoke Ajibulu | QT AI
+
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+
+// === Local Chained Audit Logger ===
+class AuditLogger {
+  constructor(logFile = "./audit_log.json") {
+    this.logFile = path.resolve(logFile);
+    if (!fs.existsSync(this.logFile)) fs.writeFileSync(this.logFile, JSON.stringify([], null, 2));
+  }
+
+  static hashEntry(entry) {
+    return crypto.createHash("sha256").update(JSON.stringify(entry)).digest("hex");
+  }
+
+  _readLogs() {
+    return JSON.parse(fs.readFileSync(this.logFile, "utf8"));
+  }
+
+  _writeLogs(logs) {
+    fs.writeFileSync(this.logFile, JSON.stringify(logs, null, 2));
+  }
+
+  async write(visitorId, action, details = {}) {
+    const logs = this._readLogs();
+    const prevHash = logs.length ? logs[logs.length - 1].entryHash : null;
+    const entry = { timestamp: new Date().toISOString(), visitorId, action, details, previousHash };
+    entry.entryHash = AuditLogger.hashEntry(entry);
+    logs.push(entry);
+    this._writeLogs(logs);
+    return entry.entryHash;
+  }
+
+  verify() {
+    const logs = this._readLogs();
+    const problems = [];
+    for (let i = 0; i < logs.length; i++) {
+      const e = logs[i];
+      const entryToHash = { ...e, entryHash: undefined };
+      const recomputed = AuditLogger.hashEntry(entryToHash);
+      if (recomputed !== e.entryHash) problems.push({ index: i, reason: "HASH_MISMATCH" });
+      if (i > 0 && e.previousHash !== logs[i - 1].entryHash) problems.push({ index: i, reason: "CHAIN_BROKEN" });
+      if (i === 0 && e.previousHash) problems.push({ index: 0, reason: "FIRST_ENTRY_PREVHASH_NOT_NULL" });
+    }
+    return { valid: problems.length === 0, problems, totalEntries: logs.length };
+  }
+
+  query({ visitorId, action, from, to } = {}) {
+    return this._readLogs().filter(e => {
+      if (visitorId && e.visitorId !== visitorId) return false;
+      if (action && e.action !== action) return false;
+      if (from && new Date(e.timestamp) < new Date(from)) return false;
+      if (to && new Date(e.timestamp) > new Date(to)) return false;
+      return true;
+    });
+  }
+}
+
+const auditLogger = new AuditLogger();
+
+// === Central Audit Sync ===
+async function centralAuditLog(visitorId, action, details = {}) {
+  try {
+    await axios.post("https://qt-ai/api/audit-log", { visitorId, action, details, timestamp: new Date().toISOString() });
+  } catch (err) {
+    console.error(`[CENTRAL AUDIT ERROR] ${visitorId} → ${action}`, err.message);
+    await auditLogger.write(visitorId, `CENTRAL_SYNC_FAIL_${action}`, { error: err.message });
+  }
+}
+
+// === Visitor/Trader Model ===
+class VisitorTrader {
+  constructor(id, peaceIndex, emotionalIntelligence, integrityScore) {
+    this.id = id;
+    this.peaceIndex = peaceIndex;
+    this.emotionalIntelligence = emotionalIntelligence;
+    this.integrityScore = integrityScore;
+    this.intentionScore = null;
+    this.accessLevel = null;
+  }
+}
+
+// === Routing Logic ===
+async function assessIntention(visitor) {
+  let intention;
+  if (visitor.peaceIndex >= 80 && visitor.emotionalIntelligence >= 70 && visitor.integrityScore >= 75) intention = "Peaceful & Constructive";
+  else if (visitor.peaceIndex >= 50 && visitor.emotionalIntelligence >= 50) intention = "Neutral/Inexperienced";
+  else intention = "Resistant/Unstable";
+
+  visitor.intentionScore = intention;
+
+  await auditLogger.write(visitor.id, "ASSESS_INTENTION", { intention, scores: { ...visitor } });
+  await centralAuditLog(visitor.id, "ASSESS_INTENTION", { intention, scores: { ...visitor } });
+
+  return intention;
+}
+
+async function routeVisitor(visitor) {
+  const intention = await assessIntention(visitor);
+  switch (intention) {
+    case "Peaceful & Constructive": await grantAccess(visitor, "TraderLab™ + CPilot™"); break;
+    case "Neutral/Inexperienced": await guideVisitor(visitor); break;
+    case "Resistant/Unstable": await redirectToPavilion(visitor); break;
+  }
+}
+
+async function grantAccess(visitor, destination) {
+  visitor.accessLevel = destination;
+  await auditLogger.write(visitor.id, "ACCESS_GRANTED", { destination });
+  await centralAuditLog(visitor.id, "ACCESS_GRANTED", { destination });
+}
+
+async function guideVisitor(visitor) {
+  visitor.accessLevel = "Guidance Modules";
+  await auditLogger.write(visitor.id, "GUIDANCE_ASSIGNED", {});
+  await centralAuditLog(visitor.id, "GUIDANCE_ASSIGNED", {});
+}
+
+async function redirectToPavilion(visitor) {
+  visitor.accessLevel = "Games Pavilion";
+  await auditLogger.write(visitor.id, "REDIRECTED_TO_PAVILION", {});
+  await centralAuditLog(visitor.id, "REDIRECTED_TO_PAVILION", {});
+}
+
+// === Live QT AI Stream Integration ===
+class QTStream {
+  constructor() {
+    this.handlers = {};
+  }
+  on(event, handler) { this.handlers[event] = handler; }
+  emit(event, data) { if (this.handlers[event]) this.handlers[event](data); }
+}
+
+const qtStream = new QTStream();
+
+function connectToQTStream(stream) {
+  stream.on("visitorEvent", async (data) => {
+    const visitor = new VisitorTrader(data.id, data.peaceIndex, data.emotionalIntelligence, data.integrityScore);
+
+    await routeVisitor(visitor);
+
+    // Continuous reevaluation every 10s for ethical consistency
+    setInterval(async () => { await routeVisitor(visitor); }, 10000);
+  });
+}
+
+// === CLI Support ===
+async function runCLI() {
+  const args = process.argv.slice(2);
+
+  if (args.includes("--verify")) {
+    const v = auditLogger.verify();
+    if (v.valid) console.log(`[AUDIT] Ledger OK (${v.totalEntries} entries)`); else console.error("[AUDIT] Verification FAILED:", v.problems);
+    process.exit(v.valid ? 0 : 1);
+  }
+
+  if (args.includes("--export")) {
+    const idx = args.indexOf("--export");
+    const filterArg = args[idx + 1] ? JSON.parse(args[idx + 1]) : {};
+    const exported = auditLogger.query(filterArg);
+    fs.writeFileSync("./audit_export.json", JSON.stringify(exported, null, 2));
+    console.log(`[AUDIT] Exported ${exported.length} entries to audit_export.json`);
+    process.exit(0);
+  }
+
+  // Default: connect stream
+  connectToQTStream(qtStream);
+
+  // Simulate a visitor event for demonstration
+  qtStream.emit("visitorEvent", { id: "V001", peaceIndex: 90, emotionalIntelligence: 85, integrityScore: 80 });
+  qtStream.emit("visitorEvent", { id: "V002", peaceIndex: 60, emotionalIntelligence: 55, integrityScore: 50 });
+  qtStream.emit("visitorEvent", { id: "V003", peaceIndex: 30, emotionalIntelligence: 40, integrityScore: 20 });
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) runCLI();
+
+// === Exports ===
+export { routeVisitor, assessIntention, auditLogger, connectToQTStream, qtStream };
+
+// === Trader_Routing_Engine.js ===
+// Quantum Trader AI - Bubble Routing Engine with Chained Audit + Central Sync + CLI
+// © Olagoke Ajibulu | QT AI
+
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+
+// === Local Chained Audit Logger ===
+class AuditLogger {
+  constructor(logFile = "./audit_log.json") {
+    this.logFile = path.resolve(logFile);
+    if (!fs.existsSync(this.logFile)) fs.writeFileSync(this.logFile, JSON.stringify([], null, 2));
+  }
+
+  static hashEntry(entry) {
+    return crypto.createHash("sha256").update(JSON.stringify(entry)).digest("hex");
+  }
+
+  _readLogs() {
+    return JSON.parse(fs.readFileSync(this.logFile, "utf8"));
+  }
+
+  _writeLogs(logs) {
+    fs.writeFileSync(this.logFile, JSON.stringify(logs, null, 2));
+  }
+
+  async write(visitorId, action, details = {}) {
+    const logs = this._readLogs();
+    const prevHash = logs.length ? logs[logs.length - 1].entryHash : null;
+    const entry = { timestamp: new Date().toISOString(), visitorId, action, details, previousHash };
+    entry.entryHash = AuditLogger.hashEntry(entry);
+    logs.push(entry);
+    this._writeLogs(logs);
+    return entry.entryHash;
+  }
+
+  verify() {
+    const logs = this._readLogs();
+    const problems = [];
+    for (let i = 0; i < logs.length; i++) {
+      const e = logs[i];
+      const entryToHash = { ...e, entryHash: undefined };
+      const recomputed = AuditLogger.hashEntry(entryToHash);
+      if (recomputed !== e.entryHash) problems.push({ index: i, reason: "HASH_MISMATCH" });
+      if (i > 0 && e.previousHash !== logs[i - 1].entryHash) problems.push({ index: i, reason: "CHAIN_BROKEN" });
+      if (i === 0 && e.previousHash) problems.push({ index: 0, reason: "FIRST_ENTRY_PREVHASH_NOT_NULL" });
+    }
+    return { valid: problems.length === 0, problems, totalEntries: logs.length };
+  }
+
+  query({ visitorId, action, from, to } = {}) {
+    return this._readLogs().filter(e => {
+      if (visitorId && e.visitorId !== visitorId) return false;
+      if (action && e.action !== action) return false;
+      if (from && new Date(e.timestamp) < new Date(from)) return false;
+      if (to && new Date(e.timestamp) > new Date(to)) return false;
+      return true;
+    });
+  }
+}
+
+const auditLogger = new AuditLogger();
+
+// === Central Audit Sync ===
+async function centralAuditLog(visitorId, action, details = {}) {
+  try {
+    await axios.post("https://qt-ai/api/audit-log", { visitorId, action, details, timestamp: new Date().toISOString() });
+  } catch (err) {
+    console.error(`[CENTRAL AUDIT ERROR] ${visitorId} → ${action}`, err.message);
+    await auditLogger.write(visitorId, `CENTRAL_SYNC_FAIL_${action}`, { error: err.message });
+  }
+}
+
+// === Visitor/Trader Model ===
+class VisitorTrader {
+  constructor(id, peaceIndex, emotionalIntelligence, integrityScore) {
+    this.id = id;
+    this.peaceIndex = peaceIndex;
+    this.emotionalIntelligence = emotionalIntelligence;
+    this.integrityScore = integrityScore;
+    this.intentionScore = null;
+    this.accessLevel = null;
+  }
+}
+
+// === Routing Logic ===
+async function assessIntention(visitor) {
+  let intention;
+  if (visitor.peaceIndex >= 80 && visitor.emotionalIntelligence >= 70 && visitor.integrityScore >= 75) intention = "Peaceful & Constructive";
+  else if (visitor.peaceIndex >= 50 && visitor.emotionalIntelligence >= 50) intention = "Neutral/Inexperienced";
+  else intention = "Resistant/Unstable";
+
+  visitor.intentionScore = intention;
+
+  await auditLogger.write(visitor.id, "ASSESS_INTENTION", { intention, scores: { ...visitor } });
+  await centralAuditLog(visitor.id, "ASSESS_INTENTION", { intention, scores: { ...visitor } });
+
+  return intention;
+}
+
+async function routeVisitor(visitor) {
+  const intention = await assessIntention(visitor);
+  switch (intention) {
+    case "Peaceful & Constructive": await grantAccess(visitor, "TraderLab™ + CPilot™"); break;
+    case "Neutral/Inexperienced": await guideVisitor(visitor); break;
+    case "Resistant/Unstable": await redirectToPavilion(visitor); break;
+  }
+}
+
+async function grantAccess(visitor, destination) {
+  visitor.accessLevel = destination;
+  await auditLogger.write(visitor.id, "ACCESS_GRANTED", { destination });
+  await centralAuditLog(visitor.id, "ACCESS_GRANTED", { destination });
+}
+
+async function guideVisitor(visitor) {
+  visitor.accessLevel = "Guidance Modules";
+  await auditLogger.write(visitor.id, "GUIDANCE_ASSIGNED", {});
+  await centralAuditLog(visitor.id, "GUIDANCE_ASSIGNED", {});
+}
+
+async function redirectToPavilion(visitor) {
+  visitor.accessLevel = "Games Pavilion";
+  await auditLogger.write(visitor.id, "REDIRECTED_TO_PAVILION", {});
+  await centralAuditLog(visitor.id, "REDIRECTED_TO_PAVILION", {});
+}
+
+// === CLI Support ===
+async function runCLI() {
+  const args = process.argv.slice(2);
+
+  if (args.includes("--verify")) {
+    const v = auditLogger.verify();
+    if (v.valid) console.log(`[AUDIT] Ledger OK (${v.totalEntries} entries)`); else console.error("[AUDIT] Verification FAILED:", v.problems);
+    process.exit(v.valid ? 0 : 1);
+  }
+
+  if (args.includes("--export")) {
+    const idx = args.indexOf("--export");
+    const filterArg = args[idx + 1] ? JSON.parse(args[idx + 1]) : {};
+    const exported = auditLogger.query(filterArg);
+    fs.writeFileSync("./audit_export.json", JSON.stringify(exported, null, 2));
+    console.log(`[AUDIT] Exported ${exported.length} entries to audit_export.json`);
+    process.exit(0);
+  }
+
+  // Default: simulate visitor routing
+  const visitors = [
+    new VisitorTrader("V001", 90, 85, 80),
+    new VisitorTrader("V002", 60, 55, 50),
+    new VisitorTrader("V003", 30, 40, 20)
+  ];
+  for (const v of visitors) await routeVisitor(v);
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) runCLI();
+
+// === Exports ===
+export { routeVisitor, assessIntention, auditLogger };
+
+// Trader_Routing_Engine.js
+// Quantum Trader AI - Bubble-Routing Engine with Central Audit Sync
+
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+
+// --- Local Logger ---
+const logFilePath = path.join(__dirname, "trader_engine.log");
+function localLogger(message) {
+  const timestamp = new Date().toISOString();
+  const logEntry = `[${timestamp}] ${message}\n`;
+  fs.appendFileSync(logFilePath, logEntry, "utf8");
+  console.log(logEntry.trim());
+}
+
+// --- Central Audit Logger (QT AI API) ---
+async function centralAuditLog(visitorId, action, details = {}) {
+  try {
+    await axios.post("https://qt-ai/api/audit-log", {
+      visitorId,
+      action,
+      details,
+      timestamp: new Date().toISOString(),
+    });
+    console.log(`[CENTRAL AUDIT] Synced: ${visitorId} → ${action}`);
+  } catch (err) {
+    console.error(`[CENTRAL AUDIT ERROR] ${visitorId} → ${action}`, err.message);
+    // Optional: fallback to local log for later sync
+    localLogger(`[CENTRAL SYNC FAILED] ${visitorId} → ${action}`);
+  }
+}
+
+// --- Intention Assessment ---
+async function assessIntention(visitor) {
+  const { peaceIndex, emotionalIntelligence, integrityScore } = visitor;
+  let intention;
+
+  if (peaceIndex >= 80 && emotionalIntelligence >= 70 && integrityScore >= 75) {
+    intention = "peaceful";
+  } else if (peaceIndex >= 50 && emotionalIntelligence >= 50) {
+    intention = "neutral";
+  } else {
+    intention = "resistant";
+  }
+
+  // Log locally + central
+  localLogger(`Visitor ${visitor.id} assessed as ${intention.toUpperCase()}`);
+  await centralAuditLog(visitor.id, "ASSESS_INTENTION", { intention, scores: visitor });
+
+  return intention;
+}
+
+// --- Routing Logic ---
+async function routeVisitor(visitor) {
+  const intention = await assessIntention(visitor);
+
+  switch (intention) {
+    case "peaceful":
+      await grantAccess(visitor, "TraderLab™ + CPilot™");
+      break;
+    case "neutral":
+      await guideVisitor(visitor);
+      break;
+    case "resistant":
+      await redirectToPavilion(visitor);
+      break;
+  }
+}
+
+// --- Action Handlers ---
+async function grantAccess(visitor, destination) {
+  visitor.access = destination;
+  localLogger(`ACCESS GRANTED → Visitor ${visitor.id} → ${destination}`);
+  await centralAuditLog(visitor.id, "ACCESS_GRANTED", { destination });
+}
+
+async function guideVisitor(visitor) {
+  visitor.access = "Guidance Modules";
+  localLogger(`GUIDANCE INITIATED → Visitor ${visitor.id} → Guidance Modules`);
+  await centralAuditLog(visitor.id, "GUIDANCE_ASSIGNED", {});
+}
+
+async function redirectToPavilion(visitor) {
+  visitor.access = "Games Pavilion";
+  localLogger(`REDIRECTED → Visitor ${visitor.id} → Games Pavilion`);
+  await centralAuditLog(visitor.id, "REDIRECTED_TO_PAVILION", {});
+}
+
+// --- Example Simulation ---
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const testVisitors = [
+    { id: "V001", peaceIndex: 90, emotionalIntelligence: 85, integrityScore: 80 },
+    { id: "V002", peaceIndex: 60, emotionalIntelligence: 55, integrityScore: 50 },
+    { id: "V003", peaceIndex: 30, emotionalIntelligence: 40, integrityScore: 20 },
+  ];
+
+  for (const visitor of testVisitors) {
+    await routeVisitor(visitor);
+  }
+}
+
+export { routeVisitor, assessIntention };
+
+// Trader_Routing_Engine.js
+// Quantum Trader AI - Bubble-Routing Engine with Logging
+// © Olagoke Ajibulu | QT AI
+
+// --- Logger Module ---
+const fs = require("fs");
+const path = require("path");
+
+const logFilePath = path.join(__dirname, "trader_engine.log");
+
+function logger(message) {
+  const timestamp = new Date().toISOString();
+  const logEntry = `[${timestamp}] ${message}\n`;
+  fs.appendFileSync(logFilePath, logEntry, "utf8");
+  console.log(logEntry.trim()); // Also echo to console
+}
+
+// --- Intention Assessment ---
+function assessIntention(visitorData) {
+  const { peaceIndex, emotionalIntelligence, integrityScore } = visitorData;
+
+  if (peaceIndex >= 80 && emotionalIntelligence >= 70 && integrityScore >= 75) {
+    logger(
+      `Visitor ${visitorData.id} assessed as Peaceful & Constructive (TraderLab™ candidate)`
+    );
+    return "peaceful";
+  } else if (peaceIndex >= 50 && emotionalIntelligence >= 50) {
+    logger(
+      `Visitor ${visitorData.id} assessed as Neutral/Inexperienced (Guidance recommended)`
+    );
+    return "neutral";
+  } else {
+    logger(
+      `Visitor ${visitorData.id} assessed as Resistant/Unstable (Redirect to Games Pavilion)`
+    );
+    return "resistant";
+  }
+}
+
+// --- Routing Logic ---
+function routeVisitor(visitorData) {
+  const intention = assessIntention(visitorData);
+
+  switch (intention) {
+    case "peaceful":
+      grantAccess(visitorData, "TraderLab™ + CPilot™");
+      break;
+    case "neutral":
+      guideVisitor(visitorData);
+      break;
+    case "resistant":
+      redirectToPavilion(visitorData);
+      break;
+  }
+}
+
+// --- Action Handlers ---
+function grantAccess(visitorData, destination) {
+  logger(`ACCESS GRANTED → Visitor ${visitorData.id} → ${destination}`);
+  visitorData.access = destination;
+}
+
+function guideVisitor(visitorData) {
+  logger(`GUIDANCE INITIATED → Visitor ${visitorData.id} → Supportive Modules`);
+  visitorData.access = "Guidance Modules";
+}
+
+function redirectToPavilion(visitorData) {
+  logger(
+    `REDIRECTED → Visitor ${visitorData.id} → Games Pavilion (Reform & Reflection)`
+  );
+  visitorData.access = "Games Pavilion";
+}
+
+// --- Export Module ---
+module.exports = { routeVisitor, assessIntention };
+
+// --- Example Simulation ---
+if (require.main === module) {
+  const testVisitors = [
+    { id: "V001", peaceIndex: 90, emotionalIntelligence: 85, integrityScore: 80 },
+    { id: "V002", peaceIndex: 60, emotionalIntelligence: 55, integrityScore: 50 },
+    { id: "V003", peaceIndex: 30, emotionalIntelligence: 40, integrityScore: 20 },
+  ];
+
+  testVisitors.forEach(routeVisitor);
+}
+
+// === Trader_Routing_Engine.js ===
 // QT AI Visitor/Trader Access & Bubble Routing (with Chained Audit Logger + CLI Verify)
 
 import axios from "axios";
