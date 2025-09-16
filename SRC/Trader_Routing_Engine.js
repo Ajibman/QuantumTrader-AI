@@ -1,3 +1,15 @@
+chmod +x backup.sh
+chmod +x .git/hooks/pre-commit
+
+# backup.sh - backs up Trader_Routing_Engine.js
+
+BACKUP_DIR="repo2/backup"
+mkdir -p "$BACKUP_DIR"
+
+cp Trader_Routing_Engine.js "$BACKUP_DIR/Trader_Routing_Engine_$(date +%Y%m%d_%H%M%S).js"
+
+echo "✅ Backup complete: $BACKUP_DIR"
+
 node Trader_Routing_Engine.js --selfheal-test
 
 ls -lah ./backup
