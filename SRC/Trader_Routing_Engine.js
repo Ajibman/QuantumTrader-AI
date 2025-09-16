@@ -1,3 +1,22 @@
+# backup.sh - backs up Trader_Routing_Engine.js and logs each backup
+
+BACKUP_DIR="repo2/backup"
+LOG_FILE="$BACKUP_DIR/backup.log"
+
+# Ensure backup directory exists
+mkdir -p "$BACKUP_DIR"
+
+# Generate timestamped backup filename
+BACKUP_FILE="$BACKUP_DIR/Trader_Routing_Engine_$(date +%Y%m%d_%H%M%S).js"
+
+# Copy the file
+cp Trader_Routing_Engine.js "$BACKUP_FILE"
+
+# Log the backup
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup created: $(basename $BACKUP_FILE)" >> "$LOG_FILE"
+
+echo "✅ Backup complete: $BACKUP_FILE"
+
 node Trader_Routing_Engine.js --selfheal-test
 
 ls -lah ./backup
