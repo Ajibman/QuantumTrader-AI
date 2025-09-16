@@ -12,6 +12,7 @@
             background-color: #f5f5f5;
         }
 
+        /* Header Logos */
         #header {
             display: flex;
             justify-content: space-around;
@@ -25,6 +26,7 @@
             max-height: 60px;
         }
 
+        /* Coming Soon Logo */
         #coming-soon-container {
             text-align: center;
             margin: 40px 0;
@@ -35,6 +37,7 @@
             height: auto;
         }
 
+        /* Main Content */
         #main-content {
             text-align: center;
             padding: 20px;
@@ -42,6 +45,24 @@
 
         h1 {
             color: #333;
+        }
+
+        /* Public Intentions Section */
+        #public-intentions {
+            margin: 50px auto;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        #public-intentions iframe {
+            width: 100%;
+            min-height: 600px;
+            border: none;
+            display: block;
+            overflow-y: auto; /* Smooth scrolling */
         }
     </style>
 </head>
@@ -62,7 +83,11 @@
     <!-- Main Content -->
     <div id="main-content">
         <p>Quantum Trader AI is preparing for launch. Stay tuned for the official rollout!</p>
-        <!-- Any additional existing content goes here -->
+    </div>
+
+    <!-- Public Intentions Section (pulling from backup index) -->
+    <div id="public-intentions">
+        <iframe src="./backup/index/index.html" title="Public Intentions" id="intentions-iframe" scrolling="yes"></iframe>
     </div>
 
 </body>
