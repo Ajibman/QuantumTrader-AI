@@ -1,3 +1,571 @@
+QT_AI_STREAM_URL=https://staging.qt-ai.com/api
+QT_AI_ENVIRONMENT=staging
+// Trader_Routing_Engine.js
+
+// === Imports ===
+require("dotenv").config();
+const axios = require("axios");
+const winston = require("winston");
+
+// === Env Config ===
+const STREAM_URL = process.env.QT_AI_STREAM_URL || "http://localhost:4000";
+const ENV_NAME =
+  process.env.QT_AI_ENVIRONMENT || "local"; // e.g. "staging", "production", "local"
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData, environment: ENV_NAME });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Unknown";
+  }
+}
+
+// === Main Processor (with Axios + Env URL) ===
+async function processVisitorFromStream(visitorId) {
+  try {
+    const response = await axios.get(`${STREAM_URL}/visitors/${visitorId}`);
+    const visitorData = response.data;
+
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed from stream", {
+      visitorId: visitorId,
+      intention,
+      route,
+      environment: ENV_NAME
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error fetching or processing visitor from stream", {
+      visitorId,
+      error: error.message,
+      environment: ENV_NAME
+    });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitorFromStream
+};
+
+// Trader_Routing_Engine.js
+
+// === Imports ===
+require("dotenv").config();
+const axios = require("axios");
+const winston = require("winston");
+
+// === Env Config ===
+const STREAM_URL = process.env.QT_AI_STREAM_URL || "http://localhost:4000";
+const ENV_NAME =
+  process.env.QT_AI_ENVIRONMENT || "local"; // e.g. "staging", "production", "local"
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData, environment: ENV_NAME });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", {
+        intention,
+        environment: ENV_NAME
+      });
+      return "Unknown";
+  }
+}
+
+// === Main Processor (with Axios + Env URL) ===
+async function processVisitorFromStream(visitorId) {
+  try {
+    const response = await axios.get(`${STREAM_URL}/visitors/${visitorId}`);
+    const visitorData = response.data;
+
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed from stream", {
+      visitorId: visitorId,
+      intention,
+      route,
+      environment: ENV_NAME
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error fetching or processing visitor from stream", {
+      visitorId,
+      error: error.message,
+      environment: ENV_NAME
+    });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitorFromStream
+};
+
+// Trader_Routing_Engine.js
+
+// === Imports ===
+require("dotenv").config();
+const axios = require("axios");
+const winston = require("winston");
+
+// === Env Config ===
+const STREAM_URL = process.env.QT_AI_STREAM_URL || "http://localhost:4000";
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", { intention });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", { intention });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", { intention });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", { intention });
+      return "Unknown";
+  }
+}
+
+// === Main Processor (with Axios + Env URL) ===
+async function processVisitorFromStream(visitorId) {
+  try {
+    const response = await axios.get(`${STREAM_URL}/visitors/${visitorId}`);
+    const visitorData = response.data;
+
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed from stream", {
+      visitorId: visitorId,
+      intention,
+      route
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error fetching or processing visitor from stream", {
+      visitorId,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitorFromStream
+};
+
+// Trader_Routing_Engine.js
+
+// === Imports ===
+const axios = require("axios");
+const winston = require("winston");
+
+// === Env Config ===
+const STREAM_URL = process.env.QT_AI_STREAM_URL || "http://localhost:4000"; 
+// Default: local stream if env not set
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", { intention });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", { intention });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", { intention });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", { intention });
+      return "Unknown";
+  }
+}
+
+// === Main Processor (with Axios + Env URL) ===
+async function processVisitorFromStream(visitorId) {
+  try {
+    const response = await axios.get(`${STREAM_URL}/visitors/${visitorId}`);
+    const visitorData = response.data;
+
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed from stream", {
+      visitorId: visitorId,
+      intention,
+      route
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error fetching or processing visitor from stream", {
+      visitorId,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitorFromStream
+};
+
+// Trader_Routing_Engine.js
+
+// === Imports ===
+const axios = require("axios");
+const winston = require("winston");
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", { intention });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", { intention });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", { intention });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", { intention });
+      return "Unknown";
+  }
+}
+
+// === Main Processor (with Axios) ===
+// Fetches visitor/trader data from QT AI stream before routing
+async function processVisitorFromStream(streamUrl, visitorId) {
+  try {
+    const response = await axios.get(`${streamUrl}/visitors/${visitorId}`);
+    const visitorData = response.data;
+
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed from stream", {
+      visitorId: visitorId,
+      intention,
+      route
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error fetching or processing visitor from stream", {
+      visitorId,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitorFromStream
+};
+
+// Trader_Routing_Engine.js
+
+// === Imports ===
+const axios = require("axios");
+const winston = require("winston");
+
+// === Logger Setup ===
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "routing.log" })
+  ]
+});
+
+// === Assessment Function ===
+// Takes in visitor/trader data and returns intention
+function assessIntention(visitorData) {
+  if (!visitorData || !visitorData.behavior) {
+    logger.warn("Invalid visitor data", { visitorData });
+    return "Neutral";
+  }
+
+  const { behavior, integrityScore, peaceAlignment } = visitorData;
+
+  if (peaceAlignment >= 0.8 && integrityScore >= 0.75) {
+    return "Peaceful";
+  } else if (behavior === "confused" || behavior === "inexperienced") {
+    return "Neutral";
+  } else {
+    return "Disruptive";
+  }
+}
+
+// === Routing Function ===
+function routeVisitor(intention) {
+  switch (intention) {
+    case "Peaceful":
+      logger.info("Visitor routed to TraderLab + CPilot™", { intention });
+      return "TraderLab + CPilot™";
+    case "Neutral":
+      logger.info("Visitor routed to Guidance Modules", { intention });
+      return "Guidance Modules";
+    case "Disruptive":
+      logger.info("Visitor routed to Games Pavilion", { intention });
+      return "Games Pavilion";
+    default:
+      logger.warn("Unknown routing outcome", { intention });
+      return "Unknown";
+  }
+}
+
+// === Main Processor ===
+async function processVisitor(visitorData) {
+  try {
+    const intention = assessIntention(visitorData);
+    const route = routeVisitor(intention);
+
+    logger.info("Visitor processed", {
+      visitorId: visitorData?.id || "unknown",
+      intention,
+      route
+    });
+
+    return route;
+  } catch (error) {
+    logger.error("Error processing visitor", { error: error.message });
+    throw error;
+  }
+}
+
+// === Exports ===
+module.exports = {
+  assessIntention,
+  routeVisitor,
+  processVisitor
+};
+
 // === Trader_Routing_Engine.js ===
 // Quantum Trader AI - Bubble Routing Engine with Live Stream + Chained Audit + Central Sync
 // © Olagoke Ajibulu | QT AI
