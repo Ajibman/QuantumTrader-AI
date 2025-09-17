@@ -1,131 +1,155 @@
-    <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quantum Trader AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Trader AI</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+  }
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #0a0a0a;
-      color: #f5f5f5;
-    }
+  h1 {
+    margin-top: 2rem;
+    font-size: 2.8rem;
+    color: #00ffaa;
+    text-shadow: 0 0 20px rgba(0,255,170,0.8);
+    animation: pulseText 2.5s infinite alternate;
+  }
 
-    header {
-      padding: 2rem 1rem;
-    }
+  @keyframes pulseText { from {opacity:0.7;} to {opacity:1;} }
 
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 0.5rem;
-      color: #00c8ff;
-    }
+  .logo img {
+    max-width: 200px;
+    margin: 1.5rem auto;
+    border-radius: 10px;
+  }
 
-    p.subtitle {
-      font-size: 1.2rem;
-      opacity: 0.85;
-    }
+  .map-banner img {
+    width: 400px;
+    margin: 2rem auto 1.5rem auto;
+    animation: pulseBanner 2.5s infinite alternate;
+    cursor: default;
+  }
 
-    .logo {
-      margin-top: 2rem;
-    }
+  @keyframes pulseBanner {
+    0% { transform: scale(1); opacity: 0.85; box-shadow: 0 0 10px rgba(0,200,255,0.4);}
+    50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 30px rgba(0,200,255,0.9);}
+    100% { transform: scale(1); opacity: 0.85; box-shadow: 0 0 10px rgba(0,200,255,0.4);}
+  }
 
-    .logo img {
-      width: 250px;
-    }
+  .globe-container img {
+    width: 250px;
+    margin: 1.5rem auto 2rem auto;
+    animation: rotateGlobe 20s linear infinite;
+  }
 
-    .banner-container {
-      text-align: center;
-      margin-top: 3rem;
-    }
+  @keyframes rotateGlobe { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
 
-    #qtBanner {
-      width: 400px;
-      animation: pulseGlow 2.5s infinite;
-      border-radius: 12px;
-      cursor: pointer;
-    }
+  /* Y-Diagram */
+  .y-diagram {
+    position: relative;
+    width: 300px;
+    height: 250px;
+    margin: 0 auto 3rem auto;
+  }
 
-    @keyframes pulseGlow {
-      0% {
-        transform: scale(1);
-        opacity: 0.85;
-        box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
-      }
-      50% {
-        transform: scale(1.05);
-        opacity: 1;
-        box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
-      }
-      100% {
-        transform: scale(1);
-        opacity: 0.85;
-        box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
-      }
-    }
+  .stem {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 150px;
+    background: #00ffaa;
+    box-shadow: 0 0 20px rgba(0,255,170,0.8);
+    animation: pulse 2.5s infinite alternate;
+  }
 
-    footer {
-      margin-top: 4rem;
-      padding: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-  </style>
+  .branch {
+    position: absolute;
+    width: 120px;
+    height: 4px;
+    background: #00ffaa;
+    box-shadow: 0 0 20px rgba(0,255,170,0.8);
+    animation: pulse 2.5s infinite alternate;
+  }
+
+  .branch.top { top: 30px; left: 50%; transform: rotate(-30deg); transform-origin: left center; }
+  .branch.bottom { top: 90px; left: 50%; transform: rotate(30deg); transform-origin: left center; }
+
+  /* Labels pinned to branch ends */
+  .label {
+    position: absolute;
+    color: #00ffaa;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0,255,170,1);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .label.traderlab { top: 140px; left: calc(50% - 150px); } /* left tail */
+  .label.cpilot { top: 20px; left: calc(50% + 110px); }    /* top arm tip */
+  .label.trading { top: 85px; left: calc(50% + 110px); }   /* bottom arm tip */
+
+  .active-link {
+    pointer-events: auto;
+    color: #00ffaa;
+    text-decoration: none;
+    text-shadow: 0 0 15px rgba(0,255,170,1);
+  }
+
+  .active-link:hover { color: #fff; text-decoration: underline; }
+</style>
 </head>
 <body>
-  <header>
-    <h1>🚀 Quantum Trader AI</h1>
-    <p class="subtitle"><i>Turning Vision into Market Reality</i></p>
-  </header>
 
-  <!-- Coming Soon Logo -->
-  <div class="logo">
-    <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo" />
-  </div>
+<h1>Quantum Trader AI</h1>
 
-  <!-- Pulsating Banner -->
-  <div class="banner-container">
-    <a id="qtLink" href="#">
-      <img src="assets/MacArthur.png" alt="QT AI Banner" id="qtBanner" />
-    </a>
-  </div>
+<div class="logo">
+  <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
+</div>
 
-  <footer>
-    Built with Patience, Discipline, and Integrity. <br />
-    &copy; 2025 Quantum Trader AI
-  </footer>
+<div class="map-banner">
+  <img src="assets/MacArthur.png" alt="MacArthur Map Banner" id="qtBanner">
+</div>
 
-  <script>
-    // Define rollout date
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
+<div class="globe-container">
+  <img src="assets/globe.png" alt="Rotating Globe">
+</div>
 
-    const banner = document.getElementById("qtBanner");
-    const link = document.getElementById("qtLink");
+<div class="y-diagram">
+  <div class="stem"></div>
+  <div class="branch top"></div>
+  <div class="branch bottom"></div>
+  <div class="label traderlab">TraderLab™</div>
+  <div class="label cpilot">CPilot™</div>
+  <div class="label trading">Trading Floor</div>
+</div>
 
-    function checkDate() {
-      const now = new Date();
+<script>
+const rolloutDate = new Date("2025-11-09T00:00:00Z");
 
-      if (now >= rolloutDate) {
-        // Switch banner to clean MacArthur.png
-        banner.src = "assets/MacArthur.png"; // ensure this is the clean version without "COMING SOON"
+function activateYDiagram() {
+  const now = new Date();
+  if (now >= rolloutDate) {
+    document.querySelector(".label.traderlab").innerHTML =
+      `<a href="pages/traderlab.html" class="active-link">TraderLab™</a>`;
+    document.querySelector(".label.cpilot").innerHTML =
+      `<a href="pages/cpilot.html" class="active-link">CPilot™</a>`;
+    document.querySelector(".label.trading").innerHTML =
+      `<a href="pages/tradingfloor.html" class="active-link">Trading Floor</a>`;
+  }
+}
 
-        // Enable link to trader platform
-        link.href = "https://ajibman.github.io/QuantumTrader-AI/markets"; 
-        link.target = "_blank";
-      } else {
-        // Before rollout: keep showing current banner (with COMING SOON visible)
-        banner.src = "assets/MacArthur.png"; 
-        link.removeAttribute("href");
-        link.style.pointerEvents = "none";
-      }
-    }
+activateYDiagram();
+setInterval(activateYDiagram, 60 * 1000);
+</script>
 
-    checkDate(); // Run immediately
-    setInterval(checkDate, 60 * 1000); // Check every 1 minute
-  </script>
 </body>
 </html>
