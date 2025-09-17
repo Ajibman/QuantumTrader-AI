@@ -1,3 +1,97 @@
+.log-box.system {
+  max-height: 400px;
+  overflow-y: auto;
+  background: #111;
+  padding: 12px;
+  font-family: monospace;
+  border-radius: 8px;
+  color: #0f0; /* green backend logs */
+}
+
+<div className="log-box system">
+  <h2>System Logs</h2>
+  {logs.map((line, i) => (
+    <div key={i}>{line}</div>
+  ))}
+</div>
+
+.log-box {
+  max-height: 200px;
+  overflow-y: scroll;
+  background: #111;
+  color: #0f0;
+  padding: 10px;
+  font-family: monospace;
+  margin-bottom: 20px;
+}
+
+.log-box.visitor {
+  color: #0af;
+}
+
+{/* 🔹 System Logs */}
+<section>
+  <h2>System Logs</h2>
+  <div className="log-box">
+    {logs.filter(line => line.includes("[SYSTEM]")).map((line, i) => (
+      <div key={i}>{line}</div>
+    ))}
+  </div>
+</section>
+
+{/* 🔹 Visitor Logs */}
+<section>
+  <h2>Visitor Logs</h2>
+  <div className="log-box visitor">
+    {logs.filter(line => line.includes("[VISITOR]")).map((line, i) => (
+      <div key={i}>{line}</div>
+    ))}
+  </div>
+</section>
+    // All logs (system + visitor)
+app.get("/api/admin/logs", (req, res) => {
+  if (!fs.existsSync(logFile)) return res.json({ logs: [] });
+  const logs = fs.readFileSync(logFile, "utf-8").split("\n").slice(-100);
+  res.json({ logs });
+});
+
+// Visitor-specific logs
+app.get("/api/admin/logs/visitors", (req, res) => {
+  if (!fs.existsSync(logFile)) return res.json({ logs: [] });
+  const logs = fs.readFileSync(logFile, "utf-8")
+    .split("\n")
+    .filter((line) => line.includes("[VISITOR]"))
+    .slice(-50);
+  res.json({ logs });
+});
+
+import fs from "fs";
+import path from "path";
+
+const logFile = path.resolve("logs/restarts.log");
+
+function logEvent(type, message) {
+  const timestamp = new Date().toISOString();
+  const entry = `[${timestamp}] [${type.toUpperCase()}] ${message}\n`;
+  fs.appendFileSync(logFile, entry);
+}
+
+// Example usage in self-healing:
+logEvent("system", "Server restarted automatically after crash.");
+
+// Example usage in visitor bubble routing:
+logEvent("visitor", "Trader 123 routed to 'Conservative Strategy Bubble'");
+
+{/* 🔹 Logs */}
+<section style={{ border: "1px solid #ccc", padding: "10px", marginTop: "20px" }}>
+  <h2>System Logs (Last 50)</h2>
+  <div style={{ maxHeight: "200px", overflowY: "scroll", background: "#111", color: "#0f0", padding: "10px", fontFamily: "monospace" }}>
+    {logs.map((line, i) => (
+      <div key={i}>{line}</div>
+    ))}
+  </div>
+</section>
+
 "scripts": {
   "start": "node scripts/checkServer.js && react-scripts start",
   "server": "node server/server.js",
