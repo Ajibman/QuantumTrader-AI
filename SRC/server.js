@@ -1,4 +1,19 @@
+import fs from "fs";
+import path from "path";
+import express from "express";
 
+// ... your existing code
+
+// 🔹 Serve Restart Logs
+app.get("/api/admin/logs", (req, res) => {
+  const logFile = path.resolve("logs/restarts.log");
+  if (!fs.existsSync(logFile)) {
+    return res.json({ logs: [] });
+  }
+
+  const logs = fs.readFileSync(logFile, "utf-8").split("\n").slice(-50); // last 50 lines
+  res.json({ logs });
+});
 
 // src/pages/Dashboard.js
 import React, { useEffect, useState } from "react";
