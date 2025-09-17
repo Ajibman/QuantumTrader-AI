@@ -1,3 +1,240 @@
+// server/server.js
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const { exec } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const TraderRoutingEngine = require("../Trader_Routing_Engine");
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+const PORT = process.env.PORT || 4000;
+const logFile = path.join(__dirname, "logs/restarts.log");
+
+// Ensure logs directory exists
+if (!fs.existsSync(path.join(__dirname, "logs"))) fs.mkdirSync(path.join(__dirname, "logs"));
+
+// --- Logging Utility ---
+function logRestart(reason) {
+  const timestamp = new Date().toISOString();
+  const logEntry = `[${timestamp}] Server restart triggered: ${reason}\n`;
+  fs.appendFileSync(logFile, logEntry, { encoding: "utf8" });
+  console.log("📝 Restart logged.");
+}
+
+// --- Data Stores ---
+let visitors = {}; // visitorId -> current visitor data
+let entryHistory = {}; // visitorId -> array of history entries
+let leaderboard = {}; // visitorId -> {count, highestTier, totalScore}
+
+// --- Socket.IO Handling ---
+io.on("connection", (socket) => {
+  console.log(`👤 Client connected: ${socket.id}`);
+  socket.emit("initialData", { visitors, leaderboard, entryHistory });
+});
+
+// --- Core Routing Function ---
+function handleVisitor(visitorData) {
+  // Route visitor through TraderRoutingEngine
+  const destination = TraderRoutingEngine.route(visitorData);
+  visitorData.destination = destination;
+
+  // Update visitors store
+  visitors[visitorData.visitorId] = visitorData;
+
+  // Update entryHistory
+  if (!entryHistory[visitorData.visitorId]) entryHistory[visitorData.visitorId] = [];
+  entryHistory[visitorData.visitorId].unshift({
+    timestamp: new Date().toISOString(),
+    bubble: destination,
+    score: visitorData.score ?? "N/A",
+    tier: visitorData.tier ?? "N/A",
+  });
+
+  // Update leaderboard
+  const prev = leaderboard[visitorData.visitorId] || { count: 0, highestTier: null, totalScore: 0 };
+  leaderboard[visitorData.visitorId] = {
+    count: prev.count + 1,
+    highestTier: visitorData.tier ?? prev.highestTier,
+    totalScore: prev.totalScore + (visitorData.score ?? 0),
+  };
+
+  // Emit updates to dashboard
+  io.emit("visitorRouted", visitorData);
+  io.emit("entryHistoryUpdate", { visitorId: visitorData.visitorId, entry: entryHistory[visitorData.visitorId][0] });
+  io.emit("leaderboardUpdate", leaderboard);
+}
+
+// --- REST API Endpoints ---
+app.use(express.json());
+
+// Get all active visitors
+app.get("/api/visitors", (req, res) => res.json(visitors));
+
+// Get single visitor
+app.get("/api/visitor/:id", (req, res) => {
+  const visitorId = req.params.id;
+  res.json({ current: visitors[visitorId] ?? null, history: entryHistory[visitorId] ?? [] });
+});
+
+// Re-evaluate visitor
+app.post("/api/visitor/re-evaluate/:id", (req, res) => {
+  const visitorId = req.params.id;
+  const visitorData = visitors[visitorId];
+  if (!visitorData) return res.status(404).json({ error: "Visitor not found" });
+
+  handleVisitor(visitorData); // Re-route
+  res.json({ message: "Visitor re-evaluated", visitor: visitors[visitorId] });
+});
+
+// Manually reroute visitor
+app.post("/api/visitor/reroute/:id", (req, res) => {
+  const visitorId = req.params.id;
+  const { bubble } = req.body;
+  if (!visitorId || !bubble) return res.status(400).json({ error: "Missing visitorId or bubble" });
+
+  const visitorData = visitors[visitorId];
+  if (!visitorData) return res.status(404).json({ error: "Visitor not found" });
+
+  visitorData.destination = bubble;
+  handleVisitor(visitorData);
+  res.json({ message: `Visitor manually routed to ${bubble}`, visitor: visitors[visitorId] });
+});
+
+// Leaderboard & export
+app.get("/api/leaderboard", (req, res) => res.json(leaderboard));
+app.get("/api/leaderboard/export", (req, res) => {
+  res.setHeader("Content-Disposition", "attachment; filename=leaderboard.json");
+  res.json(leaderboard);
+});
+
+// Entry history & export
+app.get("/api/history", (req, res) => res.json(entryHistory));
+app.get("/api/history/export", (req, res) => {
+  res.setHeader("Content-Disposition", "attachment; filename=entryHistory.json");
+  res.json(entryHistory);
+});
+
+// Admin: reset session
+app.post("/api/admin/reset", (req, res) => {
+  visitors = {};
+  entryHistory = {};
+  leaderboard = {};
+  res.json({ message: "All session data cleared" });
+});
+
+// Admin: fix dependencies
+app.post("/api/admin/fix-deps", (req, res) => {
+  exec("npm run fix-deps", (error, stdout, stderr) => {
+    if (error) return res.status(500).json({ error: error.message });
+    if (stderr) console.error(stderr);
+    res.json({ message: "Dependencies fixed", output: stdout });
+  });
+});
+
+// Admin: server status
+app.get("/api/admin/status", (req, res) => {
+  res.json({
+    status: "OK",
+    uptime: process.uptime(),
+    visitorsCount: Object.keys(visitors).length,
+  });
+});
+
+// --- Self-Healing / Self-Correcting ---
+function startServer() {
+  try {
+    server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+  } catch (err) {
+    console.error("❌ Server crashed:", err);
+    logRestart(`Exception: ${err.message}`);
+    selfCorrectAndRestart();
+  }
+}
+
+function selfCorrectAndRestart() {
+  console.log("🔧 Running self-correction (npm run fix-deps)...");
+  exec("npm run fix-deps", (error, stdout, stderr) => {
+    if (error) console.error(`⚠️ Self-correction failed: ${error.message}`);
+    if (stderr) console.error(`stderr: ${stderr}`);
+    console.log(stdout);
+    logRestart("Self-correction executed, restarting server...");
+    console.log("🔄 Restarting server after correction...");
+    setTimeout(startServer, 3000);
+  });
+}
+
+// Global error handlers
+process.on("uncaughtException", (err) => {
+  console.error("⚠️ Uncaught Exception:", err);
+  logRestart(`Uncaught Exception: ${err.message}`);
+  selfCorrectAndRestart();
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("⚠️ Unhandled Rejection:", reason);
+  logRestart(`Unhandled Rejection: ${reason}`);
+  selfCorrectAndRestart();
+});
+
+// --- Start Server ---
+startServer();
+
+// server.js
+const express = require("express");
+const { exec } = require("child_process");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Example route
+app.get("/", (req, res) => {
+  res.send("Server is running ✅");
+});
+
+// Start server with auto-recovery + self-correction
+function startServer() {
+  try {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Server crashed:", err);
+    selfCorrectAndRestart();
+  }
+}
+
+// Function to self-correct dependencies & restart
+function selfCorrectAndRestart() {
+  console.log("🔧 Running self-correction (npm run fix-deps)...");
+  exec("npm run fix-deps", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`⚠️ Self-correction failed: ${error.message}`);
+    }
+    if (stderr) console.error(`stderr: ${stderr}`);
+    console.log(stdout);
+
+    console.log("🔄 Restarting server after correction...");
+    setTimeout(startServer, 3000);
+  });
+}
+
+startServer();
+
+// Global error handlers
+process.on("uncaughtException", (err) => {
+  console.error("⚠️ Uncaught Exception:", err);
+  selfCorrectAndRestart();
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("⚠️ Unhandled Rejection:", reason);
+  selfCorrectAndRestart();
+});
+
 // server.js
 const express = require("express");
 const app = express();
