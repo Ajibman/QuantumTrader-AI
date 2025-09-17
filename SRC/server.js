@@ -1,3 +1,16 @@
+// Emit logs to admin dashboard
+function broadcastLog(message) {
+  io.emit("system_log", message);
+}
+
+// Patch logger
+const origLog = console.log;
+console.log = (...args) => {
+  const msg = args.join(" ");
+  broadcastLog(msg);
+  origLog.apply(console, args);
+};
+
 .log-box.system {
   max-height: 400px;
   overflow-y: auto;
