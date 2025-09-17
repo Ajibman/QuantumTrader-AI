@@ -1,3 +1,9 @@
+"scripts": {
+  "start": "node scripts/checkServer.js && react-scripts start",
+  "server": "node server/server.js",
+  "dev": "concurrently \"npm run server\" \"npm start\""
+}
+
 {
   "name": "quantumtrader-ai",
   "version": "1.0.0",
