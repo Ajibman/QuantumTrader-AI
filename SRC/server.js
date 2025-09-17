@@ -1,3 +1,11 @@
+// Admin Dashboard route (already protected with adminLogin + lockout)
+app.get("/adminDashboard", (req, res) => {
+  if (!req.session.isAdmin) {
+    return res.status(401).send("Unauthorized");
+  }
+  res.sendFile(path.join(process.cwd(), "src/pages/adminDashboard.html"));
+});
+
 import fs from "fs";
 import path from "path";
 
