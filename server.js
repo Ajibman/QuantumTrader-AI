@@ -1,3 +1,61 @@
+// scripts/checkServer.js
+const fs = require("fs");
+const path = require("path");
+
+const expectedPath = path.join(__dirname, "../server/server.js");
+const misplacedPath = path.join(__dirname, "../src/server.js");
+
+// Ensure /server folder exists
+const serverDir = path.join(__dirname, "../server");
+if (!fs.existsSync(serverDir)) {
+  fs.mkdirSync(serverDir);
+  console.log("📂 Created /server directory.");
+}
+
+// 1. Handle misplaced file in /src
+if (fs.existsSync(misplacedPath)) {
+  console.warn("⚠️ Found misplaced server.js in /src.");
+  if (!fs.existsSync(expectedPath)) {
+    fs.renameSync(misplacedPath, expectedPath);
+    console.log("✅ Moved server.js to /server/");
+  } else {
+    // If both exist, keep /server copy, archive the /src one
+    const archivePath = path.join(__dirname, "../server/server_src_backup.js");
+    fs.renameSync(misplacedPath, archivePath);
+    console.log("🗂️ Duplicate found. Kept /server/server.js, archived /src/server.js as server_src_backup.js");
+  }
+}
+
+// 2. Detect multiple server.js anywhere in repo
+function findServerFiles(dir, results = []) {
+  const list = fs.readdirSync(dir);
+  list.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      findServerFiles(filePath, results);
+    } else if (file === "server.js") {
+      results.push(filePath);
+    }
+  });
+  return results;
+}
+
+const allServerFiles = findServerFiles(path.join(__dirname, ".."));
+if (allServerFiles.length > 1) {
+  console.warn("⚠️ Multiple server.js files detected:");
+  allServerFiles.forEach((f) => console.warn("   - " + f));
+  console.warn("👉 Keeping only /server/server.js as the authoritative backend file.");
+}
+
+// 3. Final validation
+if (!fs.existsSync(expectedPath)) {
+  console.error("❌ ERROR: server.js missing in /server/. Please restore it manually!");
+  process.exit(1);
+} else {
+  console.log("✅ server.js is correctly located in /server/");
+}
+
 // Trader_Routing_Engine.js
 // Quantum Trader AI - Bubble Routing Engine with Live Stream + Chained Audit + Central Sync
 // © Olagoke Ajibulu | QT AI
