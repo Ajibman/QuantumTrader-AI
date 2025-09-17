@@ -1,3 +1,89 @@
+import { useState, useEffect } from "react";
+
+export default function Dashboard() {
+  const [securityLog, setSecurityLog] = useState("");
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
+  const [isStalled, setIsStalled] = useState(false);
+
+  // Fetch security log
+  const fetchSecurityLog = async () => {
+    try {
+      const response = await fetch("/admin/security-log");
+      const data = await response.text();
+      setSecurityLog(data);
+      setLastUpdate(Date.now());
+      setIsStalled(false); // reset stall if fetch succeeds
+    } catch (err) {
+      setIsStalled(true);
+    }
+  };
+
+  // Auto-refresh every 5s
+  useEffect(() => {
+    fetchSecurityLog(); // initial
+    const interval = setInterval(fetchSecurityLog, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Stall checker — if no update in 7s, trigger flashing
+  useEffect(() => {
+    const check = setInterval(() => {
+      if (Date.now() - lastUpdate > 7000) {
+        setIsStalled(true);
+      }
+    }, 3000);
+    return () => clearInterval(check);
+  }, [lastUpdate]);
+
+  // Manual refresh (admin-triggered)
+  const handleManualRefresh = () => {
+    fetchSecurityLog();
+    setIsStalled(false); // stop flashing
+  };
+
+  return (
+    <div>
+      <h2>Backend Dashboard</h2>
+
+      <pre
+        style={{
+          marginTop: "1rem",
+          padding: "1rem",
+          background: isStalled ? "#330000" : "#111",
+          color: isStalled ? "#ff4444" : "#0f0",
+          maxHeight: "300px",
+          overflowY: "auto",
+          borderRadius: "8px",
+          transition: "background 0.5s, color 0.5s",
+        }}
+      >
+        {securityLog || "Loading security log..."}
+      </pre>
+
+      {isStalled && (
+        <div style={{ marginTop: "1rem", color: "#ff4444" }}>
+          ⚠️ Log stalled — flashing until refreshed.
+        </div>
+      )}
+
+      <button
+        onClick={handleManualRefresh}
+        style={{
+          marginTop: "1rem",
+          padding: "0.5rem 1rem",
+          borderRadius: "6px",
+          background: "#222",
+          color: "#fff",
+          border: "1px solid #555",
+          cursor: "pointer",
+        }}
+      >
+        Refresh Now / Halt Flashes
+      </button>
+    </div>
+  );
+}
+
 import { useState } from "react";
 
 export default function Dashboard() {
