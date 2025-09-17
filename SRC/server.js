@@ -1,3 +1,180 @@
+
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:4000"); // replace with live backend URL
+
+export default function Dashboard() {
+  const [visitors, setVisitors] = useState([]);
+  const [entryHistory, setEntryHistory] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    socket.on("visitorRouted", (data) => {
+      setVisitors((prev) => [...prev, data]);
+    });
+
+    socket.on("entryHistoryUpdate", (history) => {
+      setEntryHistory(history);
+    });
+
+    socket.on("leaderboardUpdate", (lb) => {
+      setLeaderboard(lb);
+    });
+
+    return () => {
+      socket.off("visitorRouted");
+      socket.off("entryHistoryUpdate");
+      socket.off("leaderboardUpdate");
+    };
+  }, []);
+
+  // 🔹 Admin Actions
+  const callAdmin = async (endpoint, method = "GET") => {
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:4000/api/admin/${endpoint}`, {
+        method,
+      });
+      const data = await res.json();
+      setStatus(data);
+    } catch (err) {
+      setStatus({ error: err.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Quantum Trader AI Dashboard</h1>
+
+      {/* 🔹 Admin Panel */}
+      <section style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
+        <h2>Admin Controls</h2>
+        <button onClick={() => callAdmin("reset", "POST")} disabled={loading}>
+          Reset Session
+        </button>
+        <button onClick={() => callAdmin("status")} disabled={loading}>
+          Check Status
+        </button>
+        <button onClick={() => callAdmin("fix-deps", "POST")} disabled={loading}>
+          Fix Dependencies
+        </button>
+        <pre>{status ? JSON.stringify(status, null, 2) : "No status yet"}</pre>
+      </section>
+
+      {/* 🔹 Visitors */}
+      <section>
+        <h2>Visitors</h2>
+        <ul>
+          {visitors.map((v, i) => (
+            <li key={i}>{v.name} → {v.bubble}</li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 🔹 Entry History */}
+      <section>
+        <h2>Entry History</h2>
+        <ul>
+          {entryHistory.map((e, i) => (
+            <li key={i}>{e.timestamp}: {e.name} → {e.bubble}</li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 🔹 Leaderboard */}
+      <section>
+        <h2>Leaderboard</h2>
+        <ul>
+          {leaderboard.map((l, i) => (
+            <li key={i}>{l.name} — Score: {l.score} (Tier: {l.tier})</li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+        }
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:4000"); // replace with live backend URL
+
+export default function Dashboard() {
+  const [visitors, setVisitors] = useState([]);
+  const [entryHistory, setEntryHistory] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    // New visitor routed
+    socket.on("visitorRouted", (data) => {
+      setVisitors((prev) => [...prev, data]);
+    });
+
+    // Entry history update
+    socket.on("entryHistoryUpdate", (history) => {
+      setEntryHistory(history);
+    });
+
+    // Leaderboard update
+    socket.on("leaderboardUpdate", (lb) => {
+      setLeaderboard(lb);
+    });
+
+    return () => {
+      socket.off("visitorRouted");
+      socket.off("entryHistoryUpdate");
+      socket.off("leaderboardUpdate");
+    };
+  }, []);
+
+  return (
+    <div>
+      <h1>Quantum Trader AI Dashboard</h1>
+
+      <section>
+        <h2>Visitors</h2>
+        <ul>
+          {visitors.map((v, i) => (
+            <li key={i}>{v.name} → {v.bubble}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Entry History</h2>
+        <ul>
+          {entryHistory.map((e, i) => (
+            <li key={i}>{e.timestamp}: {e.name} → {e.bubble}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Leaderboard</h2>
+        <ul>
+          {leaderboard.map((l, i) => (
+            <li key={i}>{l.name} — Score: {l.score} (Tier: {l.tier})</li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+          }
+
+simulateVisitors(50, 
+                 
+              500); // 50 visitors, 0.5s interval
+
+node server/server.js
+
 name: Deploy React Dashboard to GitHub Pages
 
 on:
