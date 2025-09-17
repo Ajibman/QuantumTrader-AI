@@ -1,3 +1,16 @@
+// Emit logs to admin dashboard
+function broadcastLog(message) {
+  io.emit("system_log", message);
+}
+
+// Patch logger
+const origLog = console.log;
+console.log = (...args) => {
+  const msg = args.join(" ");
+  broadcastLog(msg);
+  origLog.apply(console, args);
+};
+
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
