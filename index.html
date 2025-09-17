@@ -1,76 +1,102 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quantum Trader AI</title>
+
+  <!-- Styles -->
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      font-family: Arial, sans-serif;
       text-align: center;
       background-color: #0a0a0a;
-      color: #fff;
+      color: #f5f5f5;
     }
 
     header {
-      padding: 20px;
-      background: #111;
-      border-bottom: 2px solid #333;
+      padding: 2rem 1rem;
     }
 
-    .rotating {
-      animation: spin 12s linear infinite;
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #00c8ff;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    p.subtitle {
+      font-size: 1.2rem;
+      opacity: 0.85;
     }
 
-    .logo-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin: 20px 0;
+    /* Coming Soon Logo */
+    .logo {
+      margin-top: 2rem;
+    }
+
+    .logo img {
+      width: 250px;
+    }
+
+    /* Pulsating Banner */
+    .banner-container {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    #qtBanner {
+      width: 400px;
+      animation: pulseGlow 2.5s infinite;
+      border-radius: 12px;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        transform: scale(1);
+        opacity: 0.85;
+        box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+        box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.85;
+        box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+      }
     }
 
     footer {
-      padding: 20px;
-      background: #111;
-      border-top: 2px solid #333;
-      margin-top: 40px;
+      margin-top: 4rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
-  <!-- Top header with rotating logo -->
   <header>
-    <img src="assets/qtai-rotatelogo.png" alt="QT AI Rotating Logo" class="rotating" width="150" />
-    <h1>Quantum Trader AI</h1>
+    <h1>🚀 Quantum Trader AI</h1>
+    <p class="subtitle"><i>Turning Vision into Market Reality</i></p>
   </header>
 
-  <!-- Globe logo as centerpiece -->
-  <section>
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo" width="200" />
-    <h2>Turning Vision into Market Reality</h2>
-  </section>
+  <!-- Coming Soon Logo -->
+  <div class="logo">
+    <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo" />
+  </div>
 
-  <!-- Row for Ori + Seal logos -->
-  <section class="logo-row">
-    <img src="assets/qtai-logo-ori.png" alt="QT AI Ori Logo" width="150" />
-    <img src="assets/qtai-logo-seal.png" alt="QT AI Seal Logo" width="150" />
-  </section>
-
-  <!-- Alternate rotating logo (extra version) -->
-  <section>
-    <img src="assets/qtai-rotatelogo2.png" alt="QT AI Rotating Logo 2" class="rotating" width="150" />
-  </section>
+  <!-- Pulsating Banner -->
+  <div class="banner-container">
+    <img src="assets/MacArthur.png" alt="QT AI Banner" id="qtBanner" />
+  </div>
 
   <footer>
-    <p>🚀 Built with Patience, Discipline and Integrity</p>
-    <p>© 2025 Quantum Trader AI. All rights reserved.</p>
+    Built with Patience, Discipline, and Integrity. <br />
+    &copy; 2025 Quantum Trader AI
   </footer>
 </body>
 </html>
