@@ -1,3 +1,32 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import AdminDashboard from "./pages/adminDashboard";
+import Home from "./pages/home";
+
+function App() {
+  const adminKey = process.env.REACT_APP_ADMIN_KEY;
+  const userKey = new URLSearchParams(window.location.search).get("key");
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/adminDashboard"
+          element={
+            userKey === adminKey ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
 // Emit logs to admin dashboard
 function broadcastLog(message) {
   io.emit("system_log", message);
