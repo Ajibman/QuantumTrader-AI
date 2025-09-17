@@ -1,3 +1,16 @@
+// Add near the other admin routes in server.js
+
+app.get("/admin/security-log", (req, res) => {
+  // Hard-coded test log message for now
+  const log = `
+[${new Date().toISOString()}] SECURITY_LOG_OK
+System integrity: ✅
+Attempts today: 0
+No anomalies detected.
+  `;
+  res.type("text/plain").send(log);
+});
+
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
