@@ -1,3 +1,51 @@
+// scripts/mockVisitors.js
+const axios = require("axios");
+
+const SERVER_URL = "http://localhost:4000";
+
+// Generate random visitor
+function generateVisitor() {
+  const id = "visitor_" + Math.floor(Math.random() * 10000);
+  const score = Math.floor(Math.random() * 100);
+  const tier = ["Bronze", "Silver", "Gold", "Platinum"][Math.floor(Math.random() * 4)];
+  const behavior = ["peaceful", "neutral", "resistant"][Math.floor(Math.random() * 3)];
+
+  return { visitorId: id, score, tier, behavior };
+}
+
+// Simulate sending visitors to server
+async function sendVisitor(visitorData) {
+  try {
+    const res = await axios.post(`${SERVER_URL}/api/visitor/re-evaluate/${visitorData.visitorId}`, visitorData);
+    console.log(`✅ Visitor routed:`, res.data.visitor ?? visitorData);
+  } catch (err) {
+    // If visitor does not exist yet, create manually via reroute to trigger routing
+    if (err.response && err.response.status === 404) {
+      try {
+        await axios.post(`${SERVER_URL}/api/visitor/reroute/${visitorData.visitorId}`, {
+          bubble: "TraderLab"
+        });
+        console.log(`✅ Visitor created & routed: ${visitorData.visitorId}`);
+      } catch (e) {
+        console.error("❌ Failed to create visitor:", e.message);
+      }
+    } else {
+      console.error("❌ Routing error:", err.message);
+    }
+  }
+}
+
+// Simulate multiple visitors
+async function simulateVisitors(count = 5, delay = 1000) {
+  for (let i = 0; i < count; i++) {
+    const visitor = generateVisitor();
+    await sendVisitor(visitor);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+}
+
+simulateVisitors(10, 1500);
+
 // server/server.js
 const express = require("express");
 const http = require("http");
