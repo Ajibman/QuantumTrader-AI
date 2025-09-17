@@ -1,3 +1,60 @@
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+const socket = io();
+
+export default function AdminDashboard() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    socket.on("system_log", (log) => {
+      setLogs((prev) => [...prev, log]);
+    });
+
+    return () => {
+      socket.off("system_log");
+    };
+  }, []);
+
+  const downloadLogs = () => {
+    const blob = new Blob([logs.join("\n")], { type: "text/plain" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `system-logs-${new Date().toISOString()}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const clearLogs = () => {
+    setLogs([]); // Just clear frontend view, server continues logging
+  };
+
+  return (
+    <div className="admin-dashboard">
+      <h1>Backend Dashboard</h1>
+
+      <div className="dashboard-controls">
+        <button onClick={downloadLogs} className="download-btn">
+          Download Logs
+        </button>
+        <button onClick={clearLogs} className="clear-btn">
+          Clear Logs
+        </button>
+      </div>
+
+      <div className="log-box system">
+        <h2>System Logs</h2>
+        {logs.length === 0 ? (
+          <div>No logs yet...</div>
+        ) : (
+          logs.map((line, i) => <div key={i}>{line}</div>)
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Emit logs to admin dashboard
 function broadcastLog(message) {
   io.emit("system_log", message);
