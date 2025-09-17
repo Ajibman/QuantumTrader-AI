@@ -1,3 +1,11 @@
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "fix-deps": "npm install && npm audit fix --force && npm dedupe"
+  }
+}
+
 "scripts": {
   "start": "node scripts/checkServer.js && react-scripts start",
   "server": "node server/server.js",
