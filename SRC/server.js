@@ -1,3 +1,47 @@
+import express from "express";
+import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();
+app.use(express.json());
+
+let clearLogsAttempts = 0;
+
+function logAttempt(success, reason = "") {
+  const timestamp = new Date().toISOString();
+  const logEntry = `${timestamp} | Clear Logs Attempt | ${success ? "SUCCESS" : "FAILURE"} ${reason}\n`;
+  fs.appendFileSync("logs/security.log", logEntry, "utf8");
+}
+
+app.post("/admin/clear-logs", (req, res) => {
+  const { secret } = req.body;
+
+  if (clearLogsAttempts >= 3) {
+    logAttempt(false, "(BLOCKED: too many attempts)");
+    return res.status(403).json({ message: "Access blocked after 3 failed attempts." });
+  }
+
+  if (secret !== process.env.CLEAR_LOGS_SECRET) {
+    clearLogsAttempts++;
+    logAttempt(false, "(Wrong secret key)");
+    return res.status(401).json({ message: "Unauthorized attempt." });
+  }
+
+  // Reset attempts on success
+  clearLogsAttempts = 0;
+
+  try {
+    fs.writeFileSync("logs/system.log", "");
+    logAttempt(true);
+    return res.json({ message: "Logs cleared successfully." });
+  } catch (err) {
+    logAttempt(false, `(Error: ${err.message})`);
+    return res.status(500).json({ message: "Error clearing logs.", error: err.message });
+  }
+});
+
 async function clearLogs() {
   const response = await fetch("/admin/clear-logs", {
     method: "POST",
