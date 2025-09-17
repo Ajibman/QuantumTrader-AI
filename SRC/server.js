@@ -1,3 +1,1143 @@
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    socket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    socket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // Filter & sort visitors
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  // Summary
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  // Function to determine if visitor is top-worthy
+  const isTopVisitor = (v) => {
+    return v.destination === "TraderLab_CPilot" && (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative group
+                        ${bubbleColors[bubble]}
+                        ${isTopVisitor(v) ? "ring-4 ring-yellow-400" : ""}
+                      `}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    // Connect to QT AI backend live stream
+    const socket = io(SOCKET_URL);
+
+    // Live routing event
+    socket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    // Live re-evaluation event
+    socket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // Filter & sort visitors
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  // Summary
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative ${bubbleColors[bubble]} group`}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+const API_URL = "http://localhost:4000/api";
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    newSocket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    newSocket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const submitVisitor = async (visitorData) => {
+    try {
+      const response = await axios.post(`${API_URL}/visitor`, visitorData);
+      console.log("Visitor routed:", response.data);
+    } catch (err) {
+      console.error("Error submitting visitor:", err);
+    }
+  };
+
+  // Filter & sort visitors
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  // Compute summary
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <button
+          className="bg-blue-500 text-white px-5 py-2 rounded mb-2 md:mb-0"
+          onClick={() =>
+            submitVisitor({
+              visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+              peacefulness: Math.floor(Math.random() * 10),
+              emotionalIntelligence: Math.floor(Math.random() * 10),
+              genomP: Math.floor(Math.random() * 10),
+              score: Math.floor(Math.random() * 10),
+              category: ["Peaceful", "Neutral", "Disruptive"][Math.floor(Math.random() * 3)],
+            })
+          }
+        >
+          Simulate Visitor
+        </button>
+
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative ${bubbleColors[bubble]} group`}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+const API_URL = "http://localhost:4000/api";
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    newSocket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    newSocket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const submitVisitor = async (visitorData) => {
+    try {
+      const response = await axios.post(`${API_URL}/visitor`, visitorData);
+      console.log("Visitor routed:", response.data);
+    } catch (err) {
+      console.error("Error submitting visitor:", err);
+    }
+  };
+
+  // Filter & sort visitors
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <button
+          className="bg-blue-500 text-white px-5 py-2 rounded mb-2 md:mb-0"
+          onClick={() =>
+            submitVisitor({
+              visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+              peacefulness: Math.floor(Math.random() * 10),
+              emotionalIntelligence: Math.floor(Math.random() * 10),
+              genomP: Math.floor(Math.random() * 10),
+              score: Math.floor(Math.random() * 10),
+            })
+          }
+        >
+          Simulate Visitor
+        </button>
+
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      <h2 className="text-2xl font-semibold mb-4">Live Bubble Routing</h2>
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative ${bubbleColors[bubble]} group`}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion"; // animation library
+
+const SOCKET_URL = "http://localhost:4000";
+const API_URL = "http://localhost:4000/api";
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    newSocket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    newSocket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const submitVisitor = async (visitorData) => {
+    try {
+      const response = await axios.post(`${API_URL}/visitor`, visitorData);
+      console.log("Visitor routed:", response.data);
+    } catch (err) {
+      console.error("Error submitting visitor:", err);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      <button
+        className="bg-blue-500 text-white px-5 py-2 rounded mb-6"
+        onClick={() =>
+          submitVisitor({
+            visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+            peacefulness: Math.floor(Math.random() * 10),
+            emotionalIntelligence: Math.floor(Math.random() * 10),
+            genomP: Math.floor(Math.random() * 10),
+            score: Math.floor(Math.random() * 10),
+          })
+        }
+      >
+        Simulate Visitor
+      </button>
+
+      <h2 className="text-2xl font-semibold mb-4">Live Bubble Routing</h2>
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {visitors
+                  .filter((v) => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout // animate position change
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative ${bubbleColors[bubble]} group`}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+const API_URL = "http://localhost:4000/api";
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    newSocket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    newSocket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const submitVisitor = async (visitorData) => {
+    try {
+      const response = await axios.post(`${API_URL}/visitor`, visitorData);
+      console.log("Visitor routed:", response.data);
+    } catch (err) {
+      console.error("Error submitting visitor:", err);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      <button
+        className="bg-blue-500 text-white px-5 py-2 rounded mb-6"
+        onClick={() =>
+          submitVisitor({
+            visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+            peacefulness: Math.floor(Math.random() * 10),
+            emotionalIntelligence: Math.floor(Math.random() * 10),
+            genomP: Math.floor(Math.random() * 10),
+            score: Math.floor(Math.random() * 10) // optional alignment score
+          })
+        }
+      >
+        Simulate Visitor
+      </button>
+
+      <h2 className="text-2xl font-semibold mb-4">Live Bubble Routing</h2>
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              {visitors
+                .filter((v) => v.destination === bubble)
+                .map((v) => (
+                  <div
+                    key={v.visitorId}
+                    className={`p-2 text-white rounded relative ${bubbleColors[bubble]}`}
+                  >
+                    {v.visitorId} (Score: {v.score ?? "N/A"})
+                    {/* Hover tooltip */}
+                    <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                      <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                      <p>genomP: {v.genomP ?? "N/A"}</p>
+                      <p>Total Score: {v.score ?? "N/A"}</p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+const API_URL = "http://localhost:4000/api";
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    newSocket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    newSocket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const submitVisitor = async (visitorData) => {
+    try {
+      const response = await axios.post(`${API_URL}/visitor`, visitorData);
+      console.log("Visitor routed:", response.data);
+    } catch (err) {
+      console.error("Error submitting visitor:", err);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      <button
+        className="bg-blue-500 text-white px-5 py-2 rounded mb-6"
+        onClick={() =>
+          submitVisitor({
+            visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+            peacefulness: Math.floor(Math.random() * 10),
+            emotionalIntelligence: Math.floor(Math.random() * 10),
+            genomP: Math.floor(Math.random() * 10),
+          })
+        }
+      >
+        Simulate Visitor
+      </button>
+
+      <h2 className="text-2xl font-semibold mb-4">Live Bubble Routing</h2>
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              {visitors
+                .filter((v) => v.destination === bubble)
+                .map((v) => (
+                  <div
+                    key={v.visitorId}
+                    className={`p-2 text-white rounded ${bubbleColors[bubble]}`}
+                  >
+                    {v.visitorId}
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+const API_URL = "http://localhost:4000/api";
+
+const Dashboard = () => {
+    const [visitors, setVisitors] = useState([]);
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        // Connect to Socket.IO server
+        const newSocket = io(SOCKET_URL);
+        setSocket(newSocket);
+
+        // Listen for live routed events
+        newSocket.on("visitorRouted", (data) => {
+            setVisitors((prev) => {
+                const existing = prev.filter(v => v.visitorId !== data.visitorId);
+                return [...existing, data];
+            });
+        });
+
+        newSocket.on("visitorReEvaluated", (data) => {
+            setVisitors((prev) => {
+                const existing = prev.filter(v => v.visitorId !== data.visitorId);
+                return [...existing, data];
+            });
+        });
+
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []);
+
+    // Example function: submit visitor/trader data
+    const submitVisitor = async (visitorData) => {
+        try {
+            const response = await axios.post(`${API_URL}/visitor`, visitorData);
+            console.log("Visitor routed:", response.data);
+        } catch (err) {
+            console.error("Error submitting visitor:", err);
+        }
+    };
+
+    return (
+        <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4">Quantum Trader AI Dashboard</h1>
+            <button
+                className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                onClick={() =>
+                    submitVisitor({
+                        visitorId: "visitor_" + Math.floor(Math.random() * 1000),
+                        peacefulness: Math.floor(Math.random() * 10),
+                        emotionalIntelligence: Math.floor(Math.random() * 10),
+                        genomP: Math.floor(Math.random() * 10),
+                    })
+                }
+            >
+                Simulate Visitor
+            </button>
+
+            <h2 className="text-xl font-semibold mb-2">Live Visitors</h2>
+            <ul>
+                {visitors.map((v) => (
+                    <li key={v.visitorId} className="mb-1">
+                        {v.visitorId} → {v.destination}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+export default Dashboard;
+
+// server.js
+// Backend server for QT AI
+import express from "express";
+import http from "http";
+import { Server as SocketIOServer } from "socket.io";
+import cors from "cors";
+import { bubbleRoute, reEvaluate, logEvent, auditAction, qtStream } from "./Trader_Routing_Engine.js";
+
+const app = express();
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+    cors: {
+        origin: "*", // Adjust to frontend domain in production
+        methods: ["GET", "POST"]
+    }
+});
+
+app.use(cors());
+app.use(express.json());
+
+// ---- API ENDPOINTS ----
+
+// Test route
+app.get("/api/ping", (req, res) => res.json({ status: "OK", message: "QT AI backend active" }));
+
+// Submit visitor/trader data for routing
+app.post("/api/visitor", (req, res) => {
+    const visitorData = req.body;
+    if (!visitorData.visitorId) {
+        return res.status(400).json({ error: "visitorId required" });
+    }
+
+    // Bubble route and emit event
+    const destination = bubbleRoute(visitorData);
+    qtStream.emit("visitorRouted", { visitorId: visitorData.visitorId, destination });
+
+    return res.json({ visitorId: visitorData.visitorId, destination });
+});
+
+// Optional: Re-evaluation endpoint
+app.post("/api/reevaluate", (req, res) => {
+    const visitorData = req.body;
+    if (!visitorData.visitorId) {
+        return res.status(400).json({ error: "visitorId required" });
+    }
+
+    reEvaluate(visitorData);
+    return res.json({ visitorId: visitorData.visitorId, status: "Re-evaluation triggered" });
+});
+
+// ---- SOCKET.IO FOR LIVE DASHBOARD ----
+io.on("connection", (socket) => {
+    console.log(`Visitor connected: ${socket.id}`);
+
+    // Listen for live visitor updates from frontend
+    socket.on("visitorAction", (visitorData) => {
+        const destination = bubbleRoute(visitorData);
+        socket.emit("visitorRouted", { visitorId: visitorData.visitorId, destination });
+    });
+
+    socket.on("disconnect", () => {
+        console.log(`Visitor disconnected: ${socket.id}`);
+    });
+});
+
+// ---- STREAM EVENTS ----
+qtStream.on("visitorRouted", (data) => {
+    io.emit("visitorRouted", data); // broadcast to all connected dashboards
+});
+
+qtStream.on("visitorReEvaluated", (data) => {
+    io.emit("visitorReEvaluated", data);
+});
+
+// ---- SERVER START ----
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => console.log(`QT AI backend running on port ${PORT}`));
+
+// Trader_Routing_Engine.js
+// Core routing engine for QT AI
+// Handles visitor/trader assessment, bubble routing, logging, and audit
+
+import EventEmitter from "events";
+import fs from "fs";
+import path from "path";
+
+// ---- CONFIGURATION ----
+const LOG_FILE = path.join(process.cwd(), "logs", "visitor_logs.json");
+const AUDIT_FILE = path.join(process.cwd(), "logs", "audit_logs.json");
+
+// Ensure logs directory exists
+if (!fs.existsSync(path.dirname(LOG_FILE))) {
+    fs.mkdirSync(path.dirname(LOG_FILE), { recursive: true });
+}
+
+// ---- EVENT EMITTER FOR LIVE STREAM ----
+class QTStream extends EventEmitter {}
+export const qtStream = new QTStream();
+
+// ---- LOGGER ----
+function logEvent(visitorId, event, details = {}) {
+    const timestamp = new Date().toISOString();
+    const entry = { timestamp, visitorId, event, details };
+    fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + "\n");
+    console.log(`[LOG] ${timestamp} | ${visitorId} | ${event}`);
+}
+
+// ---- AUDIT ----
+function auditAction(visitorId, action, outcome) {
+    const timestamp = new Date().toISOString();
+    const entry = { timestamp, visitorId, action, outcome };
+    fs.appendFileSync(AUDIT_FILE, JSON.stringify(entry) + "\n");
+}
+
+// ---- INTENTION ASSESSMENT ----
+function assessIntention(visitorData) {
+    // Example scoring based on peacefulness, emotional intelligence, genomP alignment
+    const { peacefulness, emotionalIntelligence, genomP } = visitorData;
+    let score = 0;
+
+    if (peacefulness >= 8) score += 3;
+    if (emotionalIntelligence >= 7) score += 2;
+    if (genomP >= 5) score += 1;
+
+    // Determine intention category
+    let category;
+    if (score >= 6) category = "Peaceful";
+    else if (score >= 3) category = "Neutral";
+    else category = "Disruptive";
+
+    return { score, category };
+}
+
+// ---- BUBBLE ROUTING ----
+function bubbleRoute(visitorData) {
+    const { visitorId } = visitorData;
+    const { category, score } = assessIntention(visitorData);
+
+    logEvent(visitorId, "IntentionAssessed", { category, score });
+
+    let destination;
+
+    switch (category) {
+        case "Peaceful":
+            destination = "TraderLab_CPilot";
+            break;
+        case "Neutral":
+            destination = "GuidanceModule";
+            break;
+        case "Disruptive":
+        default:
+            destination = "GamesPavilion";
+            break;
+    }
+
+    logEvent(visitorId, "BubbleRouted", { destination });
+    auditAction(visitorId, "RoutingDecision", destination);
+
+    return destination;
+}
+
+// ---- RE-EVALUATION LOOP ----
+function reEvaluate(visitorData) {
+    const destination = bubbleRoute(visitorData);
+    qtStream.emit("visitorReEvaluated", { visitorId: visitorData.visitorId, destination });
+}
+
+// ---- EXPORTS ----
+export { bubbleRoute, reEvaluate, logEvent, auditAction };
+
 {
   "name": "qtai-admin-dashboard",
   "version": "1.0.0",
