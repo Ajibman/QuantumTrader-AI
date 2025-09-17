@@ -1,4 +1,33 @@
-// src/pages/Dashboard.js
+"scripts": {
+  "start": "node scripts/checkServer.js && react-scripts start",
+  "server": "node server/server.js",
+  "dev": "concurrently \"npm run server\" \"npm start\""
+}
+
+// scripts/checkServer.js
+const fs = require("fs");
+const path = require("path");
+
+const expectedPath = path.join(__dirname, "../server/server.js");
+const misplacedPath = path.join(__dirname, "../src/server.js");
+
+// Check misplaced file
+if (fs.existsSync(misplacedPath)) {
+  console.warn("⚠️ Found misplaced server.js in src/. Moving to server/...");
+  if (!fs.existsSync(path.join(__dirname, "../server"))) {
+    fs.mkdirSync(path.join(__dirname, "../server"));
+  }
+  fs.renameSync(misplacedPath, expectedPath);
+  console.log("✅ Fixed: server.js moved to /server/");
+}
+
+// Check if server.js exists at correct location
+if (!fs.existsSync(expectedPath)) {
+  console.error("❌ ERROR: server.js missing from /server/. Please restore!");
+  process.exit(1);
+} else {
+  console.log("✅ server.js is in correct location.");
+}// src/pages/Dashboard.js
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
