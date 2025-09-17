@@ -1,3 +1,11 @@
+const banner = document.getElementById("qtBanner");
+
+// Start pulsating
+banner.style.animation = "pulse 2s infinite";
+
+// Stop pulsating (if needed later)
+// banner.style.animation = "none";
+
 // Admin Dashboard route (already protected with adminLogin + lockout)
 app.get("/adminDashboard", (req, res) => {
   if (!req.session.isAdmin) {
