@@ -1,3 +1,34 @@
+import fs from "fs";
+import path from "path";
+
+// --- Security Log Endpoint ---
+app.get("/admin/security-log", (req, res) => {
+  const mode = process.env.SECURITY_LOG_MODE || "test"; // "test" or "live"
+
+  if (mode === "test") {
+    // Testing mode → hard-coded log
+    const log = `
+[${new Date().toISOString()}] SECURITY_LOG_OK
+System integrity: ✅
+Attempts today: 0
+No anomalies detected.
+    `;
+    res.type("text/plain").send(log);
+  } else {
+    // Live mode → read from actual log file
+    const logPath = path.join(process.cwd(), "logs", "security.log");
+
+    fs.readFile(logPath, "utf8", (err, data) => {
+      if (err) {
+        return res
+          .status(500)
+          .send(`[${new Date().toISOString()}] ERROR: Cannot read security log`);
+      }
+      res.type("text/plain").send(data);
+    });
+  }
+});
+
 // Add near the other admin routes in server.js
 
 app.get("/admin/security-log", (req, res) => {
