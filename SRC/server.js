@@ -17,7 +17,15 @@ function logAttempt(success, reason = "") {
 
 app.post("/admin/clear-logs", (req, res) => {
   const { secret } = req.body;
-
+// View security log
+app.get("/admin/security-log", (req, res) => {
+  try {
+    const data = fs.readFileSync("logs/security.log", "utf8");
+    res.type("text/plain").send(data || "No security log entries yet.");
+  } catch (err) {
+    res.status(500).json({ message: "Error reading security log.", error: err.message });
+  }
+});
   if (clearLogsAttempts >= 3) {
     logAttempt(false, "(BLOCKED: too many attempts)");
     return res.status(403).json({ message: "Access blocked after 3 failed attempts." });
