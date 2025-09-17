@@ -1,3 +1,45 @@
+import { useState } from "react";
+
+export default function Dashboard() {
+  const [securityLog, setSecurityLog] = useState("");
+
+  const viewSecurityLog = async () => {
+    try {
+      const response = await fetch("/admin/security-log");
+      const data = await response.text();
+      setSecurityLog(data);
+    } catch (err) {
+      setSecurityLog("Error fetching security log.");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Backend Dashboard</h2>
+
+      <button onClick={viewSecurityLog}>
+        View Security Log
+      </button>
+
+      {securityLog && (
+        <pre
+          style={{
+            marginTop: "1rem",
+            padding: "1rem",
+            background: "#111",
+            color: "#0f0",
+            maxHeight: "300px",
+            overflowY: "auto",
+            borderRadius: "8px",
+          }}
+        >
+          {securityLog}
+        </pre>
+      )}
+    </div>
+  );
+}
+
 import express from "express";
 import fs from "fs";
 import dotenv from "dotenv";
