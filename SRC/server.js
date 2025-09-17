@@ -35,6 +35,43 @@ function App() {
 
 export default App;
 
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import AdminDashboard from "./pages/adminDashboard";
+import Home from "./pages/home";
+
+function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const userKey = new URLSearchParams(window.location.search).get("key");
+
+  useEffect(() => {
+    if (userKey) {
+      fetch(`/verify-admin?key=${userKey}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setIsAdmin(true);
+          }
+        })
+        .catch(() => setIsAdmin(false));
+    }
+  }, [userKey]);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/adminDashboard"
+          element={isAdmin ? <AdminDashboard /> : <Navigate to="/" replace />}
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
