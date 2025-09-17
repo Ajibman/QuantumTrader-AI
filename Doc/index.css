@@ -5,6 +5,35 @@
 
 #qtBanner {
   width: 400px; /* adjust as needed */
+  animation: pulseGlow 2.5s infinite;
+  border-radius: 12px; /* smooth edges */
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+  }
+}
+
+.banner-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+#qtBanner {
+  width: 400px; /* adjust as needed */
   animation: pulse 2s infinite;
 }
 
