@@ -1,3 +1,48 @@
+async function clearLogs() {
+  const response = await fetch("/admin/clear-logs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret: "mySuperSecureKey" }) // pulled from .env during build
+  });
+
+  const result = await response.json();
+  alert(result.message);
+}
+
+import express from "express";
+import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();
+let clearLogsAttempts = 0;
+
+app.post("/admin/clear-logs", (req, res) => {
+  const { secret } = req.body;
+
+  if (clearLogsAttempts >= 3) {
+    return res.status(403).json({ message: "Access blocked after 3 failed attempts." });
+  }
+
+  if (secret !== process.env.CLEAR_LOGS_SECRET) {
+    clearLogsAttempts++;
+    return res.status(401).json({ message: "Unauthorized attempt." });
+  }
+
+  // Reset attempts after success
+  clearLogsAttempts = 0;
+
+  try {
+    fs.writeFileSync("logs/system.log", "");
+    return res.json({ message: "Logs cleared successfully." });
+  } catch (err) {
+    return res.status(500).json({ message: "Error clearing logs.", error: err.message });
+  }
+});
+
+CLEAR_LOGS_SECRET=mySuperSecureKey
+
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminDashboard from "./pages/adminDashboard";
