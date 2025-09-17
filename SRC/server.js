@@ -2,6 +2,653 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+  CPilot: "bg-purple-500",
+};
+
+const alertSound = new Audio("/sounds/alert.mp3"); // optional alert sound
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    const handleVisitorUpdate = (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+
+      if (isTopVisitor(data)) {
+        toast.success(
+          `Top Visitor Alert: ${data.visitorId} entered ${data.destination}`,
+          { duration: 5000 }
+        );
+        alertSound.play().catch(() => {}); // play sound if browser allows
+      }
+    };
+
+    socket.on("visitorRouted", handleVisitorUpdate);
+    socket.on("visitorReEvaluated", handleVisitorUpdate);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const isTopVisitor = (v) => {
+    if (v.destination === "TraderLab_CPilot") {
+      return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+    }
+    if (v.destination === "CPilot") {
+      return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
+    }
+    return false;
+  };
+
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  const topVisitors = visitors.filter(isTopVisitor);
+
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  return (
+    <div className="p-6">
+      <Toaster position="top-right" />
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Top Visitor Panel */}
+      <div className="mb-6 p-4 border rounded shadow bg-gray-50">
+        <h2 className="text-2xl font-semibold mb-3">Top Visitors</h2>
+        {topVisitors.length === 0 ? (
+          <p>No top-worthy visitors currently.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {topVisitors.map((v) => (
+              <div
+                key={v.visitorId}
+                className="p-2 bg-yellow-400 text-white rounded shadow animate-pulse relative"
+              >
+                <strong>{v.visitorId}</strong> - {v.destination} (Score: {v.score ?? "N/A"})
+                <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                  <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                  <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                  <p>genomP: {v.genomP ?? "N/A"}</p>
+                  <p>Total Score: {v.score ?? "N/A"}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+          <option>CPilot</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative group
+                        ${bubbleColors[bubble] || "bg-purple-500"}
+                        ${isTopVisitor(v) ? "ring-4 ring-yellow-400 animate-pulse" : ""}
+                      `}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+  CPilot: "bg-purple-500",
+};
+
+// Sound for alerts
+const alertSound = new Audio("/sounds/alert.mp3"); // add your alert sound file
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    const handleVisitorUpdate = (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+
+      if (isTopVisitor(data)) {
+        toast.success(
+          `Top Visitor Alert: ${data.visitorId} entered ${data.destination}`,
+          { duration: 5000 }
+        );
+        alertSound.play().catch(() => {}); // play sound if browser allows
+      }
+    };
+
+    socket.on("visitorRouted", handleVisitorUpdate);
+    socket.on("visitorReEvaluated", handleVisitorUpdate);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  const isTopVisitor = (v) => {
+    if (v.destination === "TraderLab_CPilot") {
+      return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+    }
+    if (v.destination === "CPilot") {
+      return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
+    }
+    return false;
+  };
+
+  return (
+    <div className="p-6">
+      <Toaster position="top-right" />
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+          <option>CPilot</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative group
+                        ${bubbleColors[bubble] || "bg-purple-500"}
+                        ${isTopVisitor(v) ? "ring-4 ring-yellow-400 animate-pulse" : ""}
+                      `}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast"; // for notifications
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+  CPilot: "bg-purple-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    const handleVisitorUpdate = (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+
+      if (isTopVisitor(data)) {
+        toast.success(
+          `Top Visitor Alert: ${data.visitorId} entered ${data.destination}`,
+          { duration: 5000 }
+        );
+      }
+    };
+
+    socket.on("visitorRouted", handleVisitorUpdate);
+    socket.on("visitorReEvaluated", handleVisitorUpdate);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  const isTopVisitor = (v) => {
+    if (v.destination === "TraderLab_CPilot") {
+      return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+    }
+    if (v.destination === "CPilot") {
+      return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
+    }
+    return false;
+  };
+
+  return (
+    <div className="p-6">
+      <Toaster position="top-right" />
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+          <option>CPilot</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative group
+                        ${bubbleColors[bubble] || "bg-purple-500"}
+                        ${isTopVisitor(v) ? "ring-4 ring-yellow-400" : ""}
+                      `}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+};
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    socket.on("visitorRouted", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    socket.on("visitorReEvaluated", (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // Filter & sort visitors
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => sortByScore ? (b.score ?? 0) - (a.score ?? 0) : 0);
+
+  // Summary
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  // Determine if visitor is top-worthy per bubble
+  const isTopVisitor = (v) => {
+    if (v.destination === "TraderLab_CPilot") {
+      return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+    }
+    if (v.destination === "CPilot") {
+      return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
+    }
+    return false;
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+        <select
+          className="border rounded px-3 py-2"
+          value={filterBubble}
+          onChange={(e) => setFilterBubble(e.target.value)}
+        >
+          <option>All</option>
+          <option>TraderLab_CPilot</option>
+          <option>GuidanceModule</option>
+          <option>GamesPavilion</option>
+          <option>CPilot</option>
+        </select>
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={sortByScore}
+            onChange={() => setSortByScore(!sortByScore)}
+          />
+          <span>Sort by Score</span>
+        </label>
+      </div>
+
+      {/* Bubble Visualization */}
+      <div className="flex space-x-4">
+        {["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => (
+          <div key={bubble} className="flex-1 p-4 border rounded shadow">
+            <h3 className="text-xl font-semibold mb-2">{bubble}</h3>
+            <div className="space-y-2">
+              <AnimatePresence>
+                {filteredVisitors
+                  .filter(v => v.destination === bubble)
+                  .map((v) => (
+                    <motion.div
+                      key={v.visitorId}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-2 text-white rounded relative group
+                        ${bubbleColors[bubble] || "bg-purple-500"}
+                        ${isTopVisitor(v) ? "ring-4 ring-yellow-400" : ""}
+                      `}
+                    >
+                      {v.visitorId} (Score: {v.score ?? "N/A"})
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-gray-800 text-white text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p>Peacefulness: {v.peacefulness ?? "N/A"}</p>
+                        <p>Emotional Intelligence: {v.emotionalIntelligence ?? "N/A"}</p>
+                        <p>genomP: {v.genomP ?? "N/A"}</p>
+                        <p>Total Score: {v.score ?? "N/A"}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
 
