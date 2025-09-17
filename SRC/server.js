@@ -1,3 +1,95 @@
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import AdminDashboard from "./pages/adminDashboard";
+import Home from "./pages/home";
+
+function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const userKey = new URLSearchParams(window.location.search).get("key");
+
+  useEffect(() => {
+    if (userKey) {
+      fetch(`/verify-admin?key=${userKey}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setIsAdmin(true);
+          }
+        })
+        .catch(() => setIsAdmin(false));
+    }
+  }, [userKey]);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/adminDashboard"
+          element={isAdmin ? <AdminDashboard /> : <Navigate to="/" replace />}
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const rateLimit = require("express-rate-limit");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+const ADMIN_KEY = process.env.ADMIN_KEY || "SuperSecretKey123";
+const failedAttempts = {}; // { ip: count }
+
+// Middleware: track attempts
+app.use((req, res, next) => {
+  const ip = req.ip;
+
+  // Initialize
+  if (!failedAttempts[ip]) {
+    failedAttempts[ip] = { count: 0, blocked: false };
+  }
+
+  // Blocked?
+  if (failedAttempts[ip].blocked) {
+    console.log(`[SECURITY] Blocked IP tried again: ${ip}`);
+    return res.status(403).send("Access denied");
+  }
+
+  next();
+});
+
+// Route to verify admin key
+app.get("/verify-admin", (req, res) => {
+  const { key } = req.query;
+  const ip = req.ip;
+
+  if (key === ADMIN_KEY) {
+    failedAttempts[ip] = { count: 0, blocked: false }; // reset attempts
+    return res.json({ success: true });
+  } else {
+    failedAttempts[ip].count += 1;
+    console.log(`[SECURITY] Failed attempt ${failedAttempts[ip].count} from ${ip}`);
+
+    if (failedAttempts[ip].count >= 3) {
+      failedAttempts[ip].blocked = true;
+      console.log(`[SECURITY] 🚫 Blocked IP: ${ip} after 3 failed attempts`);
+    }
+
+    return res.status(401).json({ success: false });
+  }
+});
+
+REACT_APP_ADMIN_KEY=SuperSecretKey123
+
+const socket = io("/admin");
+
 io.of("/admin").on("connection", (socket) => {
   console.log("Admin connected to logs");
 
