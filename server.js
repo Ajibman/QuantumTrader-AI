@@ -1,3 +1,39 @@
+// server.js
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Example route
+app.get("/", (req, res) => {
+  res.send("Server is running ✅");
+});
+
+// Start server with auto-recovery
+function startServer() {
+  try {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Server crashed:", err);
+    console.log("🔄 Restarting server...");
+    setTimeout(startServer, 3000); // restart after 3s
+  }
+}
+
+startServer();
+
+// Global error handlers
+process.on("uncaughtException", (err) => {
+  console.error("⚠️ Uncaught Exception:", err);
+  startServer();
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("⚠️ Unhandled Rejection:", reason);
+  startServer();
+});
+
 // scripts/checkServer.js
 const fs = require("fs");
 const path = require("path");
