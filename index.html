@@ -32,38 +32,40 @@
       width: 250px;
       max-width: 80%;
     }
-    /* Y diagram */
+
+    /* Horizontal Y diagram */
     .diagram {
       position: relative;
       width: 400px;
-      height: 300px;
+      height: 150px;
       margin: 40px auto;
     }
     .stem {
       position: absolute;
-      left: 50%;
-      top: 0;
-      width: 4px;
-      height: 150px;
+      left: 0;  /* Tail on the left */
+      top: 50%;
+      width: 150px;
+      height: 4px;
       background: cyan;
       animation: glow 2s infinite;
+      transform: translateY(-50%);
     }
     .branch {
       position: absolute;
-      width: 4px;
-      height: 120px;
+      width: 120px;
+      height: 4px;
       background: cyan;
-      transform-origin: top;
+      transform-origin: left center;
       animation: glow 2s infinite;
     }
     .branch.top {
-      left: 50%;
-      top: 0;
+      left: 150px;
+      top: 50%;
       transform: rotate(-45deg);
     }
     .branch.bottom {
-      left: 50%;
-      top: 0;
+      left: 150px;
+      top: 50%;
       transform: rotate(45deg);
     }
     .label {
@@ -74,17 +76,19 @@
       animation: pulse 2s infinite;
     }
     .label.traderlab {
-      left: 45%;
-      top: 150px;
+      left: 0;
+      top: 60%;
+      transform: translateY(-50%);
     }
     .label.cpilot {
-      left: 70%;
-      top: 40px;
+      left: 260px;
+      top: 15%;
     }
     .label.tradingfloor {
-      left: 70%;
-      top: 200px;
+      left: 260px;
+      top: 75%;
     }
+
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.4; }
