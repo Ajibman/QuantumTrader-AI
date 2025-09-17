@@ -15,3 +15,21 @@
   font-family: monospace;
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
 }
+
+.admin-dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #000;
+  min-height: 100vh;
+  color: #0f0;
+}
+
+.log-box.system {
+  max-height: 500px;
+  overflow-y: auto;
+  background: #111;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+}
