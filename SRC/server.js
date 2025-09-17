@@ -19,6 +19,223 @@ const tierColors = {
   Bronze: "bg-orange-400",
 };
 
+const alertSound = new Audio("/sounds/alert.mp3");
+
+const Dashboard = () => {
+  const [visitors, setVisitors] = useState([]);
+  const [historicalLeaderboard, setHistoricalLeaderboard] = useState({});
+  const [entryHistory, setEntryHistory] = useState({});
+  const [filterBubble, setFilterBubble] = useState("All");
+  const [sortByScore, setSortByScore] = useState(false);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    const handleVisitorUpdate = (data) => {
+      setVisitors((prev) => {
+        const existing = prev.filter(v => v.visitorId !== data.visitorId);
+        return [...existing, data];
+      });
+
+      // Update historical leaderboard
+      setHistoricalLeaderboard((prev) => {
+        const prevEntry = prev[data.visitorId] || { count: 0, highestTier: null, totalScore: 0 };
+        const newTier = getTier(data);
+        const tierRank = { Gold: 3, Silver: 2, Bronze: 1, null: 0 };
+        const highestTier = tierRank[newTier] > tierRank[prevEntry.highestTier] ? newTier : prevEntry.highestTier;
+        const count = prevEntry.count + 1;
+        const totalScore = prevEntry.totalScore + (data.score ?? 0);
+        return { ...prev, [data.visitorId]: { count, highestTier, totalScore } };
+      });
+
+      // Update timestamped entry history
+      setEntryHistory((prev) => {
+        const visitorHistory = prev[data.visitorId] || [];
+        const newEntry = {
+          timestamp: new Date().toLocaleString(),
+          bubble: data.destination,
+          score: data.score ?? "N/A",
+          tier: getTier(data)
+        };
+        return { ...prev, [data.visitorId]: [newEntry, ...visitorHistory] };
+      });
+
+      if (isTopVisitor(data)) {
+        toast.success(
+          `Top Visitor Alert: ${data.visitorId} entered ${data.destination}`,
+          { duration: 5000 }
+        );
+        alertSound.play().catch(() => {});
+      }
+    };
+
+    socket.on("visitorRouted", handleVisitorUpdate);
+    socket.on("visitorReEvaluated", handleVisitorUpdate);
+
+    return () => socket.disconnect();
+  }, []);
+
+  const isTopVisitor = (v) => {
+    if (v.destination === "TraderLab_CPilot") return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
+    if (v.destination === "CPilot") return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
+    return false;
+  };
+
+  const getTier = (v) => {
+    if (!isTopVisitor(v)) return null;
+    if (v.score >= 9 && (v.peacefulness ?? 0) >= 9) return "Gold";
+    if (v.score >= 8 && (v.peacefulness ?? 0) >= 8) return "Silver";
+    return "Bronze";
+  };
+
+  const tierOrder = { Gold: 1, Silver: 2, Bronze: 3 };
+
+  const filteredVisitors = visitors
+    .filter(v => filterBubble === "All" || v.destination === filterBubble)
+    .sort((a, b) => {
+      if (sortByScore) return (b.score ?? 0) - (a.score ?? 0);
+      const tierA = getTier(a);
+      const tierB = getTier(b);
+      return (tierOrder[tierA] ?? 4) - (tierOrder[tierB] ?? 4);
+    });
+
+  const topVisitors = visitors
+    .filter(isTopVisitor)
+    .sort((a, b) => (tierOrder[getTier(a)] ?? 4) - (tierOrder[getTier(b)] ?? 4));
+
+  const summary = ["TraderLab_CPilot", "GuidanceModule", "GamesPavilion", "CPilot"].map((bubble) => {
+    const bubbleVisitors = visitors.filter(v => v.destination === bubble);
+    const total = bubbleVisitors.length;
+    const avgScore = total > 0
+      ? (bubbleVisitors.reduce((acc, v) => acc + (v.score ?? 0), 0) / total).toFixed(2)
+      : 0;
+    const peacefulCount = bubbleVisitors.filter(v => v.category === "Peaceful").length;
+    const neutralCount = bubbleVisitors.filter(v => v.category === "Neutral").length;
+    const disruptiveCount = bubbleVisitors.filter(v => v.category === "Disruptive").length;
+    return { bubble, total, avgScore, peacefulCount, neutralCount, disruptiveCount };
+  });
+
+  return (
+    <div className="p-6">
+      <Toaster position="top-right" />
+      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+
+      {/* Top Visitor Panel */}
+      <div className="mb-6 p-4 border rounded shadow bg-gray-50">
+        <h2 className="text-2xl font-semibold mb-3">Top Visitors</h2>
+        {topVisitors.length === 0 ? (
+          <p>No top-worthy visitors currently.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {topVisitors.map((v) => {
+              const tier = getTier(v);
+              return (
+                <div
+                  key={v.visitorId}
+                  className={`p-2 text-white rounded shadow animate-pulse relative ${tierColors[tier]}`}
+                >
+                  <strong>{v.visitorId}</strong> - {v.destination} (Score: {v.score ?? "N/A"}) <br />
+                  <span className="text-sm font-semibold">{tier} Tier</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Historical Leaderboard */}
+      <div className="mb-6 p-4 border rounded shadow bg-gray-100">
+        <h2 className="text-2xl font-semibold mb-3">Historical Leaderboard</h2>
+        {Object.keys(historicalLeaderboard).length === 0 ? (
+          <p>No historical data yet.</p>
+        ) : (
+          <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr className="bg-gray-300">
+                <th className="border px-2 py-1">Visitor ID</th>
+                <th className="border px-2 py-1">Highest Tier</th>
+                <th className="border px-2 py-1">Entries</th>
+                <th className="border px-2 py-1">Total Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(historicalLeaderboard)
+                .sort(([, a], [, b]) => {
+                  const tierRank = { Gold: 3, Silver: 2, Bronze: 1, null: 0 };
+                  return tierRank[b.highestTier] - tierRank[a.highestTier] || b.totalScore - a.totalScore;
+                })
+                .map(([visitorId, stats]) => (
+                  <tr key={visitorId}>
+                    <td className="border px-2 py-1">{visitorId}</td>
+                    <td className="border px-2 py-1">{stats.highestTier}</td>
+                    <td className="border px-2 py-1">{stats.count}</td>
+                    <td className="border px-2 py-1">{stats.totalScore}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Visitor Entry History */}
+      <div className="mb-6 p-4 border rounded shadow bg-gray-50">
+        <h2 className="text-2xl font-semibold mb-3">Visitor Entry History</h2>
+        {Object.keys(entryHistory).length === 0 ? (
+          <p>No entries recorded yet.</p>
+        ) : (
+          Object.entries(entryHistory).map(([visitorId, entries]) => (
+            <div key={visitorId} className="mb-4">
+              <h3 className="font-semibold">{visitorId}</h3>
+              <ul className="list-disc list-inside">
+                {entries.map((e, idx) => (
+                  <li key={idx}>
+                    [{e.timestamp}] → {e.bubble} (Score: {e.score}, Tier: {e.tier ?? "N/A"})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Summary Panel */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {summary.map((s) => (
+          <div key={s.bubble} className="flex-1 p-4 border rounded shadow bg-gray-100">
+            <h3 className="text-xl font-semibold mb-2">{s.bubble}</h3>
+            <p>Total Visitors: {s.total}</p>
+            <p>Avg Score: {s.avgScore}</p>
+            <p>Peaceful: {s.peacefulCount} | Neutral: {s.neutralCount} | Disruptive: {s.disruptiveCount}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+// src/pages/Dashboard.js
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
+
+const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+
+const bubbleColors = {
+  TraderLab_CPilot: "bg-green-500",
+  GuidanceModule: "bg-yellow-400",
+  GamesPavilion: "bg-red-500",
+  CPilot: "bg-purple-500",
+};
+
+const tierColors = {
+  Gold: "bg-yellow-400",
+  Silver: "bg-gray-400",
+  Bronze: "bg-orange-400",
+};
+
 const alertSound = new Audio("/sounds/alert.mp3"); // optional alert sound
 
 const Dashboard = () => {
