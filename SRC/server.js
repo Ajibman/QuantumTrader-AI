@@ -1,3 +1,20 @@
+io.of("/admin").on("connection", (socket) => {
+  console.log("Admin connected to logs");
+
+  // Send logs only to admin namespace
+  function broadcastLog(message) {
+    socket.emit("system_log", message);
+  }
+
+  // Example patch
+  const origLog = console.log;
+  console.log = (...args) => {
+    const msg = args.join(" ");
+    broadcastLog(msg);
+    origLog.apply(console, args);
+  };
+});
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminDashboard from "./pages/adminDashboard";
 import Home from "./pages/home";
