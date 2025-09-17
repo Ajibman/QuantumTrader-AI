@@ -1,3 +1,23 @@
+// Inside Dashboard.js
+const [logs, setLogs] = useState([]);
+
+const fetchLogs = async () => {
+  try {
+    const res = await fetch("http://localhost:4000/api/admin/logs");
+    const data = await res.json();
+    setLogs(data.logs);
+  } catch (err) {
+    setLogs([`Error: ${err.message}`]);
+  }
+};
+
+// Auto-refresh logs every 10s
+useEffect(() => {
+  fetchLogs();
+  const interval = setInterval(fetchLogs, 10000);
+  return () => clearInterval(interval);
+}, []);
+
 async function fetchDashboardData() {
     try {
         const response = await fetch('http://localhost:5000/dashboard_data');
