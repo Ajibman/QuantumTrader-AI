@@ -1,11 +1,10 @@
- <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quantum Trader AI</title>
 
-  <!-- Styles -->
   <style>
     body {
       margin: 0;
@@ -31,7 +30,6 @@
       opacity: 0.85;
     }
 
-    /* Coming Soon Logo */
     .logo {
       margin-top: 2rem;
     }
@@ -40,7 +38,6 @@
       width: 250px;
     }
 
-    /* Pulsating Banner */
     .banner-container {
       text-align: center;
       margin-top: 3rem;
@@ -50,6 +47,7 @@
       width: 400px;
       animation: pulseGlow 2.5s infinite;
       border-radius: 12px;
+      cursor: pointer;
     }
 
     @keyframes pulseGlow {
@@ -91,12 +89,43 @@
 
   <!-- Pulsating Banner -->
   <div class="banner-container">
-    <img src="assets/MacArthur.png" alt="QT AI Banner" id="qtBanner" />
+    <a id="qtLink" href="#">
+      <img src="assets/MacArthur.png" alt="QT AI Banner" id="qtBanner" />
+    </a>
   </div>
 
   <footer>
     Built with Patience, Discipline, and Integrity. <br />
     &copy; 2025 Quantum Trader AI
   </footer>
+
+  <script>
+    // Define rollout date
+    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
+
+    const banner = document.getElementById("qtBanner");
+    const link = document.getElementById("qtLink");
+
+    function checkDate() {
+      const now = new Date();
+
+      if (now >= rolloutDate) {
+        // Switch banner to clean MacArthur.png
+        banner.src = "assets/MacArthur.png"; // ensure this is the clean version without "COMING SOON"
+
+        // Enable link to trader platform
+        link.href = "https://ajibman.github.io/QuantumTrader-AI/markets"; 
+        link.target = "_blank";
+      } else {
+        // Before rollout: keep showing current banner (with COMING SOON visible)
+        banner.src = "assets/MacArthur.png"; 
+        link.removeAttribute("href");
+        link.style.pointerEvents = "none";
+      }
+    }
+
+    checkDate(); // Run immediately
+    setInterval(checkDate, 60 * 1000); // Check every 1 minute
+  </script>
 </body>
 </html>
