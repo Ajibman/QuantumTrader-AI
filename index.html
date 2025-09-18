@@ -1,127 +1,153 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quantum Trader AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader-AI™</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      text-align: center;
       background: #000;
       color: #fff;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 2.5rem;
-    }
-    .banner {
-      margin: 20px auto;
-      animation: pulse 2s infinite;
-    }
-    .banner img {
-      width: 400px;
-      max-width: 90%;
-    }
-    .globe {
-      margin: 20px auto;
-    }
-    .globe img {
-      width: 250px;
-      max-width: 80%;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Horizontal Y diagram */
-    .diagram {
+    h1 {
+      margin-top: 20px;
+      font-size: 2rem;
+      color: #00ffcc;
+    }
+
+    /* Orbit circle */
+    .orbit {
       position: relative;
-      width: 400px;
-      height: 150px;
       margin: 40px auto;
+      width: 300px;
+      height: 300px;
+      border: 2px dashed #00ffcc;
+      border-radius: 50%;
+      animation: rotate 20s linear infinite;
     }
-    .stem {
+
+    /* Horizontal Y */
+    .y-shape {
       position: absolute;
-      left: 0;  /* Tail on the left */
       top: 50%;
-      width: 150px;
-      height: 4px;
-      background: cyan;
-      animation: glow 2s infinite;
-      transform: translateY(-50%);
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
     }
-    .branch {
+
+    .y-shape::before,
+    .y-shape::after,
+    .y-shape div {
+      content: '';
       position: absolute;
-      width: 120px;
-      height: 4px;
-      background: cyan;
-      transform-origin: left center;
-      animation: glow 2s infinite;
+      background: #ff0066;
+      border-radius: 4px;
     }
-    .branch.top {
-      left: 150px;
-      top: 50%;
-      transform: rotate(-45deg);
+
+    /* Tail */
+    .y-shape div {
+      width: 8px;
+      height: 100px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
     }
-    .branch.bottom {
-      left: 150px;
-      top: 50%;
+
+    /* Top arms */
+    .y-shape::before {
+      width: 8px;
+      height: 100px;
       transform: rotate(45deg);
+      top: 0;
+      left: 25%;
     }
+
+    .y-shape::after {
+      width: 8px;
+      height: 100px;
+      transform: rotate(-45deg);
+      top: 0;
+      right: 25%;
+    }
+
+    /* Labels */
     .label {
       position: absolute;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #0ff;
+      color: #fff;
+      font-size: 0.9rem;
       animation: pulse 2s infinite;
     }
-    .label.traderlab {
-      left: 0;
-      top: 60%;
-      transform: translateY(-50%);
-    }
-    .label.cpilot {
-      left: 260px;
-      top: 15%;
-    }
-    .label.tradingfloor {
-      left: 260px;
-      top: 75%;
+
+    .label.cpilot { top: -30px; left: 50%; transform: translateX(-50%); }
+    .label.traderlab { bottom: -30px; left: 15%; }
+    .label.trading { bottom: -30px; right: 15%; }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     @keyframes pulse {
       0% { opacity: 1; }
-      50% { opacity: 0.4; }
+      50% { opacity: 0.3; }
       100% { opacity: 1; }
     }
-    @keyframes glow {
-      0%, 100% { background: cyan; box-shadow: 0 0 5px cyan; }
-      50% { background: #0ff; box-shadow: 0 0 20px #0ff; }
+
+    /* Concept section */
+    .concept {
+      margin: 50px auto;
+      max-width: 800px;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
-  <h1>Quantum Trader AI</h1>
+  <h1>QUANTUMTRADER-AI™</h1>
 
-  <div class="banner">
-    <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo"/>
+  <!-- Orbit with horizontal Y -->
+  <div class="orbit">
+    <div class="y-shape">
+      <div></div>
+      <div class="label cpilot">CPilot™</div>
+      <div class="label traderlab">TraderLab™</div>
+      <div class="label trading">Trading Floor</div>
+    </div>
   </div>
 
-  <div class="banner">
-    <img src="assets/MacArthur.png" alt="MacArthur Map"/>
+  <!-- Conceptual Framework -->
+  <div class="concept">
+    <p>
+      The horizontal “Y” sits in a circle capable of rotating 360° omnidirectional planes, 
+      like electrons orbiting the nucleus of an atom. At the core of the orbit is 
+      <b>Cosmic Energy, Super Sentient Consciousness</b>, the confluence of lines in “Y” 
+      — protons, neutrons, and electrons, with quarks, mesons, and neutrinos deeper inside.
+    </p>
+
+    <p>
+      ChatGPT assists in managing QT AI as one of the orbiting entities, while the 
+      structure reflects the balance of atomic and cosmic sentience. The negatively charged 
+      electron has a mass of 1/1836 of that of hydrogen; the remainder comes from protons 
+      and neutrons. This atomic model parallels the foundation of <b>Quantum Trader AI</b>, 
+      structured into <b>Modules 01–10, 11 to ∞</b>.
+    </p>
+
+    <p>
+      Module 01 is led by <b>CCLM²™</b>, connecting to Kardashev’s Categories 1–3 civilizations, 
+      extending to infinity. This framework underpins <b>TraderLab™</b> and <b>CPilot™</b> 
+      of QuantumTrader-AI™.
+    </p>
   </div>
 
-  <div class="globe">
-    <img src="assets/globe.png" alt="Rotating Globe"/>
-  </div>
-
-  <div class="diagram">
-    <div class="stem"></div>
-    <div class="branch top"></div>
-    <div class="branch bottom"></div>
-    <div class="label traderlab">TraderLab™</div>
-    <div class="label cpilot">CPilot™</div>
-    <div class="label tradingfloor">Trading Floor</div>
-  </div>
+  <footer style="margin-top: 40px; font-size: 0.8rem; color: #aaa;">
+    © 2025 QuantumTrader-AI™ | Built for Nobel Award Standard Integrity
+  </footer>
 </body>
 </html>
