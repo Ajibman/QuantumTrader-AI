@@ -167,5 +167,44 @@ simulateBtn.addEventListener('click', async () => {
   }
 });
 </script>
+
+ <!-- ==================== Simulate Visitor Interaction Module ==================== -->
+<div id="visitor-sim-panel" style="display:none; border:1px solid #ccc; padding:10px; margin-top:20px; background:#f9f9f9;">
+  <h3>Visitor Interaction Simulation</h3>
+  <pre id="visitor-sim-output">No events yet...</pre>
+  <button id="simulate-visitor-btn" style="padding:5px 10px; margin-top:5px;">Simulate Interaction</button>
+</div>
+
+<script>
+  (function() {
+    const simulateBtn = document.getElementById('simulate-visitor-btn');
+    const output = document.getElementById('visitor-sim-output');
+
+    simulateBtn.addEventListener('click', async () => {
+      try {
+        // Example visitor data
+        const visitorData = {
+          actions: ['login', 'browse'],
+          statements: ['I want to trade ethically'],
+          patterns: ['peace-inclined']
+        };
+
+        // Send POST request to backend
+        const response = await fetch('/api/visitor-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(visitorData)
+        }).then(res => res.json());
+
+        // Display result in panel
+        output.textContent = JSON.stringify(response, null, 2);
+        document.getElementById('visitor-sim-panel').style.display = 'block';
+      } catch (err) {
+        output.textContent = 'Error: ' + err;
+      }
+    });
+  })();
+</script>
+<!-- ==================== End of Simulation Module ==================== -->
 </body>
 </html>
