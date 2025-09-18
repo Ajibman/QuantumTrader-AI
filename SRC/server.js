@@ -1,3 +1,14 @@
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; // actions, statements, patterns
+    const response = await routeVisitor(visitorData);
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
 <svg width="100%" height="auto" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
   <!-- MacArthur Banner -->
   <rect x="200" y="20" width="200" height="50" fill="gray" stroke="black" stroke-width="2" rx="8" ry="8"/>
