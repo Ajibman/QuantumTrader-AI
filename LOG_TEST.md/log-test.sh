@@ -1,7 +1,15 @@
-#!/bin/bash
-# log-test.sh — Add new test entry into TEST_LOG.md and auto-sync with GitHub
+ #!/bin/bash
+# log-test.sh — Add new test entry into TEST_LOG.md with sequential Session IDs and auto-sync
 
 LOG_FILE="TEST_LOG.md"
+
+# Determine next session number
+if [ -f "$LOG_FILE" ]; then
+    session_num=$(grep -c "## Test Session" "$LOG_FILE")
+    session_num=$((session_num + 1))
+else
+    session_num=1
+fi
 
 # Ask user for test details
 echo "=== New Test Entry ==="
@@ -20,7 +28,7 @@ cat <<EOF >> $LOG_FILE
 
 ---
 
-## Test Session $(date +%s)
+## Test Session $session_num
 - **Date/Time:** $datetime
 - **Module Tested:** $module
 - **Input:** $input
@@ -32,7 +40,7 @@ EOF
 
 # Commit & push
 git add $LOG_FILE
-git commit -m "test: logged new session for $module ($status)"
+git commit -m "test: logged new session $session_num for $module ($status)"
 git push origin main
 
-echo "✅ Test logged and pushed to GitHub!"
+echo "✅ Test Session $session_num logged and pushed to GitHub!"
