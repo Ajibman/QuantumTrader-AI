@@ -225,7 +225,37 @@ async function sendVisitorEvent() {
   }
 }
 </script>
+<!-- Existing content of index.html above -->
 
+  <!-- Simulation Button Section -->
+  <div style="text-align:center; margin-top:20px;">
+    <button id="simulateVisitorBtn">Simulate Visitor Interaction</button>
+  </div>
+
+  <script>
+    document.getElementById('simulateVisitorBtn').addEventListener('click', async () => {
+      const simulatedVisitor = {
+        action: "viewed_homepage",
+        intention: "explore_trading",
+        statement: "show me trending assets"
+      };
+
+      try {
+        const response = await fetch('/api/visitor-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(simulatedVisitor)
+        });
+        const result = await response.json();
+        console.log('Routing result:', result);
+        alert("Visitor routed: " + JSON.stringify(result));
+      } catch (err) {
+        console.error("Error simulating visitor event:", err);
+      }
+    });
+  </script>
+</body>
+</html>
 </body>
 </html>
 </body>
