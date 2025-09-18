@@ -32,8 +32,12 @@ git push origin main
 echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ Backup executed successfully -> $BACKUP_FILE" >> "$LOG_FILE"
 
 # Auto-clean old backups (keep last 10)
-BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/index_*.html 2>/dev/null | wc -l)
+BACKUPS_LIST=$(ls -1t "$BACKUP_DIR"/index_*.html 2>/dev/null)
+BACKUP_COUNT=$(echo "$BACKUPS_LIST" | wc -l)
+
 if [ "$BACKUP_COUNT" -gt 10 ]; then
-  ls -1t "$BACKUP_DIR"/index_*.html | tail -n +11 | xargs rm -f
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - ♻️ Auto-clean executed, kept last 10 backups" >> "$LOG_FILE"
+  TO_DELETE=$(echo "$BACKUPS_LIST" | tail -n +11)
+  echo "$TO_DELETE" | xargs rm -f
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - ♻️ Auto-clean executed, deleted:" >> "$LOG_FILE"
+  echo "$TO_DELETE" >> "$LOG_FILE"
 fi
