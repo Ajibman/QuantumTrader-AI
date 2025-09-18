@@ -1,3 +1,51 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const { routeVisitor } = require('./Trader_Routing_Engine');
+const { exec } = require('child_process');
+
+const app = express();
+app.use(bodyParser.json());
+
+// Live visitor/trader events endpoint
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; // Actions, statements, patterns
+    const response = await routeVisitor(visitorData);
+
+    // Prepare test entry for automated logging
+    const module = 'Visitor Simulation';
+    const input = JSON.stringify(visitorData).replace(/"/g, '\\"');
+    const expected = 'Routing according to Bubble-Routing Decision Tree';
+    const actual = JSON.stringify(response).replace(/"/g, '\\"');
+    const status = 'Pass';
+    const notes = 'Automated log from simulated visitor';
+
+    // Build command to call log-test.sh safely
+    const cmd = `echo -e "${module}\n${input}\n${expected}\n${actual}\n${status}\n${notes}\ny" | ./log-test.sh`;
+
+    // Non-blocking exec to log test without holding response
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error('Error logging test:', error);
+      } else {
+        console.log('✅ Visitor simulation logged:', stdout);
+      }
+    });
+
+    res.status(200).json(response);
+
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 const { exec } = require('child_process');
 
 // After routing visitor
