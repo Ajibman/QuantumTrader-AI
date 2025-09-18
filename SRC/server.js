@@ -1,3 +1,16 @@
+import qtAISentinel from '../core/qtAISentinel.js';
+
+// Example function when a trader interacts
+export function processTraderAction(traderId, interaction) {
+  // QT AI monitors and decides where to route
+  qtAISentinel.monitor(traderId, interaction);
+}
+
+// Example periodic backup trigger
+setInterval(() => {
+  qtAISentinel.triggerBackup();
+}, 300000); // every 5 minutes
+
 class QTAISentinel {
   constructor() {
     this.traderStates = {};       // Tracks visitor/trader states
