@@ -1,61 +1,25 @@
  #!/bin/bash
+# restore.sh - Safely restore index.html from backup with confirmation
 
-# Backup directory
 BACKUP_DIR="./backup"
-mkdir -p $BACKUP_DIR
+TARGET_FILE="index.html"
 
-# Timestamp for backups
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+if [ ! -f "$BACKUP_DIR/$TARGET_FILE" ]; then
+  echo "❌ No backup found in $BACKUP_DIR/$TARGET_FILE"
+  exit 1
+fi
 
-# === BACKUP FUNCTION ===
-backup() {
-  cp index.html $BACKUP_DIR/index-$TIMESTAMP.html
-  echo "Backup created: $BACKUP_DIR/index-$TIMESTAMP.html"
-  git add $BACKUP_DIR/index-$TIMESTAMP.html
-  git commit -m "backup: index.html at $TIMESTAMP"
+echo "⚠️ This will overwrite $TARGET_FILE with the backup version."
+read -p "Are you sure? (y/n): " confirm
+
+if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+  cp "$BACKUP_DIR/$TARGET_FILE" "$TARGET_FILE"
+  echo "✅ Restore completed."
+
+  # Auto-commit & push
+  git add "$TARGET_FILE"
+  git commit -m "restore: restored index.html from backup"
   git push origin main
-}
-
-# === RESTORE FUNCTIONS (AUTO-COMMIT + PUSH) ===
-
-# Restore latest backup
-restore_latest() {
-  LATEST_BACKUP=$(ls -t $BACKUP_DIR/index-*.html | head -n 1)
-  if [ -n "$LATEST_BACKUP" ]; then
-    cp "$LATEST_BACKUP" index.html
-    echo "Restored from latest backup: $LATEST_BACKUP"
-    git add index.html
-    git commit -m "restore: index.html from $LATEST_BACKUP"
-    git push origin main
-  else
-    echo "No backups found!"
-  fi
-}
-
-# Restore a specific backup file
-restore_specific() {
-  if [ -f "$1" ]; then
-    cp "$1" index.html
-    echo "Restored from: $1"
-    git add index.html
-    git commit -m "restore: index.html from $1"
-    git push origin main
-  else
-    echo "Backup file not found: $1"
-  fi
-}
-
-# Restore by tag (backup timestamp)
-restore_by_tag() {
-  TAG=$1
-  FILE="$BACKUP_DIR/index-${TAG#backup-}.html"
-  if [ -f "$FILE" ]; then
-    cp "$FILE" index.html
-    echo "Restored from tag: $TAG ($FILE)"
-    git add index.html
-    git commit -m "restore: index.html from tag $TAG"
-    git push origin main
-  else
-    echo "Backup for tag $TAG not found!"
-  fi
-}
+else
+  echo "❌ Restore canceled."
+fi
