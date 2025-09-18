@@ -1,34 +1,30 @@
  #!/bin/bash
-# Backup and Restore script for index.html
 
-cd "$(dirname "$0")"
+BACKUP_DIR="./backup"
+TIMESTAMP=$(date +"%Y-%m-%d-%H%M%S")
 
-mkdir -p backups
+mkdir -p "$BACKUP_DIR"
 
-if [ "$1" == "backup" ]; then
-  # Backup current index.html
-  cp index.html "backups/index-$(date +%Y-%m-%d-%H%M%S).html"
-  git add backups/
-  git commit -m "chore: backup index.html on $(date +%Y-%m-%d %H:%M:%S)"
-  git push origin main
-  echo "✅ Backup completed."
-
-elif [ "$1" == "restore" ]; then
-  if [ -z "$2" ]; then
-    echo "⚠️ Please specify which backup file to restore."
-    echo "Available backups:"
-    ls backups/
-    exit 1
-  fi
-
-  cp "backups/$2" index.html
-  git add index.html
-  git commit -m "chore: restore index.html from $2"
-  git push origin main
-  echo "✅ Restored index.html from $2"
-
-else
-  echo "Usage:"
-  echo "./backup.sh backup        # create a new backup"
-  echo "./backup.sh restore FILE  # restore index.html from a backup"
-fi
+case "$1" in
+  backup)
+    cp index.html "$BACKUP_DIR/index-$TIMESTAMP.html"
+    echo "✅ Backup created: $BACKUP_DIR/index-$TIMESTAMP.html"
+    ;;
+  restore)
+    if [ -n "$2" ]; then
+      cp "$BACKUP_DIR/$2" index.html
+      echo "✅ Restored from $BACKUP_DIR/$2"
+    else
+      LATEST=$(ls -t $BACKUP_DIR/index-*.html | head -n 1)
+      if [ -n "$LATEST" ]; then
+        cp "$LATEST" index.html
+        echo "✅ Restored latest backup: $LATEST"
+      else
+        echo "⚠️ No backups found in $BACKUP_DIR"
+      fi
+    fi
+    ;;
+  *)
+    echo "Usage: ./backup.sh {backup|restore [filename]}"
+    ;;
+esac
