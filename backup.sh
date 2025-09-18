@@ -8,6 +8,19 @@ if [ "$BACKUP_COUNT" -gt 10 ]; then
   echo "$(date '+%Y-%m-%d %H:%M:%S') - ♻️ Auto-clean executed, deleted:" >> "$LOG_FILE"
   echo "$TO_DELETE" >> "$LOG_FILE"
 
-  # Send notification (placeholder)
-  echo "QT AI Backup Notice: Auto-clean executed at $(date). Deleted: $TO_DELETE" | mail -s "QT AI Backup Alert" you@example.com
+  # Local notification (Linux / Mac / Windows WSL)
+  if command -v notify-send &> /dev/null; then
+    notify-send "QT AI Backup" "Auto-clean executed. Deleted old backups."
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    osascript -e 'display notification "Auto-clean executed. Deleted old backups." with title "QT AI Backup"'
+  else
+    echo "Auto-clean executed – deleted old backups." # fallback
+  fi
+
+  # Wait 5 seconds before sending email
+  sleep 5
+
+  # Email alert (replace with your address or configure mail service)
+  echo -e "QT AI Backup Notice\n\nAuto-clean executed at $(date).\n\nDeleted:\n$TO_DELETE" \
+  | mail -s "QT AI Backup Alert" you@example.com
 fi
