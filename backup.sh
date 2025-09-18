@@ -1,4 +1,25 @@
- restore_latest() {
+ #!/bin/bash
+
+# Backup directory
+BACKUP_DIR="./backup"
+mkdir -p $BACKUP_DIR
+
+# Timestamp for backups
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+# === BACKUP FUNCTION ===
+backup() {
+  cp index.html $BACKUP_DIR/index-$TIMESTAMP.html
+  echo "Backup created: $BACKUP_DIR/index-$TIMESTAMP.html"
+  git add $BACKUP_DIR/index-$TIMESTAMP.html
+  git commit -m "backup: index.html at $TIMESTAMP"
+  git push origin main
+}
+
+# === RESTORE FUNCTIONS (AUTO-COMMIT + PUSH) ===
+
+# Restore latest backup
+restore_latest() {
   LATEST_BACKUP=$(ls -t $BACKUP_DIR/index-*.html | head -n 1)
   if [ -n "$LATEST_BACKUP" ]; then
     cp "$LATEST_BACKUP" index.html
@@ -11,6 +32,7 @@
   fi
 }
 
+# Restore a specific backup file
 restore_specific() {
   if [ -f "$1" ]; then
     cp "$1" index.html
@@ -23,6 +45,7 @@ restore_specific() {
   fi
 }
 
+# Restore by tag (backup timestamp)
 restore_by_tag() {
   TAG=$1
   FILE="$BACKUP_DIR/index-${TAG#backup-}.html"
