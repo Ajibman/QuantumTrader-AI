@@ -1,3 +1,39 @@
+const { exec } = require('child_process');
+
+// After routing visitor
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body;
+    const response = await routeVisitor(visitorData);
+
+    // Prepare test entry details for log-test.sh
+    const module = 'Visitor Simulation';
+    const input = JSON.stringify(visitorData).replace(/"/g, '\\"');
+    const expected = 'Routing according to Bubble-Routing Decision Tree';
+    const actual = JSON.stringify(response).replace(/"/g, '\\"');
+    const status = 'Pass';
+    const notes = 'Automated log from simulated visitor';
+
+    // Call log-test.sh
+    const cmd = `./log-test.sh <<EOF
+\n${module}\n${input}\n${expected}\n${actual}\n${status}\n${notes}\ny\nEOF`;
+
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error('Error logging test:', error);
+      } else {
+        console.log('✅ Visitor simulation logged:', stdout);
+      }
+    });
+
+    res.status(200).json(response);
+
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
 app.post('/api/visitor-event', async (req, res) => {
   try {
     const visitorData = req.body; // actions, statements, patterns
