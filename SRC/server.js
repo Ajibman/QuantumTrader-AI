@@ -1,5 +1,65 @@
 class QTAISentinel {
   constructor() {
+    this.traderStates = {};       // Tracks visitor/trader states
+    this.moduleStates = {         // Tracks module availability
+      cpilot: true,
+      traderlab: true,
+      tradingfloor: true,
+      gamespavilion: true
+    };
+  }
+
+  // Real-time monitoring of trader actions
+  monitor(traderId, interaction) {
+    this.traderStates[traderId] = this.evaluateInteraction(interaction);
+    this.decideRouting(traderId);
+  }
+
+  // Evaluate ethical & emotional alignment
+  evaluateInteraction(interaction) {
+    // Returns category: "Peaceful", "Neutral", "Resistant"
+    // Placeholder logic (replace with actual #genomP, #peaceindex checks)
+    if(interaction.peaceScore > 80) return "Peaceful";
+    if(interaction.confusionScore > 50) return "Confused";
+    return "Resistant";
+  }
+
+  // Decide module routing
+  decideRouting(traderId) {
+    const state = this.traderStates[traderId];
+    if (state === "Peaceful" && this.moduleStates.cpilot) {
+      this.routeTo("cpilot", traderId);
+    } else if (state === "Confused") {
+      this.routeTo("traderlab", traderId);
+    } else {
+      this.routeTo("gamespavilion", traderId);
+    }
+  }
+
+  // Route trader and log
+  routeTo(module, traderId) {
+    console.log(`Routing trader ${traderId} to ${module}`);
+    // Trigger module action (call module methods)
+    // Each module reports back to sentinel on completion
+  }
+
+  // Trigger backups or safety actions
+  triggerBackup() {
+    console.log("Triggering backup for live sessions and module states.");
+    // Backup logic here
+  }
+
+  // Optional: handle maintenance mode
+  setModuleState(module, state) {
+    this.moduleStates[module] = state; // true=active, false=under fix
+  }
+}
+
+// Export for use in routing engine
+export default new QTAISentinel();
+
+class QTAISentinel {
+  constructor() {
     this.traderStates = {};       // Track all visitors/traders
     this.moduleStates = {};       // Track CPilot™, TraderLab™, Trading Floor
   }
