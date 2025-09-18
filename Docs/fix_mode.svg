@@ -1,0 +1,29 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- MacArthur Banner -->
+  <rect x="200" y="20" width="200" height="50" fill="gray" stroke="black" stroke-width="2"/>
+  <text x="300" y="50" font-family="Arial" font-size="16" fill="white" text-anchor="middle">MacArthur Banner</text>
+  <text x="300" y="65" font-family="Arial" font-size="12" fill="white" text-anchor="middle">(Static)</text>
+
+  <!-- Sentinel -->
+  <circle cx="300" cy="150" r="40" fill="green" stroke="black" stroke-width="2"/>
+  <text x="300" y="155" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Sentinel</text>
+  <text x="300" y="170" font-family="Arial" font-size="12" fill="white" text-anchor="middle">(Active)</text>
+
+  <!-- Lines connecting to modules -->
+  <line x1="300" y1="190" x2="150" y2="300" stroke="black" stroke-width="2"/>
+  <line x1="300" y1="190" x2="300" y2="300" stroke="black" stroke-width="2"/>
+  <line x1="300" y1="190" x2="450" y2="300" stroke="black" stroke-width="2"/>
+
+  <!-- Modules -->
+  <rect x="100" y="300" width="100" height="50" fill="red" stroke="black" stroke-width="2"/>
+  <text x="150" y="330" font-family="Arial" font-size="14" fill="white" text-anchor="middle">CPilot™</text>
+  <text x="150" y="345" font-family="Arial" font-size="12" fill="white" text-anchor="middle">(Disabled)</text>
+
+  <rect x="250" y="300" width="100" height="50" fill="red" stroke="black" stroke-width="2"/>
+  <text x="300" y="330" font-family="Arial" font-size="14" fill="white" text-anchor="middle">TraderLab™</text>
+  <text x="300" y="345" font-family="Arial" font-size="12" fill="white" text-anchor="middle">(Disabled)</text>
+
+  <rect x="400" y="300" width="100" height="50" fill="red" stroke="black" stroke-width="2"/>
+  <text x="450" y="330" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Trading Floor</text>
+  <text x="450" y="345" font-family="Arial" font-size="12" fill="white" text-anchor="middle">(Disabled)</text>
+</svg>
