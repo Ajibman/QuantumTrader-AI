@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuantumTrader-AI™</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      margin-top: 20px;
+    }
+
+    /* Pulsating MacArthur banner */
+    .banner {
+      width: 300px;
+      height: auto;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Horizontal Y */
+    .y-container {
+      margin: 50px auto;
+      width: 400px;
+      height: 200px;
+      position: relative;
+    }
+    .line {
+      position: absolute;
+      background: cyan;
+      height: 4px;
+    }
+    /* Tail (left) */
+    .line-tail {
+      width: 150px;
+      left: 0;
+      top: 100px;
+    }
+    /* Top arm */
+    .line-top {
+      width: 150px;
+      right: 0;
+      top: 50px;
+      transform: rotate(-20deg);
+      transform-origin: left;
+    }
+    /* Bottom arm */
+    .line-bottom {
+      width: 150px;
+      right: 0;
+      top: 150px;
+      transform: rotate(20deg);
+      transform-origin: left;
+    }
+    .label {
+      position: absolute;
+      color: yellow;
+      font-weight: bold;
+    }
+    .label-tail { left: 10px; top: 80px; }
+    .label-top { right: -50px; top: 30px; }
+    .label-bottom { right: -80px; top: 140px; }
+
+    /* Rotating globe placeholder */
+    .globe {
+      margin: 40px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #0ff;
+      animation: spin 10s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Simulation/admin panel (hidden from visitors) */
+    .admin-panel {
+      display: none; /* set to block for testing backend */
+      margin: 20px auto;
+      padding: 10px;
+      border: 2px solid red;
+      width: 300px;
+    }
+    .admin-panel button {
+      background: red;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QUANTUMTRADER-AI™</h1>
+    <img src="assets/MacArthur.png" alt="MacArthur Map" class="banner"/>
+  </header>
+
+  <!-- Horizontal Y -->
+  <section class="y-container">
+    <div class="line line-tail"></div>
+    <div class="line line-top"></div>
+    <div class="line line-bottom"></div>
+    <div class="label label-tail">TraderLab™</div>
+    <div class="label label-top">CPilot™</div>
+    <div class="label label-bottom">Trading Floor</div>
+  </section>
+
+  <!-- Rotating Globe -->
+  <div class="globe"></div>
+
+  <!-- Hidden admin panel -->
+  <div class="admin-panel">
+    <h3>Admin Controls</h3>
+    <button>Simulate Visitor Interaction</button>
+    <button>Clear Logs</button>
+  </div>
+
+  <footer>
+    <p>© 2025 QuantumTrader-AI™ | All Rights Reserved</p>
+  </footer>
+</body>
+</html>
