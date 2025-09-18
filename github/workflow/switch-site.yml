@@ -1,0 +1,26 @@
+name: Switch Site to Full Version
+
+on:
+  schedule:
+    # Run at 00:00 UTC on November 9, 2025
+    - cron: "0 0 9 11 *"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Switch to full-site branch
+        run: |
+          git fetch origin
+          git checkout full-site
+          git merge main --no-edit || true
+          git push origin full-site:gh-pages --force
