@@ -12,8 +12,10 @@ case "$1" in
 
     git add index.html "$BACKUP_DIR/index-$TIMESTAMP.html"
     git commit -m "Backup on $TIMESTAMP"
+    git tag "backup-$TIMESTAMP"
     git push
-    echo "📤 Backup pushed to GitHub"
+    git push origin "backup-$TIMESTAMP"
+    echo "📤 Backup pushed to GitHub with tag: backup-$TIMESTAMP"
     ;;
   restore)
     if [ -n "$2" ]; then
