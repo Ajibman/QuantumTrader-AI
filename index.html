@@ -180,6 +180,49 @@
     }, 5000);
   </script>
   <!-- End appended JS -->
+<!-- Existing content of index.html -->
+...
+<!-- Other assets, banners, Y-orbit visuals, etc. -->
 
+<!-- Visitor Interaction Simulation (Safe Append) -->
+<div id="visitor-simulator" style="position:fixed; bottom:20px; right:20px; z-index:1000;">
+  <button id="simulateVisitor" onclick="sendVisitorEvent()" style="padding:8px 12px; font-size:14px;">
+    Simulate Visitor Interaction
+  </button>
+</div>
+
+<script>
+async function sendVisitorEvent() {
+  const visitorData = {
+    id: 'visitor001',
+    score: Math.floor(Math.random() * 10) + 1,
+    actions: ['click', 'scroll'],
+    statements: ['I want to trade ethically']
+  };
+
+  try {
+    const response = await fetch('/api/visitor-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(visitorData)
+    });
+
+    const bubble = await response.json();
+    console.log('Routing Response:', bubble);
+
+    if (bubble.access === 'granted') {
+      alert(`Access granted to: ${bubble.pathway}`);
+    } else {
+      alert(`You are routed to: ${bubble.pathway}`);
+    }
+
+  } catch (err) {
+    console.error('Visitor event dispatch failed:', err);
+  }
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>
