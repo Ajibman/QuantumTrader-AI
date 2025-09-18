@@ -39,7 +39,14 @@ case "$1" in
       fi
     fi
     ;;
+  list)
+    echo "📜 Available backups in $BACKUP_DIR:"
+    ls -t $BACKUP_DIR/index-*.html 2>/dev/null || echo "⚠️ No backups found"
+    echo
+    echo "🔖 Git tags for backups:"
+    git tag -l "backup-*"
+    ;;
   *)
-    echo "Usage: ./backup.sh {backup|restore [filename]}"
+    echo "Usage: ./backup.sh {backup|restore [filename]|list}"
     ;;
 esac
