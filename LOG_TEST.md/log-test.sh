@@ -1,5 +1,5 @@
  #!/bin/bash
-# log-test.sh — Add new test entry into TEST_LOG.md with sequential Session IDs and auto-sync
+# log-test.sh — Add new test entry into TEST_LOG.md with sequential Session IDs, preview, and auto-sync
 
 LOG_FILE="TEST_LOG.md"
 
@@ -23,8 +23,8 @@ read -p "Actual Output? " actual
 read -p "Status (Pass/Fail)? " status
 read -p "Notes? " notes
 
-# Append test entry
-cat <<EOF >> $LOG_FILE
+# Prepare test entry
+entry=$(cat <<EOF
 
 ---
 
@@ -37,10 +37,20 @@ cat <<EOF >> $LOG_FILE
 - **Status:** $status
 - **Notes:** $notes
 EOF
+)
 
-# Commit & push
-git add $LOG_FILE
-git commit -m "test: logged new session $session_num for $module ($status)"
-git push origin main
+# Preview
+echo "=== Preview Test Entry ==="
+echo "$entry"
+echo "=========================="
+read -p "Do you want to append and push this entry? (y/n) " confirm
 
-echo "✅ Test Session $session_num logged and pushed to GitHub!"
+if [[ "$confirm" =~ ^[Yy]$ ]]; then
+    echo "$entry" >> $LOG_FILE
+    git add $LOG_FILE
+    git commit -m "test: logged new session $session_num for $module ($status)"
+    git push origin main
+    echo "✅ Test Session $session_num logged and pushed to GitHub!"
+else
+    echo "⚠️ Test entry canceled. Nothing was committed."
+fi
