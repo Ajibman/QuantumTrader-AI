@@ -1,4 +1,4 @@
-cat << 'EOF' > TEST_LOG.md
+ cat << 'EOF' > TEST_LOG.md
 # QuantumTrader-AI™ — Test Log
 
 This file records all tests, observations, and results during Step 3 (Simulated Visitor Interaction) and beyond.
@@ -29,3 +29,8 @@ This file records all tests, observations, and results during Step 3 (Simulated 
 
 (Continue adding new sessions as needed.)
 EOF
+
+# Auto-sync TEST_LOG.md to GitHub
+git add TEST_LOG.md
+git commit -m "chore(test): initialize or update TEST_LOG.md with latest test logs"
+git push origin main
