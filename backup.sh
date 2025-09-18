@@ -1,20 +1,34 @@
-#!/bin/bash
-# Backup script for index.html
+ #!/bin/bash
+# Backup and Restore script for index.html
 
-# Make sure we are inside the repo
 cd "$(dirname "$0")"
 
-# Ensure backups folder exists
 mkdir -p backups
 
-# Copy index.html with today's date
-cp index.html "backups/index-$(date +%Y-%m-%d).html"
+if [ "$1" == "backup" ]; then
+  # Backup current index.html
+  cp index.html "backups/index-$(date +%Y-%m-%d-%H%M%S).html"
+  git add backups/
+  git commit -m "chore: backup index.html on $(date +%Y-%m-%d %H:%M:%S)"
+  git push origin main
+  echo "✅ Backup completed."
 
-# Stage the backup
-git add backups/
+elif [ "$1" == "restore" ]; then
+  if [ -z "$2" ]; then
+    echo "⚠️ Please specify which backup file to restore."
+    echo "Available backups:"
+    ls backups/
+    exit 1
+  fi
 
-# Commit with a clear message
-git commit -m "chore: backup index.html on $(date +%Y-%m-%d)"
+  cp "backups/$2" index.html
+  git add index.html
+  git commit -m "chore: restore index.html from $2"
+  git push origin main
+  echo "✅ Restored index.html from $2"
 
-# Push to GitHub
-git push origin main
+else
+  echo "Usage:"
+  echo "./backup.sh backup        # create a new backup"
+  echo "./backup.sh restore FILE  # restore index.html from a backup"
+fi
