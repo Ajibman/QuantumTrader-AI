@@ -353,8 +353,6 @@
     /* Launch Date */
     .launch-date { text-align: center; margin-top: 1rem; font-size: 1.2rem; color: #007bff; }
   </style>
-</head>
-<body>
 
   <!-- Step 3: Communication Hub -->
   <section id="step3" class="build-step">
@@ -409,10 +407,27 @@
 
     <p class="launch-date">Official Rollout Date: <strong>November 09, 2025</strong></p>
   </section>
+<!-- Talking Drum at the center of the Y -->
+<div id="talking-drum">🥁</div>
 
-</body>
-</html>
-  <footer>
+<style>
+  #talking-drum {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    animation: pulseDrum 2s infinite;
+    z-index: 20; /* ensure it sits above the Y lines */
+  }
+
+  @keyframes pulseDrum {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+</style>
+<footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
 </body>
