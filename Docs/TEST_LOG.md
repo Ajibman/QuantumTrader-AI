@@ -1,3 +1,7 @@
+### [2025-09-19] Update
+- Integrated Visitor Simulation module in `index.html`
+- Added Horizontal "Y" with 🥁 (drum) and 🪘 (talking drum) to symbolize the Quantum Signal
+ 
  # TEST_LOG.md
 
 This file tracks all test sessions for QT AI.
