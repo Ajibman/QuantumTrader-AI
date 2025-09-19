@@ -61,14 +61,51 @@
       justify-content: center;
       align-items: center;
       margin: 20px 0;
+      position: relative;
+      height: 100px;
     }
     .y-arm {
-      margin: 0 15px;
+      margin: 0 10px;
       padding: 10px;
       border: 2px solid #00ffcc;
       border-radius: 5px;
       font-weight: bold;
       animation: pulsate 1.5s infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .y-stem {
+      width: 40px;
+      height: 2px;
+      background-color: #ffcc00;
+      position: relative;
+      top: 20px;
+    }
+    /* Simulation button styling */
+    #simulateBtn {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 15px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #00ffcc;
+      color: #0d0d0d;
+      font-weight: bold;
+    }
+    #simulateBtn:hover {
+      background-color: #00e6b8;
+    }
+    #simulationOutput {
+      margin-top: 15px;
+      text-align: left;
+      background-color: #1a1a1a;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: monospace;
     }
   </style>
   <script>
@@ -94,10 +131,14 @@
     <div id="home" class="tab active">
       <h2>Welcome</h2>
       <p>This is the evolving front-end of Quantum Trader AI. 🚀</p>
+
+      <!-- Horizontal Y with stem and arms -->
       <div class="horizontal-y">
-        <div class="y-arm">CPilot™</div>
-        <div class="y-arm">Trading Floor</div>
+        <div class="y-arm" style="transform: rotate(-30deg);">CPilot™</div>
+        <div class="y-stem"></div>
+        <div class="y-arm" style="transform: rotate(30deg);">Trading Floor</div>
       </div>
+
       <!-- Example: MacArthur map -->
       <img src="assets/MacArthur.png" alt="MacArthur Map" width="400" class="pulsate">
       <!-- Example: Rotating globe -->
@@ -115,6 +156,20 @@
       <h2>Visitor Simulation</h2>
       <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
       <p>We will wire the backend test log here later. 🔒</p>
+
+      <!-- Simulation Button -->
+      <button id="simulateBtn">Run Simulation</button>
+
+      <!-- Output area -->
+      <pre id="simulationOutput"></pre>
+
+      <script>
+        document.getElementById('simulateBtn').addEventListener('click', () => {
+          const output = document.getElementById('simulationOutput');
+          // Temporary frontend simulation
+          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nStatus: Simulation running...`;
+        });
+      </script>
     </div>
   </div>
 
