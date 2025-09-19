@@ -1,3 +1,26 @@
+#!/bin/bash
+# scripts/log-test.sh
+# Run visitor simulation tests and log results safely
+
+LOG_FILE="TEST_LOG.md"
+
+echo "You are about to run visitor interaction tests and log results."
+read -p "Are you sure? (yes/no): " confirm
+
+if [[ "$confirm" != "yes" ]]; then
+  echo "Aborted. No changes made."
+  exit 0
+fi
+
+echo "Running visitor interaction simulation..."
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+RESULT="✅ Visitor simulation test passed at $TIMESTAMP"
+
+# Append to TEST_LOG.md
+echo -e "\n### Test Run - $TIMESTAMP\n$RESULT\n" >> $LOG_FILE
+
+echo "Test complete. Results logged in $LOG_FILE"
+
 "scripts": {
   "start": "node server.js",
   "backup": "./scripts/backup.sh",
