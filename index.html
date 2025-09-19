@@ -55,7 +55,6 @@
       bottom: 0;
       font-size: 0.9em;
     }
-    /* Horizontal Y visualization */
     .horizontal-y {
       display: flex;
       justify-content: center;
@@ -82,7 +81,6 @@
       position: relative;
       top: 20px;
     }
-    /* Simulation button styling */
     #simulateBtn {
       padding: 10px 20px;
       font-size: 1em;
@@ -127,47 +125,56 @@
   </nav>
 
   <div class="content">
-    <!-- Home Tab -->
     <div id="home" class="tab active">
       <h2>Welcome</h2>
       <p>This is the evolving front-end of Quantum Trader AI. 🚀</p>
 
-      <!-- Horizontal Y with stem and arms -->
       <div class="horizontal-y">
         <div class="y-arm" style="transform: rotate(-30deg);">CPilot™</div>
         <div class="y-stem"></div>
         <div class="y-arm" style="transform: rotate(30deg);">Trading Floor</div>
       </div>
 
-      <!-- Example: MacArthur map -->
       <img src="assets/MacArthur.png" alt="MacArthur Map" width="400" class="pulsate">
-      <!-- Example: Rotating globe -->
       <img src="assets/globe.png" alt="Rotating Globe" width="200" class="pulsate">
     </div>
 
-    <!-- Public Intentions Tab -->
     <div id="public-intentions" class="tab">
       <h2>Public Intentions</h2>
       <p>We uphold transparency, integrity, and collaboration with like minds across the globe.</p>
     </div>
 
-    <!-- Visitor Simulation Tab -->
     <div id="simulation" class="tab">
       <h2>Visitor Simulation</h2>
       <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
       <p>We will wire the backend test log here later. 🔒</p>
 
-      <!-- Simulation Button -->
       <button id="simulateBtn">Run Simulation</button>
-
-      <!-- Output area -->
       <pre id="simulationOutput"></pre>
 
       <script>
-        document.getElementById('simulateBtn').addEventListener('click', () => {
+        document.getElementById('simulateBtn').addEventListener('click', async () => {
           const output = document.getElementById('simulationOutput');
-          // Temporary frontend simulation
-          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nStatus: Simulation running...`;
+          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nSending data to backend...`;
+
+          try {
+            const visitorData = {
+              actions: "click",
+              statements: "interested in trading",
+              patterns: ["curious", "ethical"]
+            };
+
+            const response = await fetch('/api/visitor-event', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(visitorData)
+            });
+
+            const result = await response.json();
+            output.textContent += `\nBackend Response:\n${JSON.stringify(result, null, 2)}`;
+          } catch (err) {
+            output.textContent += `\nError: ${err.message}`;
+          }
         });
       </script>
     </div>
