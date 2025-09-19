@@ -427,8 +427,32 @@
     100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
 </style>
+ <!-- Talking Drum at the center of the Y -->
+<div id="talking-drum" title="The Talking Drum - Ancient communication system, now Quantum Signal of QT AI.">
+  🥁
+</div>
+
+<style>
+  #talking-drum {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    animation: pulseDrum 2s infinite;
+    z-index: 20; /* ensures it sits above Y lines */
+    cursor: help; /* shows tooltip on hover */
+  }
+
+  @keyframes pulseDrum {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+</style>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
+ 
 </body>
 </html>
