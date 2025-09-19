@@ -179,7 +179,101 @@
       </script>
     </div>
   </div>
+<!-- Step 3: Build Process Confluence (Completed) -->
+<section id="step3" class="build-step">
+  <h2>Step 3: Communication Hub 🥁🪘</h2>
+  <div class="confluence">
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line line3"></div>
+    <div class="emoji" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:2rem;">
+      🥁🪘
+    </div>
+  </div>
+  <p>All missing files and assets integrated at this hub for Step 3 of 5.</p>
+</section>
 
+<!-- Step 4: Functional Modules (Placeholders) -->
+<section id="step4" class="build-step">
+  <h2>Step 4: Module Activation</h2>
+  <div class="modules">
+    <a href="#traderlab" class="module placeholder">TraderLab™ (Coming Soon)</a>
+    <a href="#cpilot" class="module placeholder">CPilot™ (Coming Soon)</a>
+    <a href="#tradingfloor" class="module placeholder">Trading Floor (Coming Soon)</a>
+  </div>
+  <p>Modules are prepared as placeholders, ready for backend integration and frontend interaction.</p>
+  
+  <!-- Progress Indicator for Steps 1–5 -->
+  <div class="progress-bar">
+    <div class="step completed">1</div>
+    <div class="step completed">2</div>
+    <div class="step current">3</div>
+    <div class="step upcoming">4</div>
+    <div class="step upcoming">5</div>
+  </div>
+</section>
+
+<style>
+.build-step { 
+  padding: 2rem; 
+  margin: 2rem 0; 
+  border: 1px solid #ccc; 
+  border-radius: 12px; 
+  background: #f9f9f9; 
+  position: relative;
+}
+.confluence { 
+  width: 300px; 
+  height: 300px; 
+  margin: 1rem auto; 
+  position: relative; 
+}
+.line { 
+  position: absolute; 
+  background: #555; 
+  width: 2px; 
+  height: 100%; 
+  top: 0; 
+  left: 50%; 
+}
+.line1 { transform: rotate(0deg); transform-origin: center; }
+.line2 { transform: rotate(60deg); transform-origin: center; }
+.line3 { transform: rotate(-60deg); transform-origin: center; }
+.modules { 
+  display: flex; 
+  justify-content: center; 
+  gap: 2rem; 
+  margin-top: 1rem; 
+}
+.module { 
+  padding: 1rem 2rem; 
+  background: #007bff; 
+  color: white; 
+  text-decoration: none; 
+  border-radius: 8px; 
+  transition: background 0.3s; 
+}
+.module:hover { background: #0056b3; }
+.module.placeholder { background: #6c757d; cursor: not-allowed; }
+.progress-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+.step {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.step.completed { background: #28a745; color: white; }
+.step.current { background: #ffc107; color: white; }
+.step.upcoming { background: #ccc; color: white; }
+</style>
   <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
