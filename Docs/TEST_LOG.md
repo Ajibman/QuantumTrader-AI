@@ -1,3 +1,5 @@
+
+
 #!/bin/bash
 # pre-merge.sh
 # Pre-merge helper to ensure essential files are staged
