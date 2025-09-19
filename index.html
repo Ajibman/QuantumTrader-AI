@@ -466,6 +466,66 @@
     100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
 </style>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader-AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Welcome to QuantumTrader-AI</h1>
+    <p>Shaping the Future of Trading with Quantum Intelligence</p>
+  </header>
+
+  <main>
+    <!-- Visitor Simulation Section -->
+    <section id="visitor-simulation">
+      <h2>Visitor Simulation</h2>
+      <button onclick="simulateVisitor()">Run Simulation</button>
+      <div id="simulation-output"></div>
+    </section>
+
+    <!-- Horizontal Y with Talking Drum -->
+    <section id="quantum-symbol">
+      <h2>Quantum Signal</h2>
+      <p>
+        The Talking Drum - Ancient communication system, now Quantum Signal of QT AI.
+      </p>
+      <div style="text-align: center; font-size: 2rem; line-height: 1.5;">
+        <!-- Horizontal Y with Drum Emojis -->
+        <div>
+          🥁<br />
+          &nbsp;&nbsp;&nbsp;│<br />
+          ──┼──<br />
+          &nbsp;&nbsp;&nbsp;│<br />
+          🪘
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 QuantumTrader-AI. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function simulateVisitor() {
+      const output = document.getElementById("simulation-output");
+      const scenarios = [
+        "Visitor exploring AI trading strategies...",
+        "Visitor uploading test portfolio...",
+        "Visitor requesting transparency report...",
+        "Visitor redirected to ethics & integrity section...",
+      ];
+      const pick = scenarios[Math.floor(Math.random() * scenarios.length)];
+      output.innerHTML = `<p><strong>Simulation Result:</strong> ${pick}</p>`;
+    }
+  </script>
+</body>
+</html>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
