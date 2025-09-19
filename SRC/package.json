@@ -1,0 +1,6 @@
+"scripts": {
+  "start": "node server.js",
+  "backup": "./scripts/backup.sh",
+  "restore": "./scripts/restore.sh",
+  "test-log": "./scripts/log-test.sh"
+}
