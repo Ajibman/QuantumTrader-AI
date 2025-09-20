@@ -1,3 +1,19 @@
+## TEST_LOG.md entries
+
+### [YYYY-MM-DD HH:MM] - pre-merge.sh introduced
+- Added **pre-merge.sh** to automate staging and preparation of files before commits.
+- Ensures all newly created folders/files are detected and staged.
+- Starts automatically at 06:00 hrs WA+1.
+- Facilitates seamless pre-merge checks and auto-sync of changes.
+- Target: QT AI repository (front-end and server.js).
+
+### [YYYY-MM-DD HH:MM] - restore.sh introduced
+- Added **restore.sh** to enable rollback to the latest backup.
+- Can restore all tracked files or specific files.
+- Stages restored files and commits automatically with rollback timestamp.
+- Provides safety net if any new change breaks functionality.
+- Supports visitor/trader workflow continuity in QT AI.
+
 # QuantumTrader-AI Test Log
 
 ## Log Entries
