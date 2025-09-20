@@ -1,4 +1,43 @@
 #!/bin/bash
+# pre-merge.sh - Automatic staging and commit for QT AI
+
+REPO_DIR="$(pwd)"
+
+# Safety prompt
+echo "⚡ Pre-merge automation starting..."
+read -p "Are you sure you want to stage and commit all changes? (y/n): " CONFIRM
+
+if [[ "$CONFIRM" != "y" ]]; then
+  echo "Aborted by user."
+  exit 0
+fi
+
+# Detect new or modified files
+NEW_FILES=$(git ls-files --others --exclude-standard)
+MODIFIED_FILES=$(git diff --name-only)
+
+# Stage files
+if [[ ! -z "$NEW_FILES" ]]; then
+  echo "Staging new files..."
+  git add $NEW_FILES
+fi
+
+if [[ ! -z "$MODIFIED_FILES" ]]; then
+  echo "Staging modified files..."
+  git add $MODIFIED_FILES
+fi
+
+# Auto-commit
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+COMMIT_MSG="Auto-commit pre-merge: $TIMESTAMP"
+
+git commit -m "$COMMIT_MSG"
+
+# Summary
+echo "✅ Auto-commit completed."
+git log -1 --oneline
+
+#!/bin/bash
 # pre-merge.sh - Automatic staging and pre-merge preparation for QT AI
 
 # Set working directory (repo root)
