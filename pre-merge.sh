@@ -1,4 +1,46 @@
 #!/bin/bash
+# pre-merge.sh - Automatic staging and pre-merge preparation for QT AI
+
+# Set working directory (repo root)
+REPO_DIR="$(pwd)"
+
+# Optional: safety prompt
+echo "⚡ Pre-merge automation starting..."
+read -p "Are you sure you want to stage all changes? (y/n): " CONFIRM
+
+if [[ "$CONFIRM" != "y" ]]; then
+  echo "Aborted by user."
+  exit 0
+fi
+
+# Detect new or modified files
+echo "Scanning for new or modified files..."
+NEW_FILES=$(git ls-files --others --exclude-standard)
+MODIFIED_FILES=$(git diff --name-only)
+
+# Stage new files
+if [[ ! -z "$NEW_FILES" ]]; then
+  echo "Staging new files..."
+  git add $NEW_FILES
+else
+  echo "No new files detected."
+fi
+
+# Stage modified files
+if [[ ! -z "$MODIFIED_FILES" ]]; then
+  echo "Staging modified files..."
+  git add $MODIFIED_FILES
+else
+  echo "No modified files detected."
+fi
+
+# Summary
+echo "✅ Files staged:"
+git status -s
+
+echo "Pre-merge staging complete. Ready to commit."
+
+#!/bin/bash
 # pre-merge.sh - automatic staging, logging, self-healing & rollback for QT AI
 
 # 0️⃣ Define required project structure
