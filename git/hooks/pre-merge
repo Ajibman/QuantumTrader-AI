@@ -1,3 +1,5 @@
+🔔 ALERT: Commit failed! Restoring TEST_LOG.md...
+
 #!/bin/bash
 # post-merge hook with confirmation + fail-safe restore + alert
 # Auto stage + commit TEST_LOG.md after merge
