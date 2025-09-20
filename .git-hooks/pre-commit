@@ -1,0 +1,5 @@
+#!/bin/bash
+# pre-commit hook to run pre-merge.sh before every commit
+
+echo "🔔 Running pre-merge.sh before commit..."
+sh ./pre-merge.sh
