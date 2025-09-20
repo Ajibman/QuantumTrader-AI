@@ -1,4 +1,24 @@
 #!/bin/bash
+# pre-merge hook with confirmation step
+# Auto stage + commit TEST_LOG.md before merge
+
+LOGFILE="TEST_LOG.md"
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+echo "⚠️ You are about to auto-update $LOGFILE before merge."
+read -p "Are you sure? (y/n): " CONFIRM
+
+if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
+    echo "- [AutoLog] Pre-merge update at $TIMESTAMP" >> "$LOGFILE"
+    git add "$LOGFILE"
+    git commit -m "AutoLog: Pre-merge update at $TIMESTAMP"
+    echo "✅ TEST_LOG.md updated and committed (pre-merge)."
+else
+    echo "❌ Pre-merge auto-log aborted by user."
+    exit 1
+fi
+
+#!/bin/bash
 # pre-merge.sh
 # Auto stage + commit TEST_LOG.md before merge
 
