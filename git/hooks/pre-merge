@@ -1,3 +1,34 @@
+#!/bin/bash
+# pre-merge.sh - Auto stage and log during merges with branch info + safety checks
+
+set -e  # exit immediately if a command fails
+
+# Ensure TEST_LOG.md exists
+if [ ! -f TEST_LOG.md ]; then
+  echo "❌ TEST_LOG.md missing. Aborting merge."
+  exit 1
+fi
+
+# Get branch info
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+MERGE_BRANCH=$1  # git passes the merge branch name as an argument if available
+
+# Stage all changes
+git add -A
+
+# Append merge info to TEST_LOG.md
+if [ -n "$MERGE_BRANCH" ]; then
+  echo -e "\n[AutoMerge] $(date '+%Y-%m-%d %H:%M:%S') - Merging branch '$MERGE_BRANCH' into '$CURRENT_BRANCH'" >> TEST_LOG.md
+else
+  echo -e "\n[AutoMerge] $(date '+%Y-%m-%d %H:%M:%S') - Merge initiated on '$CURRENT_BRANCH'" >> TEST_LOG.md
+fi
+
+# Show staged changes
+git status --short
+
+echo "✅ Auto-staging and logging done. Proceeding with merge."
+exit 0
+
 ln -sf /pre-merge.sh .git/hooks/pre-merge
 
 #!/bin/bash
