@@ -1,0 +1,3 @@
+#!/bin/bash
+# Trigger pre-merge script before every push
+../pre-merge.sh
