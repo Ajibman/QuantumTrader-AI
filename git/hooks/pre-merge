@@ -1,3 +1,39 @@
+#!/bin/bash
+# pre-merge hook with confirmation + fail-safe restore + alert
+# Auto stage + commit TEST_LOG.md before merge
+
+LOGFILE="TEST_LOG.md"
+BACKUPFILE="TEST_LOG.backup"
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+echo "⚠️ Preparing for merge. Do you want to auto-update $LOGFILE ?"
+read -p "Are you sure? (y/n): " CONFIRM
+
+if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
+    # Backup TEST_LOG.md
+    cp "$LOGFILE" "$BACKUPFILE"
+
+    # Append log entry
+    echo "- [AutoLog] Pre-merge update at $TIMESTAMP" >> "$LOGFILE"
+    git add "$LOGFILE"
+
+    # Commit
+    if git commit -m "AutoLog: Pre-merge update at $TIMESTAMP"; then
+        echo "✅ TEST_LOG.md updated and committed (pre-merge)."
+    else
+        echo "🔔 ALERT: Commit failed! Restoring $LOGFILE..."
+        mv "$BACKUPFILE" "$LOGFILE"
+        git reset HEAD "$LOGFILE"
+        exit 1
+    fi
+
+    # Remove backup after success
+    rm -f "$BACKUPFILE"
+else
+    echo "❌ Pre-merge auto-log aborted by user."
+    exit 1
+fi
+
 🔔 ALERT: Commit failed! Restoring TEST_LOG.md...
 
 #!/bin/bash
