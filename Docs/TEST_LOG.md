@@ -1,6 +1,6 @@
 ## TEST_LOG.md entries
 
-### [YYYY-MM-DD HH:MM] - pre-merge.sh introduced
+### [2025-09-20 08:59] - pre-merge.sh introduced
 - Added **pre-merge.sh** to automate staging and preparation of files before commits.
 - Ensures all newly created folders/files are detected and staged.
 - Starts automatically at 06:00 hrs WA+1.
