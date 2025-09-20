@@ -1,3 +1,21 @@
+#!/bin/bash
+# pre-merge.sh
+# Ensures TEST_LOG.md is updated, staged, and auto-committed before merge
+
+LOGFILE="TEST_LOG.md"
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+# Step 1: Append entry to TEST_LOG.md
+echo "- [AutoLog] Pre-merge update at $TIMESTAMP" >> "$LOGFILE"
+
+# Step 2: Stage TEST_LOG.md
+git add "$LOGFILE"
+
+# Step 3: Commit automatically
+git commit -m "AutoLog: Pre-merge update at $TIMESTAMP"
+
+echo "✅ TEST_LOG.md updated and committed automatically."
+
 git commit -m "AutoLog: Merge log update"
 
 #!/bin/bash
