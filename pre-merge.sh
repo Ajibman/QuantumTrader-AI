@@ -1,3 +1,5 @@
+chmod +x pre-merge.sh
+
 #!/bin/bash
 # pre-merge.sh - automatic staging & logging for QT AI
 
