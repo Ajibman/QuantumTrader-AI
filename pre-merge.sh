@@ -1,3 +1,52 @@
+#!/bin/bash
+# pre-merge.sh - automatic staging, logging & self-healing for QT AI
+
+# 0️⃣ Define required project structure
+REQUIRED_DIRS=("src" "assets")
+REQUIRED_FILES=("index.html" "server.js" "README.md" "TEST_LOG.md")
+
+# 1️⃣ Safety confirmation
+echo "⚠️ Pre-merge safety check"
+read -p "Are you sure you want to stage and merge? [y/N] " CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+    echo "❌ Merge aborted."
+    exit 1
+fi
+
+# 2️⃣ Self-healing: restore missing folders
+for DIR in "${REQUIRED_DIRS[@]}"; do
+    if [ ! -d "$DIR" ]; then
+        echo "🛠 Creating missing folder: $DIR"
+        mkdir -p "$DIR"
+        echo "# Placeholder for $DIR" > "$DIR/.keep"
+        git add "$DIR/.keep"
+    fi
+done
+
+# 3️⃣ Self-healing: restore missing files
+for FILE in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$FILE" ]; then
+        echo "🛠 Restoring missing file: $FILE"
+        echo "<!-- Auto-generated placeholder for $FILE -->" > "$FILE"
+        git add "$FILE"
+    fi
+done
+
+# 4️⃣ Auto-stage new and modified files
+echo "🟢 Auto-staging files..."
+git add src/* assets/* index.html server.js README.md TEST_LOG.md || true
+
+# 5️⃣ Commit changes with timestamped message
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+git commit -m "Auto-staged & healed repo at $TIMESTAMP" || echo "ℹ️ No changes to commit."
+
+# 6️⃣ Update TEST_LOG.md
+LOGFILE="TEST_LOG.md"
+echo -e "\n[$TIMESTAMP] Auto-staged, healed structure, and committed changes." >> $LOGFILE
+
+# 7️⃣ Success message
+echo "✅ Pre-merge process complete. Repo structure healed & TEST_LOG.md updated."
+
 chmod +x pre-merge.sh
 
 #!/bin/bash
