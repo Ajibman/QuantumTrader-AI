@@ -1,0 +1,12 @@
+cd path/to/QuantumTrader-AI/.git/hooks/
+
+touch pre-commit
+chmod +x pre-commit
+
+#!/bin/bash
+# pre-commit hook to run pre-merge.sh before every commit
+
+echo "🔔 Running pre-merge checks before commit..."
+sh ../pre-merge.sh
+
+git commit -m "Test pre-commit hook"
