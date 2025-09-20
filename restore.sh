@@ -1,3 +1,5 @@
+./restore.sh index.html server.js
+
 #!/bin/bash
 # restore.sh - Rollback utility for QT AI repo
 # Restores the most recent backup of a given file or all files
