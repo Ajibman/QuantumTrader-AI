@@ -1,3 +1,18 @@
+function cleanOldArchives() {
+  const files = fs.readdirSync(archiveFolder)
+    .filter(f => f.startsWith('app-') && f.endsWith('.log'))
+    .sort(); // sorts alphabetically, which works for YYYY-MM-DD format
+
+  const maxArchives = 30;
+  if (files.length > maxArchives) {
+    const filesToDelete = files.slice(0, files.length - maxArchives);
+    filesToDelete.forEach(file => {
+      fs.unlinkSync(path.join(archiveFolder, file));
+      console.log(`Deleted old archive: ${file}`);
+    });
+  }
+}
+
 // Refresh visitor stats every 5 seconds
 setInterval(updateVisitorStats, 5000);
 
