@@ -1,4 +1,61 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+app.use(bodyParser.json());
+
+const STATS_FILE = path.join(__dirname, 'visitor-stats.json');
+const LOG_FILE = path.join(__dirname, 'logs', 'app.log');
+
+// Ensure stats file exists
+if (!fs.existsSync(STATS_FILE)) {
+  fs.writeFileSync(STATS_FILE, JSON.stringify({ totalVisits: 0, lastVisit: null }));
+}
+
+// Ensure logs folder exists
+if (!fs.existsSync(path.dirname(LOG_FILE))) {
+  fs.mkdirSync(path.dirname(LOG_FILE), { recursive: true });
+}
+
+// Log server start/restart
+fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] Server started/restarted\n`);
+
+// Helper to update stats
+function updateStats(action) {
+  const stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf-8'));
+  if (action === 'simulate' || action === 'heartbeat') {
+    stats.totalVisits += 1;
+    stats.lastVisit = new Date().toISOString();
+    fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+    fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] Event: ${action}\n`);
+  }
+  return stats;
+}
+
+// Endpoint to receive visitor events
+app.post('/api/visitor-event', (req, res) => {
+  try {
+    const { action } = req.body;
+    const stats = updateStats(action);
+    res.status(200).json(stats);
+  } catch (err) {
+    fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] Error: ${err.message}\n`);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Optional: refresh stats every hour
+setInterval(() => {
+  const stats = updateStats('heartbeat');
+  console.log('Hourly stats refreshed:', stats);
+}, 3600 * 1000);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`QT AI server running on port ${PORT}`));
+
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
