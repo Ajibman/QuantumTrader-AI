@@ -1,3 +1,30 @@
+---
+date: 2025-09-21
+step: 3
+title: "Frontend to Backend Integration"
+status: in-progress
+---
+
+## Test Log Entry  
+
+**Context:**  
+We are in **Step 3 of Step 5** of the QuantumTrader AI build process.  
+Focus: Connecting `index.html` frontend with `server.js` backend through partial integration.  
+
+**Notes:**  
+- Integration tested between frontend (static page) and backend route `/api/visitor-stats`.  
+- Script placement confirmed inside `<body>` of `index.html`.  
+- Reminder system now functional (via `reminders.log`).  
+
+**Next Actions:**  
+1. Expand integration to cover event-driven visitor tracking.  
+2. Refine API endpoints for global stats visibility (private).  
+3. Document linguistic distinctions (server.js vs index.html instructions).  
+
+---
+
+
+
 #!/bin/bash
 echo "🔍 Running pre-merge checks..."
 
