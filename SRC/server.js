@@ -1,4 +1,41 @@
-- name: Daily backup & rotate visitor-stats.json (keep 30 days)
+name: Daily backup & rotate logs/stats
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # daily at 00:00 UTC
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Daily backup & rotate logs/stats (30-day retention)
+        run: |
+          # Create archive directories if not exist
+          mkdir -p logs/archive stats/archive
+
+          timestamp=$(date -u +"%Y-%m-%d")
+
+          # Backup and rotate app.log
+          cp logs/app.log "logs/archive/app-$timestamp.log" || true
+          find logs/archive -type f -name "app-*.log" -mtime +30 -exec rm {} \;
+
+          # Backup and rotate visitor-stats.json
+          cp stats/visitor-stats.json "stats/archive/visitor-stats-$timestamp.json" || true
+          find stats/archive -type f -name "visitor-stats-*.json" -mtime +30 -exec rm {} \;
+
+          # Stage changes
+          git add logs/archive/ stats/archive/ logs/app.log stats/visitor-stats.json || true
+
+          # Commit if changes exist
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: daily backup & rotate logs/stats (30-day retention)"
+            git push origin main
+          fi
+                  
+                  - name: Daily backup & rotate visitor-stats.json (keep 30 days)
         if: github.event.schedule == '0 0 * * *'
         run: |
           mkdir -p stats/archive
