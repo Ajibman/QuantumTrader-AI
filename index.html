@@ -693,7 +693,39 @@ cd QuantumTrader-AI
   <div>Active Sessions: <span id="active-sessions">0</span></div>
 </div>
 
+<script><!-- ========================= -->
+<!-- QuantumTrader-AI Visitor Stats Panel -->
+<!-- ========================= -->
+<div id="visitor-stats" style="position: fixed; bottom: 20px; right: 20px; 
+     background-color: rgba(0,0,0,0.7); color: #fff; padding: 10px 15px; 
+     border-radius: 8px; font-family: sans-serif; z-index: 9999;">
+  <h4 style="margin: 0 0 5px 0; font-size: 14px;">QuantumTrader-AI™ Stats</h4>
+  <div>Total Visitors: <span id="total-visitors">0</span></div>
+  <div>Active Sessions: <span id="active-sessions">0</span></div>
+</div>
+
 <script>
+(async function() {
+  const totalEl = document.getElementById('total-visitors');
+  const activeEl = document.getElementById('active-sessions');
+
+  async function fetchStats() {
+    try {
+      const res = await fetch('/api/visitor-stats'); // Endpoint in server.js
+      if (!res.ok) throw new Error('Stats fetch failed');
+      const data = await res.json();
+      totalEl.textContent = data.totalVisitors || 0;
+      activeEl.textContent = data.activeSessions || 0;
+    } catch (err) {
+      console.error('Visitor stats error:', err);
+    }
+  }
+
+  fetchStats(); // initial fetch
+  setInterval(fetchStats, 10000); // update every 10 sec
+})();
+</script>
+
 (async function() {
   const totalEl = document.getElementById('total-visitors');
   const activeEl = document.getElementById('active-sessions');
