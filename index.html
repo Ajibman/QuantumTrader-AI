@@ -588,6 +588,56 @@
   // Optional: Show the simulation module only for admins/developers
   document.getElementById('visitor-simulation').style.display = 'block';
 </script>
+
+ <!-- QT AI Visitor Simulation - Start -->
+<div id="visitor-simulation-tab" style="position: fixed; bottom: 10px; right: 10px; background:#1a1a1a; color:#fff; padding:8px 12px; border-radius:5px; cursor:pointer; z-index:9999;">
+  Simulation Tab (Inactive)
+</div>
+
+<script>
+(function(){
+  // Dormant simulation until triggered manually
+  let simulationActive = false;
+
+  const simTab = document.getElementById('visitor-simulation-tab');
+  simTab.addEventListener('click', () => {
+    simulationActive = !simulationActive;
+    simTab.textContent = simulationActive ? "Simulation Active" : "Simulation Tab (Inactive)";
+    simTab.style.background = simulationActive ? "#28a745" : "#1a1a1a";
+  });
+
+  // Example visitor patterns
+  const visitorPatterns = [
+    { action: "view_home", description: "Visitor opened homepage" },
+    { action: "click_banner", description: "Visitor clicked MacArthur banner" },
+    { action: "hover_Y", description: "Visitor hovered horizontal Y" },
+    { action: "attempt_trade", description: "Visitor attempted simulated trade" }
+  ];
+
+  // Periodic simulation - runs every 5 seconds if active
+  setInterval(async () => {
+    if(simulationActive) {
+      const event = visitorPatterns[Math.floor(Math.random() * visitorPatterns.length)];
+      console.log("[QT AI Simulation] Event:", event.description);
+
+      try {
+        // Send simulated visitor event to backend
+        const response = await fetch('/api/visitor-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event })
+        });
+        const data = await response.json();
+        console.log("[QT AI Simulation] Server Response:", data);
+      } catch(err) {
+        console.error("[QT AI Simulation] Backend error:", err);
+      }
+    }
+  }, 5000);
+})();
+</script>
+
+ <!-- QT AI Visitor Simulation - End -->
 </body>
 </html>
 <footer>
