@@ -1,3 +1,40 @@
+#!/bin/bash
+
+REMINDERS_FILE="reminders.log"
+BACKUP_DIR="backups"
+TEST_LOG="TEST_LOG.md"
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+
+mkdir -p $BACKUP_DIR
+
+# Ensure TEST_LOG.md has headings if it's empty
+if [ ! -s "$TEST_LOG" ]; then
+  echo "# TEST LOG" > $TEST_LOG
+  echo -e "\n## Commits" >> $TEST_LOG
+  echo -e "\n## Cleanup" >> $TEST_LOG
+fi
+
+# Log new commit entry
+echo "[$TIMESTAMP] Commit saved." >> $REMINDERS_FILE
+sed -i "/^## Cleanup/i - [$TIMESTAMP] Commit saved." $TEST_LOG
+
+# Trim reminders.log to last 50 entries
+tail -n 50 $REMINDERS_FILE > $REMINDERS_FILE.tmp && mv $REMINDERS_FILE.tmp $REMINDERS_FILE
+
+# Keep only last 50 TEST_LOG.md backups
+TOTAL_BACKUPS=$(ls -1t $BACKUP_DIR/TEST_LOG_*.md 2>/dev/null | wc -l)
+
+if [ "$TOTAL_BACKUPS" -gt 50 ]; then
+  ls -1t $BACKUP_DIR/TEST_LOG_*.md | tail -n +51 | xargs -r rm --
+  echo "[$TIMESTAMP] ♻️ cleaned backups, kept last 50." >> $REMINDERS_FILE
+  sed -i "/^## Cleanup/a - [$TIMESTAMP] ♻️ cleaned backups, kept last 50." $TEST_LOG
+fi
+
+# Silent auto-commit
+git add .
+git commit -m "Auto-commit at $TIMESTAMP" >/dev/null 2>&1
+git push origin main >/dev/null 2>&1
+
 # After writing success/fail to reminders.log
 if git push >/dev/null 2>&1; then
   echo "$(date +"%Y-%m-%d %H:%M:%S") ✅ Auto-push success: TEST_LOG entry #$NEW_NUM - $TITLE" >> $REMINDERS_FILE
