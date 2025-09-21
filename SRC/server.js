@@ -1,3 +1,19 @@
+// ====== Server Reminders ======
+const reminders = [
+  "Check auto-staging pre-merge.sh",
+  "Ensure backup.sh is running",
+  "Verify visitor simulation module",
+  "Review visitor/trader stats logging",
+  "Confirm .env variables are set correctly"
+];
+
+console.log("===== QT AI Server Reminders ======");
+reminders.forEach((reminder, index) => {
+  const timestamp = new Date().toLocaleString();
+  console.log(`${index + 1}. [${timestamp}] ${reminder}`);
+});
+console.log("===================================");
+
 // ===== QT AI Reminders / To-Do Section =====
 const reminders = [
   "Review visitor simulation logs weekly.",
