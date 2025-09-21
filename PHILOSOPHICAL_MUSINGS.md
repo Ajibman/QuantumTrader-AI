@@ -1,7 +1,7 @@
 # PHILOSOPHY_NOTES.md
 
 ## Proof of Quality — QT AI  
-**Author: Olagoke Ajibulu**  
+**Author: Olagoke Ajibulu, QT AI creator, Philosopher, Concepts creator, architect...**  
 
 The creation of QuantumTrader AI is rooted in discipline, experience, and commitment to cosmic good.  
 
