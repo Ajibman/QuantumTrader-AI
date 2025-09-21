@@ -1,4 +1,19 @@
-// Load .env or create one if missing
+# Ignore environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db// Load .env or create one if missing
 const fs = require("fs");
 const path = require("path");
 
