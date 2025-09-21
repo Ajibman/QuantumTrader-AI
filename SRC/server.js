@@ -1,3 +1,31 @@
+name: Auto Commit Stats & Logs
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # runs every hour
+  workflow_dispatch:       # allow manual trigger
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit stats & logs if changed
+        run: |
+          git add visitor-stats.json logs/app.log || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update visitor stats & logs"
+            git push origin main
+          fi
+
 #!/usr/bin/env node
 // QuantumTrader-AI server.js
 
