@@ -1,4 +1,20 @@
 #!/bin/bash
+# pre-merge.sh
+# Automatic staging + sync for QuantumTrader-AI
+
+echo "[pre-merge] Starting pre-merge tasks..."
+
+# Step 1: Sync root index.html → backup/index.html
+cp index.html backup/index.html
+echo "[pre-merge] Synced index.html to backup/index.html"
+
+# Step 2: Stage changes (but do not auto-commit yet)
+git add index.html backup/index.html
+echo "[pre-merge] Staged index.html and backup/index.html"
+
+echo "[pre-merge] Pre-merge tasks complete."
+
+#!/bin/bash
 # pre-merge.sh - Automatic staging and commit for QT AI
 
 REPO_DIR="$(pwd)"
