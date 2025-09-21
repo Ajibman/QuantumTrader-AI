@@ -1,3 +1,47 @@
+// server.js (patch snippet)
+
+require('dotenv').config(); // Load .env variables
+const express = require('express');
+const bodyParser = require('body-parser');
+const { routeVisitor } = require('./Trader_Routing_Engine');
+const app = express();
+
+app.use(bodyParser.json());
+
+const visitorSimEnabled = process.env.SIMULATION_ENABLED === 'true';
+const simInterval = parseInt(process.env.SIMULATION_INTERVAL_SECONDS) || 5;
+
+// Example: Visitor simulation loop
+if (visitorSimEnabled) {
+  setInterval(async () => {
+    try {
+      const simulatedVisitor = {
+        id: 'SIM_' + Date.now(),
+        actions: ['visit', 'click', 'scroll'],
+      };
+      const response = await routeVisitor(simulatedVisitor);
+      console.log('Simulated visitor processed:', response);
+    } catch (err) {
+      console.error('Error in visitor simulation:', err);
+    }
+  }, simInterval * 1000);
+}
+
+// API endpoint for real visitors
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body;
+    const response = await routeVisitor(visitorData);
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
 #!/bin/bash
 # pre-merge.sh — automatic staging wiring with .env protection + logging
 
