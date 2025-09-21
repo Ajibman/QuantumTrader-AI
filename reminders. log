@@ -1,0 +1,19 @@
+==============================
+Quantum Trader AI - Reminders
+==============================
+Date Created: 2025-09-21
+Location: Root folder
+
+# Format:
+# [YYYY-MM-DD HH:MM] - Reminder message
+
+[2025-09-21 10:00] - Create reminders.log file in root folder.
+[2025-09-21 10:05] - Wire server.js to log reminders automatically.
+[2025-09-21 10:10] - Include private notes and to-do tasks for system admin.
+[2025-09-21 10:15] - Ensure reminders are **not visible to public visitors**.
+
+------------------------------
+Notes:
+- Each new reminder should follow the date-time stamp format.
+- Keep sensitive information private; do not log anything that visitors could access.
+- Use for admin tasks, build notes, and system self-checks.
