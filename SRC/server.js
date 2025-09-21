@@ -1,4 +1,23 @@
-// Load environment variables from .env
+// Load .env or create one if missing
+const fs = require("fs");
+const path = require("path");
+
+const envPath = path.resolve(__dirname, ".env");
+
+// If .env doesn't exist, create a starter one
+if (!fs.existsSync(envPath)) {
+  const defaultEnv = `# Auto-created by server.js
+PORT=3000
+NODE_ENV=development
+ADMIN_TOKEN=changeme123
+`;
+
+  fs.writeFileSync(envPath, defaultEnv, { encoding: "utf8" });
+  console.log("[PATCH] .env file was missing. A default .env has been created.");
+}
+
+// Now load the environment variables
+require("dotenv").config();// Load environment variables from .env
 require('dotenv').config();
 
 const express = require('express');
