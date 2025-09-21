@@ -2,6 +2,36 @@
 
 REMINDERS_FILE="reminders.log"
 BACKUP_DIR="backups"
+TEST_LOG="TEST_LOG.md"
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+
+mkdir -p $BACKUP_DIR
+
+# Log new commit entry
+echo "[$TIMESTAMP] Commit saved." >> $REMINDERS_FILE
+echo "- [$TIMESTAMP] Commit saved." >> $TEST_LOG
+
+# Trim reminders.log to last 50 entries
+tail -n 50 $REMINDERS_FILE > $REMINDERS_FILE.tmp && mv $REMINDERS_FILE.tmp $REMINDERS_FILE
+
+# Keep only last 50 TEST_LOG.md backups
+TOTAL_BACKUPS=$(ls -1t $BACKUP_DIR/TEST_LOG_*.md 2>/dev/null | wc -l)
+
+if [ "$TOTAL_BACKUPS" -gt 50 ]; then
+  ls -1t $BACKUP_DIR/TEST_LOG_*.md | tail -n +51 | xargs -r rm --
+  echo "[$TIMESTAMP] ♻️ cleaned backups, kept last 50." >> $REMINDERS_FILE
+  echo "- [$TIMESTAMP] ♻️ cleaned backups, kept last 50." >> $TEST_LOG
+fi
+
+# Silent auto-commit
+git add .
+git commit -m "Auto-commit at $TIMESTAMP" >/dev/null 2>&1
+git push origin main >/dev/null 2>&1
+
+#!/bin/bash
+
+REMINDERS_FILE="reminders.log"
+BACKUP_DIR="backups"
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
 mkdir -p $BACKUP_DIR
