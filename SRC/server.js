@@ -1,3 +1,10 @@
+// Endpoint for visitor stats
+app.get('/api/visitor-stats', (req, res) => {
+  const totalVisitors = 1234; // Replace with live DB or memory data
+  const activeSessions = 56;  // Replace with live DB or memory data
+  res.json({ totalVisitors, activeSessions });
+});
+
 // Add in server.js
 app.get('/api/visitor-stats', (req, res) => {
   // Replace with live data from database or memory counters
