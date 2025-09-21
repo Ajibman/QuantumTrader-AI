@@ -1,4 +1,16 @@
 #!/bin/bash
+# Auto-commit stats & logs
+STATS_FILE="visitor-stats.json"
+LOG_FILE="logs/app.log"
+
+# Check if files exist
+if [[ -f "$STATS_FILE" || -f "$LOG_FILE" ]]; then
+  git add "$STATS_FILE" "$LOG_FILE" 2>/dev/null
+  git commit -m "auto: update visitor stats & logs" >/dev/null 2>&1
+  git push origin main >/dev/null 2>&1
+fi
+
+#!/bin/bash
 # pre-merge.sh
 # Automatic staging + sync for QuantumTrader-AI
 
