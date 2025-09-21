@@ -1,3 +1,35 @@
+# =========================
+# QuantumTrader-AI Settings
+# =========================
+
+# Server settings
+PORT=3000
+NODE_ENV=development
+
+# Logging
+LOG_LEVEL=info
+LOG_PATH=logs/app.log
+
+# Visitor statistics
+VISITOR_STATS_FILE=logs/visitor-stats.json
+
+# Security
+SESSION_SECRET=changeme_secret_key
+API_KEY=changeme_api_key
+
+# Database (if/when added)
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=your_username
+DB_PASS=your_password
+DB_NAME=quantumtrader
+
+# Email/Notifications (future integration)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_email@example.com
+SMTP_PASS=your_email_password
+
 // Load environment variables
 require('dotenv').config();
 
