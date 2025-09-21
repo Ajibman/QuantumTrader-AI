@@ -1,3 +1,5 @@
+[ -f "reminders. log" ] && rm "reminders. log"; touch reminders.log
+
 // ====== Server Reminders ======
 const reminders = [
   "Check auto-staging pre-merge.sh",
