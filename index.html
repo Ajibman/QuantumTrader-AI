@@ -637,7 +637,46 @@
 })();
 </script>
 
- <!-- QT AI Visitor Simulation - End -->
+ <!-- QT AI Visitor Simulation - End --><!-- QT AI Visitor Stats - Start -->
+<div id="visitor-stats" style="position: fixed; bottom: 50px; right: 10px; background:#222; color:#fff; padding:8px 12px; border-radius:5px; font-size:12px; display:none; z-index:9999;">
+  <strong>QT AI Visitor Stats</strong>
+  <div>Total Visits: <span id="total-visits">0</span></div>
+  <div>Interactions: <span id="total-interactions">0</span></div>
+</div>
+
+<script>
+(function(){
+  // Set the launch date
+  const launchDate = new Date("2025-11-09T00:00:00+01:00"); // WA+1 timezone
+  const now = new Date();
+
+  if(now >= launchDate){
+    // Show the stats panel after launch
+    const statsPanel = document.getElementById('visitor-stats');
+    statsPanel.style.display = 'block';
+
+    const totalVisitsEl = document.getElementById('total-visits');
+    const totalInteractionsEl = document.getElementById('total-interactions');
+
+    // Periodically fetch stats from backend
+    setInterval(async () => {
+      try {
+        const response = await fetch('/api/visitor-stats');
+        const data = await response.json();
+        totalVisitsEl.textContent = data.totalVisits || 0;
+        totalInteractionsEl.textContent = data.totalInteractions || 0;
+      } catch(err){
+        console.error("[QT AI Stats] Error fetching stats:", err);
+      }
+    }, 5000);
+  }
+})();
+</script>
+ 
+<!-- QT AI Visitor Stats - End -->
+
+git clone https://github.com/ajibman/QuantumTrader-AI.git
+cd QuantumTrader-AI
 </body>
 </html>
 <footer>
