@@ -1,3 +1,54 @@
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const statsFile = path.join(__dirname, 'visitor-stats.json');
+const logFile = path.join(__dirname, 'logs', 'app.log');
+
+// Ensure logs directory exists
+if (!fs.existsSync(path.join(__dirname, 'logs'))) {
+  fs.mkdirSync(path.join(__dirname, 'logs'));
+}
+
+// Ensure stats file exists
+let stats = { visits: 0 };
+if (fs.existsSync(statsFile)) {
+  try {
+    stats = JSON.parse(fs.readFileSync(statsFile));
+  } catch (err) {
+    stats = { visits: 0 }; // reset if corrupted
+  }
+} else {
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+}
+
+// Log server start/restart
+fs.appendFileSync(logFile, `[${new Date().toISOString()}] Server started\n`);
+
+// Visitor route
+app.get('/', (req, res) => {
+  stats.visits += 1;
+
+  // Save stats immediately
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+
+  // Append visit log
+  fs.appendFileSync(logFile, `[${new Date().toISOString()}] Visit #${stats.visits}\n`);
+
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Refresh stats to disk every 5 seconds
+setInterval(() => {
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+}, 5000);
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 // Inside your route handler that updates visitor-stats.json
 app.get('/', (req, res) => {
   const statsFile = path.join(__dirname, 'visitor-stats.json');
