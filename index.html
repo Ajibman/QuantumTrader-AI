@@ -798,8 +798,39 @@ cd QuantumTrader-AI
       }
     }, 5000);
   </script>
-</body>
-</html>
+
+ <!-- Visitor Simulation & Stats Integration -->
+<script>
+  async function simulateVisitor(action = 'simulate') {
+    try {
+      const response = await fetch('/api/visitor-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      const stats = await response.json();
+      console.log('Visitor event processed:', stats);
+      // Optional: update a small stats display in frontend
+      const statsDisplay = document.getElementById('visitor-stats');
+      if (statsDisplay) {
+        statsDisplay.textContent = `Total Visits: ${stats.totalVisits} | Last Visit: ${stats.lastVisit}`;
+      }
+    } catch (err) {
+      console.error('Visitor simulation error:', err);
+    }
+  }
+
+  // Example: simulate a visitor every 5 seconds for demo/testing
+  setInterval(() => simulateVisitor('simulate'), 5000);
+
+  // Optional: silent heartbeat every hour
+  setInterval(() => simulateVisitor('heartbeat'), 3600 * 1000);
+</script>
+
+<!-- Optional stats display -->
+<div id="visitor-stats" style="font-size: 14px; color: #333; margin-top: 10px;">
+  Total Visits: 0 | Last Visit: N/A
+</div>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
