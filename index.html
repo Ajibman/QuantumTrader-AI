@@ -746,7 +746,58 @@ cd QuantumTrader-AI
   fetchStats();
   setInterval(fetchStats, 10000);
 })();
-</script>
+</script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader AI</title>
+  <!-- Your existing CSS and JS links here -->
+</head>
+<body>
+  <!-- Existing content of your index.html goes here -->
+
+  <!-- Simulation tab -->
+  <div id="visitor-simulation-tab" style="position:fixed; bottom:10px; right:10px; background:#fff; border:1px solid #ccc; padding:10px; z-index:9999;">
+    <h4>Visitor Simulation</h4>
+    <button id="simulate-visit-btn">Simulate Visitor Event</button>
+    <p id="visit-status"></p>
+  </div>
+
+  <script>
+    const simulateBtn = document.getElementById('simulate-visit-btn');
+    const visitStatus = document.getElementById('visit-status');
+
+    simulateBtn.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/visitor-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'simulate', timestamp: new Date().toISOString() })
+        });
+
+        const data = await response.json();
+        visitStatus.textContent = `Visitor event recorded. Backend response: ${JSON.stringify(data)}`;
+      } catch (err) {
+        visitStatus.textContent = `Error sending visitor event: ${err.message}`;
+      }
+    });
+
+    // Optional: auto-refresh visit stats every 5 seconds
+    setInterval(async () => {
+      try {
+        const res = await fetch('/api/visitor-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'heartbeat', timestamp: new Date().toISOString() })
+        });
+        const data = await res.json();
+        visitStatus.textContent = `Visitor event updated. Backend response: ${JSON.stringify(data)}`;
+      } catch (err) {
+        visitStatus.textContent = `Heartbeat error: ${err.message}`;
+      }
+    }, 5000);
+  </script>
 </body>
 </html>
 <footer>
