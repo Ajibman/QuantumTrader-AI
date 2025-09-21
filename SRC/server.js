@@ -1,4 +1,23 @@
-// Track visitors globally (very simple in-memory store for now)
+<!-- Public Pulse: visible to everyone -->
+<div id="public-pulse" style="margin-top:20px;">
+  <h3>🌐 Active visitors</h3>
+  <div id="pulse" style="width:24px;height:24px;border-radius:50%;margin:8px auto;"></div>
+  <p id="pulse-label">System active — live now</p>
+</div>
+
+<style>
+  @keyframes subtlePulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.25); opacity: 0.6; }
+    100% { transform: scale(1); opacity: 0.9; }
+  }
+  #pulse {
+    background: radial-gradient(circle at 30% 30%, rgba(0,255,204,0.95), rgba(0,255,204,0.6));
+    box-shadow: 0 0 12px rgba(0,255,204,0.15);
+    animation: subtlePulse 2s infinite;
+  }
+  #pulse-label { font-size: 0.9rem; color: #cfcfcf; }
+</style>// Track visitors globally (very simple in-memory store for now)
 let visitorStats = {
   total: 0,
   lastVisit: null,
