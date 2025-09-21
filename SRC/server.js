@@ -1,3 +1,25 @@
+// server.js (top of file)
+const fs = require('fs');
+const path = require('path');
+
+// Ensure logs directory exists
+const logsDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// Ensure visitor-stats.json exists
+const statsFile = path.join(__dirname, 'visitor-stats.json');
+if (!fs.existsSync(statsFile)) {
+  fs.writeFileSync(statsFile, JSON.stringify({ visits: 0 }, null, 2));
+}
+
+// Ensure app.log exists
+const logFile = path.join(logsDir, 'app.log');
+if (!fs.existsSync(logFile)) {
+  fs.writeFileSync(logFile, '');
+}
+
 // Load environment variables
 require('dotenv').config();
 
