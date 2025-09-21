@@ -1,4 +1,27 @@
-<!-- Public Pulse: visible to everyone -->
+// Load environment variables from .env
+require('dotenv').config();
+
+const express = require('express');
+const app = express();
+
+// Use PORT from .env, fallback to 3000
+const PORT = process.env.PORT || 3000;
+
+// Example: secure admin route
+app.get('/admin/stats', (req, res) => {
+  const token = req.query.token;
+  if (token !== process.env.ADMIN_TOKEN) {
+    return res.status(403).send('Forbidden');
+  }
+  res.json({
+    visitors: 123,  // replace later with real stats
+    env: process.env.NODE_ENV,
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`QT AI running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+});<!-- Public Pulse: visible to everyone -->
 <div id="public-pulse" style="margin-top:20px;">
   <h3>🌐 Active visitors</h3>
   <div id="pulse" style="width:24px;height:24px;border-radius:50%;margin:8px auto;"></div>
