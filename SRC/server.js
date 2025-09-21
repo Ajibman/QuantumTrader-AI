@@ -1,3 +1,41 @@
+#!/usr/bin/env node
+// QuantumTrader-AI server.js
+
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const { routeVisitor } = require('./Trader_Routing_Engine');
+require('dotenv').config();
+
+app.use(bodyParser.json());
+
+// Live visitor/trader events endpoint
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; // Actions, statements, patterns
+    const response = await routeVisitor(visitorData);
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+// Example health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).send({ status: 'QT AI server running', timestamp: new Date() });
+});
+
+// Set port from .env or default to 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`QuantumTrader-AI server listening on port ${PORT}`);
+});
+
+chmod +x server.js
+  
+./server.js
+  
 # Make all shell scripts executable
 find . -type f -name "*.sh" -exec chmod +x {} \;
 
