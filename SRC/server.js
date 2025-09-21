@@ -1,3 +1,76 @@
+// server.js (extended patch)
+
+require('dotenv').config();
+const fs = require('fs');
+const { exec } = require('child_process');
+const express = require('express');
+const bodyParser = require('body-parser');
+const { routeVisitor } = require('./Trader_Routing_Engine');
+const app = express();
+
+app.use(bodyParser.json());
+
+const visitorSimEnabled = process.env.SIMULATION_ENABLED === 'true';
+const simInterval = parseInt(process.env.SIMULATION_INTERVAL_SECONDS) || 5;
+const autoBackupEnabled = process.env.AUTO_BACKUP === 'true';
+const preMergeEnabled = process.env.PRE_MERGE === 'true';
+
+// Visitor simulation
+if (visitorSimEnabled) {
+  setInterval(async () => {
+    try {
+      const simulatedVisitor = {
+        id: 'SIM_' + Date.now(),
+        actions: ['visit', 'click', 'scroll'],
+      };
+      const response = await routeVisitor(simulatedVisitor);
+      console.log('Simulated visitor processed:', response);
+    } catch (err) {
+      console.error('Error in visitor simulation:', err);
+    }
+  }, simInterval * 1000);
+}
+
+// Auto-backup function
+function runBackup() {
+  if (!autoBackupEnabled) return;
+  exec('./backup.sh', (err, stdout, stderr) => {
+    if (err) console.error('Backup error:', err);
+    if (stdout) console.log('Backup output:', stdout);
+    if (stderr) console.error('Backup stderr:', stderr);
+  });
+}
+
+// Pre-merge / auto-stage function
+function runPreMerge() {
+  if (!preMergeEnabled) return;
+  exec('./pre-merge.sh', (err, stdout, stderr) => {
+    if (err) console.error('Pre-merge error:', err);
+    if (stdout) console.log('Pre-merge output:', stdout);
+    if (stderr) console.error('Pre-merge stderr:', stderr);
+  });
+}
+
+// API endpoint for real visitors
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body;
+    const response = await routeVisitor(visitorData);
+
+    // Trigger backup and pre-merge after processing visitor
+    runBackup();
+    runPreMerge();
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
 // server.js (patch snippet)
 
 require('dotenv').config(); // Load .env variables
