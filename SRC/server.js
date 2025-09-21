@@ -4,6 +4,81 @@ require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
+
+const app = express();
+
+// -----------------------------
+// Environment variables
+// -----------------------------
+const PORT = process.env.PORT || 3000;
+const LOG_PATH = process.env.LOG_PATH || 'logs/app.log';
+const VISITOR_STATS_FILE = process.env.VISITOR_STATS_FILE || 'logs/visitor-stats.json';
+
+// -----------------------------
+// Ensure logs directory exists
+// -----------------------------
+const logsDir = path.dirname(LOG_PATH);
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// -----------------------------
+// Visitor statistics handler
+// -----------------------------
+function updateVisitorStats(ip) {
+  let stats = { visits: 0, visitors: {} };
+
+  if (fs.existsSync(VISITOR_STATS_FILE)) {
+    stats = JSON.parse(fs.readFileSync(VISITOR_STATS_FILE, 'utf8'));
+  }
+
+  stats.visits++;
+  stats.visitors[ip] = (stats.visitors[ip] || 0) + 1;
+
+  fs.writeFileSync(VISITOR_STATS_FILE, JSON.stringify(stats, null, 2));
+
+  // -----------------------------
+  // Silent git auto-commit
+  // -----------------------------
+  exec(`git add ${VISITOR_STATS_FILE} && git commit -m "Auto-update visitor stats" && git push`, 
+    { stdio: 'ignore' }, 
+    (err) => {
+      if (err) {
+        fs.appendFileSync(LOG_PATH, `[${new Date().toISOString()}] Auto-commit failed: ${err.message}\n`);
+      }
+    }
+  );
+
+  return stats;
+}
+
+// -----------------------------
+// Routes
+// -----------------------------
+app.get('/', (req, res) => {
+  const stats = updateVisitorStats(req.ip);
+  res.send(`
+    <h1>Welcome to QuantumTrader AI</h1>
+    <p>Total Visits: ${stats.visits}</p>
+    <p>Your IP (${req.ip}) visits: ${stats.visitors[req.ip]}</p>
+  `);
+});
+
+// -----------------------------
+// Server start
+// -----------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  fs.appendFileSync(LOG_PATH, `[${new Date().toISOString()}] Server started on port ${PORT}\n`);
+});
+
+// Load environment variables
+require('dotenv').config();
+
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 
