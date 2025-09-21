@@ -1,3 +1,47 @@
+name: Auto Commit Stats & Logs
+
+on:
+  schedule:
+    - cron: "0 * * * *"     # hourly
+    - cron: "0 0 * * *"     # daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Hourly commit of stats & logs
+        if: github.event.schedule == '0 * * * *'
+        run: |
+          git add visitor-stats.json logs/app.log || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update visitor stats & logs"
+            git push origin main
+          fi
+
+      - name: Daily backup & rotate app.log
+        if: github.event.schedule == '0 0 * * *'
+        run: |
+          mkdir -p logs/archive
+          timestamp=$(date -u +"%Y%m%d")
+          cp logs/app.log "logs/archive/app-$timestamp.log" || true
+          # Clear the main log after backup
+          : > logs/app.log
+          git add logs/archive/ logs/app.log || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: daily backup & rotate logs"
+            git push origin main
+          fi
+            
 logs/archive/app-20250921.log
 
 name: Auto Commit Stats & Logs
