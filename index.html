@@ -542,7 +542,52 @@
       output.innerHTML = `<p><strong>Simulation Result:</strong> ${pick}</p>`;
     }
   </script>
+<!-- ---------------- Visitor Simulation Module ---------------- -->
+<div id="visitor-simulation" style="display:none;">
+  <h3>Visitor Simulation (For Backend Testing)</h3>
+  <button id="simulate-visit">Simulate Visitor Event</button>
+  <button id="self-heal-btn">Trigger Self-Heal</button>
+</div>
 
+<script>
+  // --- Helper function to POST data to backend ---
+  async function postData(url = '', data = {}) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return await response.json();
+    } catch (err) {
+      console.error('Error posting data:', err);
+      return { error: err.message };
+    }
+  }
+
+  // --- Simulate visitor event ---
+  document.getElementById('simulate-visit').addEventListener('click', async () => {
+    const sampleVisitor = {
+      id: Math.floor(Math.random() * 100000),
+      action: 'click',
+      target: 'MacArthur.png',
+      timestamp: new Date().toISOString()
+    };
+    const result = await postData('/api/visitor-event', sampleVisitor);
+    console.log('Visitor simulation result:', result);
+    alert('Visitor event simulated! Check console for response.');
+  });
+
+  // --- Trigger self-heal manually ---
+  document.getElementById('self-heal-btn').addEventListener('click', async () => {
+    const result = await postData('/api/self-heal', {});
+    console.log('Self-heal result:', result);
+    alert('Self-healing triggered! Check console for details.');
+  });
+
+  // Optional: Show the simulation module only for admins/developers
+  document.getElementById('visitor-simulation').style.display = 'block';
+</script>
 </body>
 </html>
 <footer>
