@@ -1,4 +1,12 @@
-#!/bin/bash
+# After writing success/fail to reminders.log
+if git push >/dev/null 2>&1; then
+  echo "$(date +"%Y-%m-%d %H:%M:%S") ✅ Auto-push success: TEST_LOG entry #$NEW_NUM - $TITLE" >> $REMINDERS_FILE
+else
+  echo "$(date +"%Y-%m-%d %H:%M:%S") ❌ Auto-push failed: TEST_LOG entry #$NEW_NUM - $TITLE" >> $REMINDERS_FILE
+fi
+
+# Trim reminders.log to last 50 entries
+tail -n 50 $REMINDERS_FILE > $REMINDERS_FILE.tmp && mv $REMINDERS_FILE.tmp $REMINDERS_FILE#!/bin/bash
 # log-entry.sh - Append entry to TEST_LOG.md with instant save, silent background push + reminders.log notify
 
 LOG_FILE="TEST_LOG.md"
