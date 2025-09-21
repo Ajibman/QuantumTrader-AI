@@ -1,3 +1,59 @@
+// rotate-logs.js
+const fs = require('fs');
+const path = require('path');
+
+// Path to app.log
+const logFilePath = path.join(__dirname, '../logs/app.log');
+
+// Path to archive folder
+const archiveFolder = path.join(__dirname, '../logs/archive');
+if (!fs.existsSync(archiveFolder)) {
+  fs.mkdirSync(archiveFolder);
+}
+
+// Get today's date
+const today = new Date();
+const dateStamp = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+// Create archive file name
+const archiveFileName = `app-${dateStamp}.log`;
+const archivePath = path.join(archiveFolder, archiveFileName);
+
+// Move current log to archive if it exists
+if (fs.existsSync(logFilePath)) {
+  fs.renameSync(logFilePath, archivePath);
+}
+
+// Create a new empty log file
+fs.writeFileSync(logFilePath, '', 'utf8');
+
+console.log(`Log rotated: ${archiveFileName}`);
+
+// server.js (partial snippet)
+const path = require('path');
+const { fork } = require('child_process');
+
+// Paths
+const refreshScript = path.join(__dirname, 'scripts/refresh-visitor-stats.js');
+
+// Function to run the refresh script quietly
+function runVisitorStatsRefresh() {
+  const child = fork(refreshScript, [], { silent: true });
+
+  // Optionally handle child process errors
+  child.on('error', (err) => {
+    console.error('Visitor stats refresh failed:', err);
+  });
+}
+
+// Run once immediately on server start
+runVisitorStatsRefresh();
+
+// Run every hour (3600 seconds)
+setInterval(runVisitorStatsRefresh, 3600 * 1000);
+
+// Existing server.js logic continues here...
+
 // scripts/refresh-visitor-stats.js
 const fs = require('fs');
 const path = require('path');
