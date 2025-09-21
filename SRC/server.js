@@ -1,3 +1,5 @@
+logs/archive/app-20250921.log
+
 name: Auto Commit Stats & Logs
 
 on:
