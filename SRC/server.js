@@ -1,3 +1,157 @@
+/**
+ * server.js – Fully integrated STEP 3 for QT AI
+ * Modules: Visitor Event Handling, Self-healing, Backup, Logging, Reminders
+ */
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
+
+const { routeVisitor } = require('./Trader_Routing_Engine');
+
+const app = express();
+app.use(bodyParser.json());
+
+// Environment variables
+const PORT = process.env.PORT || 3000;
+const BACKUP_PATH = process.env.BACKUP_PATH || './backup';
+const LOG_PATH = process.env.LOG_PATH || './logs';
+const REMINDERS_LOG = path.join(LOG_PATH, 'reminders.log');
+const VISITOR_LOG = path.join(LOG_PATH, 'visitor_stats.log');
+
+// Ensure directories exist
+[BACKUP_PATH, LOG_PATH].forEach((dir) => {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
+// -------------------- Utility Functions --------------------
+
+// Self-healing: backup and restore
+function selfHeal() {
+  try {
+    const backupFiles = fs.readdirSync(BACKUP_PATH);
+    backupFiles.forEach(file => {
+      const src = path.join(BACKUP_PATH, file);
+      const dest = path.join(__dirname, file);
+      fs.copyFileSync(src, dest);
+    });
+    console.log('Self-healing executed: backups restored.');
+  } catch (err) {
+    console.error('Self-healing error:', err);
+  }
+}
+
+// Logging visitors
+function logVisitor(data) {
+  const timestamp = new Date().toISOString();
+  const logEntry = `${timestamp} | ${JSON.stringify(data)}\n`;
+  fs.appendFileSync(VISITOR_LOG, logEntry);
+}
+
+// Logging reminders
+function logReminder(reminderText) {
+  const timestamp = new Date().toISOString();
+  const logEntry = `${timestamp} | ${reminderText}\n`;
+  fs.appendFileSync(REMINDERS_LOG, logEntry);
+}
+
+// -------------------- API Endpoints --------------------
+
+// Visitor event handling
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; // actions, statements, patterns
+    logVisitor(visitorData);
+
+    const response = await routeVisitor(visitorData);
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+// Trigger self-healing manually
+app.post('/api/self-heal', (req, res) => {
+  selfHeal();
+  res.status(200).json({ status: 'Self-healing executed' });
+});
+
+// Trigger reminders
+app.post('/api/reminder', (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: 'No reminder text provided' });
+  logReminder(text);
+  res.status(200).json({ status: 'Reminder logged' });
+});
+
+// -------------------- Server Startup --------------------
+app.listen(PORT, () => {
+  console.log(`QT AI Server running on port ${PORT}`);
+});
+
+PORT=3000
+MAX_ATTEMPTS=3
+BACKUP_PATH=./backup/
+LOG_PATH=./logs/
+
+// server.js (partial, STEP 3 integration)
+
+// Load environment variables
+require('dotenv').config(); // requires npm install dotenv
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const { routeVisitor } = require('./Trader_Routing_Engine');
+
+const app = express();
+app.use(bodyParser.json());
+
+// Example environment variables
+const PORT = process.env.PORT || 3000;
+const MAX_ATTEMPTS = process.env.MAX_ATTEMPTS || 3; // e.g., for login or critical ops
+const BACKUP_PATH = process.env.BACKUP_PATH || './backup/'; 
+const LOG_PATH = process.env.LOG_PATH || './logs/';
+
+// Keep track of attempts (self-correction)
+let attemptCounter = 0;
+
+// Middleware: log all incoming requests (for internal debugging)
+app.use((req, res, next) => {
+    const logEntry = `[${new Date().toISOString()}] ${req.method} ${req.url}\n`;
+    fs.appendFileSync(`${LOG_PATH}visitor.log`, logEntry);
+    next();
+});
+
+// Live visitor/trader events endpoint
+app.post('/api/visitor-event', async (req, res) => {
+    try {
+        const visitorData = req.body; // Actions, statements, patterns
+        const response = await routeVisitor(visitorData);
+
+        // Increment attempt counter for self-healing logic
+        attemptCounter++;
+        if (attemptCounter > MAX_ATTEMPTS) {
+            console.warn("Max attempts reached. Triggering auto-rollback/self-healing.");
+            // Call self-healing function (can restore backup, restart service, etc.)
+            attemptCounter = 0; // reset after action
+        }
+
+        res.status(200).json(response);
+    } catch (err) {
+        console.error('Routing error:', err);
+        res.status(500).json({ error: 'Internal routing error' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`QT AI server running on port ${PORT}`);
+});
+
 # Personal reminder log (do not push)
 reminders.log
   
