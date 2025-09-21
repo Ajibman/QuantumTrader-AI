@@ -1,3 +1,29 @@
+// Inside your route handler that updates visitor-stats.json
+app.get('/', (req, res) => {
+  const statsFile = path.join(__dirname, 'visitor-stats.json');
+  let stats = { visits: 0 };
+
+  try {
+    stats = JSON.parse(fs.readFileSync(statsFile));
+  } catch (err) {
+    // fallback if file is corrupted
+    stats = { visits: 0 };
+  }
+
+  stats.visits += 1;
+
+  // Save updated stats
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+
+  // Append quiet log entry
+  const logFile = path.join(__dirname, 'logs', 'app.log');
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logFile, `[${timestamp}] Visit #${stats.visits}\n`);
+
+  // Respond
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // server.js (top of file)
 const fs = require('fs');
 const path = require('path');
