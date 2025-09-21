@@ -43,6 +43,51 @@ function refreshVisitorStats() {
 // Run the refresh
 refreshVisitorStats();
 
+// scripts/refresh-visitor-stats.js
+const fs = require('fs');
+const path = require('path');
+
+// File paths
+const statsFile = path.join(__dirname, '../stats/visitor-stats.json');
+const logFile = path.join(__dirname, '../logs/app.log');
+
+// Function to read current stats
+function readStats() {
+  try {
+    const data = fs.readFileSync(statsFile, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    // If file does not exist or corrupted, start fresh
+    return { totalVisits: 0, lastUpdated: null };
+  }
+}
+
+// Function to write stats
+function writeStats(stats) {
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2), 'utf-8');
+}
+
+// Function to log event quietly
+function logEvent(message) {
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logFile, `[${timestamp}] ${message}\n`, 'utf-8');
+}
+
+// Main refresh logic
+function refreshVisitorStats() {
+  const stats = readStats();
+
+  // Example increment (replace with actual visitor count logic)
+  stats.totalVisits = stats.totalVisits + Math.floor(Math.random() * 5); // simulate new visits
+  stats.lastUpdated = new Date().toISOString();
+
+  writeStats(stats);
+  logEvent(`Visitor stats refreshed. Total visits: ${stats.totalVisits}`);
+}
+
+// Run the refresh
+refreshVisitorStats();
+
 name: Daily backup & rotate logs/stats
 
 on:
