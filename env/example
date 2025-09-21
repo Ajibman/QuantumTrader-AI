@@ -1,3 +1,19 @@
+# .env.example for QuantumTrader-AI
+
+# Port the server should run on
+PORT=3000
+
+# API keys (if any) or other secret tokens
+API_KEY=your_api_key_here
+
+# Feature flags
+ENABLE_LOGGING=true
+ENABLE_VISITOR_SIMULATION=true
+
+# Backup and auto-commit settings
+AUTO_COMMIT=true
+BACKUP_INTERVAL_MINUTES=5
+
 # .env.example
 # Copy this file to ".env" and fill in the actual values.
 # DO NOT commit the real ".env" file with secrets.
