@@ -1,3 +1,73 @@
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const visitorStatsFile = path.join(__dirname, 'visitor-stats.json');
+const logFile = path.join(__dirname, 'logs', 'app.log');
+
+// Ensure logs folder exists
+if (!fs.existsSync(path.join(__dirname, 'logs'))) {
+  fs.mkdirSync(path.join(__dirname, 'logs'));
+}
+
+// Utility to log events quietly
+function logEvent(message) {
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logFile, `[${timestamp}] ${message}\n`, 'utf8');
+}
+
+// Load or initialize visitor stats
+let visitorStats = { visits: 0 };
+if (fs.existsSync(visitorStatsFile)) {
+  try {
+    visitorStats = JSON.parse(fs.readFileSync(visitorStatsFile, 'utf8'));
+  } catch (err) {
+    logEvent('Error reading visitor-stats.json, initializing fresh stats.');
+    visitorStats = { visits: 0 };
+  }
+}
+
+// Increment visits
+function incrementVisit() {
+  visitorStats.visits += 1;
+  fs.writeFileSync(visitorStatsFile, JSON.stringify(visitorStats, null, 2), 'utf8');
+  logEvent(`Visitor count updated: ${visitorStats.visits}`);
+}
+
+// Log server start
+logEvent('Server starting/restarting...');
+logEvent(`Heartbeat interval set to ${process.env.HEARTBEAT_INTERVAL || 3600} seconds`);
+
+// Set up heartbeat
+const hbIntervalSeconds = parseInt(process.env.HEARTBEAT_INTERVAL || "3600", 10);
+setInterval(() => {
+  logEvent('Heartbeat – server alive');
+}, hbIntervalSeconds * 1000);
+
+app.use(bodyParser.json());
+
+// Visitor event endpoint
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; 
+    // routeVisitor is assumed defined elsewhere
+    const response = await routeVisitor(visitorData);
+    incrementVisit(); // update stats
+    res.status(200).json(response);
+  } catch (err) {
+    logEvent(`Routing error: ${err.message}`);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+app.listen(PORT, () => {
+  logEvent(`Server listening on port ${PORT}`);
+});
+
 const hbIntervalSeconds = parseInt(process.env.HEARTBEAT_INTERVAL || "3600", 10);
 const hbIntervalMs = hbIntervalSeconds * 1000;
 
