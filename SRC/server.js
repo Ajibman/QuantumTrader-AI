@@ -1,4 +1,31 @@
-# Ignore environment variables
+#!/bin/bash
+# pre-merge.sh — automatic staging wiring with .env protection
+
+echo "🔍 Running pre-merge checks..."
+
+# Safety check: prevent accidental .env commit
+if git diff --cached --name-only | grep -q "^\.env"; then
+  echo "⚠️  ERROR: .env file detected in staged changes!"
+  echo "🚫 Unstaging .env for your safety..."
+  git reset HEAD .env
+  echo "✅ .env has been unstaged. Please keep secrets private."
+  exit 1
+fi
+
+# Safety check: prevent any .env.* variants
+if git diff --cached --name-only | grep -q "^\.env."; then
+  echo "⚠️  ERROR: .env.* file detected in staged changes!"
+  echo "🚫 Unstaging all .env.* files..."
+  git reset HEAD .env.*
+  echo "✅ .env.* files have been unstaged."
+  exit 1
+fi
+
+# Normal pre-merge staging process
+echo "📦 Auto-staging new and modified files..."
+git add -A
+
+echo "✅ Pre-merge checks completed successfully."# Ignore environment variables
 .env
 .env.local
 .env.*.local
