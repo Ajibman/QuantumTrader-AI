@@ -1,3 +1,17 @@
+**Notes:**
+- **Frontend (`index.html`)** = requests and UI display.  
+- **Backend (`server.js`)** = executes logic, routes visitors, updates logs.  
+- **Logs (TEST_LOG.md, reminders)** = record of activities.  
+- **Automation scripts (pre-merge.sh, backup.sh)** = ensure backups & safety.  
+
+This establishes **linguistic clarity**:  
+- Frontend → *requests*  
+- Backend → *executes*  
+- Logs → *remembers*  
+- Scripts → *protect*  
+
+---
+
 ## TEST_LOG.md entries
 
 ### [2025-09-20 08:59] - pre-merge.sh introduced
