@@ -1,3 +1,9 @@
+# Make all shell scripts executable
+find . -type f -name "*.sh" -exec chmod +x {} \;
+
+# Make server.js executable
+chmod +x server.js
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { routeVisitor } = require('./Trader_Routing_Engine');
