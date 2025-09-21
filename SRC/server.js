@@ -1,3 +1,11 @@
+// Add in server.js
+app.get('/api/visitor-stats', (req, res) => {
+  // Replace with live data from database or memory counters
+  const totalVisitors = 1234;     
+  const activeSessions = 56;      
+  res.json({ totalVisitors, activeSessions });
+});
+
 /**
  * server.js – Fully integrated STEP 3 for QT AI
  * Modules: Visitor Event Handling, Self-healing, Backup, Logging, Reminders
