@@ -1,3 +1,28 @@
+const dashboardFile = path.join(__dirname, 'visitor-dashboard.json');
+
+function updateDashboard() {
+  let snapshot = {};
+  const snapshotFile = path.join(archiveFolder, 'visitor-snapshot.json');
+
+  if (fs.existsSync(snapshotFile)) {
+    snapshot = JSON.parse(fs.readFileSync(snapshotFile, 'utf8'));
+  }
+
+  // Extract the latest snapshot entry
+  const latestEntry = snapshot.entries ? snapshot.entries[snapshot.entries.length - 1] : null;
+
+  if (latestEntry) {
+    const dashboardData = {
+      lastUpdate: latestEntry.timestamp,
+      totalVisits: latestEntry.totalVisits,
+      uniqueVisitors: latestEntry.uniqueVisitors
+    };
+
+    fs.writeFileSync(dashboardFile, JSON.stringify(dashboardData, null, 2), 'utf8');
+    console.log('Visitor dashboard updated.');
+  }
+}
+
 function snapshotVisitorStats() {
   const snapshotFile = path.join(archiveFolder, 'visitor-snapshot.json');
 
