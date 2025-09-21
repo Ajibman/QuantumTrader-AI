@@ -1,3 +1,13 @@
+function updateVisitorStats() {
+  const stats = JSON.parse(fs.readFileSync(statsFilePath, 'utf8'));
+  stats.visitors = (stats.visitors || 0) + 1; // increment visitor count
+  fs.writeFileSync(statsFilePath, JSON.stringify(stats, null, 2), 'utf8');
+
+  // Append to app.log silently
+  const logEntry = `[${new Date().toISOString()}] Visitor count updated: ${stats.visitors}\n`;
+  fs.appendFileSync(logFilePath, logEntry);
+}
+
 // rotate-logs.js
 const fs = require('fs');
 const path = require('path');
