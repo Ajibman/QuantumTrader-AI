@@ -21,7 +21,7 @@ This establishes **linguistic clarity**:
 - Facilitates seamless pre-merge checks and auto-sync of changes.
 - Target: QT AI repository (front-end and server.js).
 
-### [YYYY-MM-DD HH:MM] - restore.sh introduced
+### [2025-09-20 08:59] - restore.sh introduced
 - Added **restore.sh** to enable rollback to the latest backup.
 - Can restore all tracked files or specific files.
 - Stages restored files and commits automatically with rollback timestamp.
