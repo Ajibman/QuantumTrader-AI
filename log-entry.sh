@@ -1,4 +1,64 @@
 #!/bin/bash
+# log-entry.sh - Append a new entry to TEST_LOG.md with silent auto-commit and backup
+
+LOG_FILE="TEST_LOG.md"
+BACKUP_DIR="backups"
+
+# Ensure backup directory exists
+mkdir -p $BACKUP_DIR
+
+# Create a timestamped backup
+cp $LOG_FILE $BACKUP_DIR/TEST_LOG_$(date +"%Y%m%d_%H%M%S").md
+
+# Prompt for title
+echo "Enter entry title:"
+read TITLE
+
+# Prompt for step
+echo "Enter step (e.g., Step 3 of Step 5):"
+read STEP
+
+# Prompt for notes
+echo "Enter notes (end with CTRL+D):"
+NOTES=$(</dev/stdin)
+
+# Count existing entries
+ENTRY_NUM=$(grep -c "## Entry" $LOG_FILE)
+NEW_NUM=$((ENTRY_NUM + 1))
+
+# Append to TEST_LOG.md
+cat >> $LOG_FILE <<EOL
+
+---
+
+## Entry $NEW_NUM
+
+\`\`\`yaml
+date: $(date +"%Y-%m-%d %H:%M:%S")
+step: "$STEP"
+title: "$TITLE"
+status: in-progress
+\`\`\`
+
+### Context  
+(Describe context here)  
+
+### Notes  
+$NOTES  
+
+### Next Actions  
+1. (Add later if needed)  
+
+EOL
+
+echo "✅ New entry appended to $LOG_FILE"
+
+# Silent Git auto-commit & push
+git add $LOG_FILE >/dev/null 2>&1
+git commit -m "docs: add TEST_LOG entry #$NEW_NUM - $TITLE" >/dev/null 2>&1
+git push >/dev/null 2>&1
+
+echo "🚀 Entry committed and pushed silently. Backup saved in $BACKUP_DIR/"#!/bin/bash
 # log-entry.sh - Append a new entry to TEST_LOG.md and auto-commit silently
 
 LOG_FILE="TEST_LOG.md"
