@@ -1,3 +1,19 @@
+- name: Daily backup & rotate app.log (keep 30 days)
+        if: github.event.schedule == '0 0 * * *'
+        run: |
+          mkdir -p logs/archive
+          timestamp=$(date -u +"%Y-%m-%d")
+          cp logs/app.log "logs/archive/app-$timestamp.log" || true
+          # Clear the main log after backup
+          : > logs/app.log
+          # Remove logs older than 30 days
+          find logs/archive -type f -name "app-*.log" -mtime +30 -exec rm {} \;
+          git add logs/archive/ logs/app.log || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: daily backup & rotate logs (30-day retention)"
+            git push origin main
+          fi
+          
 name: Auto Commit Stats & Logs
 
 on:
