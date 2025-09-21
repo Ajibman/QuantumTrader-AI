@@ -1,3 +1,10 @@
+# Log new commit entry with GitHub link
+GITHUB_REPO="https://github.com/ajibman/QuantumTrader-AI"
+GITHUB_LINK="$GITHUB_REPO/commit/$COMMIT_HASH"
+
+echo "[$TIMESTAMP] Commit saved (hash: $COMMIT_HASH)." >> $REMINDERS_FILE
+sed -i "/^## Cleanup/i - [$TIMESTAMP] Commit saved (hash: $COMMIT_HASH) → [$GITHUB_LINK]($GITHUB_LINK)" $TEST_LOG
+
 #!/bin/bash
 
 REMINDERS_FILE="reminders.log"
