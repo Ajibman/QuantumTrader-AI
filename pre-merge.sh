@@ -1,3 +1,5 @@
+echo "./pre-merge.sh" > .git/hooks/pre-merge
+chmod +x .git/hooks/pre-merge
 #!/bin/bash
 # Auto-commit stats & logs
 STATS_FILE="visitor-stats.json"
