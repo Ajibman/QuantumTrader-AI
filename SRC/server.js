@@ -1,3 +1,14 @@
+const hbIntervalSeconds = parseInt(process.env.HEARTBEAT_INTERVAL || "3600", 10);
+const hbIntervalMs = hbIntervalSeconds * 1000;
+
+// Log heartbeat interval at startup
+logEvent(`Heartbeat interval set to ${hbIntervalSeconds} seconds`);
+
+// Heartbeat function
+setInterval(() => {
+  logEvent('Heartbeat – server alive');
+}, hbIntervalMs);
+
 require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
