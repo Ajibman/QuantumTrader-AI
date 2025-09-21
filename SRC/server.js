@@ -1,3 +1,31 @@
+function snapshotVisitorStats() {
+  const snapshotFile = path.join(archiveFolder, 'visitor-snapshot.json');
+
+  let snapshot = {};
+  if (fs.existsSync(snapshotFile)) {
+    snapshot = JSON.parse(fs.readFileSync(snapshotFile, 'utf8'));
+  }
+
+  // Take current stats
+  const currentStats = {
+    timestamp: new Date().toISOString(),
+    totalVisits: visitorData.total || 0,
+    uniqueVisitors: visitorData.unique || 0
+  };
+
+  // Push to snapshot array
+  if (!snapshot.entries) snapshot.entries = [];
+  snapshot.entries.push(currentStats);
+
+  // Keep only last 30 entries (30 rotations, 30 months if rotation monthly)
+  if (snapshot.entries.length > 30) {
+    snapshot.entries = snapshot.entries.slice(-30);
+  }
+
+  fs.writeFileSync(snapshotFile, JSON.stringify(snapshot, null, 2), 'utf8');
+  console.log('Visitor snapshot saved.');
+}
+
 function cleanOldArchives() {
   const files = fs.readdirSync(archiveFolder)
     .filter(f => f.startsWith('app-') && f.endsWith('.log'))
