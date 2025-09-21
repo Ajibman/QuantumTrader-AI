@@ -1,4 +1,29 @@
+date: 2025-09-20
+step: 2
+title: "Reminders System"
+status: completed
+
+✅ This way:  
+- One file, fully continuous.  
+- Each entry has a **YAML block inside fenced code** (so it won’t break parsing).  
+- Still human-readable and structured like a **lab notebook**.  
+
+Do you want me to also wire this into your repo so each **new entry auto-appends** to `TEST_LOG.md` (via a script), or will you prefer to keep adding them manually for now?
+
+# QuantumTrader AI – TEST LOG  
+
+This document records key steps, tests, and observations in the build sequence of QuantumTrader AI.  
+Entries are chronological.  
+
 ---
+
+## Entry 1  
+
+```yaml
+date: 2025-09-19
+step: 1
+title: "Initial Setup"
+status: completed
 date: 2025-09-19
 step: 1
 title: "Initial Setup"
