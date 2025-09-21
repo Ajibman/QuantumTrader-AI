@@ -1,3 +1,12 @@
+// Load environment variables
+require('dotenv').config();
+
+// Example usage: fallback to defaults if variables not set
+const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+
+console.log(`Server starting in ${NODE_ENV} mode on port ${PORT}`);
+
 // Endpoint for visitor stats
 app.get('/api/visitor-stats', (req, res) => {
   const totalVisitors = 1234; // Replace with live DB or memory data
