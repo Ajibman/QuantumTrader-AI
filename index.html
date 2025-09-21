@@ -472,6 +472,32 @@
   <p>Unique Visitors: <span id="unique-visitors">0</span></p>
   <p>Last Update: <span id="last-update">N/A</span></p>
 </div>
+
+ <!-- Hidden Visitor Dashboard -->
+<div id="visitor-dashboard" style="display:none; position:fixed; bottom:10px; right:10px; background:#f4f4f4; padding:10px; border:1px solid #ccc; border-radius:5px; z-index:1000;">
+  <h4>QT AI Visitor Stats</h4>
+  <p>Total Visits: <span id="total-visits">0</span></p>
+  <p>Unique Visitors: <span id="unique-visitors">0</span></p>
+  <p>Last Update: <span id="last-update">--</span></p>
+</div>
+
+<script>
+async function fetchVisitorStats() {
+  try {
+    const res = await fetch('/api/visitor-dashboard');
+    const data = await res.json();
+    document.getElementById('total-visits').textContent = data.totalVisits || 0;
+    document.getElementById('unique-visitors').textContent = data.uniqueVisitors || 0;
+    document.getElementById('last-update').textContent = data.lastUpdate || '--';
+  } catch (err) {
+    console.error('Error fetching visitor stats:', err);
+  }
+}
+
+// Refresh every 5 seconds
+setInterval(fetchVisitorStats, 5000);
+fetchVisitorStats();
+</script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
