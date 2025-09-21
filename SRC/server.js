@@ -1,4 +1,7 @@
-[ -f "reminders. log" ] && rm "reminders. log"; touch reminders.log
+# Personal reminder log (do not push)
+reminders.log
+  
+  [ -f "reminders. log" ] && rm "reminders. log"; touch reminders.log
 
 // ====== Server Reminders ======
 const reminders = [
