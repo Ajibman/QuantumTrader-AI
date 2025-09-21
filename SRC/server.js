@@ -1,3 +1,37 @@
+// Track visitors globally (very simple in-memory store for now)
+let visitorStats = {
+  total: 0,
+  lastVisit: null,
+  locations: {} // e.g., { "Nigeria": 15, "USA": 3 }
+};
+
+app.post('/api/visitor-event', async (req, res) => {
+  try {
+    const visitorData = req.body; // Actions, statements, patterns
+    visitorStats.total++;
+    visitorStats.lastVisit = new Date().toISOString();
+
+    // If visitor sends location info
+    if (visitorData.country) {
+      if (!visitorStats.locations[visitorData.country]) {
+        visitorStats.locations[visitorData.country] = 0;
+      }
+      visitorStats.locations[visitorData.country]++;
+    }
+
+    const response = await routeVisitor(visitorData);
+    res.status(200).json({ ...response, stats: visitorStats });
+  } catch (err) {
+    console.error('Routing error:', err);
+    res.status(500).json({ error: 'Internal routing error' });
+  }
+});
+
+// Optional endpoint: get stats directly
+app.get('/api/stats', (req, res) => {
+  res.json(visitorStats);
+});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { routeVisitor } = require('./Trader_Routing_Engine');
