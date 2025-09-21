@@ -1,3 +1,58 @@
+require('dotenv').config();
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const statsFile = path.join(__dirname, 'visitor-stats.json');
+const logFile = path.join(__dirname, 'logs', 'app.log');
+
+if (!fs.existsSync(path.join(__dirname, 'logs'))) {
+  fs.mkdirSync(path.join(__dirname, 'logs'));
+}
+
+let stats = { visits: 0 };
+if (fs.existsSync(statsFile)) {
+  try {
+    stats = JSON.parse(fs.readFileSync(statsFile));
+  } catch (err) {
+    stats = { visits: 0 };
+  }
+} else {
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+}
+
+function logEvent(message) {
+  fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${message}\n`);
+}
+
+// Log server start/restart
+logEvent('Server started');
+
+// Visitor route
+app.get('/', (req, res) => {
+  stats.visits += 1;
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+  logEvent(`Visit #${stats.visits}`);
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Refresh stats every 5s
+setInterval(() => {
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+}, 5000);
+
+// Heartbeat
+const hbInterval = parseInt(process.env.HEARTBEAT_INTERVAL || "3600", 10) * 1000;
+setInterval(() => {
+  logEvent('Heartbeat – server alive');
+}, hbInterval);
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
