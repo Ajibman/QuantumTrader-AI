@@ -1,3 +1,12 @@
+// Refresh visitor stats every 5 seconds
+setInterval(updateVisitorStats, 5000);
+
+// Rotate logs every 30 days
+setInterval(rotateLogs, 30 * 24 * 3600 * 1000);
+
+// Optional: rotate logs on server start
+rotateLogs();
+
 function updateVisitorStats() {
   const stats = JSON.parse(fs.readFileSync(statsFilePath, 'utf8'));
   stats.visitors = (stats.visitors || 0) + 1; // increment visitor count
