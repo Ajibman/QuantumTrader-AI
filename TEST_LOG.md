@@ -1,4 +1,68 @@
 ---
+date: 2025-09-19
+step: 1
+title: "Initial Setup"
+status: completed
+---
+
+## Test Log Entry  
+
+**Context:**  
+Repository for QuantumTrader AI created.  
+Landing page (`index.html`) scaffolded.  
+
+**Notes:**  
+- Placeholder logo inserted.  
+- Backup file `index.backup.html` created.  
+- Early commit strategy established.  
+---
+
+date: 2025-09-20
+step: 2
+title: "Reminders System"
+status: completed
+---
+
+## Test Log Entry  
+
+**Context:**  
+Private reminder system introduced (`reminders.log`).  
+
+**Notes:**  
+- File created and hidden from public visibility.  
+- Commit guide tested (`git add reminders.log && git commit -m "Add reminders log"`).  
+- Verified that reminders remain private to dev environment.  
+
+**Next Actions:**  
+1. Keep reminders log outside public assets.  
+2. Expand functionality later if necessary.  
+---
+
+date: 2025-09-21
+step: 3
+title: "Frontend to Backend Integration"
+status: in-progress
+---
+
+## Test Log Entry  
+
+**Context:**  
+We are in **Step 3 of Step 5** of the QuantumTrader AI build process.  
+Focus: Connecting `index.html` frontend with `server.js` backend through partial integration.  
+
+**Notes:**  
+- Integration tested between frontend (static page) and backend route `/api/visitor-stats`.  
+- Script placement confirmed inside `<body>` of `index.html`.  
+- Reminder system now functional (via `reminders.log`).  
+
+**Next Actions:**  
+1. Expand integration to cover event-driven visitor tracking.  
+2. Refine API endpoints for global stats visibility (private).  
+3. Document linguistic distinctions (server.js vs index.html instructions).  
+
+---
+
+
 date: 2025-09-21
 step: 3
 title: "Frontend to Backend Integration"
