@@ -1,4 +1,20 @@
-- name: Daily backup & rotate app.log (keep 30 days)
+- name: Daily backup & rotate visitor-stats.json (keep 30 days)
+        if: github.event.schedule == '0 0 * * *'
+        run: |
+          mkdir -p stats/archive
+          timestamp=$(date -u +"%Y-%m-%d")
+          cp stats/visitor-stats.json "stats/archive/visitor-stats-$timestamp.json" || true
+          # Optionally reset the main stats file or keep accumulating
+          # : > stats/visitor-stats.json
+          # Remove snapshots older than 30 days
+          find stats/archive -type f -name "visitor-stats-*.json" -mtime +30 -exec rm {} \;
+          git add stats/archive/ stats/visitor-stats.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: daily backup & rotate visitor-stats (30-day retention)"
+            git push origin main
+          fi
+                  
+                  - name: Daily backup & rotate app.log (keep 30 days)
         if: github.event.schedule == '0 0 * * *'
         run: |
           mkdir -p logs/archive
