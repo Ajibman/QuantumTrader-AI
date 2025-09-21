@@ -1,3 +1,19 @@
+// ===== QT AI Reminders / To-Do Section =====
+const reminders = [
+  "Review visitor simulation logs weekly.",
+  "Check backup.sh output and verify backups.",
+  "Review pre-merge.sh auto-staging status.",
+  "Verify .env settings before major deployments.",
+  "Ensure all assets are properly committed before rollout."
+];
+
+// Log reminders on server start
+console.log("===== QT AI REMINDERS =====");
+reminders.forEach((note, idx) => {
+  console.log(`${idx + 1}. ${note}`);
+});
+console.log("============================");
+
 // server.js (extended patch)
 
 require('dotenv').config();
