@@ -1,6 +1,6 @@
 ---
 
-### [2025-09-21] Step 3 – Frontend to Backend Integration (Flow Diagram)
+### (2025-09-21) Step 3 – Frontend to Backend Integration (Flow Diagram)
 
 **Notes:**
 - **Frontend (`index.html`)** = requests and UI display.  
