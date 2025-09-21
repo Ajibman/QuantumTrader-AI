@@ -1,0 +1,11 @@
+git add reminders.log
+
+git commit -m "chore: add reminders.log with initial template"
+
+git commit -m "docs(reminders): log [YYYY-MM-DD] task about <short task description>"
+
+git push origin main
+
+git add reminders.log
+git commit -m "docs(reminders): add reminder to review .env variables"
+git push origin main
