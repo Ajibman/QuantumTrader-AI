@@ -1,3 +1,29 @@
+const logPath = path.join(__dirname, 'logs', 'app.log');
+
+function logEvent(message) {
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logPath, `[${timestamp}] ${message}\n`);
+}
+
+// Log server start
+logEvent('Server started');
+
+// Wrap stat writes with logging
+function writeStats(stats) {
+  fs.writeFileSync(visitorStatsPath, JSON.stringify(stats, null, 2));
+  logEvent(`Visitor stats updated: Visitors=${stats.totalVisitors}, Interactions=${stats.totalInteractions}`);
+}
+
+// Optionally, log server restarts
+process.on('SIGINT', () => {
+  logEvent('Server shutting down (SIGINT)');
+  process.exit();
+});
+process.on('SIGTERM', () => {
+  logEvent('Server shutting down (SIGTERM)');
+  process.exit();
+});
+
 {
   "totalVisitors": 0,
   "totalInteractions": 0
