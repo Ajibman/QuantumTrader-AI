@@ -1,3 +1,7 @@
+30 0 * * * find /full/path/to/QuantumTrader-AI/logs/ -type f -name "*.log" -mtime +30 -exec rm {} \;
+
+crontab -l
+  
 const statsFile = path.join(__dirname, 'visitor-stats.json');
 
 // Middleware to track visitors
