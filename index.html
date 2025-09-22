@@ -851,6 +851,32 @@ updateVisitorStats();
 
 // Refresh every 5 seconds
 setInterval(updateVisitorStats, 5000);
+</script><!-- Add this near the bottom of <body>, after the visitor-stats div -->
+<script>
+// Example: Track interactions
+function trackInteraction(action, details = {}) {
+  fetch('/api/visitor-event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, details, timestamp: new Date().toISOString() })
+  }).catch(err => console.error('Failed to log visitor event:', err));
+}
+
+// Example usage:
+// Track clicks on a specific button
+document.querySelectorAll('.track-click').forEach(btn => {
+  btn.addEventListener('click', () => {
+    trackInteraction('button-click', { id: btn.id, text: btn.textContent });
+  });
+});
+
+// Track form submissions
+document.querySelectorAll('form').forEach(form => {
+  form.addEventListener('submit', e => {
+    const formData = Object.fromEntries(new FormData(form));
+    trackInteraction('form-submit', { formId: form.id, data: formData });
+  });
+});
 </script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
