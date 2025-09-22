@@ -909,6 +909,35 @@ document.querySelectorAll('form').forEach(form => {
 
   // Optional: expose for manual testing
   window.simulateVisitor = (action, details) => sendVisitorEvent(action, details);
+</script><!-- Live Visitor Stats Display -->
+<div id="visitor-stats" style="position:fixed; bottom:10px; right:10px; 
+     background:rgba(0,0,0,0.6); color:white; padding:10px; border-radius:5px; 
+     font-family:sans-serif; z-index:9999;">
+  Loading visitor stats...
+</div>
+
+<script>
+  async function fetchVisitorStats() {
+    try {
+      const res = await fetch('/api/visitor-stats'); // Backend endpoint to serve stats
+      if (!res.ok) throw new Error('Network response not ok');
+      const stats = await res.json();
+      const statsDiv = document.getElementById('visitor-stats');
+      statsDiv.innerHTML = `
+        Total Visits: ${stats.totalVisits}<br>
+        Active Visitors: ${stats.activeVisitors}<br>
+        Last Visit: ${stats.lastVisit}
+      `;
+    } catch (err) {
+      console.error('Error fetching visitor stats:', err);
+    }
+  }
+
+  // Fetch stats every 5 seconds
+  setInterval(fetchVisitorStats, 5000);
+
+  // Initial fetch
+  fetchVisitorStats();
 </script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
