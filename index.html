@@ -830,7 +830,28 @@ cd QuantumTrader-AI
 <!-- Optional stats display -->
 <div id="visitor-stats" style="font-size: 14px; color: #333; margin-top: 10px;">
   Total Visits: 0 | Last Visit: N/A
+</div><!-- Place this near the bottom of <body> without overwriting existing content -->
+<div id="visitor-stats" style="font-size:14px; color:#444; margin-top:10px;">
+  Total Visitors: <span id="total-visitors">0</span>
 </div>
+
+<script>
+async function updateVisitorStats() {
+  try {
+    const response = await fetch('/api/visitor-stats');
+    const data = await response.json();
+    document.getElementById('total-visitors').textContent = data.totalVisits || 0;
+  } catch (err) {
+    console.error('Failed to fetch visitor stats:', err);
+  }
+}
+
+// Initial fetch
+updateVisitorStats();
+
+// Refresh every 5 seconds
+setInterval(updateVisitorStats, 5000);
+</script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
