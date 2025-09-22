@@ -7,6 +7,43 @@ function cleanOldLogs() {
   const lines = fs.readFileSync(logPath, 'utf-8').split('\n');
 
   const filteredLines = lines.filter(line => {
+    if (!line.trim()) return false;
+    const match = line.match(/^\[(.+?)\]/);
+    if (!match) return true;
+    const timestamp = new Date(match[1]);
+    const ageDays = (now - timestamp) / (1000 * 60 * 60 * 24);
+    return ageDays <= LOG_RETENTION_DAYS;
+  });
+
+  fs.writeFileSync(logPath, filteredLines.join('\n') + '\n');
+}
+
+// refresh + log every 5 seconds
+setInterval(() => {
+  const now = new Date().toISOString();
+  const visitCount = visitorStats.total; // assuming you keep this in memory
+
+  const logEntry = `[${now}] Refresh: ${visitCount} visits logged`;
+  fs.appendFileSync(logPath, logEntry + '\n');
+
+  // clean once every refresh cycle too
+  cleanOldLogs();
+}, 5000);
+
+setInterval(() => {
+ 
+  // refresh visitor stats
+}, 5000);
+
+const LOG_RETENTION_DAYS = 30;
+
+function cleanOldLogs() {
+  if (!fs.existsSync(logPath)) return;
+
+  const now = new Date();
+  const lines = fs.readFileSync(logPath, 'utf-8').split('\n');
+
+  const filteredLines = lines.filter(line => {
     if (!line.trim()) return false; // skip empty lines
     const match = line.match(/^\[(.+?)\]/);
     if (!match) return true; // keep line if no timestamp
