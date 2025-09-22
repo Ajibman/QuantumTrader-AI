@@ -1,3 +1,64 @@
+const fs = require('fs');
+const path = require('path');
+
+// Paths
+const logDir = path.join(__dirname, 'logs');
+const logFile = path.join(logDir, 'app.log');
+const visitorStatsFile = path.join(__dirname, 'visitor-stats.json');
+
+// Ensure logs directory exists
+if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+// Helper to append log silently
+function appendLog(message) {
+  const timestamp = new Date().toISOString();
+  fs.appendFile(logFile, `[${timestamp}] ${message}\n`, err => {
+    if (err) console.error('Log append error:', err);
+  });
+}
+
+// Function to refresh visitor stats
+function refreshVisitorStats() {
+  let stats = { totalVisits: 0 }; // Default if file missing
+  try {
+    if (fs.existsSync(visitorStatsFile)) {
+      const data = fs.readFileSync(visitorStatsFile, 'utf-8');
+      stats = JSON.parse(data);
+    }
+    // Example: increment total visits for simulation
+    stats.totalVisits = (stats.totalVisits || 0) + 1;
+    fs.writeFileSync(visitorStatsFile, JSON.stringify(stats, null, 2));
+    appendLog(`Visitor stats auto-updated: ${stats.totalVisits}`);
+  } catch (err) {
+    appendLog(`Visitor stats refresh error: ${err.message}`);
+  }
+}
+
+// Function to trim logs older than 30 days
+function trimOldLogs() {
+  if (!fs.existsSync(logFile)) return;
+  const cutoff = Date.now() - 30 * 24 * 3600 * 1000; // 30 days
+  const lines = fs.readFileSync(logFile, 'utf-8').split('\n');
+  const filtered = lines.filter(line => {
+    const match = line.match(/^\[(.+?)\]/);
+    if (!match) return true;
+    const time = new Date(match[1]).getTime();
+    return time >= cutoff;
+  });
+  fs.writeFileSync(logFile, filtered.join('\n'));
+}
+
+// Initial run
+refreshVisitorStats();
+trimOldLogs();
+appendLog('Server started/restarted.');
+
+// Interval auto-update: every 3600 secs (1 hour)
+setInterval(() => {
+  refreshVisitorStats();
+  trimOldLogs();
+}, 3600 * 1000);
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
