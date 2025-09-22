@@ -1,4 +1,29 @@
 #!/bin/bash
+# master-run.sh - main startup script for QuantumTrader-AI
+
+# Exit immediately on error
+set -e
+
+echo ">>> QuantumTrader-AI Master Run Starting..."
+
+# Step 1: Rotate logs and visitor stats (safe monthly rotation)
+if [ -f "./rotate.sh" ]; then
+  echo ">>> Running rotation script..."
+  bash ./rotate.sh
+else
+  echo ">>> rotate.sh not found. Skipping rotation..."
+fi
+
+# Step 2: Start server.js with nodemon
+if command -v nodemon >/dev/null 2>&1; then
+  echo ">>> Starting server with nodemon..."
+  nodemon server.js
+else
+  echo ">>> Starting server with node..."
+  node server.js
+fi
+
+#!/bin/bash
 # master-run.sh - QuantumTrader-AI master script
 
 # Auto-commit, log visitor stats, and push changes
