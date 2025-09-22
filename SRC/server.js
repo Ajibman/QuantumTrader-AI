@@ -1,3 +1,8 @@
+{
+  "totalVisitors": 0,
+  "totalInteractions": 0
+}
+
 app.get('/api/visitor-stats', async (req, res) => {
   try {
     const stats = {
