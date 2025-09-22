@@ -1,3 +1,39 @@
+const statsFile = path.join(__dirname, 'visitor-stats.json');
+
+// Middleware to track visitors
+app.use((req, res, next) => {
+  try {
+    const now = new Date().toISOString();
+    const visitorId = req.ip; // Or another unique visitor identifier
+    let stats = { totalVisits: 0, lastVisit: now, visitors: [] };
+
+    if (fs.existsSync(statsFile)) {
+      stats = JSON.parse(fs.readFileSync(statsFile, 'utf8'));
+    }
+
+    // Update or add visitor
+    const visitorIndex = stats.visitors.findIndex(v => v.id === visitorId);
+    if (visitorIndex > -1) {
+      stats.visitors[visitorIndex].lastVisit = now;
+    } else {
+      stats.visitors.push({ id: visitorId, lastVisit: now });
+      stats.totalVisits += 1;
+    }
+
+    stats.lastVisit = now;
+
+    // Clean up old visitors (older than 30 days)
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    stats.visitors = stats.visitors.filter(v => new Date(v.lastVisit) > thirtyDaysAgo);
+
+    fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+  } catch (err) {
+    console.error('Error updating visitor stats:', err);
+  }
+
+  next();
+});
+
 const fs = require('fs');
 const path = require('path');
 
