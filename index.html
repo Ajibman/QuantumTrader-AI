@@ -940,7 +940,27 @@ document.querySelectorAll('form').forEach(form => {
   fetchVisitorStats();
 </script><span id="visitor-count">0</span>
 <span id="interaction-count">0</span>
+  <div>
+  <strong>Visitors:</strong> <span id="visitor-count">0</span>
+  <strong>Interactions:</strong> <span id="interaction-count">0</span>
+</div>
 
+<script>
+  async function fetchVisitorStats() {
+    try {
+      const response = await fetch('/api/visitor-stats');
+      if (!response.ok) throw new Error('Network response not ok');
+      const data = await response.json();
+      document.getElementById('visitor-count').textContent = data.totalVisitors;
+      document.getElementById('interaction-count').textContent = data.totalInteractions;
+    } catch (err) {
+      console.error('Error fetching visitor stats:', err);
+    }
+  }
+
+  fetchVisitorStats();               // initial fetch
+  setInterval(fetchVisitorStats, 5000); // refresh every 5 seconds
+</script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
   </footer>
