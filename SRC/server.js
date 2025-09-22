@@ -1,4 +1,35 @@
-const LOG_RETENTION_DAYS = 30;
+bash rotate.sh
+
+0 0 1 * * /path/to/rotate.sh
+
+#!/bin/bash
+# rotate.sh - monthly rotation for logs and visitor stats
+
+# Directories
+LOG_DIR="logs"
+DATA_FILE="visitor-stats.json"
+
+# Ensure log dir exists
+mkdir -p "$LOG_DIR"
+
+# Timestamp for archive filenames
+TIMESTAMP=$(date +"%Y-%m")
+
+# Rotate app.log
+if [ -f "$LOG_DIR/app.log" ]; then
+  mv "$LOG_DIR/app.log" "$LOG_DIR/app-$TIMESTAMP.log"
+  echo "[$(date)] Rotated app.log -> app-$TIMESTAMP.log"
+fi
+touch "$LOG_DIR/app.log"   # new empty log file
+
+# Rotate visitor-stats.json
+if [ -f "$DATA_FILE" ]; then
+  mv "$DATA_FILE" "${DATA_FILE%.json}-$TIMESTAMP.json"
+  echo "[$(date)] Rotated $DATA_FILE -> ${DATA_FILE%.json}-$TIMESTAMP.json"
+fi
+echo '{"visits":0,"lastUpdated":"'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"}' > "$DATA_FILE"
+
+echo "Rotation complete."const LOG_RETENTION_DAYS = 30;
 
 function cleanOldLogs() {
   if (!fs.existsSync(logPath)) return;
