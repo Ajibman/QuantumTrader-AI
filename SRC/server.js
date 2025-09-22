@@ -1,3 +1,43 @@
+const fs = require('fs');
+const path = require('path');
+
+// Endpoint to return visitor stats
+app.get('/api/visitor-stats', (req, res) => {
+  const statsFile = path.join(__dirname, 'visitor-stats.json');
+
+  fs.readFile(statsFile, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading visitor stats:', err);
+      return res.status(500).json({
+        totalVisits: 0,
+        activeVisitors: 0,
+        lastVisit: 'N/A'
+      });
+    }
+
+    try {
+      const stats = JSON.parse(data);
+
+      // Basic active visitor calculation (example: visitors in last 5 mins)
+      const fiveMinsAgo = Date.now() - 5 * 60 * 1000;
+      const activeVisitors = stats.visitors.filter(v => new Date(v.lastVisit).getTime() > fiveMinsAgo).length;
+
+      res.json({
+        totalVisits: stats.totalVisits || 0,
+        activeVisitors,
+        lastVisit: stats.lastVisit || 'N/A'
+      });
+    } catch (parseErr) {
+      console.error('Error parsing visitor stats:', parseErr);
+      res.status(500).json({
+        totalVisits: 0,
+        activeVisitors: 0,
+        lastVisit: 'N/A'
+      });
+    }
+  });
+});
+
 // server.js (Additions for visitor tracking)
 const fs = require('fs');
 const path = require('path');
