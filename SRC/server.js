@@ -1,3 +1,16 @@
+app.get('/api/visitor-stats', async (req, res) => {
+  try {
+    const stats = {
+      totalVisitors: await getTotalVisitors(),       // fetch from logs or DB
+      totalInteractions: await getTotalInteractions() // fetch from logs or DB
+    };
+    res.json(stats);
+  } catch (err) {
+    console.error('Error fetching visitor stats:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 30 0 * * * find /full/path/to/QuantumTrader-AI/logs/ -type f -name "*.log" -mtime +30 -exec rm {} \;
 
 crontab -l
