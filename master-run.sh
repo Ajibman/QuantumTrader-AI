@@ -1,4 +1,51 @@
 #!/bin/bash
+# master-run.sh - QuantumTrader-AI master script
+
+# Auto-commit, log visitor stats, and push changes
+
+# Set variables
+REPO_DIR="/path/to/QuantumTrader-AI"  # <- Update with your local repo path
+LOG_FILE="$REPO_DIR/logs/app.log"
+VISITOR_STATS="$REPO_DIR/visitor-stats.json"
+COMMIT_MESSAGE="Auto-update: $(date +'%Y-%m-%d %H:%M:%S')"
+BRANCH="main"  # change if your branch name is different
+
+# 1. Navigate to repo
+cd "$REPO_DIR" || { echo "Repo not found! Exiting..."; exit 1; }
+
+# 2. Pull latest changes
+git pull origin "$BRANCH" --quiet
+
+# 3. Update visitor stats (simulate refresh)
+if [ -f "$VISITOR_STATS" ]; then
+    VISITS=$(jq '.visits += 1' "$VISITOR_STATS")
+    echo "$VISITS" > "$VISITOR_STATS"
+else
+    echo '{"visits": 1}' > "$VISITOR_STATS"
+fi
+
+# 4. Append visit count to app.log silently
+echo "$(date +'%Y-%m-%d %H:%M:%S') - Visitor count updated" >> "$LOG_FILE"
+
+# 5. Stage all changes
+git add .
+
+# 6. Auto-commit with message
+git commit -m "$COMMIT_MESSAGE" --quiet
+
+# 7. Push to remote (will use HTTPS or SSH based on config)
+git push origin "$BRANCH" --quiet
+
+# 8. Log server restart event if needed
+echo "$(date +'%Y-%m-%d %H:%M:%S') - Master-run.sh executed" >> "$LOG_FILE"
+
+# 9. Optional: Cleanup logs older than 30 days
+find "$REPO_DIR/logs" -type f -name "*.log" -mtime +30 -exec rm {} \;
+
+# 10. Finished
+echo "Master-run.sh executed successfully at $(date +'%Y-%m-%d %H:%M:%S')"
+
+#!/bin/bash
 # master-run.sh - updates stats, logs, reminders
 
 # 1. Update visitor stats & logs (existing logic)
