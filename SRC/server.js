@@ -1,3 +1,24 @@
+// --- Add this after your existing imports and setup ---
+
+// Serve visitor stats to frontend
+app.get('/api/visitor-stats', (req, res) => {
+  try {
+    if (fs.existsSync(visitorStatsFile)) {
+      const data = fs.readFileSync(visitorStatsFile, 'utf-8');
+      res.status(200).json(JSON.parse(data));
+    } else {
+      res.status(200).json({ totalVisits: 0 });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Could not read visitor stats' });
+  }
+});
+
+// Auto-update every 5 seconds
+setInterval(() => {
+  refreshVisitorStats(); // increments visitor count in visitor-stats.json
+}, 5000); // 5000ms = 5 seconds
+
 const fs = require('fs');
 const path = require('path');
 
