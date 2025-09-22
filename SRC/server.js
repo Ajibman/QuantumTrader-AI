@@ -1,4 +1,28 @@
 #!/bin/bash
+# master-run.sh
+# Orchestrates server, logs, stats refresh, and monthly rotation
+
+# Start server
+echo "$(date +"%F %T") - Starting server..." >> logs/app.log
+node SRC/server.js &   # run server in background
+SERVER_PID=$!
+
+# Run 5-sec visitor stats refresh in background
+while true; do
+  sleep 5
+  node SRC/update-stats.js
+done &
+
+# Run 30-day rotation in background
+while true; do
+  sleep $((30*24*3600))   # 30 days in seconds
+  bash rotate.sh
+done &
+
+# Wait for server to exit
+wait $SERVER_PID
+  
+#!/bin/bash
 # Rotate logs and visitor stats monthly
 
 LOG_DIR="logs"
