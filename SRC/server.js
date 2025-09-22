@@ -1,3 +1,27 @@
+const LOG_RETENTION_DAYS = 30;
+
+function cleanOldLogs() {
+  if (!fs.existsSync(logPath)) return;
+
+  const now = new Date();
+  const lines = fs.readFileSync(logPath, 'utf-8').split('\n');
+
+  const filteredLines = lines.filter(line => {
+    if (!line.trim()) return false; // skip empty lines
+    const match = line.match(/^\[(.+?)\]/);
+    if (!match) return true; // keep line if no timestamp
+    const timestamp = new Date(match[1]);
+    const ageDays = (now - timestamp) / (1000 * 60 * 60 * 24);
+    return ageDays <= LOG_RETENTION_DAYS;
+  });
+
+  fs.writeFileSync(logPath, filteredLines.join('\n') + '\n');
+}
+
+// Schedule cleanup once per day
+setInterval(cleanOldLogs, 24 * 60 * 60 * 1000); // 24 hours
+cleanOldLogs(); // also run immediately at server start
+
 const logPath = path.join(__dirname, 'logs', 'app.log');
 
 function logEvent(message) {
