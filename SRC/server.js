@@ -1,3 +1,41 @@
+#!/bin/bash
+# Rotate logs and visitor stats monthly
+
+LOG_DIR="logs"
+STATS_FILE="visitor-stats.json"
+APP_LOG="$LOG_DIR/app.log"
+ROTATE_MARKER="$LOG_DIR/.last_rotate"
+
+mkdir -p "$LOG_DIR"
+
+NOW=$(date +"%Y-%m-%d %H:%M:%S")
+MONTH=$(date +"%Y-%m")
+
+# Check if already rotated this month
+if [ -f "$ROTATE_MARKER" ] && grep -q "$MONTH" "$ROTATE_MARKER"; then
+  echo "[$NOW] Rotation already done for $MONTH" >> "$APP_LOG"
+  exit 0
+fi
+
+# Rotate app.log
+if [ -f "$APP_LOG" ]; then
+  mv "$APP_LOG" "$LOG_DIR/app-$MONTH.log"
+  echo "[$NOW] Rotated app.log to app-$MONTH.log" >> "$LOG_DIR/rotation.log"
+fi
+
+# Rotate visitor-stats.json
+if [ -f "$STATS_FILE" ]; then
+  cp "$STATS_FILE" "$LOG_DIR/visitor-stats-$MONTH.json"
+  echo "{}" > "$STATS_FILE"
+  echo "[$NOW] Rotated visitor-stats.json to visitor-stats-$MONTH.json" >> "$LOG_DIR/rotation.log"
+fi
+
+# Update marker
+echo "$MONTH" > "$ROTATE_MARKER"
+
+# Log action
+echo "[$NOW] Rotation executed for $MONTH" >> "$APP_LOG"
+
 30 0 * * * find /full/path/to/QuantumTrader-AI/logs/ -type f -name "*.log" -mtime +30 -exec rm {} \;
 
 crontab -l
