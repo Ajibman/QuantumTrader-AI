@@ -1,3 +1,19 @@
+#!/bin/bash
+# master-run.sh - updates stats, logs, reminders
+
+# 1. Update visitor stats & logs (existing logic)
+# e.g., node update-stats.js or any other logic you have
+
+# 2. Append automatic log entries
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Auto update completed." >> ./logs/app.log
+
+# 3. Commit and push updated logs/statistics to GitHub
+cd /path/to/QuantumTrader-AI
+
+git add logs/app.log logs/visitor-stats.json logs/reminders.log
+git commit -m "chore: auto-update logs & visitor stats $(date '+%Y-%m-%d %H:%M:%S')"
+git push origin main
+
 0 * * * * /path/to/QuantumTrader-AI/scripts/master-run.sh
 
 /path/to/QuantumTrader-AI/scripts/master-run.shcrontab -e
