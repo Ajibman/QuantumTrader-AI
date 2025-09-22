@@ -1,3 +1,65 @@
+// server.js (Additions for visitor tracking)
+const fs = require('fs');
+const path = require('path');
+
+const VISITOR_LOG = path.join(__dirname, 'logs', 'app.log');
+const VISITOR_STATS = path.join(__dirname, 'visitor-stats.json');
+
+// Ensure stats file exists
+if (!fs.existsSync(VISITOR_STATS)) fs.writeFileSync(VISITOR_STATS, JSON.stringify({ totalVisits: 0, interactions: [] }));
+
+// Load stats
+let stats = JSON.parse(fs.readFileSync(VISITOR_STATS));
+
+// Endpoint for visitor events
+app.post('/api/visitor-event', (req, res) => {
+  try {
+    const { action, details, timestamp } = req.body;
+    
+    // Update interaction list
+    stats.interactions.push({ action, details, timestamp });
+
+    // Optionally: increment total visits if action indicates a new visit
+    if (action === 'new-visit') stats.totalVisits += 1;
+
+    // Write to stats file
+    fs.writeFileSync(VISITOR_STATS, JSON.stringify(stats, null, 2));
+
+    // Append to log
+    const logLine = `${timestamp} | ${action} | ${JSON.stringify(details)}\n`;
+    fs.appendFileSync(VISITOR_LOG, logLine);
+
+    res.status(200).json({ success: true, stats });
+  } catch (err) {
+    console.error('Visitor event error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// Auto-refresh stats every 5 seconds for front-end (optional)
+setInterval(() => {
+  try {
+    fs.writeFileSync(VISITOR_STATS, JSON.stringify(stats, null, 2));
+  } catch (err) {
+    console.error('Failed auto-refresh stats:', err);
+  }
+}, 5000);
+
+// Optional: clean old logs older than 30 days
+setInterval(() => {
+  try {
+    const logs = fs.readFileSync(VISITOR_LOG, 'utf-8').split('\n').filter(Boolean);
+    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000; // 30 days
+    const filteredLogs = logs.filter(line => {
+      const timestamp = new Date(line.split(' | ')[0]).getTime();
+      return timestamp >= cutoff;
+    });
+    fs.writeFileSync(VISITOR_LOG, filteredLogs.join('\n') + '\n');
+  } catch (err) {
+    console.error('Log cleanup error:', err);
+  }
+}, 3600 * 1000); // every hour
+
 // --- Add this after your existing imports and setup ---
 
 // Serve visitor stats to frontend
