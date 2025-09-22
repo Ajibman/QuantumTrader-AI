@@ -877,6 +877,38 @@ document.querySelectorAll('form').forEach(form => {
     trackInteraction('form-submit', { formId: form.id, data: formData });
   });
 });
+</script><!-- Visitor Simulation / Interaction Script -->
+<script>
+  // Function to send visitor events to server
+  async function sendVisitorEvent(action, details = {}) {
+    const timestamp = new Date().toISOString();
+    const payload = { action, details, timestamp };
+
+    try {
+      const response = await fetch('/api/visitor-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      console.log('Visitor event sent:', data);
+    } catch (err) {
+      console.error('Failed to send visitor event:', err);
+    }
+  }
+
+  // Example: automatically log a "new visit" when page loads
+  window.addEventListener('load', () => {
+    sendVisitorEvent('new-visit', { page: window.location.pathname });
+  });
+
+  // Example: simulate interaction every 10 seconds (can be replaced with real events)
+  setInterval(() => {
+    sendVisitorEvent('interaction', { type: 'heartbeat', note: 'visitor active' });
+  }, 10000);
+
+  // Optional: expose for manual testing
+  window.simulateVisitor = (action, details) => sendVisitorEvent(action, details);
 </script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
