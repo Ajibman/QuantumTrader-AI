@@ -5506,3 +5506,47 @@ server.listen(PORT, () => {
   console.log(`QT AI backend running on port ${PORT}`);
 });
 
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve the dashboard HTML
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// API to provide the data for the dashboard
+app.get('/dashboard-data', (req, res) => {
+  // Visitor stats
+  const visitorStats = JSON.parse(fs.readFileSync('visitor-stats.json', 'utf8'));
+
+  // App logs (latest entries)
+  const appLogs = fs.readFileSync('app.log', 'utf8').split('\n').slice(-10).join('\n'); // Last 10 lines
+
+  // Commit logs (get the latest commits from Git)
+  const exec = require('child_process').execSync;
+  const commitLogs = exec('git log --oneline -n 5').toString();
+
+  // File integrity check (for now, just check server.js file)
+  const fileIntegrity = fs.existsSync('server.js') ? 'Intact' : 'Corrupted';
+
+  // Log rotation status (check for old logs)
+  const logRotationStatus = fs.existsSync('logs/old') ? 'Rotated' : 'Pending';
+
+  // Return the data as JSON
+  res.json({
+    visitorCount: visitorStats.count,
+    appLog: appLogs,
+    commitLogs: commitLogs,
+    fileIntegrity: fileIntegrity,
+    logRotationStatus: logRotationStatus,
+  });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
