@@ -216,7 +216,7 @@ app.use((req, res, next) => {
     if (fs.existsSync(statsFile)) {
       stats = JSON.parse(fs.readFileSync(statsFile, 'utf8'));
     }
-
+ 
     // Update or add visitor
     const visitorIndex = stats.visitors.findIndex(v => v.id === visitorId);
     if (visitorIndex > -1) {
