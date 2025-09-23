@@ -506,7 +506,6 @@
   </script>
 
 Visitor simulation
-  
 <div id="simulation" class="tab">
       <h2>Visitor Simulation</h2>
       <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
@@ -522,8 +521,10 @@ Visitor simulation
   <button id="simulate-visit">Simulate Visitor Event</button>
   <button id="self-heal-btn">Trigger Self-Heal</button>
 </div>
-<script>
-  // --- Helper function to POST data to backend ---
+</body>
+  
+  <script>
+    // --- Helper function to POST data to backend ---
   async function postData(url = '', data = {}) {
     try {
       const response = await fetch(url, {
