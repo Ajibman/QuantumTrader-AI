@@ -5550,3 +5550,12 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+function clearChart() {
+  visitorData.length = 0; // empty the data array
+  visitorTotal = 0;
+  document.getElementById('visitor-count').textContent = "Total Visitors: 0";
+  const canvas = document.getElementById("visitorChart");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
