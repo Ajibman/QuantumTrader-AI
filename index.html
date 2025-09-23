@@ -140,42 +140,6 @@
       <p>We uphold transparency, integrity, and collaboration with like minds across the globe.</p>
     </div>
 
-    <div id="simulation" class="tab">
-      <h2>Visitor Simulation</h2>
-      <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
-      <p>We will wire the backend test log here later. 🔒</p>
-
-      <button id="simulateBtn">Run Simulation</button>
-      <pre id="simulationOutput"></pre>
-
-      <script>
-        document.getElementById('simulateBtn').addEventListener('click', async () => {
-          const output = document.getElementById('simulationOutput');
-          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nSending data to backend...`;
-
-          try {
-            const visitorData = {
-              actions: "click",
-              statements: "interested in trading",
-              patterns: ["curious", "ethical"]
-            };
-
-            const response = await fetch('/api/visitor-event', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(visitorData)
-            });
-
-            const result = await response.json();
-            output.textContent += `\nBackend Response:\n${JSON.stringify(result, null, 2)}`;
-          } catch (err) {
-            output.textContent += `\nError: ${err.message}`;
-          }
-        });
-      </script>
-    </div>
-  </div>
-
 <!-- Horizontal "Y" Section -->
 <div id="horizontal-Y" class="flex justify-center items-center mt-12">
   <div class="w-1/3 h-px bg-gray-400"></div>
