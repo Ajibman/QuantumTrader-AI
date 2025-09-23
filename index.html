@@ -504,24 +504,6 @@
       output.innerHTML = `<p><strong>Simulation Result:</strong> ${pick}</p>`;
     }
   </script>
-
-Visitor simulation
-<div id="simulation" class="tab">
-      <h2>Visitor Simulation</h2>
-      <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
-      <p>We will wire the backend test log here later. 🔒</p>
-</div>
-  
-      <button id="simulateBtn">Run Simulation</button>
-      <pre id="simulationOutput"></pre>
-  
-<!-- ---------------- Visitor Simulation Module ---------------- -->
-<div id="visitor-simulation" style="display:none;">
-  <h3>Visitor Simulation (For Backend Testing)</h3>
-  <button id="simulate-visit">Simulate Visitor Event</button>
-  <button id="self-heal-btn">Trigger Self-Heal</button>
-</div>
-</body>
   
   <script>
     // --- Helper function to POST data to backend ---
@@ -931,6 +913,45 @@ document.querySelectorAll('form').forEach(form => {
 
   fetchVisitorStats();               // initial fetch
   setInterval(fetchVisitorStats, 5000); // refresh every 5 seconds
+<script>
+  Visitor simulation
+
+<div id="simulation" class="tab">
+      <h2>Visitor Simulation</h2>
+      <p>⚡ This tab is reserved for upcoming static visitor interaction simulation (Step 3).</p>
+      <p>We will wire the backend test log here later. 🔒</p>
+
+      <button id="simulateBtn">Run Simulation</button>
+      <pre id="simulationOutput"></pre>
+
+     
+<script>
+  <div>
+        document.getElementById('simulateBtn').addEventListener('click', async () => {
+          const output = document.getElementById('simulationOutput');
+          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nSending data to backend...`;
+
+          try {
+            const visitorData = {
+              actions: "click",
+              statements: "interested in trading",
+              patterns: ["curious", "ethical"]
+            };
+
+            const response = await fetch('/api/visitor-event', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(visitorData)
+            });
+
+            const result = await response.json();
+            output.textContent += `\nBackend Response:\n${JSON.stringify(result, null, 2)}`;
+          } catch (err) {
+            output.textContent += `\nError: ${err.message}`;
+          }
+        });
+
+  </div>
 </script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
