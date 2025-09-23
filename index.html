@@ -268,7 +268,83 @@
       panes[index].classList.add('active');
     });
   });
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Trader AI</title>
+  <!-- Add your CSS & JS links here -->
+</head>
+<body>
+  <!-- ===== Coming Soon Logo Section ===== -->
+  <section id="coming-soon-logo">
+    <!-- Placeholder for Coming Soon logo -->
+    <img src="coming-soon-logo.png" alt="Coming Soon Logo" />
+    <!-- Future: update with animation or interactive element -->
+  </section>
+
+  <!-- ===== Main Tabbed Dashboard Section ===== -->
+  <section id="dashboard">
+    <div class="tabs">
+      <!-- Tab Buttons -->
+      <button class="tab-button" data-tab="cpilot">CPilot™</button>
+      <button class="tab-button" data-tab="traderlab">TraderLab™</button>
+      <button class="tab-button" data-tab="visitor-stats">Visitor Statistics</button>
+      <!-- Placeholder for future tabs -->
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="tab-content" id="cpilot">
+      <!-- Placeholder content for CPilot™ -->
+      <p>CPilot™ will display trading insights here.</p>
+    </div>
+
+    <div class="tab-content" id="traderlab">
+      <!-- Placeholder content for TraderLab™ -->
+      <p>TraderLab™ interface will appear here.</p>
+    </div>
+
+    <div class="tab-content" id="visitor-stats">
+      <!-- Placeholder content for Visitor Statistics -->
+      <p>Visitor statistics and activity metrics will be shown here.</p>
+    </div>
+  </section>
+
+  <!-- ===== Ori Section at Bottom ===== -->
+  <footer id="ori-footer">
+    <!-- Placeholder for Ori display -->
+    <img src="ori.png" alt="Ori Ologo" />
+    <!-- Future: add interactive features or animation -->
+  </footer>
+
+  <!-- ===== Placeholder Comments for Future Improvements ===== -->
+  <!-- TODO: Implement interactive tab switching logic -->
+  <!-- TODO: Add real-time visitor statistics -->
+  <!-- TODO: Enhance Coming Soon logo with animation -->
+  <!-- TODO: Integrate TraderLab™ tools and CPilot™ functionality -->
+
+  <script>
+    // Basic tab switcher
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.tab;
+
+        tabContents.forEach(tc => {
+          tc.style.display = tc.id === target ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Initialize first tab visible
+    tabContents.forEach(tc => tc.style.display = 'none');
+    if (tabContents[0]) tabContents[0].style.display = 'block';
   </script>
 </body>
 </html>
- 
+
+  
