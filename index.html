@@ -503,6 +503,32 @@
     tabContents.forEach(tc => tc.style.display = 'none');
     if (tabContents[0]) tabContents[0].style.display = 'block';
   </script>
+  <script>
+  // Get tab buttons and content
+  const tabs = document.querySelectorAll('.tab-button');
+  const contents = document.querySelectorAll('.tab-content');
+
+  // Show first tab by default
+  contents[0].style.display = 'block';
+  tabs[0].style.background = '#007bff';
+  tabs[0].style.color = '#fff';
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      // Hide all content
+      contents.forEach(c => c.style.display = 'none');
+      tabs.forEach(t => {
+        t.style.background = '#e0e0e0';
+        t.style.color = '#333';
+      });
+
+      // Show selected content
+      contents[index].style.display = 'block';
+      tab.style.background = '#007bff';
+      tab.style.color = '#fff';
+    });
+  });
+</script>
 </body>
 </html>
 
