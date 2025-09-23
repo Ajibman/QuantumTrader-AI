@@ -112,17 +112,14 @@
       document.getElementById(tabId).classList.add('active');
     }
   </script>
- 
   <header>
     Quantum Trader AI
   </header>
-
   <nav>
     <a href="#" onclick="showTab('home')">Home</a>
     <a href="#" onclick="showTab('public-intentions')">Public Intentions</a>
     <a href="#" onclick="showTab('simulation')">Visitor Simulation</a>
   </nav>
-
   <div class="content">
     <div id="home" class="tab active">
       <h2>Welcome</h2>
@@ -495,6 +492,7 @@
         The Talking Drum - Ancient communication system, now Quantum Signal of QT AI.
       </p>
       <div style="text-align: center; font-size: 2rem; line-height: 1.5;">
+     
         <!-- Horizontal Y with Drum Emojis -->
         <div>
           🥁<br />
@@ -542,14 +540,15 @@
       output.innerHTML = `<p><strong>Simulation Result:</strong> ${pick}</p>`;
     }
   </script>
+  
 <!-- ---------------- Visitor Simulation Module ---------------- -->
 <div id="visitor-simulation" style="display:none;">
   <h3>Visitor Simulation (For Backend Testing)</h3>
   <button id="simulate-visit">Simulate Visitor Event</button>
   <button id="self-heal-btn">Trigger Self-Heal</button>
 </div>
-
 <script>
+  
   // --- Helper function to POST data to backend ---
   async function postData(url = '', data = {}) {
     try {
@@ -693,7 +692,8 @@ cd QuantumTrader-AI
   <div>Active Sessions: <span id="active-sessions">0</span></div>
 </div>
 
-<script><!-- ========================= -->
+<script>
+<!-- ========================= -->
 <!-- QuantumTrader-AI Visitor Stats Panel -->
 <!-- ========================= -->
 <div id="visitor-stats" style="position: fixed; bottom: 20px; right: 20px; 
