@@ -1,4 +1,222 @@
- <!-- Horizontal "Y" Tabs Section -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+  <style>
+    /* === Global Styles === */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      line-height: 1.6;
+    }
+    header, footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      color: #fff;
+    }
+    section {
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 900px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #visitor-log p {
+      margin: 4px 0;
+      font-size: 0.9em;
+    }
+    .logo {
+      max-width: 250px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    .ori {
+      max-width: 150px;
+      margin: 20px auto 0;
+      display: block;
+    }
+    /* === Dashboard Tabs === */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      background: #f1f1f1;
+      border: 1px solid #ddd;
+      border-bottom: none;
+    }
+    .tab.active {
+      background: #fff;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    canvas {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fafafa;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- === Coming Soon Logo Section === -->
+  <header>
+    <img src="coming-soon-logo.png" alt="Coming Soon Logo" class="logo" />
+    <h1>QuantumTrader AI</h1>
+    <p>Official Launch: November 9, 2025</p>
+  </header>
+
+  <!-- === Step 3–5 Build Process Section === -->
+  <section id="build-process">
+    <h2>Build Process: Step 3 → Step 5</h2>
+    <p>We are currently progressing through the staged build process of QuantumTrader AI.</p>
+    <ul>
+      <li><strong>Step 3:</strong> Wiring in modules and preliminary testing.</li>
+      <li><strong>Step 4:</strong> Refinement, ethical improvements, and integration with CCLM²™ supervision.</li>
+      <li><strong>Step 5:</strong> Final preparation for public launch.</li>
+    </ul>
+  </section>
+
+  <!-- === Quantum Signal (Talking Drum) Section === -->
+  <section id="quantum-signal">
+    <h2>Quantum Signal — Talking Drum</h2>
+    <p>
+      This section symbolizes QuantumTrader AI’s communication backbone, like the Talking Drum, 
+      transmitting signals across distances with clarity and rhythm.
+    </p>
+  </section>
+
+  <!-- === Visitor Simulation Section === -->
+  <section id="visitor-sim">
+    <h2>Visitor Simulation</h2>
+    <button onclick="simulateVisitor()">Simulate Visitor Event</button>
+    <div id="visitor-log"></div>
+  </section>
+
+  <!-- === Tabbed Dashboard Section === -->
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('stats')">Visitor Statistics</div>
+      <div class="tab" onclick="openTab('traderlab')">TraderLab™</div>
+    </div>
+    <div id="stats" class="tab-content active">
+      <h3>Visitor Statistics</h3>
+      <p>Charts and metrics for simulated visitors.</p>
+      <div id="visitor-count">Total Visitors: 0</div>
+      <canvas id="visitorChart"></canvas>
+    </div>
+    <div id="traderlab" class="tab-content">
+      <h3>TraderLab™</h3>
+      <p>Sandbox environment for experimentation and trading intelligence modules.</p>
+      <p><em>Coming Soon...</em></p>
+    </div>
+  </section>
+
+  <!-- === Ori Ololun Section (Bottom Placeholder) === -->
+  <footer>
+    <p>&copy; 2025 QuantumTrader AI — All Rights Reserved</p>
+    <img src="ori-olokun.png" alt="Ori Olokun" class="ori" />
+  </footer>
+
+  <!-- === Consolidated Scripts === -->
+  <script>
+    // === Visitor Simulation Logic ===
+    let visitorTotal = 0;
+    const visitorData = []; // store counts over time
+
+    function simulateVisitor() {
+      const log = document.getElementById('visitor-log');
+      const visitorId = "Visitor-" + Math.floor(Math.random() * 10000);
+      const time = new Date().toLocaleTimeString();
+
+      const entry = document.createElement('p');
+      entry.textContent = visitorId + " visited at " + time;
+      log.appendChild(entry);
+
+      visitorTotal++;
+      document.getElementById('visitor-count').textContent = "Total Visitors: " + visitorTotal;
+
+      visitorData.push(visitorTotal);
+      drawChart();
+
+      console.log("Simulated visitor event:", visitorId, time);
+    }
+
+    // === Tab Switching Logic ===
+    function openTab(tabId) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(tab => tab.classList.remove('active'));
+      contents.forEach(content => content.classList.remove('active'));
+
+      document.querySelector('.tab[onclick="openTab(\''+tabId+'\')"]').classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // === Chart Drawing Logic ===
+    function drawChart() {
+      const canvas = document.getElementById("visitorChart");
+      const ctx = canvas.getContext("2d");
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = 40;
+      const spacing = 10;
+      const maxHeight = canvas.height - 20;
+      const maxValue = Math.max(...visitorData, 1);
+
+      visitorData.forEach((value, i) => {
+        const barHeight = (value / maxValue) * maxHeight;
+        const x = i * (barWidth + spacing) + 20;
+        const y = canvas.height - barHeight;
+
+        ctx.fillStyle = "#007bff";
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        ctx.fillStyle = "#000";
+        ctx.font = "10px Arial";
+        ctx.fillText(value, x + 10, y - 5);
+      });
+    }
+   <!-- Horizontal "Y" Tabs Section -->
 <div class="dashboard-tabs">
   <ul class="tab-list">
     <li class="tab-item active" title="Live trading floor">Trading Floor</li>
@@ -24,8 +242,21 @@
   </div>
 </div>
 
+    <div id="future" class="tab-content">
+  <h3>Future Improvements</h3>
+  <p>Exciting features and updates are coming soon! Stay tuned for more enhancements.</p>
+</div>
+
+    <div id="stats" class="tab-content active">
+  <h3>Visitor Statistics</h3>
+  <p>Charts and metrics for simulated visitors.</p>
+  <div id="visitor-count">Total Visitors: 0</div>
+  <button onclick="clearChart()">Clear Chart</button>
+  <canvas id="visitorChart"></canvas>
+</div>
+
 <!-- Optional: Basic Tab Switching Script -->
-<script>
+    <script>
   const tabs = document.querySelectorAll('.tab-item');
   const panes = document.querySelectorAll('.tab-pane');
 
@@ -37,4 +268,7 @@
       panes[index].classList.add('active');
     });
   });
-</script>
+  </script>
+</body>
+</html>
+ 
