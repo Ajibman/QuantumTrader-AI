@@ -924,34 +924,43 @@ document.querySelectorAll('form').forEach(form => {
       <button id="simulateBtn">Run Simulation</button>
       <pre id="simulationOutput"></pre>
 
-     
-<script>
-  <div>
-        document.getElementById('simulateBtn').addEventListener('click', async () => {
-          const output = document.getElementById('simulationOutput');
-          output.textContent = `Visitor simulation triggered at ${new Date().toLocaleTimeString()}\nSending data to backend...`;
 
-          try {
-            const visitorData = {
-              actions: "click",
-              statements: "interested in trading",
-              patterns: ["curious", "ethical"]
-            };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+  <!-- Keep your existing CSS, meta, logo, favicons here -->
+</head>
+<body>
+  <!-- Keep all your good works (logo, banners, intentions, etc.) here -->
 
-            const response = await fetch('/api/visitor-event', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(visitorData)
-            });
+  <!-- Example button/trigger for visitor simulation -->
+  <section id="visitor-sim">
+    <h2>Visitor Simulation</h2>
+    <button onclick="simulateVisitor()">Simulate Visitor Event</button>
+    <div id="visitor-log"></div>
+  </section>
 
-            const result = await response.json();
-            output.textContent += `\nBackend Response:\n${JSON.stringify(result, null, 2)}`;
-          } catch (err) {
-            output.textContent += `\nError: ${err.message}`;
-          }
-        });
+  <!-- All scripts consolidated -->
+  <script>
+    // === Visitor Simulation Logic ===
+    function simulateVisitor() {
+      const log = document.getElementById('visitor-log');
+      const visitorId = 'Visitor-' + Math.floor(Math.random() * 10000);
+      const time = new Date().toLocaleTimeString();
 
-  </div>
+      const entry = document.createElement('p');
+      entry.textContent = visitorId + " visited at " + time;
+      log.appendChild(entry);
+
+      // You can extend logic: bubble-routing, trader intent, etc.
+      console.log("Simulated event:", visitorId, time);
+    }
+  </script>
+</body>
+</html>
 </script>
 <footer>
     &copy; 2025 Quantum Trader AI. All Rights Reserved.
