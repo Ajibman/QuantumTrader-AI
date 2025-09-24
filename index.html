@@ -675,6 +675,49 @@
     opacity: 0.7;
   }
 }
+    <!-- Lightning layer (placed inside .map) -->
+<svg class="lightning" xmlns="http://www.w3.org/2000/svg">
+  <line x1="40%" y1="20%" x2="60%" y2="50%" />
+  <line x1="60%" y1="50%" x2="30%" y2="70%" />
+</svg>
+
+<style>
+.lightning {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.lightning line {
+  stroke: yellow;
+  stroke-width: 2;
+  stroke-dasharray: 6;
+  animation: flicker 0.3s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+</style>
+.power-center::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,0,0,0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 2s infinite;
+}
+
+@keyframes ripple {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+
 </style>
 </script> 
 </footer>
