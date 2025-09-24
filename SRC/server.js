@@ -5559,3 +5559,58 @@ function clearChart() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+.triangle-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 40px auto;
+}
+
+.corner {
+  position: absolute;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.traderlab {
+  left: 0;
+  bottom: 0;
+}
+
+.cpilot {
+  right: 0;
+  bottom: 0;
+}
+
+.trading-floor {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.ori-olokun {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 90px;   /* Adjust size for the central icon */
+  height: 90px;
+  opacity: 0.08; /* Ultra-opaque */
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.triangle-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  font-size: 0.92rem;
+  text-align: center;
+  color: #181818;
+  font-weight: 500;
+  text-shadow: 0 1px 8px #fff, 0 -1px 8px #fff;
+  width: 110px;
+  pointer-events: none;
+}
