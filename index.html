@@ -539,6 +539,37 @@
     gap: 1rem;
   }
 }
+    /* Additional Styling for Smooth Animation and Hover Effects */
+.entry-point .btn {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.entry-point .btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.triangle-wrapper {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 </style>
 </script> 
 </footer>
