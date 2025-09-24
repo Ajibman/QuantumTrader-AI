@@ -334,6 +334,60 @@
     <li class="tab-item" title="Coming soon: Your AI trading companion">CPilot™</li>
     <li class="tab-item" title="Coming soon: Analyze & optimize your trades">TraderLab™</li>
   </ul>
+<section class="macarthur-map">
+  <h2>Global Economic Power Centers</h2>
+  <div class="map">
+    <!-- Example centers -->
+    <div class="power-center" style="top:20%; left:40%"></div>
+    <div class="power-center" style="top:50%; left:60%"></div>
+    <div class="power-center" style="top:70%; left:30%"></div>
+  </div>
+</section>
+
+<style>
+.macarthur-map {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.map {
+  position: relative;
+  width: 100%;
+  padding-top: 60%; /* aspect ratio */
+  background: url('macarthur-map.png') center/cover no-repeat;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.power-center {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,0,0,0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255,0,0,0.7);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+}
+</style>
 
   <div class="tab-content">
     <div id="trading-floor" class="tab-pane active">
@@ -380,9 +434,7 @@
     });
   });
 
-    <!DOCTYPE html>
 <html lang="en">
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quantum Trader AI</title>
@@ -570,6 +622,59 @@
   }
 }
 
+</style><section class="macarthur-map">
+  <h2>Global Economic Power Centers</h2>
+  <div class="map">
+    <!-- Example centers -->
+    <div class="power-center" style="top:20%; left:40%"></div>
+    <div class="power-center" style="top:50%; left:60%"></div>
+    <div class="power-center" style="top:70%; left:30%"></div>
+  </div>
+</section>
+
+<style>
+.macarthur-map {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.map {
+  position: relative;
+  width: 100%;
+  padding-top: 60%; /* aspect ratio */
+  background: url('macarthur-map.png') center/cover no-repeat;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.power-center {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,0,0,0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255,0,0,0.7);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+}
 </style>
 </script> 
 </footer>
