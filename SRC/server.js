@@ -1,135 +1,65 @@
- // src/pages/Dashboard.js
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
-import toast, { Toaster } from "react-hot-toast";
+ const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-const SOCKET_URL = "http://localhost:4000"; // replace with deployed backend URL
+// Path to the backup server.js
+const backupFilePath = path.join(__dirname, 'backup', 'server.js');
+const originalFilePath = path.join(__dirname, 'server.js');
 
-const Dashboard = () => {
-  const [visitors, setVisitors] = useState([]);
-  const [historicalLeaderboard, setHistoricalLeaderboard] = useState({});
-  const [entryHistory, setEntryHistory] = useState({});
-  const [filterBubble, setFilterBubble] = useState("All");
-  const [filterTier, setFilterTier] = useState("All");
-  const [dateRange, setDateRange] = useState("All");
+// Expected hash (checksum) of the original server.js to detect corruption
+const expectedChecksum = 'yourExpectedChecksumValueHere'; // Generate this checksum for the original server.js
 
-  useEffect(() => {
-    const socket = io(SOCKET_URL);
+// Function to perform self-repair
+function performSelfRepair() {
+    // Check if the file is editable (if it’s not, do a self-repair)
+    fs.access(originalFilePath, fs.constants.W_OK, (err) => {
+        if (err) {
+            console.log('File is not writable. Triggering self-repair...');
+            restoreBackup();
+        } else {
+            console.log('File is writable. Checking for corruption...');
 
-    const handleVisitorUpdate = (data) => {
-      setVisitors((prev) => {
-        const existing = prev.filter(v => v.visitorId !== data.visitorId);
-        return [...existing, data];
-      });
-
-      setHistoricalLeaderboard((prev) => {
-        const prevEntry = prev[data.visitorId] || { count: 0, highestTier: null, totalScore: 0 };
-        const newTier = getTier(data);
-        const tierRank = { Gold: 3, Silver: 2, Bronze: 1, null: 0 };
-        const highestTier = tierRank[newTier] > tierRank[prevEntry.highestTier] ? newTier : prevEntry.highestTier;
-        const count = prevEntry.count + 1;
-        const totalScore = prevEntry.totalScore + (data.score ?? 0);
-        return { ...prev, [data.visitorId]: { count, highestTier, totalScore } };
-      });
-
-      setEntryHistory((prev) => {
-        const visitorHistory = prev[data.visitorId] || [];
-        const newEntry = {
-          timestamp: new Date().toISOString(), // ISO for easy filtering
-          bubble: data.destination,
-          score: data.score ?? "N/A",
-          tier: getTier(data)
-        };
-        return { ...prev, [data.visitorId]: [newEntry, ...visitorHistory] };
-      });
-
-      if (isTopVisitor(data)) {
-        toast.success(`Top Visitor Alert: ${data.visitorId} entered ${data.destination}`, { duration: 5000 });
-      }
-    };
-
-    socket.on("visitorRouted", handleVisitorUpdate);
-    socket.on("visitorReEvaluated", handleVisitorUpdate);
-
-    return () => socket.disconnect();
-  }, []);
-
-  const isTopVisitor = (v) => {
-    if (v.destination === "TraderLab_CPilot") return (v.score ?? 0) >= 8 && v.peacefulness >= 7;
-    if (v.destination === "CPilot") return (v.score ?? 0) >= 7 && v.emotionalIntelligence >= 8;
-    return false;
-  };
-
-  const getTier = (v) => {
-    if (!isTopVisitor(v)) return null;
-    if (v.score >= 9 && (v.peacefulness ?? 0) >= 9) return "Gold";
-    if (v.score >= 8 && (v.peacefulness ?? 0) >= 8) return "Silver";
-    return "Bronze";
-  };
-
-  // Utility: filter entry history based on tier, bubble, date range
-  const getFilteredHistory = () => {
-    let filtered = [];
-    Object.entries(entryHistory).forEach(([visitorId, entries]) => {
-      let filteredEntries = entries;
-
-      if (filterTier !== "All") {
-        filteredEntries = filteredEntries.filter(e => e.tier === filterTier);
-      }
-
-      if (filterBubble !== "All") {
-        filteredEntries = filteredEntries.filter(e => e.bubble === filterBubble);
-      }
-
-      if (dateRange === "Last7Days") {
-        const cutoff = new Date();
-        cutoff.setDate(cutoff.getDate() - 7);
-        filteredEntries = filteredEntries.filter(e => new Date(e.timestamp) >= cutoff);
-      } else if (dateRange === "Last30Days") {
-        const cutoff = new Date();
-        cutoff.setDate(cutoff.getDate() - 30);
-        filteredEntries = filteredEntries.filter(e => new Date(e.timestamp) >= cutoff);
-      }
-
-      if (filteredEntries.length > 0) {
-        filtered.push([visitorId, filteredEntries]);
-      }
+            // Check for file corruption
+            checkForCorruption();
+        }
     });
+}
 
-    return Object.fromEntries(filtered);
-  };
+// Function to check if server.js has been corrupted
+function checkForCorruption() {
+    fs.readFile(originalFilePath, (err, data) => {
+        if (err) {
+            console.error('Error reading server.js:', err);
+            return;
+        }
 
-  // Export CSV
-  const exportCSV = (data, filename) => {
-    const csvContent = Object.entries(data)
-      .map(([visitorId, entries]) => entries.map(e => `${visitorId},${e.timestamp},${e.bubble},${e.score},${e.tier ?? "N/A"}`).join("\n"))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+        const currentChecksum = getChecksum(data);
 
-  // Export JSON
-  const exportJSON = (data, filename) => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+        // Compare the current checksum with the expected one
+        if (currentChecksum !== expectedChecksum) {
+            console.log('Server.js is corrupted. Triggering self-repair...');
+            restoreBackup();
+        } else {
+            console.log('Server.js is intact. No repair needed.');
+        }
+    });
+}
 
-  return (
-    <div className="p-6">
-      <Toaster position="top-right" />
-      <h1 className="text-3xl font-bold mb-6">Quantum Trader AI Dashboard</h1>
+// Function to generate a checksum (hash) of the file content
+function getChecksum(data) {
+    return crypto.createHash('sha256').update(data).digest('hex');
+}
 
-      {/* Filters */}
-      <div className="flex gap-2 mb-4">
-        <select value={filterTier} onChange={e => setFilterTier(e.target.value)} className="border p-1 rounded">
-        
+// Function to restore the backup version of the server.js
+function restoreBackup() {
+    fs.copyFile(backupFilePath, originalFilePath, (err) => {
+        if (err) {
+            console.error('Failed to restore backup:', err);
+        } else {
+            console.log('Self-repair completed. Restored from backup.');
+        }
+    });
+}
+
+// Trigger self-repair if necessary
+performSelfRepair();
