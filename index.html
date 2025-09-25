@@ -208,8 +208,37 @@
   }
 
   setInterval(animate, 5000); // Update every 5 seconds
-====
-    body {
+
+   // MacArthur Map expansion
+  const macarthur = document.getElementById("macarthur");
+  const macarthurExpanded = document.getElementById("macarthur-expanded");
+  const macarthurContent = document.getElementById("macarthur-content");
+  const closeMacArthur = document.getElementById("close-macarthur");
+
+  macarthur.addEventListener("click", () => {
+    macarthurExpanded.style.display = "block";
+    macarthurContent.innerHTML = `
+      <p>Peace Index: ${pi}</p>
+      <p>Market hubs are ${pi > 70 ? "thriving" : pi >= 40 ? "in balance" : "unstable"}.</p>
+      <ul>
+        <li>New York: ${Math.floor(Math.random() * 100)}% activity</li>
+        <li>London: ${Math.floor(Math.random() * 100)}% activity</li>
+        <li>Tokyo: ${Math.floor(Math.random() * 100)}% activity</li>
+        <li>Shanghai: ${Math.floor(Math.random() * 100)}% activity</li>
+        <li>Lagos: ${Math.floor(Math.random() * 100)}% activity</li>
+      </ul>
+    `;
+  });
+
+  closeMacArthur.addEventListener("click", () => {
+    macarthurExpanded.style.display = "none";
+  });
+
+  // Start animation loop
+  animate();
+</script>
+
+<body> {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #0d1117;
@@ -230,7 +259,7 @@
         height: 250px;
       }
     }
-    main {
+    <main> {
       padding: 2rem;
     }
     /* Globe */
@@ -288,18 +317,16 @@
       width: 150px;
       height: 150px;
     }
-  </style>
-</head>
-<body>
+
+    </style>
+    </head>
   <header>
     <img id="qtai-logo" src="qtai-logo.png" alt="QuantumTrader AI Logo">
     <h1>QuantumTrader AI™</h1>
   </header>
-
-  <main>
-    <div id="globe">
-      <!-- Globe Image or Visual Goes Here -->
-    </div>
+  <div id="globe">
+  <!-- Globe Image or Visual Goes Here -->
+  </div>
     <div class="triangle-container">
       <div class="node apex">Trading Floor</div>
       <div class="node base-left">TraderLab™</div>
@@ -308,12 +335,13 @@
     <section id="event-widget">
       <h2>Latest Events</h2>
       <button onclick="location.reload();">Click to Refresh</button>
-      <!-- Dynamic event content can go here -->
+     
+     <!-- Dynamic event content can go here -->
     </section>
   </main>
 
   <footer>
-    <img id="ori-ololun" src="ori-olokun.png" alt="Ori Olokun">
+    <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
     <p>© 2025 QuantumTrader AI™</p>
   </footer>
 </body>
