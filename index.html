@@ -1,1067 +1,160 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
-<style>
-  /* ===== General Styles ===== */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
-    color: #333;
-    margin: 0;
-    padding: 0;
-  }
-
-  section, footer {
-    padding: 40px 20px;
-    text-align: center;
-  }
-
-  /* ===== Coming Soon Logo ===== */
-  #coming-soon-logo img {
-    max-width: 250px;
-    margin: 20px auto;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  #coming-soon-logo img:hover {
-    transform: scale(1.05);
-  }
-
-  /* ===== Tabs Dashboard ===== */
-  #dashboard {
-    background: #ffffff;
-    border-radius: 12px;
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  }
-
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  .tab-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #e0e0e0;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-
-  .tab-button:hover {
-    background: #007bff;
-    color: #fff;
-  }
-
-  .tab-content {
-    display: none;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-  }
-
-  /* ===== Ori Footer ===== */
-  #ori-footer img {
-    max-width: 150px;
-    margin-top: 20px;
-    display: inline-block;
-  }
-
-  /* ===== Placeholder Styling ===== */
-  .tab-content p {
-    font-style: italic;
-    color: #555;
-  }
-</style>
-</head>
-
-  <title>QuantumTrader AI</title>
+  <title>QuantumTrader AI™</title>
   <style>
-    /* === Global Styles === */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #222;
-      line-height: 1.6;
-    }
-    header, footer {
+      background: #0d1117;
+      color: #f0f6fc;
       text-align: center;
-      padding: 20px;
-      background: #111;
-      color: #fff;
     }
-    section {
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 900px;
-      background: #fff;
+
+    header {
+      padding: 1rem;
+    }
+
+    /* Responsive Logo */
+    #qtai-logo {
+      width: 200px;
+      height: 200px;
+    }
+    @media (min-width: 768px) {
+      #qtai-logo {
+        width: 250px;
+        height: 250px;
+      }
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    /* Globe */
+    #globe {
+      margin: 2rem auto;
+      display: block;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+    }
+
+    /* Triangular layout */
+    .triangle-container {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 2rem auto;
+    }
+
+    .node {
+      position: absolute;
+      background: #161b22;
+      border: 2px solid #58a6ff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #238636;
+      border-color: #2ea043;
+    }
+
+    .base-left {
+      bottom: 0;
+      left: 0;
+    }
+
+    .base-right {
+      bottom: 0;
+      right: 0;
+    }
+
+    /* Event widget */
+    #event-widget {
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #161b22;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 300px;
     }
-    h1, h2, h3 {
-      text-align: center;
+
+    /* Footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
     }
-    button {
-      background: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #visitor-log p {
-      margin: 4px 0;
-      font-size: 0.9em;
-    }
-    .logo {
-      max-width: 250px;
-      margin: 0 auto 20px;
-      display: block;
-    }
-    .ori {
-      max-width: 150px;
-      margin: 20px auto 0;
-      display: block;
-    }
-    /* === Dashboard Tabs === */
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid #ddd;
-    }
-    .tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      background: #f1f1f1;
-      border: 1px solid #ddd;
-      border-bottom: none;
-    }
-    .tab.active {
-      background: #fff;
-      font-weight: bold;
-    }
-    .tab-content {
-      display: none;
-      padding: 20px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    canvas {
-      margin-top: 20px;
-      width: 100%;
-      max-width: 600px;
-      height: 300px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: #fafafa;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+
+    #ori-ologo {
+      width: 150px;
+      height: 150px;
     }
   </style>
 </head>
 <body>
-  <!-- === Coming Soon Logo Section === -->
   <header>
-    <img src="coming-soon-logo.png" alt="Coming Soon Logo" class="logo" />
-    <h1>QuantumTrader AI</h1>
-    <p>Official Launch: November 9, 2025</p>
+    <img id="qtai-logo" src="https://via.placeholder.com/250x250.png?text=QT+AI+Logo" alt="QT AI Logo" />
   </header>
 
-  <!-- Coming Soon Logo Section -->
-<div id="coming-soon-logo">
-  <img src="coming-soon-logo.png" alt="Quantum Trader AI Coming Soon" width="200">
-</div>
+  <main>
+    <img id="globe" src="https://via.placeholder.com/400.png?text=Rotating+Globe" alt="Globe Placeholder" />
 
-<!-- Tab Buttons Section -->
-<div class="tab-buttons-container" style="margin-top: 30px; text-align:center;">
-  <button class="tab-button">CPilot™</button>
-  <button class="tab-button">TraderLab™</button>
-</div>
-
-<!-- Tab Contents Section -->
-<div class="tab-contents-container" style="margin-top: 20px;">
-  <div class="tab-content" style="display:none;">
-    <h3>CPilot™</h3>
-    <p>Coming Soon: AI-assisted trading insights and live market overview.</p>
-  </div>
-
-  <div class="tab-content" style="display:none;">
-    <h3>TraderLab™</h3>
-    <p>Coming Soon: Analyze trades, view stats, and explore trading strategies.</p>
-  </div>
-</div>
-
-<!-- Ori Olokun at the Bottom -->
-<div id="ori-olokun" style="margin-top:50px; text-align:center;">
-  <img src="ori-olokun.png" alt="Ori Olokun?" width="150">
-</div>
-
-  <!-- === Step 3–5 Build Process Section === -->
-  <section id="build-process">
-    <h2>Build Process: Step 3 → Step 5</h2>
-    <p>We are currently progressing through the staged build process of QuantumTrader AI.</p>
-    <ul>
-      <li><strong>Step 3:</strong> Wiring in modules and preliminary testing.</li>
-      <li><strong>Step 4:</strong> Refinement, ethical improvements, and integration with CCLM²™ supervision.</li>
-      <li><strong>Step 5:</strong> Final preparation for public launch.</li>
-    </ul>
-  </section>
-
-  <!-- === Quantum Signal (Talking Drum) Section === -->
-  <section id="quantum-signal">
-    <h2>Quantum Signal — Talking Drum</h2>
-    <p>
-      This section symbolizes QuantumTrader AI’s communication backbone. 
-      Ancient wisdom in a quantum world. 
-    </p>
-  </section>
-
-  <!-- === Visitor Simulation Section === -->
-  <section id="visitor-sim">
-    <h2>Visitor Simulation</h2>
-    <button onclick="simulateVisitor()">Simulate Visitor Event</button>
-    <div id="visitor-log"></div>
-  </section>
-
-  <!-- === Tabbed Dashboard Section === -->
-  <section id="dashboard">
-    <h2>Dashboard</h2>
-    <div class="tabs">
-      <div class="tab active" onclick="openTab('stats')">Visitor Statistics</div>
-      <div class="tab" onclick="openTab('traderlab')">TraderLab™</div>
+    <!-- Triangular layout -->
+    <div class="triangle-container">
+      <div class="node apex">Trading Floor</div>
+      <div class="node base-left">Module 01</div>
+      <div class="node base-right">Module 02</div>
     </div>
-    <div id="stats" class="tab-content active">
-      <h3>Visitor Statistics</h3>
-      <p>Charts and metrics for simulated visitors.</p>
-      <div id="visitor-count">Total Visitors: 0</div>
-      <canvas id="visitorChart"></canvas>
-    </div>
-    <div id="traderlab" class="tab-content">
-      <h3>TraderLab™</h3>
-      <p>Sandbox environment for experimentation and trading intelligence modules.</p>
-      <p><em>Coming Soon...</em></p>
-    </div>
-  </section>
 
-  <!-- === Ori Olokun Section (Bottom Placeholder) === -->
-  <img src="ori-olokun.png" alt="Ori Olokun" class="ori" />
+    <!-- Event widget -->
+    <div id="event-widget">
+      <h3>Latest Events</h3>
+      <button onclick="showEvents()">Click to Refresh</button>
+      <ul id="event-list"></ul>
+    </div>
+  </main>
+
   <footer>
-    <p>&copy; 2025 QuantumTrader AI — All Rights Reserved</p>
+    <img id="ori-ologo" src="https://via.placeholder.com/150.png?text=Ori+Ologo" alt="Ori Ologo" />
+    <p>© 2025 QuantumTrader AI™</p>
   </footer>
 
-  <!-- === Consolidated Scripts === -->
+  <!-- Scripts -->
   <script>
-    // === Visitor Simulation Logic ===
-    let visitorTotal = 0;
-    const visitorData = []; // store counts over time
-
-    function simulateVisitor() {
-      const log = document.getElementById('visitor-log');
-      const visitorId = "Visitor-" + Math.floor(Math.random() * 10000);
-      const time = new Date().toLocaleTimeString();
-
-      const entry = document.createElement('p');
-      entry.textContent = visitorId + " visited at " + time;
-      log.appendChild(entry);
-
-      visitorTotal++;
-      document.getElementById('visitor-count').textContent = "Total Visitors: " + visitorTotal;
-
-      visitorData.push(visitorTotal);
-      drawChart();
-
-      console.log("Simulated visitor event:", visitorId, time);
-    }
-
-    // === Tab Switching Logic ===
-    function openTab(tabId) {
-      const tabs = document.querySelectorAll('.tab');
-      const contents = document.querySelectorAll('.tab-content');
-
-      tabs.forEach(tab => tab.classList.remove('active'));
-      contents.forEach(content => content.classList.remove('active'));
-
-      document.querySelector('.tab[onclick="openTab(\''+tabId+'\')"]').classList.add('active');
-      document.getElementById(tabId).classList.add('active');
-    }
-
-    // === Chart Drawing Logic ===
-    function drawChart() {
-      const canvas = document.getElementById("visitorChart");
-      const ctx = canvas.getContext("2d");
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const barWidth = 40;
-      const spacing = 10;
-      const maxHeight = canvas.height - 20;
-      const maxValue = Math.max(...visitorData, 1);
-
-      visitorData.forEach((value, i) => {
-        const barHeight = (value / maxValue) * maxHeight;
-        const x = i * (barWidth + spacing) + 20;
-        const y = canvas.height - barHeight;
-
-        ctx.fillStyle = "#007bff";
-        ctx.fillRect(x, y, barWidth, barHeight);
-
-        ctx.fillStyle = "#000";
-        ctx.font = "10px Arial";
-        ctx.fillText(value, x + 10, y - 5);
+    // Event widget (4→1 sec ago demo)
+    function showEvents() {
+      const events = [
+        "Global market pulse 4 sec ago",
+        "Global market pulse 3 sec ago",
+        "Global market pulse 2 sec ago",
+        "Global market pulse 1 sec ago",
+      ];
+      const list = document.getElementById("event-list");
+      list.innerHTML = "";
+      events.forEach(e => {
+        const li = document.createElement("li");
+        li.textContent = e;
+        list.appendChild(li);
       });
     }
-   <!-- Horizontal "Y" Tabs Section -->
-<div class="dashboard-tabs">
-  <ul class="tab-list">
-    <li class="tab-item active" title="Live trading floor">Trading Floor</li>
-    <li class="tab-item" title="Coming soon: Your AI trading companion">CPilot™</li>
-    <li class="tab-item" title="Coming soon: Analyze & optimize your trades">TraderLab™</li>
-  </ul>
-<section class="macarthur-map">
-  <h2>Global Economic Power Centers</h2>
-  <div class="map">
-    <!-- Example centers -->
-    <div class="power-center" style="top:20%; left:40%"></div>
-    <div class="power-center" style="top:50%; left:60%"></div>
-    <div class="power-center" style="top:70%; left:30%"></div>
-  </div>
-</section>
 
-<style>
-.macarthur-map {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  text-align: center;
-}
-
-.map {
-  position: relative;
-  width: 100%;
-  padding-top: 60%; /* aspect ratio */
-  background: url('macarthur-map.png') center/cover no-repeat;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-.power-center {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: rgba(255,0,0,0.8);
-  border-radius: 50%;
-  box-shadow: 0 0 20px rgba(255,0,0,0.7);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-}
-</style>
-
-  <div class="tab-content">
-    <div id="trading-floor" class="tab-pane active">
-      <!-- Live Trading Floor content goes here -->
-      <p>Welcome to the Trading Floor!</p>
-    </div>
-
-    <div id="cpilot" class="tab-pane">
-      <!-- CPilot™ placeholder -->
-      <p>CPilot™ functionality coming soon. Your AI trading companion is on the way!</p>
-    </div>
-
-    <div id="traderlab" class="tab-pane">
-      <!-- TraderLab™ placeholder -->
-      <p>TraderLab™ coming soon. Analyze & optimize your trades here.</p>
-    </div>
-  </div>
-</div>
-
-    <div id="future" class="tab-content">
-  <h3>Future Improvements</h3>
-  <p>Exciting features and updates are coming soon! Stay tuned for more enhancements.</p>
-</div>
-
-    <div id="stats" class="tab-content active">
-  <h3>Visitor Statistics</h3>
-  <p>Charts and metrics for simulated visitors.</p>
-  <div id="visitor-count">Total Visitors: 0</div>
-  <button onclick="clearChart()">Clear Chart</button>
-  <canvas id="visitorChart"></canvas>
-</div>
-
-<!-- Optional: Basic Tab Switching Script -->
-    <script>
-  const tabs = document.querySelectorAll('.tab-item');
-  const panes = document.querySelectorAll('.tab-pane');
-
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      panes.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      panes[index].classList.add('active');
-    });
-  });
-
-<html lang="en">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI</title>
-  <!-- Add your CSS & JS links here -->
-    
-  <!-- ===== Coming Soon Logo Section ===== -->
-  <section id="coming-soon-logo">
-    <!-- Placeholder for Coming Soon logo -->
-    <img src="coming-soon-logo.png" alt="Coming Soon Logo" />
-    <!-- Future: update with animation or interactive element -->
-  </section>
-
-  <!-- ===== Main Tabbed Dashboard Section ===== -->
-  <section id="dashboard">
-    <div class="tabs">
-      <!-- Tab Buttons -->
-      <button class="tab-button" data-tab="cpilot">CPilot™</button>
-      <button class="tab-button" data-tab="traderlab">TraderLab™</button>
-      <button class="tab-button" data-tab="visitor-stats">Visitor Statistics</button>
-      <!-- Placeholder for future tabs -->
-    </div>
-
-    <!-- Tab Contents -->
-    <div class="tab-content" id="cpilot">
-      <!-- Placeholder content for CPilot™ -->
-      <p>CPilot™ will display trading insights here.</p>
-    </div>
-
-    <div class="tab-content" id="traderlab">
-      <!-- Placeholder content for TraderLab™ -->
-      <p>TraderLab™ interface will appear here.</p>
-    </div>
-
-    <div class="tab-content" id="visitor-stats">
-      <!-- Placeholder content for Visitor Statistics -->
-      <p>Visitor statistics and activity metrics will be shown here.</p>
-    </div>
-  </section>
-
-  <!-- ===== Ori Section at Bottom ===== -->
-  <footer id="ori-footer">
-    <!-- Placeholder for Ori display -->
-    <img src="ori.png" alt="Ori Ologo" />
-    <!-- Future: add interactive features or animation -->
-      
-  <!-- ===== Placeholder Comments for Future Improvements ===== -->
-  <!-- TODO: Implement interactive tab switching logic -->
-  <!-- TODO: Add real-time visitor statistics -->
-  <!-- TODO: Enhance Coming Soon logo with animation -->
-  <!-- TODO: Integrate TraderLab™ tools and CPilot™ functionality -->
-
-  <script>
-    // Basic tab switcher
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const target = button.dataset.tab;
-
-        tabContents.forEach(tc => {
-          tc.style.display = tc.id === target ? 'block' : 'none';
-        });
-      });
-    });
-
-    // Initialize first tab visible
-    tabContents.forEach(tc => tc.style.display = 'none');
-    if (tabContents[0]) tabContents[0].style.display = 'block';
-  </script>
-  <script>
-  // Get tab buttons and content
-  const tabs = document.querySelectorAll('.tab-button');
-  const contents = document.querySelectorAll('.tab-content');
-
-  // Show first tab by default
-  contents[0].style.display = 'block';
-  tabs[0].style.background = '#007bff';
-  tabs[0].style.color = '#fff';
-  
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => {
-      // Hide all content
-      contents.forEach(c => c.style.display = 'none');
-      tabs.forEach(t => {
-        t.style.background = '#e0e0e0';
-        t.style.color = '#333';
-      });
-      
-      // Show selected content
-      contents[index].style.display = 'block';
-      tab.style.background = '#007bff';
-      tab.style.color = '#fff';
-    });
-  }); 
-  <div class="triangle">
-  <div class="corner traderlab">TraderLab™</div>
-  <div class="corner cpilot">CPilot™</div>
-  <div class="corner trading-floor">Trading Floor</div>
-  <div class="centerpiece">
-    <span>Ancient Wisdom, Quantum Ready</span>
-    <!-- You may add icons or subtle cosmic/mind graphics here -->
-  </div>
-  <!-- Optionally, Ori Olokun emblem/graphic here for foundation/cosmic mind -->
-</div>
-    <div class="triangle-container">
-  <!-- Your triangle points, center, SVG lines, etc. go here -->
-</div>
-    <section class="triangle-wrapper">
-  <div class="triangle-apex">
-    <div class="card">Trading Floor</div>
-  </div>
-  <div class="triangle-base">
-    <div class="card">TraderLab™</div>
-    <div class="card">Cpilot™</div>
-  </div>
-</section>
-
-<style>
-.triangle-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 3rem auto;
-  max-width: 900px;
-}
-
-.triangle-apex {
-  margin-bottom: 2rem;
-}
-
-.triangle-base {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 2rem;
-}
-
-.card {
-  flex: 1;
-  text-align: center;
-  background: #f9f9f9;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .triangle-base {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-    /* Additional Styling for Smooth Animation and Hover Effects */
-.entry-point .btn {
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.entry-point .btn:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.card {
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-10px);
-}
-
-.triangle-wrapper {
-  animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-</style><section class="macarthur-map">
-  <h2>Global Economic Power Centers</h2>
-  <div class="map">
-    <!-- Example centers -->
-    <div class="power-center" style="top:20%; left:40%"></div>
-    <div class="power-center" style="top:50%; left:60%"></div>
-    <div class="power-center" style="top:70%; left:30%"></div>
-  </div>
-</section>
-
-<style>
-.macarthur-map {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  text-align: center;
-}
-
-.map {
-  position: relative;
-  width: 100%;
-  padding-top: 60%; /* aspect ratio */
-  background: url('macarthur-map.png') center/cover no-repeat;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-.power-center {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: rgba(255,0,0,0.8);
-  border-radius: 50%;
-  box-shadow: 0 0 20px rgba(255,0,0,0.7);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-}
-    <!-- Lightning layer (placed inside .map) -->
-<svg class="lightning" xmlns="http://www.w3.org/2000/svg">
-  <line x1="40%" y1="20%" x2="60%" y2="50%" />
-  <line x1="60%" y1="50%" x2="30%" y2="70%" />
-</svg>
-
-<style>
-.lightning {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-
-.lightning line {
-  stroke: yellow;
-  stroke-width: 2;
-  stroke-dasharray: 6;
-  animation: flicker 0.3s infinite;
-}
-
-@keyframes flicker {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-</style>
-.power-center::after {
-  content: "";
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 20px; height: 20px;
-  border: 2px solid rgba(255,0,0,0.6);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: ripple 2s infinite;
-}
-
-@keyframes ripple {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
-}
-<style>
-  /* Peace Index Display */
-  #pi-display {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 100px;
-    height: 100px;
-    background: black;
-    color: lime;
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    border: 2px solid lime;
-    border-radius: 8px;
-    text-align: center;
-    padding: 5px;
-    box-shadow: 0 0 10px lime;
-  }
-
-  #pi-value {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  #pi-status {
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  /* Lightning arcs canvas */
-  #arcsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-</style>
-
-<!-- Peace Index Display -->
-<div id="pi-display">
-  <div id="pi-value">Pi = 72</div>
-  <div id="pi-status">Peace: High</div>
-</div>
-
-<!-- Canvas for lightning arcs -->
-<canvas id="arcsCanvas"></canvas>
-
-<script>
-  const piValueEl = document.getElementById("pi-value");
-  const piStatusEl = document.getElementById("pi-status");
-  const canvas = document.getElementById("arcsCanvas");
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  // Example hub coordinates (you can adjust based on layout)
-  const hubs = [
-    {x: 300, y: 200},  // TraderLab™
-    {x: 600, y: 200},  // Cpilot™
-    {x: 450, y: 50},   // Trading Floor (apex)
-    {x: 450, y: 400}   // MacArthur Map
-  ];
-
-  let pi = 72; // Peace Index (starts at 72)
-
-  function updatePi() {
-    // Simulate Pi fluctuation
-    pi = Math.floor(Math.random() * 101); // 0-100
-    let status = "Low", color = "red";
-    if (pi > 70) {
-      status = "High";
-      color = "lime";
-    } else if (pi >= 40) {
-      status = "Medium";
-      color = "orange";
-    }
-    // Update display
-    piValueEl.textContent = `Pi = ${pi}`;
-    piStatusEl.textContent = `Peace: ${status}`;
-    document.getElementById("pi-display").style.borderColor = color;
-    document.getElementById("pi-display").style.boxShadow = `0 0 10px ${color}`;
-    document.getElementById("pi-display").style.color = color;
-    return color;
-  }
-
-  function drawLightning(x1, y1, x2, y2, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    let x = x1, y = y1;
-    ctx.moveTo(x, y);
-    let segments = 20;
-    for (let i = 0; i < segments; i++) {
-      x += (x2 - x1) / segments;
-      y += (y2 - y1) / segments + (Math.random() - 0.5) * 10;
-      ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width,
-<style>
-  /* Peace Index Display */
-  #pi-display {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 100px;
-    height: 100px;
-    background: black;
-    color: lime;
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    border: 2px solid lime;
-    border-radius: 8px;
-    text-align: center;
-    padding: 5px;
-    box-shadow: 0 0 10px lime;
-    cursor: default;
-  }
-
-  #pi-value {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  #pi-status {
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  /* Hubs (for click targets) */
-  .hub {
-    position: absolute;
-    width: 80px;
-    height: 30px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    border: 2px solid white;
-    border-radius: 6px;
-    text-align: center;
-    line-height: 30px;
-    font-family: Arial, sans-serif;
-    cursor: pointer;
-    z-index: 2;
-  }
-
-  /* Expanded MacArthur Map view */
-  #macarthur-expanded {
-    display: none;
-    position: fixed;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 70%;
-    background: black;
-    color: white;
-    border: 3px solid lime;
-    border-radius: 12px;
-    padding: 20px;
-    z-index: 10;
-    overflow: auto;
-    box-shadow: 0 0 20px lime;
-  }
-
-  #macarthur-expanded h2 {
-    color: lime;
-  }
-
-  #close-macarthur {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-    color: red;
-    font-size: 18px;
-  }
-
-  /* Lightning arcs canvas */
-  #arcsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-  }
-</style>
-
-<!-- Peace Index Display -->
-<div id="pi-display">
-  <div id="pi-value">Pi = 72</div>
-  <div id="pi-status">Peace: High</div>
-</div>
-
-<!-- Hubs -->
-<div class="hub" id="traderlab" style="left: 200px; top: 400px;">TraderLab™</div>
-<div class="hub" id="cpilot" style="left: 700px; top: 400px;">Cpilot™</div>
-<div class="hub" id="tradingfloor" style="left: 450px; top: 200px;">Trading Floor</div>
-<div class="hub" id="macarthur" style="left: 450px; top: 600px;">MacArthur Map</div>
-
-<!-- Expanded MacArthur view -->
-<div id="macarthur-expanded">
-  <div id="close-macarthur">✖</div>
-  <h2>MacArthur Map — Global Economic Power Centers</h2>
-  <p>
-    This view reveals pulsating hubs of global economic power.
-    Each hub represents a world market center, dynamically updating every 5 seconds
-    to show trading activities, clashes, and market shifts.
-  </p>
-  <div id="macarthur-content">
-    <!-- Dynamic content will load here -->
-  </div>
-</div>
-
-<!-- Canvas for lightning arcs -->
-<canvas id="arcsCanvas"></canvas>
-
-<script>
-  const piValueEl = document.getElementById("pi-value");
-  const piStatusEl = document.getElementById("pi-status");
-  const canvas = document.getElementById("arcsCanvas");
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  // Hub coordinates (match div positions)
-  function getHubCenter(id) {
-    const el = document.getElementById(id);
-    const rect = el.getBoundingClientRect();
-    return {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
-  }
-
-  let pi = 72; // Peace Index (starts at 72)
-
-  function updatePi() {
-    // Simulate Pi fluctuation
-    pi = Math.floor(Math.random() * 101); // 0-100
-    let status = "Low", color = "red";
-    if (pi > 70) {
-      status = "High";
-      color = "lime";
-    } else if (pi >= 40) {
-      status = "Medium";
-      color = "orange";
-    }
-    // Update display
-    piValueEl.textContent = `Pi = ${pi}`;
-    piStatusEl.textContent = `Peace: ${status}`;
-    const piDisplay = document.getElementById("pi-display");
-    piDisplay.style.borderColor = color;
-    piDisplay.style.boxShadow = `0 0 10px ${color}`;
-    piDisplay.style.color = color;
-    return color;
-  }
-
-  function drawLightning(x1, y1, x2, y2, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    let x = x1, y = y1;
-    ctx.moveTo(x, y);
-    let segments = 20;
-    for (let i = 0; i < segments; i++) {
-      x += (x2 - x1) / segments;
-      y += (y2 - y1) / segments + (Math.random() - 0.5) * 10;
-      ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let color = updatePi();
-
-    // Recompute hub centers dynamically
-    const hubs = [
-      getHubCenter("traderlab"),
-      getHubCenter("cpilot"),
-      getHubCenter("tradingfloor"),
-      getHubCenter("macarthur")
-    ];
-
-    // Draw arcs between hubs
-    for (let i = 0; i < hubs.length; i++) {
-      for (let j = i + 1; j < hubs.length; j++) {
-        if (Math.random() < 0.5) { // 50% chance arc flickers
-          drawLightning(hubs[i].x, hubs[i].y, hubs[j].x, hubs[j].y, color);
-        }
+    // Silent Medusa™ placeholder (self-heal demo)
+    setInterval(() => {
+      const logo = document.getElementById("qtai-logo");
+      if (!logo) {
+        const newLogo = document.createElement("img");
+        newLogo.id = "qtai-logo";
+        newLogo.src = "https://via.placeholder.com/250x250.png?text=QT+AI+Logo";
+        document.querySelector("header").appendChild(newLogo);
       }
-    }
-  }
-
-  setInterval(animate, 5000); // Update every 5 seconds
-
-  // MacArthur Map expansion
-  const macarthur = document.getElementById("macarthur");
-  const macarthurExpanded = document.getElementById("macarthur-expanded");
-  const macarthurContent = document.getElementById("macarthur-content");
-  const closeMacArthur = document.getElementById("close-macarthur");
-
-  macarthur.addEventListener("click", () => {
-    macarthurExpanded.style.display = "block";
-    macarthurContent.innerHTML = `
-      <p>Peace Index: ${pi}</p>
-      <p>Market hubs are ${pi > 70 ? "thriving" : pi >= 40 ? "in balance" : "unstable"}.</p>
-      <ul>
-        <li>New York: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>London: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Tokyo: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Shanghai: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Lagos: ${Math.floor(Math.random() * 100)}% activity</li>
-      </ul>
-    `;
-  });
-
-  closeMacArthur.addEventListener("click", () => {
-    macarthurExpanded.style.display = "none";
-  });
-
-  // Start animation loop
-  animate();
-</script>
-</style>
-</script> 
-</footer>
+    }, 5000);
+  </script>
 </body>
 </html>
-
-  
