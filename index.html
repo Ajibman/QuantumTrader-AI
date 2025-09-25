@@ -5,250 +5,97 @@
   <title>QuantumTrader AI™</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
- 
-  /* Peace Index Display */
-  #pi-display {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 100px;
-    height: 100px;
-    background: black;
-    color: lime;
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    border: 2px solid lime;
-    border-radius: 8px;
-    text-align: center;
-    padding: 5px;
-    box-shadow: 0 0 10px lime;
-    cursor: default;
-  }
-
-  #pi-value {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  #pi-status {
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  /* Hubs (for click targets) */
-  .hub {
-    position: absolute;
-    width: 80px;
-    height: 30px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    border: 2px solid white;
-    border-radius: 6px;
-    text-align: center;
-    line-height: 30px;
-    font-family: Arial, sans-serif;
-    cursor: pointer;
-    z-index: 2;
-  }
-
-  /* Expanded MacArthur Map view */
-  #macarthur-expanded {
-    display: none;
-    position: fixed;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 70%;
-    background: black;
-    color: white;
-    border: 3px solid lime;
-    border-radius: 12px;
-    padding: 20px;
-    z-index: 10;
-    overflow: auto;
-    box-shadow: 0 0 20px lime;
-  }
-
-  #macarthur-expanded h2 {
-    color: lime;
-  }
-
-  #close-macarthur {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-    color: red;
-    font-size: 18px;
-  }
-
-  /* Lightning arcs canvas */
-  #arcsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-  }
-</style>
-
-<!-- Peace Index Display -->
-<div id="pi-display">
-  <div id="pi-value">Pi = 72</div>
-  <div id="pi-status">Peace: High</div>
-</div>
-
-<!-- Hubs -->
-<div class="hub" id="traderlab" style="left: 200px; top: 400px;">TraderLab™</div>
-<div class="hub" id="cpilot" style="left: 700px; top: 400px;">Cpilot™</div>
-<div class="hub" id="tradingfloor" style="left: 450px; top: 200px;">Trading Floor</div>
-<div class="hub" id="macarthur" style="left: 450px; top: 600px;">MacArthur Map</div>
-
-<!-- Expanded MacArthur view -->
-<div id="macarthur-expanded">
-  <div id="close-macarthur">✖</div>
-  <h2>MacArthur Map — Global Economic Power Centers</h2>
-  <p>
-    This view reveals pulsating hubs of global economic power.
-    Each hub represents a world market center, dynamically updating every 5 seconds
-    to show trading activities, clashes, and market shifts.
-  </p>
-  <div id="macarthur-content">
-    <!-- Dynamic content will load here -->
-  </div>
-</div>
-
-<!-- Canvas for lightning arcs -->
-<canvas id="arcsCanvas"></canvas>
-
-<script>
-  const piValueEl = document.getElementById("pi-value");
-  const piStatusEl = document.getElementById("pi-status");
-  const canvas = document.getElementById("arcsCanvas");
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  // Hub coordinates (match div positions)
-  function getHubCenter(id) {
-    const el = document.getElementById(id);
-    const rect = el.getBoundingClientRect();
-    return {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
-  }
-
-  let pi = 72; // Peace Index (starts at 72)
-
-  function updatePi() {
-    // Simulate Pi fluctuation
-    pi = Math.floor(Math.random() * 101); // 0-100
-    let status = "Low", color = "red";
-    if (pi > 70) {
-      status = "High";
-      color = "lime";
-    } else if (pi >= 40) {
-      status = "Medium";
-      color = "orange";
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      text-align: center;
     }
-    // Update display
-    piValueEl.textContent = `Pi = ${pi}`;
-    piStatusEl.textContent = `Peace: ${status}`;
-    const piDisplay = document.getElementById("pi-display");
-    piDisplay.style.borderColor = color;
-    piDisplay.style.boxShadow = `0 0 10px ${color}`;
-    piDisplay.style.color = color;
-    return color;
-  }
-
-  function drawLightning(x1, y1, x2, y2, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    let x = x1, y = y1;
-    ctx.moveTo(x, y);
-    let segments = 20;
-    for (let i = 0; i < segments; i++) {
-      x += (x2 - x1) / segments;
-      y += (y2 - y1) / segments + (Math.random() - 0.5) * 10;
-      ctx.lineTo(x, y);
+    header {
+      padding: 1rem;
     }
-    ctx.stroke();
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let color = updatePi();
-
-    // Recompute hub centers dynamically
-    const hubs = [
-      getHubCenter("traderlab"),
-      getHubCenter("cpilot"),
-      getHubCenter("tradingfloor"),
-      getHubCenter("macarthur")
-    ];
-
-    // Draw arcs between hubs
-    for (let i = 0; i < hubs.length; i++) {
-      for (let j = i + 1; j < hubs.length; j++) {
-        if (Math.random() < 0.5) { // 50% chance arc flickers
-          drawLightning(hubs[i].x, hubs[i].y, hubs[j].x, hubs[j].y, color);
-        }
+    /* Responsive Logo */
+    #qtai-logo {
+      width: 200px;
+      height: 200px;
+    }
+    @media (min-width: 768px) {
+      #qtai-logo {
+        width: 250px;
+        height: 250px;
       }
     }
-  }
-
-  setInterval(animate, 5000); // Update every 5 seconds
-
-   // MacArthur Map expansion
-  const macarthur = document.getElementById("macarthur");
-  const macarthurExpanded = document.getElementById("macarthur-expanded");
-  const macarthurContent = document.getElementById("macarthur-content");
-  const closeMacArthur = document.getElementById("close-macarthur");
-
-  macarthur.addEventListener("click", () => {
-    macarthurExpanded.style.display = "block";
-    macarthurContent.innerHTML = `
-      <p>Peace Index: ${pi}</p>
-      <p>Market hubs are ${pi > 70 ? "thriving" : pi >= 40 ? "in balance" : "unstable"}.</p>
-      <ul>
-        <li>New York: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>London: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Tokyo: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Shanghai: ${Math.floor(Math.random() * 100)}% activity</li>
-        <li>Lagos: ${Math.floor(Math.random() * 100)}% activity</li>
-      </ul>
-    `;
-  });
-
-  closeMacArthur.addEventListener("click", () => {
-    macarthurExpanded.style.display = "none";
-  });
-
-  // Start animation loop
-  animate();
-</script>
-
-<body> {
-       
-    </style>
-    </head>
+    main {
+      padding: 2rem;
+    }
+    /* Globe */
+    #globe {
+      margin: 2rem auto;
+      display: block;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+    }
+    /* Triangular layout */
+    .triangle-container {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 2rem auto;
+    }
+    .node {
+      position: absolute;
+      background: #161b22;
+      border: 2px solid #58a6ff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #238636;
+      border-color: #2ea043;
+    }
+    .base-left {
+      bottom: 0;
+      left: 0;
+    }
+    .base-right {
+      bottom: 0;
+      right: 0;
+    }
+    /* Event widget */
+    #event-widget {
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #161b22;
+      border-radius: 8px;
+      width: 300px;
+    }
+    /* Footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+    #ori-ologo {
+      width: 150px;
+      height: 150px;
+    }
+  </style>
+</head>
+<body>
   <header>
     <img id="qtai-logo" src="qtai-logo.png" alt="QuantumTrader AI Logo">
     <h1>QuantumTrader AI™</h1>
   </header>
-  <div id="globe">
-  <!-- Globe Image or Visual Goes Here -->
-  </div>
+
+  <main>
+    <div id="globe">
+      <!-- Globe Image or Visual Goes Here -->
+    </div>
     <div class="triangle-container">
       <div class="node apex">Trading Floor</div>
       <div class="node base-left">TraderLab™</div>
@@ -256,10 +103,11 @@
     </div>
     <section id="event-widget">
       <h2>Latest Events</h2>
-      <button onclick="location.reload();">Click to Refresh</button> 
-     <!-- Dynamic event content can go here -->
+      <button onclick="location.reload();">Click to Refresh</button>
+      <!-- Dynamic event content can go here -->
     </section>
   </main>
+
   <footer>
     <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
     <p>© 2025 QuantumTrader AI™</p>
