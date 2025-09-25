@@ -1,155 +1,116 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI™</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    text-align: center;
-  }
-
-  h1 {
-    margin-top: 2rem;
-    font-size: 2.8rem;
-    color: #00ffaa;
-    text-shadow: 0 0 20px rgba(0,255,170,0.8);
-    animation: pulseText 2.5s infinite alternate;
-  }
-
-  @keyframes pulseText { from {opacity:0.7;} to {opacity:1;} }
-
-  .logo img {
-    max-width: 200px;
-    margin: 1.5rem auto;
-    border-radius: 10px;
-  }
-
-  .map-banner img {
-    width: 400px;
-    margin: 2rem auto 1.5rem auto;
-    animation: pulseBanner 2.5s infinite alternate;
-    cursor: default;
-  }
-
-  @keyframes pulseBanner {
-    0% { transform: scale(1); opacity: 0.85; box-shadow: 0 0 10px rgba(0,200,255,0.4);}
-    50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 30px rgba(0,200,255,0.9);}
-    100% { transform: scale(1); opacity: 0.85; box-shadow: 0 0 10px rgba(0,200,255,0.4);}
-  }
-
-  .globe-container img {
-    width: 250px;
-    margin: 1.5rem auto 2rem auto;
-    animation: rotateGlobe 20s linear infinite;
-  }
-
-  @keyframes rotateGlobe { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
-
-  /* Y-Diagram */
-  .y-diagram {
-    position: relative;
-    width: 300px;
-    height: 250px;
-    margin: 0 auto 3rem auto;
-  }
-
-  .stem {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 150px;
-    background: #00ffaa;
-    box-shadow: 0 0 20px rgba(0,255,170,0.8);
-    animation: pulse 2.5s infinite alternate;
-  }
-
-  .branch {
-    position: absolute;
-    width: 120px;
-    height: 4px;
-    background: #00ffaa;
-    box-shadow: 0 0 20px rgba(0,255,170,0.8);
-    animation: pulse 2.5s infinite alternate;
-  }
-
-  .branch.top { top: 30px; left: 50%; transform: rotate(-30deg); transform-origin: left center; }
-  .branch.bottom { top: 90px; left: 50%; transform: rotate(30deg); transform-origin: left center; }
-
-  /* Labels pinned to branch ends */
-  .label {
-    position: absolute;
-    color: #00ffaa;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(0,255,170,1);
-    pointer-events: none;
-    white-space: nowrap;
-  }
-
-  .label.traderlab { top: 140px; left: calc(50% - 150px); } /* left tail */
-  .label.cpilot { top: 20px; left: calc(50% + 110px); }    /* top arm tip */
-  .label.trading { top: 85px; left: calc(50% + 110px); }   /* bottom arm tip */
-
-  .active-link {
-    pointer-events: auto;
-    color: #00ffaa;
-    text-decoration: none;
-    text-shadow: 0 0 15px rgba(0,255,170,1);
-  }
-
-  .active-link:hover { color: #fff; text-decoration: underline; }
-</style>
+  <meta charset="UTF-8">
+  <title>QuantumTrader AI™</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      text-align: center;
+    }
+    header {
+      padding: 1rem;
+    }
+    /* Responsive Logo */
+    #qtai-logo {
+      width: 200px;
+      height: 200px;
+    }
+    @media (min-width: 768px) {
+      #qtai-logo {
+        width: 250px;
+        height: 250px;
+      }
+    }
+    main {
+      padding: 2rem;
+    }
+    /* Globe */
+    #globe {
+      margin: 2rem auto;
+      display: block;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+    }
+    /* Triangular layout */
+    .triangle-container {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 2rem auto;
+    }
+    .node {
+      position: absolute;
+      background: #161b22;
+      border: 2px solid #58a6ff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #238636;
+      border-color: #2ea043;
+    }
+    .base-left {
+      bottom: 0;
+      left: 0;
+    }
+    .base-right {
+      bottom: 0;
+      right: 0;
+    }
+    /* Event widget */
+    #event-widget {
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #161b22;
+      border-radius: 8px;
+      width: 300px;
+    }
+    /* Footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+    #ori-ologo {
+      width: 150px;
+      height: 150px;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <img id="qtai-logo" src="qtai-logo.png" alt="QuantumTrader AI Logo">
+    <h1>QuantumTrader AI™</h1>
+  </header>
 
-<h1>Quantum Trader AI</h1>
+  <main>
+    <div id="globe">
+      <!-- Globe Image or Visual Goes Here -->
+    </div>
+    <div class="triangle-container">
+      <div class="node apex">Trading Floor</div>
+      <div class="node base-left">Module 01</div>
+      <div class="node base-right">Module 02</div>
+    </div>
+    <section id="event-widget">
+      <h2>Latest Events</h2>
+      <button onclick="location.reload();">Click to Refresh</button>
+      <!-- Dynamic event content can go here -->
+    </section>
+  </main>
 
-<div class="logo">
-  <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
-</div>
-
-<div class="map-banner">
-  <img src="assets/MacArthur.png" alt="MacArthur Map Banner" id="qtBanner">
-</div>
-
-<div class="globe-container">
-  <img src="assets/globe.png" alt="Rotating Globe">
-</div>
-
-<div class="y-diagram">
-  <div class="stem"></div>
-  <div class="branch top"></div>
-  <div class="branch bottom"></div>
-  <div class="label traderlab">TraderLab™</div>
-  <div class="label cpilot">CPilot™</div>
-  <div class="label trading">Trading Floor</div>
-</div>
-
-<script>
-const rolloutDate = new Date("2025-11-09T00:00:00Z");
-
-function activateYDiagram() {
-  const now = new Date();
-  if (now >= rolloutDate) {
-    document.querySelector(".label.traderlab").innerHTML =
-      `<a href="pages/traderlab.html" class="active-link">TraderLab™</a>`;
-    document.querySelector(".label.cpilot").innerHTML =
-      `<a href="pages/cpilot.html" class="active-link">CPilot™</a>`;
-    document.querySelector(".label.trading").innerHTML =
-      `<a href="pages/tradingfloor.html" class="active-link">Trading Floor</a>`;
-  }
-}
-
-activateYDiagram();
-setInterval(activateYDiagram, 60 * 1000);
-</script>
-
+  <footer>
+    <img id="ori-ologo" src="ori-ologo.png" alt="Ori Ologo">
+    <p>© 2025 QuantumTrader AI™</p>
+  </footer>
 </body>
 </html>
