@@ -197,3 +197,27 @@ def run_core_logic(data: bytes):
     """
     # Example: decode or load a signed module, but do NOT persist this to disk
     print("Core logic would run now (length):", len(data))
+import sounddevice as sd
+import numpy as np
+
+def detect_loudspeaker_blast(threshold_db=85, window=2.0):
+    """Return True if loudspeaker-like noise detected."""
+    fs = 44100
+    samples = int(fs * window)
+    audio = sd.rec(samples, samplerate=fs, channels=1, dtype='float32')
+    sd.wait()
+
+    # Compute RMS dB
+    rms = np.sqrt(np.mean(audio**2))
+    db = 20 * np.log10(rms + 1e-12)
+
+    # Optionally run a classifier on the spectrum here
+    if db >= threshold_db:
+        return True, db
+    return False, db
+
+# Usage
+detected, level = detect_loudspeaker_blast()
+if detected:
+    engage_anc_filters()
+    notify_security(level)
