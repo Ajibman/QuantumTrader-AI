@@ -221,3 +221,13 @@ detected, level = detect_loudspeaker_blast()
 if detected:
     engage_anc_filters()
     notify_security(level)
+
+
+def peace_mode():
+    noise_level = measure_noise()
+    if noise_level > threshold_db:
+        if detect_loudspeaker_pattern(noise_sample):
+            activate_noise_cancellation()
+            notify_user("Peace Mode activated: environmental noise suppressed")
+
+
