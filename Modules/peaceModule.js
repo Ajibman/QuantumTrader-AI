@@ -1,5 +1,5 @@
 ```js
-// modules/peaceMode.js
+// modules/Module01/peaceMode.js
 // Author: Olagoke Ajibulu
 // Module: Peace Mode — Phase 1 Activation (Nov 09, 2025)
 
