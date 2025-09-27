@@ -1,7 +1,7 @@
 ```js
 // modules/Module04/lifeForce.js
 // Author: Olagoke Ajibulu
-// Module 04: Life Force — Phase 4 Activation (Feb 01, 2026)
+// Module04: Life Force — Phase 4 Activation (Feb 01, 2026)
 
 function activateLifeForce() {
   console.log("🌿 Life Force Module Activated: Monitoring life-aligned energy patterns and intuitive signals.");
