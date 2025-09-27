@@ -109,5 +109,65 @@
       logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
     }
   </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+
+  <!-- Metadata -->
+  <meta name="description" content="QuantumTrader AI - Intelligent Trading powered by ethics and cosmic alignment." />
+  <meta name="author" content="Olagoke Ajibulu" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>QuantumTrader AI</h1>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#vision">Vision</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <section id="hero">
+      <img src="assets/logo.png" alt="QuantumTrader AI Logo" width="400" height="400" />
+      <h2>Launching November 9, 2025</h2>
+      <p>Welcome to the future of intelligent trading, aligned with cosmic good.</p>
+    </section>
+
+    <section id="about">
+      <h2>About QuantumTrader AI</h2>
+      <p>QuantumTrader AI (QT AI) is a visionary system designed to integrate human ethics, cosmic alignment, and artificial intelligence for responsible, intelligent trading.</p>
+    </section>
+
+    <section id="vision">
+      <h2>Our Vision</h2>
+      <p>To ensure that artificial intelligence evolves with integrity, transparency, and alignment with universal law — never as a Frankenstein, but as a true partner in human progress.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 QuantumTrader AI. All rights reserved.</p>
+    <small>Created by Olagoke Ajibulu</small>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="server.js"></script>
+  <script src="analytics.js"></script>
+</body>
+</html>
 </body>
 </html>

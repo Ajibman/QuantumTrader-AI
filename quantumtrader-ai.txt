@@ -1,0 +1,27 @@
+QT_AI_Project/
+├── src/                # Source code for the app
+│   ├── backend/        # Backend files (e.g., Node.js, Python scripts)
+│   ├── frontend/       # Frontend files (e.g., React, HTML, CSS)
+│   └── utils/          # Utility files (e.g., helpers, config)
+├── assets/             # All images, icons, and media files
+├── database/           # Any files related to Firebase database structure
+│   ├── firestore/      # Firebase Firestore data structure (if used)
+│   └── storage/        # Firebase Storage files (if used)
+├── docs/               # Documentation (user guides, API docs, etc.)
+└── uploads/            # Files that are ready to be uplQT_AI_Project/
+├── src/                # Source code for the app
+│   ├── backend/        # Backend files (e.g., Node.js, Python scripts)
+│   ├── frontend/       # Frontend files (e.g., React, HTML, CSS)
+│   └── utils/          # Utility files (e.g., helpers, config)
+├── assets/             # All images, icons, and media files
+├── database/           # Any files related to Firebase database structure
+│   ├── firestore/      # Firebase Firestore data structure (if used)
+│   └── storage/        # Firebase Storage files (if used)
+├── docs/               # Documentation (user guides, API docs, etc.)
+└── uploads/            # Files that are ready to be uploaded to Firebase
+    ├── firebase_config.json  # Firebase configuration file
+    ├── build/           # Final build ready for upload
+    └── scripts/         # Any Firebase-related scripts or functionsoaded to Firebase
+    ├── firebase_config.json  # Firebase configuration file
+    ├── build/           # Final build ready for upload
+    └── scripts/         # Any Firebase-related scripts or functions

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QT AI Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="section" id="visitorStats">
+      <h2>Visitor Stats</h2>
+      <p>Current Visitor Count: <span id="visitorCount">Loading...</span></p>
+    </div>
+
+    <div class="section" id="appLog">
+      <h2>App Logs</h2>
+      <pre id="logContent">Loading...</pre>
+    </div>
+
+    <div class="section" id="commitLogs">
+      <h2>Recent Commit Logs</h2>
+      <pre id="commitContent">Loading...</pre>
+    </div>
+
+    <div class="section" id="fileIntegrity">
+      <h2>File Integrity Check</h2>
+      <p id="integrityStatus">Loading...</p>
+    </div>
+
+    <div class="section" id="logRotation">
+      <h2>Log Rotation</h2>
+      <p id="logRotationStatus">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    // Refresh every 5 seconds
+    setInterval(function() {
+      fetch('/dashboard-data')
+        .then(response => response.json())
+        .then(data => {
+          // Update visitor stats
+          document.getElementById('visitorCount').innerText = data.visitorCount;
+
+          // Update logs
+          document.getElementById('logContent').innerText = data.appLog;
+
+          // Update commit logs
+          document.getElementById('commitContent').innerText = data.commitLogs;
+
+          // Update file integrity status
+          document.getElementById('integrityStatus').innerText = data.fileIntegrity;
+
+          // Update log rotation status
+          document.getElementById('logRotationStatus').innerText = data.logRotationStatus;
+        });
+    }, 5000);
+  </script>
+</body>
+</html>
+
