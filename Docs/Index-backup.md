@@ -1,173 +1,118 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>QuantumTrader AI™</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
   <style>
+
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
       text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
     }
-
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
+    header {
+      padding: 1rem;
     }
-
-    .logo-container {
-      margin-top: 80px;
+    /* Responsive Logo */
+    #qtai-logo {
+      width: 200px;
+      height: 200px;
     }
-
-    .logo-container img {
-      width: 250px;
-      height: auto;
+    @media (min-width: 768px) {
+      #qtai-logo {
+        width: 250px;
+        height: 250px;
+      }
     }
-
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
+    main {
+      padding: 2rem;
     }
-
+    /* Globe */
+    #globe {
+      margin: 2rem auto;
+      display: block;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+    }
+    /* Triangular layout */
+    .triangle-container {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 2rem auto;
+    }
+    .node {
+      position: absolute;
+      background: #161b22;
+      border: 2px solid #58a6ff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #238636;
+      border-color: #2ea043;
+    }
+    .base-left {
+      bottom: 0;
+      left: 0;
+    }
+    .base-right {
+      bottom: 0;
+      right: 0;
+    }
+    /* Event widget */
+    #event-widget {
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #161b22;
+      border-radius: 8px;
+      width: 300px;
+    }
+    /* Footer */
     footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
+      margin-top: 2rem;
+      padding: 1rem;
     }
-
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
-    }
-
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    #ori-ologo {
+      width: 150px;
+      height: 150px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
-
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
-  </div>
-
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
-
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
-
-  <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
-
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
-    }
-  </script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI</title>
-
-  <!-- Metadata -->
-  <meta name="description" content="QuantumTrader AI - Intelligent Trading powered by ethics and cosmic alignment." />
-  <meta name="author" content="Olagoke Ajibulu" />
-
-  <!-- Favicon -->
-  <link rel="icon" href="assets/favicon.png" type="image/png" />
-
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <!-- Header -->
   <header>
-    <h1>QuantumTrader AI</h1>
-    <nav>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#vision">Vision</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
+    <img id="qtai-logo" src="qtai-logo.png" alt="QuantumTrader AI Logo">
+    <h1>QuantumTrader AI™</h1>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <section id="hero">
-      <img src="assets/logo.png" alt="QuantumTrader AI Logo" width="400" height="400" />
-      <h2>Launching November 9, 2025</h2>
-      <p>Welcome to the future of intelligent trading, aligned with cosmic good.</p>
-    </section>
-
-    <section id="about">
-      <h2>About QuantumTrader AI</h2>
-      <p>QuantumTrader AI (QT AI) is a visionary system designed to integrate human ethics, cosmic alignment, and artificial intelligence for responsible, intelligent trading.</p>
-    </section>
-
-    <section id="vision">
-      <h2>Our Vision</h2>
-      <p>To ensure that artificial intelligence evolves with integrity, transparency, and alignment with universal law — never as a Frankenstein, but as a true partner in human progress.</p>
+   <div class="logo">
+  <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
+   </div>
+    <div class="triangle-container">
+      <div class="node apex">Trading Floor</div>
+      <div class="node base-left">TraderLab™</div>
+      <div class="node base-right">CPilot™</div>
+    </div>
+    <section id="event-widget">
+      <h2>Latest Events</h2>
+      <button onclick="location.reload();">Click to Refresh</button>
+      <!-- Dynamic event content can go here -->
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 QuantumTrader AI. All rights reserved.</p>
-    <small>Created by Olagoke Ajibulu</small>
+    <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
+    <p>© 2025 QuantumTrader AI™</p>
   </footer>
-
-  <!-- Scripts -->
-  <script src="server.js"></script>
-  <script src="analytics.js"></script>
 </body>
 </html>
-</body>
-</html>
+ titon
