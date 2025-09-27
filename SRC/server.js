@@ -1,4 +1,4 @@
-SRC/ //server.ks/
+SRC/ //server.js/
  
 ```js
 const child_process = require('child_process');
