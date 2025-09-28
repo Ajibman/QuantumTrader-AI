@@ -1,8 +1,8 @@
- ```js
-// server.js — Quantum QuantumTrader-AI :: Timed Phase Reveal System
-// Author: Olagoke Ajibulu
-// Created: Sept 2025
-// Status: Active by timeline
+```js
+const child_process = require('child_process');
+const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
+console.log(`🧠 QT AI server.js running at commit: ${version}`);
+```
 
 const express = require('express');
 const fs = require('fs');
