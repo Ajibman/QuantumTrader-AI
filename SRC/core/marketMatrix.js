@@ -31,7 +31,8 @@ function syncGlobalMarkets() {
   console.log("✅ QT AI is now globally aware and ready to operate across all major economic sectors.");
 }
 
-module.exports = syncGlobalMarkets;
-```
+// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
+schedule.scheduleJob('2025-11-08T23:00:00.000Z', syncGlobalMarkets);
 
----
+module.exports = syncGlobalMarkets;module.exports = startGlobalMarkets;
+```
