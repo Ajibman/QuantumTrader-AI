@@ -26,6 +26,32 @@ function scheduleGlobalActivation() {
 }
 
 module.exports = scheduleGlobalActivation;
+
+```js
+// core/transmissionHalo.js
+function launchTransmissionHalo() {
+  const message = `
+  🛸 QT AI Activated | Global Message
+
+  QuantumTrader-AI is now LIVE.
+  Powered by Light. Guided by Peace.
+  Designed for humans, communities, and global markets.
+
+  #QuantumTraderAI
+  #FromCommunityToGlobal
+  #AIForGood
+  #EthicalInnovation
+  #FintechExplorer
+  `;
+
+  console.log(message);
+  // Future: Push to public APIs, social channels, dashboards
+}
+
+module.exports = launchTransmissionHalo;
 ```
 
+*💡 Next:* Call it inside `activationScheduler.js`:
+
+```js
 ---
