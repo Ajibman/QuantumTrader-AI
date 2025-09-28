@@ -53,7 +53,7 @@ function startCPilot() {
   activateGuardianCore();
 
 // Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
-schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
+schedule.scheduleJob('2025-11-08T23:00:00.000Z', startCPilot);
 
-module.exports = startTraderLab;
+module.exports = CPilot™;
 ```
