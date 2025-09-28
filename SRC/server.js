@@ -1,4 +1,4 @@
-```js
+ ```js
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
@@ -29,3 +29,18 @@ if (now < PHASES.dormantUntil) {
 // === 🚀 Base Server Activation ===
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+
+// lab/traderLab.js
+const schedule = require('node-schedule');
+
+function startTraderLab() {
+  console.log("🧪 TraderLab™ Activated: Running simulation, strategy and training modules...");
+  // Placeholder: Load strategy modules, AI feedback loops, dashboards, etc.
+}
+
+// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
+schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
+
+module.exports = startTraderLab;
+```
+
