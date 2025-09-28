@@ -25,3 +25,9 @@ export default function TransmissionPreview() {
 }
 ```
 
+```jsx
+import TransmissionPreview from './components/TransmissionPreview';
+
+// inside return():
+<TransmissionPreview />
+```
