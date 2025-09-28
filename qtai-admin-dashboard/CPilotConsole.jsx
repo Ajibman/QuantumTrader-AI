@@ -11,6 +11,7 @@ export default function CPilotConsole() {
   );
 }
 
+  ```jsx
 import { useState } from 'react';
 
 export default function CPilotConsole() {
