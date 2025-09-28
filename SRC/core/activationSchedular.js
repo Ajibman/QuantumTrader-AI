@@ -51,7 +51,4 @@ function launchTransmissionHalo() {
 module.exports = launchTransmissionHalo;
 ```
 
-*💡 Next:* Call it inside `activationScheduler.js`:
-
-```js
 ---
