@@ -94,3 +94,6 @@ schedule.scheduleJob('2025-11-08T23:00:00.000Z', syncGlobalMarkets);
 
 module.exports = syncGlobalMarkets;module.exports = startGlobalMarkets;
 
+const scheduleGlobalActivation
+= require('./core/activationSchedular'); scheduleGlobalActivation():
+```
