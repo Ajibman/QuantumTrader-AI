@@ -56,7 +56,6 @@ function startCPilot() {
 schedule.scheduleJob('2025-11-08T23:00:00.000Z', startCPilot);
 
 module.exports = CPilot™;
-```
 
 // Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
 schedule.scheduleJob('2025-11-08T23:00:00.000Z', marketMatrix);
@@ -94,4 +93,4 @@ function syncGlobalMarkets() {
 schedule.scheduleJob('2025-11-08T23:00:00.000Z', syncGlobalMarkets);
 
 module.exports = syncGlobalMarkets;module.exports = startGlobalMarkets;
-```
+
