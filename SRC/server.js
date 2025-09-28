@@ -42,5 +42,18 @@ function startTraderLab() {
 schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
 
 module.exports = startTraderLab;
-```
 
+// pilot/cPilot.js
+const { activateLightKernel } = require('../modules/Module11/lightKernel');
+const { activateGuardianCore } = require('../modules/Module13/guardianCore');
+
+function startCPilot() {
+  console.log("🛸 CPilot™ Engaged: Guiding operations with clarity and protection.");
+  activateLightKernel();
+  activateGuardianCore();
+
+// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
+schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
+
+module.exports = startTraderLab;
+```
