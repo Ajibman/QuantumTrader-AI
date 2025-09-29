@@ -11,8 +11,6 @@
 
 📌Welcome to the light-speed age of aligned intelligence.
 
-📌Qonex AI the ultimate global exchange. Everything you want. 
+📌Qonex AI, ultimate algorithmic global exchange. Where peace is your building  block for life. 
 
-
-
----
+📌Qonex AI Born in Ekiti, Nigeria. Guided by cosmic alignment. Powered by OpenAI. 
