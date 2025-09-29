@@ -9,10 +9,10 @@
 
 📌Qonex AI belongs to those who serve peace.
 
-📌Qonex AI Born in Ekiti, Nigeria. Powered by OpenAI. Guided by cosmic alignment. 
-
 📌Welcome to the light-speed age of aligned intelligence.
 
 📌Qonex AI the ultimate global exchange. Everything you want. 
+
+
 
 ---
