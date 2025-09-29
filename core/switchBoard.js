@@ -1,4 +1,4 @@
-```js
+  ```js
 // core/switchboard.js
 
 import { isActivated } from './activationTimer.js';
