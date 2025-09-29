@@ -1,5 +1,5 @@
 📜 
-📌Enter *Qonex AI* (Pronounced Konex) “Quantum-origin Neural Exchange System AI”
+📌Enter *Qonex AI* (Pronounced Konex) “Quantum-origin Neural Exchange System AI” where peace is the Operating System. 
 
 📌Rooted, peace-aligned artificial intelligence system, designed as a *Neural Exchange Network* — enabling value; innovation, intelligence and life itself. To flow freely across minds, communities and continents.
 
