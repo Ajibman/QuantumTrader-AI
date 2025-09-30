@@ -50,4 +50,27 @@ this.mode = 'active';
 module.exports = logicKernel;
 ```
 
+*🧠 Script:*
+// /core/logicKernel.js
+
+export function interpretSignal(signal) {
+  if (!signal || typeof signal !== 'object') {
+    throw new Error('Invalid signal format');
+  }
+
+  const { type, payload } = signal;
+
+  switch (type) {
+    case 'ALERT':
+      return { action: 'notifyAdmin', payload };
+    case 'SYNC':
+      return { action: 'updateClients', payload };
+    case 'EXECUTE':
+      return { action: 'runTrade', payload };
+    default:
+      return { action: 'log', payload };
+  }
+}
+```
+
 ---
