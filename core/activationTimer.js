@@ -15,4 +15,18 @@ export function isActivated() {
   const now = Date.now();
   return now >= launchTimestamp;
 }
+
 ```
+
+```js
+import systemIdentity from "./identity.js";
+import { isActivated } from "./activationTimer.js";
+
+if (isActivated()) {
+  console.log(`✅ systemIdentity.name is now ACTIVE.`);
+ else 
+  console.log(`⏳{systemIdentity.name} is dormant. Awaiting activation...`);
+}
+```
+
+---
