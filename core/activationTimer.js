@@ -1,4 +1,4 @@
-```js
+ ```js
 const systemIdentity = {
   name: "QuantumTrader-AI",
   origin: "Ekiti, Nigeria",
@@ -18,7 +18,6 @@ export function isActivated() {
 
 ```
 
-```js
 import systemIdentity from "./identity.js";
 import { isActivated } from "./activationTimer.js";
 
@@ -29,5 +28,16 @@ if (isActivated()) {
 }
 ```
 
----
+const launchDate = new Date("2025-11-09T00:00:00Z").getTime();
 
+export function isActivated() {
+  return Date.now() >= launchDate;
+}
+
+export function timeUntilActivation() {
+  const remaining = launchDate - Date.now();
+  return remaining > 0 ? remaining : 0;
+}
+```
+
+---
