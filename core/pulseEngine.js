@@ -5,7 +5,6 @@ function pulse(interval = 60000) {
     console.log(`🔄 QTAI Pulse @ timestamp`);
   , interval);
 
-
 function initiatePulse(customMessage = "All systems synchronized.") 
   console.log("🚀 Initiating QTAI pulse engine...");
   pulse();
