@@ -1,18 +1,16 @@
-  ```js
-// core/switchboard.js
+ ```js
+import systemIdentity from "./identity.js";
+import { isActivated, timeUntilActivation } from "./activationTimer.js";
 
-import { isActivated } from './activationTimer.js';
-import { initializeWiring } from '../logic/wiringHub.js';
+function displayStatus() {
+  console.log(`🔍 System: systemIdentity.name`);
+  console.log(`🌍 Origin:{systemIdentity.origin}`);
+  console.log(`⚡ Powered by: systemIdentity.poweredBy`);
+  console.log(`🧠 Type:{systemIdentity.type}`);
+  console.log(`🕊 Motto: ${systemIdentity.slogan}`);
+  console.log("— — — — —");
 
-export function engageSwitchboard() {
   if (isActivated()) {
-    console.log("QonexAI Switchboard: ACTIVATED");
-    initializeWiring();
-    // Add more control logic here as modules grow
+    console.log(`✅ System is ACTIVE.`);
   } else {
-    console.log("QonexAI Switchboard: STANDBY – Awaiting Activation Time");
-  }
-}
-```
-
----
+    const msLeft = timeUntilActivation();
