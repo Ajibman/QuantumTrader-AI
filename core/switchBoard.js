@@ -14,3 +14,21 @@ function displayStatus() {
     console.log(`✅ System is ACTIVE.`);
   } else {
     const msLeft = timeUntilActivation();
+
+const moduleRegistry = require('./moduleRegistry');
+
+const statusMonitor = () => {
+  const statuses = Object.keys(moduleRegistry).map((mod) => {
+    return {
+      module: mod,
+      status: moduleRegistry[mod]?.status || 'unknown',
+      timestamp: new Date().toISOString()
+    };
+  });
+
+  console.log('🩺 System Status Report:', statuses);
+  return statuses;
+};
+
+module.exports = statusMonitor;
+```
