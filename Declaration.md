@@ -1,6 +1,6 @@
  ---Declaration
 
- ## 📢 **🕊 📜⏱️📲💻📡
+ ## 📢 **🕊 ⚖️📜⏱️📲💻📡
 
 📌Enter QuantumTrader-AI: A “Quantum-origin Neural Exchange System AI” where peace is the Operating System. 
 
