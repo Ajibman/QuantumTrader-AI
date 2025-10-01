@@ -1,4 +1,4 @@
- ```js
+ ```js Node.js v18+
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
@@ -129,7 +129,4 @@ app.listen(3000, () => console.log('🚀 Data claim service running on port 3000
 - Later integrate Telco API for real data delivery.
 - Add user verification (OTP or email) for security.
 
----
-
-Would you like me to package this into a GitHub repo or continue adding claim logging + dashboard?
 ```
