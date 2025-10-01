@@ -1,0 +1,38 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Claim Your 500MB Daily Data</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    input, button { padding: 10px; margin: 10px; width: 80%; max-width: 300px; }
+    .response { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>🌍 Free 500MB Data — Powered by QonexAI</h2>
+  <p>Claim your free 500MB browsing data daily. Valid from 6:00 AM to midnight.</p>
+  
+  <input type="email" id="email" placeholder="Enter your email or phone" />
+  <button onclick="claim()">Claim Now</button>
+
+  <div class="response" id="responseMsg"></div>
+
+  <script>
+    async function claim() {
+      const email = document.getElementById('email').value;
+      const response = await fetch('/claim-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: email })
+      });
+      const result = await response.json();
+      document.getElementById('responseMsg').innerText = result.message;
+    }
+  </script>
+</body>
+</html>
+```
+
+---
