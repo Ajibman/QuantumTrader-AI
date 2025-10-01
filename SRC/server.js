@@ -96,4 +96,40 @@ module.exports = syncGlobalMarkets;module.exports = startGlobalMarkets;
 
 const scheduleGlobalActivation
 = require('./core/activationSchedular'); scheduleGlobalActivation():
+
+ ✅ *2. Backend Endpoint (`server.js`)*
+
+```js
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+const claimsDB = {}; // In-memory DB
+
+function getTodayDate() {
+  return new Date().toISOString().split("T")[0];
+}
+
+app.post('/claim-data', (req, res) => {
+  const { userId } = req.body;
+  const today = getTodayDate();
+
+  if (claimsDB[userId] === today) {
+    return res.json({ success: false, message: "❌ Already claimed today." });
+  }
+
+  claimsDB[userId] = today;
+  return res.json({ success: true, message: "✅ 500MB data granted!" });
+});
+
+app.listen(3000, () => console.log('🚀 Data claim service running on port 3000'));
+```
+
+- Use *Render*, *Railway*, or *Vercel* for quick testing.
+- Later integrate Telco API for real data delivery.
+- Add user verification (OTP or email) for security.
+
+---
+
+Would you like me to package this into a GitHub repo or continue adding claim logging + dashboard?
 ```
