@@ -1,4 +1,4 @@
- ```js Node.js v18+
+   "`js Node.js v18+
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
@@ -99,7 +99,6 @@ const scheduleGlobalActivation
 
  ✅ *2. Backend Endpoint (`server.js`)*
 
-```js
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -124,9 +123,48 @@ app.post('/claim-data', (req, res) => {
 
 app.listen(3000, () => console.log('🚀 Data claim service running on port 3000'));
 ```
-
-- Use *Render*, *Railway*, or *Vercel* for quick testing.
+ - Use *Render*, *Railway*, or *Vercel* for quick testing.
 - Later integrate Telco API for real data delivery.
 - Add user verification (OTP or email) for security.
 
+```
+
+const express = require('express');
+const fs = require('fs');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+// Handle claim submissions
+app.post('/submit-claim', (req, res) => {
+  const claim = req.body;
+
+  fs.readFile('./core/data/claims.json', 'utf8', (err, data) => {
+    if (err) return res.status(500).send('Failed to read claims file');
+
+    let claims = [];
+    try {
+      claims = JSON.parse(data);
+    } catch (e) {
+      claims = [];
+    }
+
+     claims.push(claim);
+
+    fs.writeFile('./core/data/claims.json', JSON.stringify(claims, null, 2), (err) => {
+      if (err) return res.status(500).send('Failed to save claim');
+
+      res.status(200).send({ message: 'Claim submitted successfully' });
+    });
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 ```
