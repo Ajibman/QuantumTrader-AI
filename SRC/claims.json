@@ -1,18 +1,9 @@
-[
-  {
-    "id": 1,
-    "phone": "+2348012345678",
-    "claimDate": "2025-10-02T06:00:00Z",
-    "status": "claimed",
-    "dataAllocatedMB": 500
-  },
-  {
-    "id": 2,
-    "phone": "+2348098765432",
-    "claimDate": "2025-10-02T08:15:00Z",
-    "status": "pending",
-    "dataAllocatedMB": 500
-  }
+[  
+{
+  "id": 99,
+  "phone": "+2348000000000",
+  "claimDate": "2025-10-01T00:00:00Z",
+  "status": "test",
+  "dataAllocatedMB": 500
+}
 ]
-
-
