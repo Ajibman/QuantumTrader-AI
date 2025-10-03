@@ -44,3 +44,30 @@ module.exports = {
   pulse
 };
 ```
+
+// ripo2/core/pulseEngine.js
+
+import { alignWithCosmos } from './cosmicAlignment.js';
+
+export function processIntent(intent) {
+  const alignmentCheck = alignWithCosmos(intent);
+
+  if (alignmentCheck.status === 'rejected') {
+    return {
+      success: false,
+      message: 'Action blocked: not aligned with core principles.',
+
+alignmentScore: alignmentCheck.alignmentScore
+    };
+  }
+
+  return {
+    success: true,
+    message: 'Intent approved and routed.',
+    data: alignmentCheck.action,
+    alignmentScore: alignmentCheck.alignmentScore
+  };
+}
+```
+
+---
