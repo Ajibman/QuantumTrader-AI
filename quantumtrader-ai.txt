@@ -25,3 +25,38 @@ QT_AI_Project/
     ├── firebase_config.json  # Firebase configuration file
     ├── build/           # Final build ready for upload
     └── scripts/         # Any Firebase-related scripts or functions
+
+✅ *Core Modules Summary – QuantumTrader AI / QonexAI*
+
+1. *`moduleRegistry.js`*  
+   → Registers and maps all functional modules for unified access.
+
+2. *`switchBoard.js`*  
+   → Central control for routing signals between core modules.
+
+3. *`identity.js`*  
+   → Establishes system identity, instance tracking, and user origin tagging.
+
+4. *`activationTimer.js`*  
+   → Manages time-based logic (e.g., midnight triggers, usage windows, etc.).
+
+5. *`syncBridge.js`*  
+   → Ensures coherent state sync between frontend and backend modules.
+
+6. *`signalOrchestor.js`*  
+   → Logs, manages, and routes events/signals across components.
+
+7. *`pulseEngine.js`*  
+   → Maintains heartbeat/pulse of system—verifies readiness and uptime.
+
+8. *`harmonicSync.js`*  
+   → Aligns logical flow and ensures modules are rhythmically coordinated.
+
+9. *`intentResolver.js`*  
+   → Parses and interprets user inputs or system commands for action.
+
+10. *`cosmicAlignment.js`*  
+   → Injects alignment logic (ethics, peace signal, core principles).
+
+11. *`quantumExchange.js`*  
+   → Handles secure transmission of payloads to and from trusted endpoints.
