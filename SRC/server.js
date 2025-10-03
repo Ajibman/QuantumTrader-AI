@@ -1,4 +1,4 @@
-   "`js Node.js v18+
+   "`js Node.js v18+'
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
