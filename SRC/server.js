@@ -214,7 +214,23 @@ app.get("/claims", (req, res) => {
   res.json(claims);
 });
 
-app.listen(PORT, () => console.log(`Claim server running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Claim server running at http://localhost:${PORT}`));`js
+const fs = require('fs');
+const path = require('path');
+
+app.post("/api/commhub", (req, res) => {
+  const newMsg = req.body;
+  const filePath = path.join(__dirname, "core/data/comm-messages.json");
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    const messages = data ? JSON.parse(data) : [];
+    messages.push(newMsg);
+    fs.writeFile(filePath, JSON.stringify(messages, null, 2), () => {
+      res.send("✅ Message received. We'll get back to you shortly.");
+    });
+  });
+});
 ```
 
----
+
+
