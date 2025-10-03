@@ -28,4 +28,26 @@ function classifyIntent(text) {
 }
 ```
 
+// ripo2/core/intentResolver.js
+
+import { processIntent } from './pulseEngine.js';
+
+export function resolveIntent(userInput) {
+  // Parse basic intent structure
+  const intent = {
+    message: userInput,
+    detectedIntent: detectIntent(userInput),
+    timestamp: Date.now()
+  };
+
+  return processIntent(intent);
+}
+
+function detectIntent(input) {
+  // Simple keyword-based detection (to be improved with NLP)
+  if (input.toLowerCase().includes('data')) return 'dataRequest';
+  if (input.toLowerCase().includes('help')) return 'supportRequest';
+  return 'unknown';
+}
+```
 ---
