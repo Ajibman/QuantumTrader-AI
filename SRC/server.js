@@ -168,3 +168,53 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 ```
+
+```js
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.static("public")); // Serve front-end files from /public or your UI folder
+
+const DATA_PATH = path.join(__dirname, "core/data/claims.json");
+
+// Ensure claims.json exists
+if (!fs.existsSync(DATA_PATH)) fs.writeFileSync(DATA_PATH, "[]", "utf8");
+
+app.post("/claim", (req, res) => {
+  const { name, phone } = req.body;
+
+  if (!name || !phone) {
+    return res.status(400).json({ message: "Both name and phone are required." });
+  }
+
+  let claims = JSON.parse(fs.readFileSync(DATA_PATH));
+  if (claims.find((c) => c.phone === phone)) {
+    return res.status(409).json({ message: "This phone number has already claimed." });
+  }
+
+  const newEntry = {
+    name: name.trim(),
+    phone: phone.trim(),
+    timestamp: new Date().toISOString()
+
+};
+
+  claims.push(newEntry);
+  fs.writeFileSync(DATA_PATH, JSON.stringify(claims, null, 2));
+
+  return res.status(200).json({ message: "Claim recorded successfully." });
+});
+
+app.get("/claims", (req, res) => {
+  const claims = JSON.parse(fs.readFileSync(DATA_PATH));
+  res.json(claims);
+});
+
+app.listen(PORT, () => console.log(`Claim server running at http://localhost:${PORT}`));
+```
+
+---
