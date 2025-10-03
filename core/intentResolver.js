@@ -50,4 +50,27 @@ function detectIntent(input) {
   return 'unknown';
 }
 ```
+
+// intentResolver.js
+
+import { alignWithCosmos } from './cosmicAlignment.js';
+
+export function resolveIntent(claimData) {
+  if (!claimData || !claimData.message) {
+    return {
+      status: 'error',
+      reason: 'No claim message provided.',
+    };
+  }
+
+  const alignmentResult = alignWithCosmos(claimData);
+
+  return {
+    original: claimData,
+    alignment: alignmentResult,
+    timestamp: new Date().toISOString(),
+  };
+}
+```
+
 ---
