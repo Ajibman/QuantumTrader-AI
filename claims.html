@@ -1,100 +1,112 @@
-"`js Node.js v18+'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>500MB Data Claim</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f5f7fa;
+      color: #333;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      color: #0077cc;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+    }
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.2rem;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #message {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+    }
+    #error {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+  <h1>Claim Your Free 500MB Data</h1>
 
- #!/bin/bash
-# ======================================
-# Quantum Trader AI - Master Generator Script
-# Enhanced version with monitoring, logging & archiving
-# ======================================
+<form id="claimForm">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" name="name" required />
 
-LOG_DIR="logs"
-ARCHIVE_DIR="$LOG_DIR/archives"
-mkdir -p "$ARCHIVE_DIR"
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required />
 
-# --------------------------------------
-# Archive function (12-hourly snapshots)
-# --------------------------------------
-archive_logs() {
-  timestamp=$(date +"%Y%m%d_%H%M%S")
-  archive_file="$ARCHIVE_DIR/archive_$timestamp.tar.gz"
-  tar -czf "$archive_file" "$LOG_DIR"/*.log 2>/dev/null
-  echo "[ARCHIVE] Logs archived at $archive_file"
-}
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" name="phone" required />
 
-# --------------------------------------
-# Improved Archive Listing
-# --------------------------------------
-list_archives() {
-  echo "======================================"
-  echo "  QT AI Master Generator Archives"
-  echo "======================================"
-  echo ""
-  
-  if [ ! -d "$ARCHIVE_DIR" ]; then
-    echo "No archives directory found yet."
-    return
-  fi
+    <button type="submit">Claim Now</button>
+  </form>
+  <div id="message"></div>
+  <div id="error"></div>
 
-  echo "Available archives in $ARCHIVE_DIR:"
-  echo ""
+  <script>
+    const backendURL = 'https://your-project-name.glitch.me'; // <-- Replace with your backend URL
 
-  # Nicely formatted list: Date | Size | Filename
-  ls -lh --time-style=long-iso "$ARCHIVE_DIR" | awk 'NR>1 {print $6, $7, " | ", $5, " | ", $9}'
+    document.getElementById('claimForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('message').textContent = '';
+      document.getElementById('error').textContent = '';
 
-  echo ""
-  echo "Legend:"
-  echo "  Date & Time | Size | Filename"
-  echo "======================================"
-}
+      const data = {
+        name: e.target.name.value.trim(),
+        email: e.target.email.value.trim(),
+        phone: e.target.phone.value.trim()
+      };
 
-# --------------------------------------
-# Monitor logins & echo commands
-# --------------------------------------
-monitor_activity() {
-  echo "[MONITOR] Monitoring user logins and commands..."
-  last -a | head -n 5
+      try {
+        const response = await fetch(`${backendURL}/claim`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
 
-  echo ""
-  echo "[MONITOR] Recent commands executed:"
-  history | tail -n 10
-}
+        const result = await response.json();
 
-# --------------------------------------
-# Main generator loop
-# --------------------------------------
-generate_all_modules() {
-  echo "[START] Master Generator Script Running..."
-  
-  # Example of generating a module
-  echo "[GEN] Creating modules..."
-  echo "Module created at $(date)" >> "$LOG_DIR/module_gen.log"
-  
-  # Trigger archive every 12 hours (placeholder)
-  # In practice, you might use cron to schedule this
-  current_hour=$(date +"%H")
-  if (( current_hour % 12 == 0 )); then
-    archive_logs
-  fi
-}
+        if (response.ok) {
+documege.getElementBy|
+d('message').textContent = result.message || 'Failed to claim data.  Please try again later.';
+ }
+} catch (err) {
+  document.getElementBy
+Id('error') textContent = 'Error connecting to the server.  Please try again later.';
+  }
+} catch (err) {
+document.getEnterby
+Id('error') textContent = Error connecting to the server.  Please try again later.';
+   }
+});
+</script>
 
-# --------------------------------------
-# Command-line options
-# --------------------------------------
-case "$1" in
-  --run)
-    generate_all_modules
-    ;;
-  --monitor)
-    monitor_activity
-    ;;
-  --archives)
-    list_archives
-    ;;
-  --help|*)
-    echo "Usage: $0 [--run | --monitor | --archives]"
-    ;;
-esac
-
-```html
 <script>
   document.querySelector("form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -120,8 +132,6 @@ esac
     }
   });
 </script>
-
 <p id="status" style="font-weight:bold;"></p>
-```
-
----
+</head>
+<body>
