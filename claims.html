@@ -1,3 +1,4 @@
+"`js Node.js v18+'
 git - update
 
  #!/bin/bash
@@ -93,3 +94,35 @@ case "$1" in
     echo "Usage: $0 [--run | --monitor | --archives]"
     ;;
 esac
+
+```html
+<script>
+  document.querySelector("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.querySelector("#name").value.trim();
+    const phone = document.querySelector("#phone").value.trim();
+
+    const status = document.querySelector("#status");
+    status.textContent = "Submitting...";
+
+    try {
+      const res = await fetch("https://your-backend.glitch.me/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone })
+      });
+
+      const data = await res.json();
+      status.textContent = data.message;
+      status.style.color = res.ok ? "green" : "red";
+    } catch (err) {
+      status.textContent = "Submission failed.";
+      status.style.color = "red";
+    }
+  });
+</script>
+
+<p id="status" style="font-weight:bold;"></p>
+```
+
+---
