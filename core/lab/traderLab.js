@@ -1,5 +1,5 @@
   ```js
-// core/Lab/TraderLab.js
+// core/lab/TraderLab.js
 
 console.log("🧪 TraderLab™ Module Initialized");
 
