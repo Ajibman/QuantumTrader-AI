@@ -33,3 +33,7 @@ aligned intelligence.
 📌Qonex AI the ultimate global 
 exchange. Everything you want.
 
+Made in Ekiti State, Nigeria
+Creator and Architect: Olagoke Ajibulu. 
+Powered by ChatGPT🤖
+
