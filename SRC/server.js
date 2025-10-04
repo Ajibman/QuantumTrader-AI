@@ -1,4 +1,4 @@
-```js
+ ```js
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
@@ -36,11 +36,12 @@ app.get('/', (req, res) => {
 
 // === 📲 Claim Endpoint ===
 app.post('/claim', (req, res) => {
-  const { phone } = req.body;
-  if (!phone) {
 
-  return res.status(400).json( message: 'Phone number is required.' );
+const  phone  = req.body;
+  if (!phone) 
+    return res.status(400).json( message: 'Phone number is required.' );
   
+
   const claimsFile = path.join(__dirname, 'claims.json');
   let claims = [];
 
@@ -72,4 +73,3 @@ app.listen(PORT, () =>
   console.log(`🚀 Server running on port{PORT}`);
 });
 ```
-
