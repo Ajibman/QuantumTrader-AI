@@ -1,8 +1,7 @@
-   "`js Node.js v18+'
+```js
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
-```
 
 const express = require('express');
 const fs = require('fs');
@@ -15,222 +14,62 @@ const now = new Date();
 // === 🗓️ Timeline Phases ===
 const PHASES = {
   dormantUntil: new Date('2025-11-09T00:00:00Z'),
-  phase1: new Date('2025-11-09T00:00:00Z'),   // Peace Mode
-  phase2: new Date('2025-12-01T00:00:00Z'),   // Visitor Engine
-  phase3: new Date('2026-01-01T00:00:00Z'),   // Quantum Signal
+  phase1: new Date('2025-11-09T00:00:00Z'),
+  phase2: new Date('2025-12-01T00:00:00Z'),
+  phase3: new Date('2026-01-01T00:00:00Z'),
 };
 
-// === 💤 Dormant Until Launch ===
-if (now < PHASES.dormantUntil) {
-  console.log("🕊️ QuantumTrader-AI is dormant until November 09, 2025.");
-  process.exit();
-}
+// === 🔓 TEMPORARY BYPASS FOR TESTING ===
+// Comment out after testing
+// if (now < PHASES.dormantUntil) {
+//   console.log("🕊️ QuantumTrader-AI is dormant until November 09, 2025.");
+//   process.exit();
+// }
 
-// === 🚀 Base Server Activation ===
+// === 🚀 Static Files and Middleware ===
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-// lab/traderLab.js
-const schedule = require('node-schedule');
-
-function startTraderLab() {
-  console.log("🧪 TraderLab™ Activated: Running simulation, strategy and training modules...");
-  // Placeholder: Load strategy modules, AI feedback loops, dashboards, etc.
-}
-
-// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
-schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
-
-module.exports = startTraderLab;
-
-// pilot/cPilot.js
-const { activateLightKernel } = require('../modules/Module11/lightKernel');
-const { activateGuardianCore } = require('../modules/Module13/guardianCore');
-
-function startCPilot() {
-  console.log("🛸 CPilot™ Engaged: Guiding operations with clarity and protection.");
-  activateLightKernel();
-  activateGuardianCore();
-
-// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
-schedule.scheduleJob('2025-11-08T23:00:00.000Z', startCPilot);
-
-module.exports = CPilot™;
-
-// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
-schedule.scheduleJob('2025-11-08T23:00:00.000Z', marketMatrix);
-
-module.exports = marketMatrix.js;
-
-function syncGlobalMarkets() {
-  console.log("🌐 Market Matrix Initiated: Syncing QT AI with global financial and industrial layers...");
-
-  const sectors = [
-    "Small & Medium Enterprises (SMEs)",
-    "Heavy Industries",
-    "Commodities",
-    "Metals (Gold, Silver, Copper, etc.)",
-    "Indexes (S&P 500, Nasdaq, Dow Jones, etc.)",
-    "Energy & Utilities",
-    "Forex (Foreign Exchange Markets)",
-    "e-Currencies (Digital Assets, Stablecoins)",
-    "Global Fortune 500 Corporations",
-    "US Fortune 500 Corporations",
-    "Emerging Markets",
-    "Tech & Innovation Sectors",
-    "Agribusiness & Food Security"
-  ];
-
-  sectors.forEach((sector) => {
-    console.log(`🔗 Linked to: ${sector}`);
-    // Placeholder: Future connections → APIs, signal feeds, ethical trading filters
-  });
-
-  console.log("✅ QT AI is now globally aware and ready to operate across all major economic sectors.");
-}
-
-// Schedule: Auto-start at midnight Nov 09, 2025 (WA+1)
-schedule.scheduleJob('2025-11-08T23:00:00.000Z', syncGlobalMarkets);
-
-module.exports = syncGlobalMarkets;module.exports = startGlobalMarkets;
-
-const scheduleGlobalActivation
-= require('./core/activationSchedular'); scheduleGlobalActivation():
-
- ✅ *2. Backend Endpoint (`server.js`)*
-
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-const claimsDB = {}; // In-memory DB
-
-function getTodayDate() {
-  return new Date().toISOString().split("T")[0];
-}
-
-app.post('/claim-data', (req, res) => {
-  const { userId } = req.body;
-  const today = getTodayDate();
-
-  if (claimsDB[userId] === today) {
-    return res.json({ success: false, message: "❌ Already claimed today." });
-  }
-
-  claimsDB[userId] = today;
-  return res.json({ success: true, message: "✅ 500MB data granted!" });
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(3000, () => console.log('🚀 Data claim service running on port 3000'));
-```
- - Use *Render*, *Railway*, or *Vercel* for quick testing.
-- Later integrate Telco API for real data delivery.
-- Add user verification (OTP or email) for security.
+// === 📲 Claim Endpoint ===
+app.post('/claim', (req, res) => {
+  const { phone } = req.body;
+  if (!phone) {
 
-```
+  return res.status(400).json( message: 'Phone number is required.' );
+  
+  const claimsFile = path.join(__dirname, 'claims.json');
+  let claims = [];
 
-const express = require('express');
-const fs = require('fs');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+  if (fs.existsSync(claimsFile)) 
+    claims = JSON.parse(fs.readFileSync(claimsFile, 'utf-8'));
+  
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+  const alreadyClaimed = claims.find(cl => cl.phone === phone);
+  if (alreadyClaimed) 
+    return res.json( message: 'Data already claimed.' );
+  
 
-app.use(cors());
-app.use(bodyParser.json());
+  const newClaim = 
+    id: claims.length + 1,
+    phone,
+    claimDate: new Date().toISOString(),
+    status: 'claimed',
+    dataAllocatedMB: 500
+  ;
 
-// Handle claim submissions
-app.post('/submit-claim', (req, res) => {
-  const claim = req.body;
+  claims.push(newClaim);
+  fs.writeFileSync(claimsFile, JSON.stringify(claims, null, 2));
 
-  fs.readFile('./core/data/claims.json', 'utf8', (err, data) => {
-    if (err) return res.status(500).send('Failed to read claims file');
+  res.json( message: '500MB successfully claimed!' );
+);
 
-    let claims = [];
-    try {
-      claims = JSON.parse(data);
-    } catch (e) {
-      claims = [];
-    }
-
-     claims.push(claim);
-
-    fs.writeFile('./core/data/claims.json', JSON.stringify(claims, null, 2), (err) => {
-      if (err) return res.status(500).send('Failed to save claim');
-
-      res.status(200).send({ message: 'Claim submitted successfully' });
-    });
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// === Start Server ===
+app.listen(PORT, () => 
+  console.log(`🚀 Server running on port{PORT}`);
 });
 ```
-
-```js
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(express.static("public")); // Serve front-end files from /public or your UI folder
-
-const DATA_PATH = path.join(__dirname, "core/data/claims.json");
-
-// Ensure claims.json exists
-if (!fs.existsSync(DATA_PATH)) fs.writeFileSync(DATA_PATH, "[]", "utf8");
-
-app.post("/claim", (req, res) => {
-  const { name, phone } = req.body;
-
-  if (!name || !phone) {
-    return res.status(400).json({ message: "Both name and phone are required." });
-  }
-
-  let claims = JSON.parse(fs.readFileSync(DATA_PATH));
-  if (claims.find((c) => c.phone === phone)) {
-    return res.status(409).json({ message: "This phone number has already claimed." });
-  }
-
-  const newEntry = {
-    name: name.trim(),
-    phone: phone.trim(),
-    timestamp: new Date().toISOString()
-
-};
-
-  claims.push(newEntry);
-  fs.writeFileSync(DATA_PATH, JSON.stringify(claims, null, 2));
-
-  return res.status(200).json({ message: "Claim recorded successfully." });
-});
-
-app.get("/claims", (req, res) => {
-  const claims = JSON.parse(fs.readFileSync(DATA_PATH));
-  res.json(claims);
-});
-
-app.listen(PORT, () => console.log(`Claim server running at http://localhost:${PORT}`));`js
-const fs = require('fs');
-const path = require('path');
-
-app.post("/api/commhub", (req, res) => {
-  const newMsg = req.body;
-  const filePath = path.join(__dirname, "core/data/comm-messages.json");
-
-  fs.readFile(filePath, "utf8", (err, data) => {
-    const messages = data ? JSON.parse(data) : [];
-    messages.push(newMsg);
-    fs.writeFile(filePath, JSON.stringify(messages, null, 2), () => {
-      res.send("✅ Message received. We'll get back to you shortly.");
-    });
-  });
-});
-```
-
-
 
