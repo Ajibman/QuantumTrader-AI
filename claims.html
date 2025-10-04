@@ -14,7 +14,6 @@
     document.getElementById('claimForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const phone = document.getElementById('phone').value;
-      
       const response = await fetch('https://qonexai-backend.glitch.me/claim', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
