@@ -4,7 +4,6 @@ SRC/ //server.js/
 const child_process = require('child_process');
 const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 console.log(`🧠 QT AI server.js running at commit: ${version}`);
-... 
      
 ```js
 // server.js — Quantum QuantumTrader-AI :: Timed Phase Reveal System
@@ -37,3 +36,20 @@ if (now < PHASES.dormantUntil) {
 // === 🚀 Base Server Activation ===
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+
+```js
+const express = require('express');
+const bodyParser = require('body-parser');
+const handleClaim = require('./core/claimHandler');
+
+const app = express();
+app.use(bodyParser.json());
+
+app.post('/api/claim', handleClaim);
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+```
+
+---
