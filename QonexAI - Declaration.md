@@ -1,9 +1,7 @@
 📜 
 📌Enter Qonex AI (Pronounced Konex)
 “Quantum-origin Neural Exchange 
-System AI” where peace is the
-Operating 
-System.
+System AI” where peace is the Operating System and conceptually, a non-negitiable asset. 
 
 📌Rooted, peace-aligned artificial
 intelligence system, designed as a 
