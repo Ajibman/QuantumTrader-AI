@@ -35,5 +35,5 @@ exchange. Everything you want.
 
 Made in Ekiti State, Nigeria
 Creator and Architect: Olagoke Ajibulu. 
-Powered by ChatGPT🤖
+Powered by OpenAI🤖
 
