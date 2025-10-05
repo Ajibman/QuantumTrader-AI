@@ -115,6 +115,34 @@ class TraderLab {
 }
 ```
 
+```js
+const TraderLab = require('./core/lab/traderLab');
+const traderLab = new TraderLab();
+
+// Endpoint to pay entry fee
+app.post('/pay-entry-fee', (req, res) => {
+  const { userId, amount } = req.body;
+  if (!userId || typeof amount !== 'number') {
+    return res.status(400).json({ message: "userId and numeric amount are required." });
+  }
+  const result = traderLab.payEntryFee(userId, amount);
+});
+
+// Middleware to protect TraderLab routes
+app.use('/traderlab', (req, res, next) => {
+  const userId = req.headers['x-user-id'];
+  
+  // Or adapt to your auth method
+  if (!userId || !traderLab.canAccessLab(userId)) {
+    return res.status(403).json({ message: "Access denied. Please pay the ₦5000 entry fee to access TraderLab™." });
+  }
+  next();
+});
+
+// Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))
+```
+
+---
  ommit.
 // === ✅ SERVER START ===
 app.listen(PORT, () => 
@@ -122,4 +150,3 @@ app.listen(PORT, () =>
 });
 ```
 
----
