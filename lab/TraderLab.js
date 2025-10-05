@@ -58,7 +58,7 @@ function hasActiveSubscription(user) {
   return diffDays <= 30;
 }
 ```
-
+// Logic assumes user last subscriptionDate is updated on payment confirmation
 if (!hasActiveSubscription(user)) {
   return res.status(403).json({
     message: "Your TraderLab™ subscription has expired. Please renew your ₦5,000 monthly access fee."
