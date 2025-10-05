@@ -18,11 +18,6 @@ Perfect — in that case, we’ll add the *actual logic* now but wrap it in a *t
 - *Test flights:* 7 days before rollout (`from: 2025-11-02`)
 - *Full activation:* from midnight on *November 09, 2025*
 
----
-  
-✅ Let’s update `traderLab.js` like this:
-
-```js
 module.exports = function traderLabInit() {
   const now = new Date();
   const testStart = new Date('2025-11-02T00:00:00Z');
@@ -55,4 +50,18 @@ module.exports = function traderLabInit() {
 };
 ```
 
----
+function hasActiveSubscription(user) {
+  const now = new Date();
+  const lastPaid = new Date(user.lastSubscriptionDate);
+  const diffDays = (now - lastPaid) / (1000 * 60 * 60 * 24);
+
+  return diffDays <= 30;
+}
+```
+
+if (!hasActiveSubscription(user)) {
+  return res.status(403).json({
+    message: "Your TraderLab™ subscription has expired. Please renew your ₦5,000 monthly access fee."
+  });
+}
+```
