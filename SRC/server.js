@@ -54,6 +54,27 @@ if (now >= PHASES.phase4)
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+```js
+// === 🎛️ Phase Modules Activation ===
+const traderLab = require('./core/lab/traderLab');
+
+const now = new Date();
+
+if (now >= PHASES.phase1) {
+  console.log("✅ Phase 1: TraderLab™ activated.");
+  traderLab.init();
+}
+
+if (now >= PHASES.phase2) {
+  console.log("✅ Phase 2: Visitor Engine activated.");
+  // require and init visitor engine
+}
+
+if (now >= PHASES.phase3) {
+  console.log("✅ Phase 3: Mentor, Network & Signal Tools activated.");
+  // require and init mentor, network, signal tools
+}
+```
 
 // === ✅ SERVER START ===
 app.listen(PORT, () => 
