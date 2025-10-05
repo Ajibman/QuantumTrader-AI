@@ -74,8 +74,23 @@ if (now >= PHASES.phase3) {
   console.log("✅ Phase 3: Mentor, Network & Signal Tools activated.");
   // require and init mentor, network, signal tools
 }
+``` 
+
+// === 🎓 TraderLab Graduation Reward Hook ===
+const traderLab = require('./core/lab/traderLab');
+
+app.post('/traderlab/graduate', async (req, res) => {
+  try {
+    const result = await traderLab.evaluateGraduation(req.body);
+    res.json(result);
+  } catch (err) {
+    console.error("TraderLab error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 ```
 
+ ommit.
 // === ✅ SERVER START ===
 app.listen(PORT, () => 
   console.log(`🚀 QonexAI server live on port{PORT}`);
