@@ -1,6 +1,7 @@
 # QuantumTrader-AI
- A Quantum Trader AI (QT AI) app (A Quantum-origin Neural Exchange System and network) of global significance with 99.99ⁿ% (nano/pico) efficiency capable of impacting global markets positively, minimizing emotional trading, embracing advance philanthropy, advance philosophy, unequivocally raising wellbeing for humankind across borders. It is crafted with "global peace," cosmic logic and ethics 24x7. Knowing that nothing is ever possible without a peaceful atmosphere. 
- #peace
+ A Quantum Trader AI (QT AI) app is a Quantum-origin Neural Exchange System (QonexAI pronounced KonexAI) and network of global significance with 99.99ⁿ% (nano/pico) efficiency. It is capable of impacting global markets positively, minimizing emotional trading, embracing advance philanthropy, advance philosophy and unequivocally raising wellbeing for peoples across borders.
+ 
+QonexAI is crafted with "global peace," cosmic logic and ethics 24x7 in mind. Knowing that nothing is ever possible without a peaceful atmosphere. #peace
 
 ```Ownership/Identity
 Identity & Ownership
