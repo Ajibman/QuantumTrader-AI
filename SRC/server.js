@@ -17,6 +17,15 @@ const PHASES = {
   phase3: new Date('2026-01-01T00:00:00Z'),
 };
 
+Update `server.js`  
+ const TraderLab = require('./core/lab/traderLab');
+
+// === 🧪 Load TraderLab for test and launch phases ===
+if (now >= new Date('2025-11-02T00:00:00Z')) {
+  TraderLab.init(app);
+}
+```
+
 // === 🔓 TEMPORARY BYPASS FOR TESTING ===
 // Comment out after testing
 // if (now < PHASES.dormantUntil) {
