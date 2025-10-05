@@ -13,3 +13,46 @@ schedule.scheduleJob('2025-11-08T23:00:00.000Z', startTraderLab);
 module.exports = startTraderLab;
 
 ```
+Perfect — in that case, we’ll add the *actual logic* now but wrap it in a *time-gate* to activate only during:
+
+- *Test flights:* 7 days before rollout (`from: 2025-11-02`)
+- *Full activation:* from midnight on *November 09, 2025*
+
+---
+  
+✅ Let’s update `traderLab.js` like this:
+
+```js
+module.exports = function traderLabInit() {
+  const now = new Date();
+  const testStart = new Date('2025-11-02T00:00:00Z');
+  const launchDate = new Date('2025-11-09T00:00:00Z');
+
+  if (now < testStart) {
+    console.log("🕒 TraderLab™ is not yet active. Will activate from November 02, 2025.");
+    return;
+  }
+
+  console.log("🧪 TraderLab™ is ACTIVE");
+
+  // === Add actual lab logic here ===
+  // Simulated example
+  const runDiagnostics = () => {
+    console.log("🔍 Running test diagnostics...");
+    // Future logic goes here
+  };
+
+  // Trigger test logic during test window
+  if (now >= testStart && now < launchDate) {
+    runDiagnostics();
+  }
+
+  // Real logic post-launch
+  if (now >= launchDate) {
+    console.log("🚀 TraderLab™ fully operational.");
+    // Add full tools, signal engine, etc.
+  }
+};
+```
+
+---
