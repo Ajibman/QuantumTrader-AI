@@ -5,6 +5,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
+
+const handleRegistration = require('./core/lab/registration');
+const handleVerification = require('./core/lab/verifyUser');
+
 const express = require('express');
 const router = express.Router();
 
@@ -154,8 +158,13 @@ app.use('/traderlab', (req, res, next) => {
   next();
 });
 
-// Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))
+// 📝 TraderLab™ Registration Endpoint
+app.post('/register', handleRegistration);
 
+// ✅ TraderLab™ User Verification Endpoint
+app.post('/verify-user', handleVerification);
+
+// Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))                    
  ommit.
 // === ✅ SERVER START ===
 app.listen(PORT, () => 
