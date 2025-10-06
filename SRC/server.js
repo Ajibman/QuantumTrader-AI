@@ -4,10 +4,21 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
+```
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.json({ message: "AI Assist Module Active" });
+});
+
+module.exports = { router };
+```
 
 // 🧠 AI Support Modules
 const userAssist = require('./core/ai/userAssist');
 const gptSentinel = require('./core/ai/gptSentinel');
+```
 
 // === 🧠 INIT COMMIT INFO ===
 try {
@@ -29,6 +40,7 @@ const PHASES = {
 
 const now = new Date();
 
+
 // === 💤 DORMANT MODE ===
 if (now < PHASES.dormantUntil) {
   console.log("🕊️ QonexAI is dormant until November 09, 2025.");
@@ -44,7 +56,6 @@ if (now >= PHASES.phase2)
   const  initVisitorEngine  = require('./core/visitor/visitorEngine');
   initVisitorEngine();
 
-
 if (now >= PHASES.phase3) 
   const  initMentor  = require('./core/mentor/mentor');
   initMentor();
@@ -59,7 +70,8 @@ if (now >= PHASES.phase4)
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-```js
+
+
 // === 🎛️ Phase Modules Activation ===
 const traderLab = require('./core/lab/traderLab');
 
@@ -79,7 +91,7 @@ if (now >= PHASES.phase3) {
   console.log("✅ Phase 3: Mentor, Network & Signal Tools activated.");
   // require and init mentor, network, signal tools
 }
-``` 
+
 
 // === 🎓 TraderLab Graduation Reward Hook ===
 const traderLab = require('./core/lab/traderLab');
@@ -93,7 +105,7 @@ app.post('/traderlab/graduate', async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-```
+
   
 const labEntryFee = 5000; // ₦5000 entry fee
 
@@ -118,9 +130,7 @@ class TraderLab {
 
   // Existing methods...
 }
-```
 
-```js
 const TraderLab = require('./core/lab/traderLab');
 const traderLab = new TraderLab();
 
@@ -145,9 +155,7 @@ app.use('/traderlab', (req, res, next) => {
 });
 
 // Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))
-```
 
----
  ommit.
 // === ✅ SERVER START ===
 app.listen(PORT, () => 
