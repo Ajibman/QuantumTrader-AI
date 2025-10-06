@@ -1,9 +1,14 @@
   ```js
+  
 const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 
+// 🧠 AI Support Modules
+const userAssist = require('./core/ai/userAssist');
+const gptSentinel = require('./core/ai/gptSentinel');
+```
 // === 🧠 INIT COMMIT INFO ===
 try {
   const child_process = require('child_process');
