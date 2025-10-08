@@ -5,6 +5,18 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
+
+app.use('/cpilot', (req, res) => {
+  const status = cpilotCore.status();
+  const mission = missionControl.currentMission();
+  const flight = flightManager.track(req.body);
+
+  res.json({ status, mission, flight });
+});
+
+const in = require('./core/cpilot/cpilotCore');
+const flightManager = require('./core/cpilot/flightManager');
+const missionControl = require('./core/cpilot/missionControl');
     
 app.post('/verify', (req, res) => {
   const isVerified = verifyUser(req.body);
