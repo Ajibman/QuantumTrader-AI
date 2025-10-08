@@ -5,8 +5,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
+    
+app.post('/verify', (req, res) => {
+  const isVerified = verifyUser(req.body);
+  
+  if (!isVerified) {
+    const blocked = trackAttempts(req);
+    if (blocked) {
+      reportThreat(req); // Send to Internet Tiger
+      return res.status(429).json({ error: "Verification failed multiple times. Authorities alerted." });
+      }
+        
+    return res.status(401).json({ error: "Verification failed." });
+  }
 
-app.use((req, res, next) => {
+  res.status(200).json({ message: "Access granted" });
+});
+
   // Simulated check for GPS header or location data
   if (!req.headers['x-user-location']) {
     return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
@@ -19,7 +34,6 @@ app.use((req, res, next) => {
 
   next();
 });
-```
 
 const geoip = require('geoip-lite');
 const shutdownQonexAI = require('./core/security/shutdown');
@@ -36,7 +50,6 @@ router.get('/', (req, res) => {
 });
 
 module.exports = { router };
-```
 
 // 🧠 AI Support Modules
 const userAssist = require('./core/ai/userAssist');
@@ -177,6 +190,14 @@ app.use('/traderlab', (req, res, next) => {
   next();
 });
 
+setInterval(() => {
+  const proximity = checkProximity(); // Dummy check for now
+  if (proximity <= 50) {
+    console.log("Agent detected nearby. Shutting down QonexAI.");
+    shutdownQonexAI();
+  }
+}, 15000); // Every 15 secs
+                   
 // 📝 TraderLab™ Registration Endpoint
 app.post('/register', handleRegistration);
 
