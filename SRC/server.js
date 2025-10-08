@@ -5,6 +5,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
+const geoip = require('geoip-lite');
+const shutdownQonexAI = require('./core/security/shutdown');
+const { trackAttempts, reportThreat, checkProximity } = require('./core/security/securityManager');
 
 const handleRegistration = require('./core/lab/registration');
 const handleVerification = require('./core/lab/verifyUser');
