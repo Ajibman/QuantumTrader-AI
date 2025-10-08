@@ -5,6 +5,22 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
+
+app.use((req, res, next) => {
+  // Simulated check for GPS header or location data
+  if (!req.headers['x-user-location']) {
+    return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+  }
+
+  const blocked = trackAttempts(req);
+  if (blocked) {
+    return res.status(429).json({ message: "Too many failed attempts. Contact Support." });
+  }
+
+  next();
+});
+```
+
 const geoip = require('geoip-lite');
 const shutdownQonexAI = require('./core/security/shutdown');
 const { trackAttempts, reportThreat, checkProximity } = require('./core/security/securityManager');
