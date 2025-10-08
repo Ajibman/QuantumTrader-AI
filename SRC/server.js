@@ -22,6 +22,14 @@ app.post('/verify', (req, res) => {
   res.status(200).json({ message: "Access granted" });
 });
 
+const { grantAccess } = require('./core/lab/accessGate');
+
+// Example use after user is verified
+const accessResult = grantAccess(user);
+if (!accessResult.allowed) {
+  return res.status(403).json({ error: accessResult.reason });
+}
+```
   // Simulated check for GPS header or location data
   if (!req.headers['x-user-location']) {
     return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
