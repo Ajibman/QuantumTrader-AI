@@ -17,7 +17,6 @@ axios.post('http://localhost:7070/verify', testPayload)
 ```
 
 // TraderLabTest.js
-
 const axios = require('axios');
 
 const testUser = {
@@ -47,4 +46,48 @@ async function runTest() {
 }
 
 runTest();
-``
+````
+
+const validUser = {
+  userId: 'user001',
+  voterCard: 'VCN90011234',
+  email: 'valid@example.com',
+  gpsEnabled: true
+};
+
+const validHeaders = {
+  'Content-Type': 'application/json',
+  'x-user-location': '6.5244,3.3792'
+};
+
+❌  Rejected Access (GPS OFF)
+
+const gpsOffUser = {
+  userId: 'user002',
+  voterCard: 'VCN00000999',
+  email: 'gpsfail@example.com',
+  gpsEnabled: false
+};
+
+const noGPSHeaders = {
+  'Content-Type': 'application/json'
+};
+```
+
+🚫 Multiple Failed Verifications (Triggers Blocking + Threat Report)
+You’ll need to simulate repeated invalid verifications. Call this 3 times:
+```js
+const invalidUser = {
+  userId: 'user999',
+  voterCard: 'INVALID',
+  email: 'hacker@example.com',
+  gpsEnabled: true
+};
+
+const spoofHeaders = {
+  'Content-Type': 'application/json',
+  'x-user-location': '0.0000,0.0000'
+};
+```
+
+---
