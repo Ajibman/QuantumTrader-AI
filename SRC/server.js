@@ -1,9 +1,30 @@
 // server.js
+
 const express = require('express');
 const path = require('path');
 const geoip = require('geoip-lite');
 const app = express();
 const PORT = process.env.PORT || 7070;
+
+// Middleware 1
+app.use(express.urlencoded({ extended: true })); // Middleware 2
+
+// POST: Registration (Serial 1)
+app.post('/register', (req, res) => {
+  const result = registerUser(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: result.message });
+  }
+  res.status(200).json({ message: "User registered successfully." });
+});
+
+// POST: User Verification & Security Enforcement (Serial 2 & 3)
+app.post('/verify', (req, res) => {
+  const isVerified = verifyUser(req.body);
+  if (!isVerified) {
+    const blocked = trackAttempts(req);
+    if (blocked) {
+      reportThreat(req);
 
 // Core modules
 const { verifyUser } = require('./core/lab/verifyUser');
