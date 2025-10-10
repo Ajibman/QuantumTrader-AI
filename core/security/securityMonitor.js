@@ -18,10 +18,8 @@ function calculateDistance(loc1, loc2) {
 
 module.exports = { checkProximity };
 ```
-
 *Integration into `server.js`:*
 
-```js
 const { checkProximity } = require('./core/security/proximityMonitor');
 ```
 
