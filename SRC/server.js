@@ -71,10 +71,29 @@ router.get('/', (req, res) => {
 
 module.exports = { router };
 
+// Mock verification function
+function verifyUser(data) {
+// Example: Assume a token "VALID_USER" is required for access
+  return data && data.token === "VALID_USER";
+}
+{ token: "VALID_USER" }`
+```
+
+// POST /verify endpoint
+app.post('/verify', (req, res) => {
+  const isVerified = verifyUser(req.body);
+
+  if (!isVerified) {
+    return res.status(401).json({ error: "Verification failed." });
+  }
+
+  res.status(200).json({ message: "Access granted" });
+});
+```
+
 // 🧠 AI Support Modules
 const userAssist = require('./core/ai/userAssist');
 const gptSentinel = require('./core/ai/gptSentinel');
-```
 
 // === 🧠 INIT COMMIT INFO ===
 try {
@@ -84,6 +103,7 @@ try {
 } catch (e) {
   console.log("Commit info unavailable.");
 }
+```
 
 // === 🗓️ Timeline Phases ===
 const PHASES = {
@@ -148,8 +168,7 @@ if (now >= PHASES.phase3) {
   // require and init mentor, network, signal tools
 }
 
-
-// === 🎓 TraderLab Graduation Reward Hook ===
+  // === 🎓 TraderLab Graduation Reward Hook ===
 const traderLab = require('./core/lab/traderLab');
 
 app.post('/traderlab/graduate', async (req, res) => {
@@ -203,7 +222,7 @@ app.post('/pay-entry-fee', (req, res) => {
 app.use('/traderlab', (req, res, next) => {
   const userId = req.headers['x-user-id'];
   
-  // Or adapt to your auth method
+// Or adapt to your auth method
   if (!userId || !traderLab.canAccessLab(userId)) {
     return res.status(403).json({ message: "Access denied. Please pay the ₦5000 entry fee to access TraderLab™." });
   }
