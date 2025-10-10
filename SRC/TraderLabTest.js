@@ -90,4 +90,71 @@ const spoofHeaders = {
 };
 ```
 
----
+
+```js
+const axios = require('axios');
+
+const baseURL = 'http://localhost:7070/verify'; // Ensure your server is running
+
+const testCases = [
+  {
+    name: '✅ Successful Access (Valid User + GPS)',
+    data: {
+      userId: 'user001',
+      voterCard: 'VCN90011234',
+      email: 'valid@example.com',
+      gpsEnabled: true
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-location': '6.5244,3.3792'
+    }
+  },
+  {
+    name: '❌ Rejected Access (GPS OFF)',
+    data: {
+      userId: 'user002',
+      voterCard: 'VCN00000999',
+      email: 'gpsfail@example.com',
+      gpsEnabled: false
+    },
+    headers: {
+      'Content-Type': 'application/json'
+      // Missing 'x-user-location' to simulate GPS off
+    }
+  },
+  {
+    name: '🚫 Multiple Failed Verifications (Trigger Block)',
+    data: {
+      userId: 'user999',
+      voterCard: 'INVALID',
+      email: 'hacker@example.com',
+      gpsEnabled: true
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-location': '0.0000,0.0000'
+    },
+    repeat:
+      
+      // Attempt 3 times
+  }
+];
+
+(async () => {
+  for (const test of testCases) {
+    console.log(`\n=== Running: ${test.name} ===`);
+
+const repeatCount = test.repeat || 1;
+    for (let i = 1; i <= repeatCount; i++) 
+      try 
+        const res = await axios.post(baseURL, test.data,  headers: test.headers );
+        console.log(`Attempt{i}:`, res.data);
+      } catch (err) {
+        const msg = err.response?.data || err.message;
+        console.log(`Attempt ${i}:`, msg);
+      }
+    }
+  }
+})();
+```
