@@ -80,7 +80,6 @@ function verifyUser(data) {
 }
 { token: "VALID_USER" }`
 ```
-
 // Example trigger
 CPilotResponder({ type: 'status', status: 'QonexAI Active' });
 
