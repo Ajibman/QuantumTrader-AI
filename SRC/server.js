@@ -1,55 +1,110 @@
-SRC/ //server.js/
- 
-```js
-const child_process = require('child_process');
-const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
-console.log(`🧠 QT AI server.js running at commit: ${version}`);
-     
-```js
-// server.js — Quantum QuantumTrader-AI :: Timed Phase Reveal System
-// Author: Olagoke Ajibulu
-// Created: Sept 2025
-// Status: Active by timeline
-
+// server.js
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
+const geoip = require('geoip-lite');
 const app = express();
 const PORT = process.env.PORT || 7070;
 
-const now = new Date();
+// Core modules
+const { verifyUser } = require('./core/lab/verifyUser');
+const { grantAccess } = require('./core/lab/accessGate');
+const handleRegistration = require('./core/lab/registration');
+const { trackAttempts, reportThreat } = require('./core/security/securityManager');
+const { checkProximity } = require('./core/security/proximityMonitor');
+const shutdownQonexAI = require('./core/security/shutdown');
+const aiAssistRouter = require('./AI/userAssist');
 
-// === 🗓️ Timeline Phases ===
-const PHASES = {
-  dormantUntil: new Date('2025-11-09T00:00:00Z'),
-  phase1: new Date('2025-11-09T00:00:00Z'),   // Peace Mode
-  phase2: new Date('2025-12-01T00:00:00Z'),   // Visitor Engine
-  phase3: new Date('2026-01-01T00:00:00Z'),   // Quantum Signal
-};
+// Middleware
+app.use(express.json());
+app.use('/assist', aiAssistRouter);
 
-// === 💤 Dormant Until Launch ===
-if (now < PHASES.dormantUntil) {
-  console.log("🕊️ QuantumTrader-AI is dormant until November 09, 2025.");
-  process.exit();
-}
+// Registration endpoint
+app.post('/register', (req, res) => {
+  const result = handleRegistration(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: result.message });
+  }
 
-// === 🚀 Base Server Activation ===
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+res.status (201).json({ message: "Registration successful." });
+});
+ 
+// Verification + Access endpoint
+app.post('/verify', (req, res) => {
+  const isVerified = verifyUser(req.body);
 
-```js
+  if (!isVerified) {
+    const blocked = trackAttempts(req);
+    if (blocked) {
+      reportThreat(req);
+      return res.status(429).json({ error: "Verification failed multiple times. Authorities alerted." });
+    }
+    return res.status(401).json({ error: "Verification failed." });
+  }
+
+  // GPS/GNS Enforcement
+  if (!req.headers['x-user-location']) {
+    return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+  }
+
+  // Proximity Check
+  const userLocation = JSON.parse(req.headers['x-user-location']);
+  const agentsNearby = [ /* define agent coordinates here */ ];
+  const proximity = checkProximity(userLocation, agentsNearby);
+
+  if (proximity.shutdown) {
+    shutdownQonexAI();
+    return res.status(403).json({ error: "Access denied: security agent proximity detected." });
+  }
+
+  // Grant Access
+  const accessResult = grantAccess(req.body.user);
+  if (!accessResult.allowed) {
+    return res.status(403).json({ error: accessResult.reason });
+  }
+
+  res.status(200).json({ message: "Access granted to TraderLab™." });
+});
+
+// Root route
+app.get('/', (req, res) => {
+
+- *User registration & verification*
+- *Access gating*
+- *GPS/GNS enforcement*
+- *Security checks (e.g. proximity detection)*
+- *Sentinel & Assist modules*
+- *CPilot™ placeholder (for final integration)*
+
+// server.js
 const express = require('express');
-const bodyParser = require('body-parser');
-const handleClaim = require('./core/claimHandler');
-
+const path = require('path');
+const geoip = require('geoip-lite');
 const app = express();
-app.use(bodyParser.json());
+const PORT = process.env.PORT || 7070;
 
-app.post('/api/claim', handleClaim);
+// Core modules
+const { verifyUser } = require('./core/lab/verifyUser');
+const { grantAccess } = require('./core/lab/accessGate');
+const handleRegistration = require('./core/lab/registration');
+const { trackAttempts, reportThreat } = require('./core/security/securityManager');
+const { checkProximity } = require('./core/security/proximityMonitor');
+const shutdownQonexAI = require('./core/security/shutdown');
+const aiAssistRouter = require('./AI/userAssist');
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+// Middleware
+app.use(express.json());
+app.use('/assist', aiAssistRouter);
+
+// Registration endpoint
+app.post('/register', (req, res) => {
+  const result = handleRegistration(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: result.message });
+  }
+[10/10, 11:26 AM] ChatGPT 1-800-242-8478: res.json({ message: "QuantumTrader-AI Server Online" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 ```
-
----
