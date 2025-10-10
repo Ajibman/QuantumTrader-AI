@@ -1,4 +1,4 @@
-```
+```js
 ✅ 2.`flightManager.js`
 
 // core/assist/cpilot/flightManager.js
