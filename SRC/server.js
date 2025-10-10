@@ -6,6 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 ```
 
+const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
+
 app.use('/cpilot', (req, res) => {
   const status = cpilotCore.status();
   const mission = missionControl.currentMission();
