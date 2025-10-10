@@ -164,8 +164,7 @@ if (now >= PHASES.phase4)
   const  initSignalTools  = require('./core/signal/signalTools');
   initSignalTools();
 
-
-// === 📁 STATIC + ROUTES ===
+ === 📁 STATIC + ROUTES ===
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
@@ -273,4 +272,3 @@ app.listen(PORT, () =>
   console.log(`🚀 QonexAI server live on port{PORT}`);
 });
 ```
-
