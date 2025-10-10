@@ -1,33 +1,32 @@
- ```js
+```js
 // core/cpilot/cpilotCore.js
 
-const { initiateShutdown } = require('../../security/shutdown');
-const logger = require('../../../utils/logger'); // optional logger
+const { initiateShutdown } = require('../security/shutdown');
+const logger = require('../../utils/logger'); // Optional logging utility
 
-// CPilot Event Handler
+// CPilot™ Event Dispatcher
 function cpilotEvent(eventType, eventData) {
   switch (eventType) {
     case 'PROXIMITY_BREACH':
-      logger?.info("CPilot™ detected proximity breach."); // Optional
-      initiateShutdown("Proximity breach detected");
+      logger?.info("🚨 CPilot™: Proximity breach detected.");
+      initiateShutdown("CPilot triggered shutdown: Agent proximity detected.");
       break;
 
     case 'GPS_DISABLED':
-      logger?.warn("CPilot™ detected GPS disabled.");
-      // Potentially notify user or system
+      logger?.warn("⚠️ CPilot™: GPS is disabled.");
+      // Could trigger in-app alert or restriction
       break;
 
-    case 'MULTIPLE_FAILED_VERIFICATIONS':
-      logger?.error("Repeated failed verifications.");
-      // Could escalate to authorities or internal alert
+    case 'FAILED_VERIFICATIONS':
+      logger?.error("❌ CPilot™: Multiple failed verifications.");
+      // Optionally escalate or block
       break;
 
     default:
-      logger?.info(`Unhandled CPilot™ event: ${eventType}`);
+      logger?.info(`ℹ️ CPilot™: Unknown event type - ${eventType}`);
   }
 }
 
 module.exports = { cpilotEvent };
 ```
 
-  
