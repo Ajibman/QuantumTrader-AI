@@ -107,4 +107,40 @@ app.post('/register', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+return res.status(429).json({ error: "Multiple failed attempts. Authorities alerted." });
+    }
+    return res.status(401).json({ error: "Verification failed." });
+  }
+
+  // GPS Check (Serial 3)
+  if (!req.headers['x-user-location']) {
+    return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+  }
+
+  // Proximity Check (shutdown trigger)
+  const userLocation = JSON.parse(req.headers['x-user-location']);
+  const agents = [/* live agents GPS data */];
+  const proximity = checkProximity(userLocation, agents);
+  if (proximity.shutdown) {
+    return res.status(403).json({ error: proximity.message });
+  }
+
+  // Subscription Access Check (Serial 4)
+  const accessResult = grantAccess(req.body.user);
+  if (!accessResult.allowed) {
+    return res.status(403).json({ error: accessResult.reason });
+  }
+
+  res.status(200).json({ message: "Access granted. Welcome to TraderLab™." });
+});
+
+// Start Server
+app.listen(PORT, () => {
+  console.log(`TraderLab™ server running on port ${PORT}`);
+});
 ```
+
+
+
+
