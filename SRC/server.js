@@ -14,10 +14,6 @@ const { checkProximity } = require('./core/security/proximityMonitor');
 const shutdownQonexAI = require('./core/security/shutdown');
 const aiAssistRouter = require('./AI/userAssist');
 
-// Middleware
-app.use(express.json());
-app.use('/assist', aiAssistRouter);
-
 // Registration endpoint
 app.post('/register', (req, res) => {
   const result = handleRegistration(req.body);
