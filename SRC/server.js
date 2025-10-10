@@ -81,6 +81,16 @@ function verifyUser(data) {
 { token: "VALID_USER" }`
 ```
 
+// Example trigger
+CPilotResponder({ type: 'status', status: 'QonexAI Active' });
+
+// On shutdown event
+CPilotResponder({ type: 'shutdown' });
+
+// On system alert
+CPilotResponder({ type: 'alert', message: 'Unauthorized access attempt' });
+
+
 // POST /verify endpoint
 app.post('/verify', (req, res) => {
   const isVerified = verifyUser(req.body);
@@ -91,7 +101,7 @@ app.post('/verify', (req, res) => {
 
   res.status(200).json({ message: "Access granted" });
 });
-```
+
 
 // 🧠 AI Support Modules
 const userAssist = require('./core/ai/userAssist');
@@ -105,7 +115,6 @@ try {
 } catch (e) {
   console.log("Commit info unavailable.");
 }
-```
 
 // === 🗓️ Timeline Phases ===
 const PHASES = {
@@ -117,7 +126,6 @@ const PHASES = {
 };
 
 const now = new Date();
-
 
 // === 💤 DORMANT MODE ===
 if (now < PHASES.dormantUntil) {
