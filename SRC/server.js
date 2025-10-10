@@ -5,8 +5,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 7070;
 ```
- 
-const { cpilotEvent } = require('./core/ai/cpilot/cpilotCore');
+
+const { cpilotEvent } = require('./core/cpilot/cpilotCore');
 
 const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
 
@@ -46,6 +46,8 @@ if (!accessResult.allowed) {
   return res.status(403).json({ error: accessResult.reason });
 }
 
+cpilotEvent('FAILED_VERIFICATIONS', { user: req.body.username });
+
   // Simulated check for GPS header or location data
   if (!req.headers['x-user-location']) {
     return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
@@ -73,7 +75,18 @@ router.get('/', (req, res) => {
   res.json({ message: "AI Assist Module Active" });
 });
 
-module.exports = { router };
+module.exports = { router }
+
+if (!req.headers['x-user-location']) {
+  cpilotEvent('GPS_DISABLED', { ip: req.ip });
+  return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+}
+
+const proximity = checkProximity(userLocation, agentsList);
+if (proximity.shutdown) {
+  cpilotEvent('PROXIMITY_BREACH', { location: userLocation });
+  return res.status(403).json({ error: "Access denied. Proximity alert triggered." });
+}
 
 // Mock verification function
 function verifyUser(data) {
@@ -90,7 +103,6 @@ CPilotResponder({ type: 'shutdown' });
 
 // On system alert
 CPilotResponder({ type: 'alert', message: 'Unauthorized access attempt' });
-
 
 // POST /verify endpoint
 app.post('/verify', (req, res) => {
