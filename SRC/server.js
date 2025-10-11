@@ -1,4 +1,4 @@
-  ```js
+ ```js
    
 const express = require('express');
 const path = require('path');
@@ -242,7 +242,8 @@ app.post('/pay-entry-fee', (req, res) => {
 
 // Middleware to protect TraderLab routes
 app.use('/traderlab', (req, res, next) => {
-  const userId = req.headers['x-user-id'];
+
+const userId = req.headers['x-user-id'];
   
 // Or adapt to your auth method
   if (!userId || !traderLab.canAccessLab(userId)) {
@@ -253,7 +254,7 @@ app.use('/traderlab', (req, res, next) => {
 
 setInterval(() => {
   const proximity = checkProximity(); // Dummy check for now
-  if (proximity <= 50) {
+  if (proximity <=to 50) {
     console.log("Agent detected nearby. Shutting down QonexAI.");
     shutdownQonexAI();
   }
