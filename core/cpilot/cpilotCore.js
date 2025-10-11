@@ -30,7 +30,6 @@ function cpilotEvent(eventType, eventData) {
 module.exports = { cpilotEvent };
 ```
 
-// core/cpilot/cpilotCore.js
 const { dispatchFlightPlan } = require('./flightManager');
 const { logEvent } = require('../logger');
 
@@ -46,6 +45,26 @@ function handleMission(user, request) {
 }
 
 module.exports = { handleMission };
-```
 
----
+const express = require('express');
+const router = express.Router();
+
+const missionControl = require('./missionControl');
+const flightManager = require('./flightManager');
+
+router.post('/dispatch', (req, res) => {
+  const result = missionControl.receiveMission(req.body);
+  if (!result.accepted) {
+    return res.status(400).json({ error: result.reason });
+  }
+  res.status(200).json({ missionId: result.missionId, status: result.status });
+});
+
+router.get('/status/:id', (req, res) => {
+  const mission = flightManager.getMissionStatus(req.params.id);
+  if (!mission) return res.status(404).json({ error: "Mission not found" });
+  res.status(200).json(mission);
+});
+
+module.exports = router;
+```
