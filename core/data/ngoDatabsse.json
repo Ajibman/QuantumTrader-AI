@@ -1,0 +1,20 @@
+```json
+[
+  {
+    "id": "NGO001",
+    "name": "Global Health Outreach",
+    "region": "Africa",
+    "focus": "Health",
+    "verified": true,
+    "active": true
+  },
+  {
+    "id": "NGO002",
+    "name": "EduBridge International",
+    "region": "Asia",
+    "focus": "Education",
+    "verified": true,
+    "active": true
+  }
+]
+```
