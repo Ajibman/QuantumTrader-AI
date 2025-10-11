@@ -66,5 +66,18 @@ router.get('/status/:id', (req, res) => {
   res.status(200).json(mission);
 });
 
-module.exports = router;
+module.exports = route
+
+const { updateProfit } = require('./philanthropyManager');
+
+// Simulated profit event dispatcher
+function handleProfitGenerated(amount) {
+  console.log(`💰 Profit received: 
+    
+{amount.toLocaleString()}`);
+  updateProfit(amount);
+}
+aa
+// Expose to missionControl or flightManagera
+module.exports = { handleProfitGenerated };
 ```
