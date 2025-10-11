@@ -19,7 +19,6 @@ function dispatchFlightPlan(user, request) {
 module.exports = { dispatchFlightPlan };
 ```
 
-// core/cpilot/flightManager.js
 const activeMissions = {};
 
 function assignMission(mission) {
