@@ -10,7 +10,6 @@ function triggerMission(user, missionRequest) {
 module.exports = { triggerMission };
 ```
 
-// core/cpilot/missionControl.js
 const flightManager = require('./flightManager');
 
 function receiveMission(missionData) {
