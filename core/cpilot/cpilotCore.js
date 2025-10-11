@@ -30,3 +30,22 @@ function cpilotEvent(eventType, eventData) {
 module.exports = { cpilotEvent };
 ```
 
+// core/cpilot/cpilotCore.js
+const { dispatchFlightPlan } = require('./flightManager');
+const { logEvent } = require('../logger');
+
+function handleMission(user, request) {
+  logEvent("CPilot Activated", { user, request });
+
+  if (!user || !request.type) {
+    return { status: "error", message: "Invalid mission data." };
+  }
+
+  const result = dispatchFlightPlan(user, request);
+  return result;
+}
+
+module.exports = { handleMission };
+```
+
+---
