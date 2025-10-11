@@ -1,6 +1,6 @@
 ```js
 
-*1. Mock user data (e.g. in `mockUser.js` or inline):*
+✅ Mock user data (e.g. in `mockUser.js` or inline):*
 const mockUser = {
   id: 'user123',
   name: 'Test Pilot',
@@ -14,7 +14,7 @@ const mockUser = {
 };
 ```
 
-*2. Mock mission request:*
+✅ Mock mission request:*
 ```js
 const mockMission = {
   id: 'mission001',
@@ -25,5 +25,21 @@ const mockMission = {
   },
   requestedBy: 'user123',
   urgency: 'high'
+};
+```
+
+
+✅ `test/mockUser.js`
+```js
+module.exports = {
+  id: 'user123',
+  name: 'Test Pilot',
+  credentials: {
+    token: 'abc123xyz'
+  },
+  location: {
+    latitude: 6.5244,
+    longitude: 3.3792 // Lagos, Nigeria
+  }
 };
 ```
