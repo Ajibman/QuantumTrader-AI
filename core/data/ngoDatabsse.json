@@ -1,19 +1,32 @@
-[
+  [
   {
     "id": "NGO001",
-    "name": "Global Health Outreach",
+    "name": "Hope Africa Foundation",
     "region": "Africa",
-    "focus": "Health",
-    "verified": true,
-    "active": true
+    "verified": true
   },
   {
     "id": "NGO002",
-    "name": "EduBridge International",
+    "name": "Asia Relief Network",
     "region": "Asia",
-    "focus": "Education",
-    "verified": true,
-    "active": true
+    "verified": true
+  },
+  {
+    "id": "NGO003",
+    "name": "European Humanitarian Aid",
+    "region": "Europe",
+    "verified": true
+  },
+  {
+    "id": "NGO004",
+    "name": "Americas Aid Initiative",
+    "region": "Americas",
+    "verified": true
+  },
+  {
+    "id": "NGO005",
+    "name": "Oceania Support Services",
+    "region": "Oceania",
+    "verified": true
   }
 ]
-
