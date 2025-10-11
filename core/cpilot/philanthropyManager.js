@@ -22,50 +22,44 @@ function evaluatePhilanthropyTrigger(profit, userPrefs) {
 module.exports = { evaluatePhilanthropyTrigger };
 ```
 
-let totalProfitPool = 0;
-const PHILANTHROPY_THRESHOLD = 10_000_000; //10 million
+const ngoDatabase = require('../../data/ngoDatabase.json');
 
-function updateProfit(amount) {
-  totalProfitPool += amount;
-  checkThreshold();
-}
-
-function checkThreshold() {
-  if (totalProfitPool >= PHILANTHROPY_THRESHOLD) {
-    triggerPhilanthropy();
+function distributeFunds(totalFunds) {
+  const threshold = 100_000_000;
+  if (totalFunds < threshold) {
+    return { status: "Insufficient funds", nextAction: "Wait until threshold is met." };
   }
+
+  // Filter NGOs by region
+  const regions = ["Africa", "Asia", "Europe", "Americas", "Oceania"];
+  const selectedNGOs = {};
+
+  for (const region of regions) {
+    selectedNGOs[region] = ngoDatabase
+      .filter(ngo => ngo.region === region && ngo.verified)
+      .slice(0, 10); // Take top 10 per region for this cycle
+  }
+
+  const perRegionShare = totalFunds / regions.length;
+
+const distribution = {};
+
+  for (const region of regions) {
+    const ngos = selectedNGOs[region];
+    const perNGOShare = ngos.length ? perRegionShare / ngos.length : 0;
+    distribution[region] = ngos.map(ngo => ({
+      ngoId: ngo.id,
+      name: ngo.name,
+      allocated: perNGOShare
+    }));
+  }
+
+  return {
+    status: "Success",
+    totalFunds,
+    distributedTo: distribution
+  };
 }
 
-function triggerPhilanthropy() {
-  console.log("✅ Philanthropy threshold reached.");
-  console.log("🚀 Initiating global donation protocols...");
-  // Insert actual donation dispatch logic here
-  totalProfitPool = 0; // Reset after dispatch
-}
-
-module.exports = { updateProfit };
-
-function handlePhilanthropy(totalFunds, ngoDatabase) 
-  const triggerThreshold = 100_000_000;
-  if (totalFunds < triggerThreshold) return;
-
-  const eligibleNGOs = ngoDatabase.filter(ngo => ngo.verified        ngo.active);
-
-  const allocationPerNGO = totalFunds / eligibleNGOs.length;
-
-  eligibleNGOs.forEach(ngo => 
-    dispatchFunds(ngo, allocationPerNGO);
-  );
-
-  console.log(`DistributedtotalFunds across{eligibleNGOs.length} NGOs.`);
-}
-
-function dispatchFunds(ngo, amount) {
-  // Placeholder: API call or internal transfer logic
-  console.log(`Dispatching 
-    
-{amount} to ngo.name ({ngo.region})`);
-}
-
-module.exports = { handlePhilanthropy };
+module.exports = { distributeFunds };
 ```
