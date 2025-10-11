@@ -259,13 +259,16 @@ setInterval(() => {
     shutdownQonexAI();
   }
 }, 15000); // Every 15 secs
-                   
+                           
+const uiRouter = require('./core/ui/uiRouter');
+app.use('/ui', uiRouter);  
+
 // 📝 TraderLab™ Registration Endpoint
 app.post('/register', handleRegistration);
 
 // ✅ TraderLab™ User Verification Endpoint
 app.post('/verify-user', handleVerification);
-
+                           
 // Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))                    
  ommit.
 // === ✅ SERVER START ===
