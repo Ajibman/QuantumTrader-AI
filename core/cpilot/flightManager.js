@@ -18,3 +18,22 @@ function dispatchFlightPlan(user, request) {
 
 module.exports = { dispatchFlightPlan };
 ```
+
+// core/cpilot/flightManager.js
+const activeMissions = {};
+
+function assignMission(mission) {
+  activeMissions[mission.missionId] = {
+    ...mission,
+    status: "In Flight",
+    startedAt: new Date(),
+  };
+  return "Mission dispatched";
+}
+
+function getMissionStatus(missionId) {
+  return activeMissions[missionId] || null;
+}
+
+module.exports = { assignMission, getMissionStatus };
+```
