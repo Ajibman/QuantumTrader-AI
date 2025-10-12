@@ -3,7 +3,7 @@
  
 QonexAI network is an array of concepts and lifelong experiences pooled together and capable of impacting global markets Or businesses from the commumity to global level, minimizing emotional trading, embracing advance philanthropy, advance philosophy and unequivocally raising wellbeing for peoples across borders.
 
-A game changer expected to reach everywhere in on the planet.
+A game changer expected to reach everywhere on the planet.
  
 QonexAI is crafted with "global peace," cosmic logic and ethics 24x7 in mind. Knowing that nothing, repeat nothing, is ever possible without a peaceful atmosphere. #peace
 
