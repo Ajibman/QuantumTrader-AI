@@ -38,4 +38,57 @@ function distributeFunds(members) {
 module.exports = { credit, getFundBalance, distributeFunds };
 ```
 
-Let me know when to commit or if you want to populate `philanthropyManager.js` next.
+// core/social/philanthropyManager.js
+
+let philanthropyFund = 0;
+const TRIGGER_AMOUNT = 100_000_000;
+
+function credit(amount) {
+  if (amount > 0) {
+    philanthropyFund += amount;
+    return { status: 'credited', amount, total: philanthropyFund };
+  }
+  return { status: 'invalid amount' };
+}
+
+function getFundBalance() {
+  return philanthropyFund;
+}
+
+function isEligibleForDisbursement() {
+  return philanthropyFund >= TRIGGER_AMOUNT;
+}
+
+function prepareDisbursement(ngoList) {
+  if (!isEligibleForDisbursement()) {
+    return { status: 'not eligible', balance: philanthropyFund };
+  }
+
+  if (!Array.isArray(ngoList) || ngoList.length === 0) {
+    return { status: 'no NGOs available' };
+  }
+
+  const share = philanthropyFund / ngoList.length;
+  const distribution = ngoList.map(ngo => ({
+    ngoId: ngo.id,
+    amount: share,
+  }));
+
+  philanthropyFund = 0; // Reset after disbursement
+  return {
+    status: 'disbursed',
+    totalDistributed: share * ngoList.length,
+    eachShare: share,
+    ngoCount: ngoList.length,
+    distribution,
+  };
+}
+
+module.exports = {
+  credit,
+  getFundBalance,
+
+isEligibleForDisbursement,
+  prepareDisbursement
+};
+``` 
