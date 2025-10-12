@@ -23,5 +23,6 @@ This project, originally known as *QuantumTrader-AI*, is equivalently recognized
 
 All these identities are unified under a single trademark intention and operational umbrella. For details:
 
-📄 [View Identity Equivalence Declaration](./Identity-Equivalence.md)
+📄 [View Identity Equivalence Declaration](./Identity-Equivalence.m
+Powered by ChatGPT
 ```
