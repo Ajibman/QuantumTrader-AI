@@ -25,4 +25,7 @@ router.get('/cooperatives', (req, res) => {
 });
 
 module.exports = router;
-```
+
+app.get('/modals/takeProfitModal.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'path/to/takeProfitModal.html'));
+});
