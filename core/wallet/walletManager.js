@@ -42,4 +42,21 @@ module.exports = {
 };
 ```
 
- 
+const wallet = {
+  philanthropy: 0,
+  cooperative: 0
+};
+
+function addFundsToPool(type, amount) {
+  if (wallet[type] !== undefined) {
+    wallet[type] += amount;
+  }
+  return Promise.resolve(wallet);
+}
+
+function getWalletBalances() {
+  return Promise.resolve(wallet);
+}
+
+module.exports = { addFundsToPool, getWalletBalances };
+```
