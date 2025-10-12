@@ -16,4 +16,15 @@
   <button onclick="confirmTakeProfit()">Confirm</button>
   <button onclick="closeModal()">Cancel</button>
 </div>
+
+<script>
+function openTakeProfitModal() {
+  fetch('/modals/takeProfitModal.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('takeProfitModalContainer').innerHTML = html;
+      document.getElementById('takeProfitModal').style.display = 'block';
+    });
+}
+</script>
 ```
