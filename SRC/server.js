@@ -6,6 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 ```
 
+const uiRoutes = require('./routes/uiRoutes');
+app.use('/ui', uiRoutes);
+
 const { cpilotEvent } = require('./core/cpilot/cpilotCore');
 
 const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
