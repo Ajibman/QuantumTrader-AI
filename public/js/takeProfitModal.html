@@ -1,0 +1,19 @@
+```html
+<!-- Take Profit Modal -->
+<div id="takeProfitModal" style="display:none; position:fixed; top:20%; left:30%; background:#fff; padding:20px; border:1px solid #ccc; z-index:999;">
+  <h3>Confirm Take Profit</h3>
+
+  <label>
+    <input type="checkbox" id="philanthropyToggle" onchange="updateBreakdown()"> 2.5% to Philanthropy
+  </label><br>
+
+  <label>
+    <input type="checkbox" id="cooperativeToggle" onchange="updateBreakdown()"> 2.5% to Cooperatives
+  </label>
+
+  <div id="breakdown" style="margin-top:10px;"></div>
+
+  <button onclick="confirmTakeProfit()">Confirm</button>
+  <button onclick="closeModal()">Cancel</button>
+</div>
+```
