@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 7070;
 const uiRoutes = require('./routes/uiRoutes');
 app.use('/ui', uiRoutes);
 
+app.use('/api/social', socialRoutes);
+
 const { cpilotEvent } = require('./core/cpilot/cpilotCore');
 
 const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
@@ -43,7 +45,7 @@ app.post('/verify', (req, res) => {
 
 const { grantAccess } = require('./core/lab/accessGate');
 
-// Example use after user is verified
+// Use after user is verified
 const accessResult = grantAccess(user);
 if (!accessResult.allowed) {
   return res.status(403).json({ error: accessResult.reason });
