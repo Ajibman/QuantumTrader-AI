@@ -53,3 +53,20 @@ function confirmTakeProfit() {
     });
 }
 ```
+
+// Simulated frontend modal interaction
+document.getElementById('confirmProfitBtn').addEventListener('click', async () => {
+  const userId = 'user001'; // simulate active user
+  const profitAmount = 12000;
+
+  // Send to backend route
+  await fetch('/api/profit/share', {
+
+method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, profitAmount })
+  });
+
+  alert("Profit shared successfully (based on your consent).");
+});
+```
