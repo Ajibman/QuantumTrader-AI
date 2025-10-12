@@ -6,6 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 ```
 
+const socialResponsocialResponsibilityRoutessibilityRoutes = require('./routes/socialResponsibility');
+app.use('/api/social-responsibility', socialResponsibilityRoutes);
+
 const uiRoutes = require('./routes/uiRoutes');
 app.use('/ui', uiRoutes);
 
