@@ -29,6 +29,7 @@ function updateBreakdown() {
 {final.toFixed(2)}</strong></p>
   `;
 }
+```
 
 function confirmTakeProfit() {
   const p = document.getElementById('philanthropyToggle').checked;
@@ -52,7 +53,6 @@ function confirmTakeProfit() {
       alert('Error submitting.');
     });
 }
-```
 
 // Simulated frontend modal interaction
 document.getElementById('confirmProfitBtn').addEventListener('click', async () => {
