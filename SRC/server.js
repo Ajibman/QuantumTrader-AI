@@ -6,6 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 ```
 
+
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/admin', adminRoutes);
+
 // inside server.js or a handler module
 const { tradeEmitter } = require('./core/trade/traderLogic');
 const { handleProfitConsent } = require('./core/logic/fundAllocator');
