@@ -6,7 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 ```
 
-
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/admin', adminRoutes);
 
