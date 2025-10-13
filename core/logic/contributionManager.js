@@ -37,10 +37,7 @@ cooperativesFund += contributions.cooperatives;
 
 module.exports = { eventBus };
 ```
-
-*Next:*
-- Commit?
-- Or connect with `TraderLogic.js` eventEmitter?
+Next: connect with `TraderLogic.js` eventEmitter,
 
   const contributions = {
     philanthropy: consent.philanthropy ? amount * PHILANTHROPY_PERCENT : 0,
