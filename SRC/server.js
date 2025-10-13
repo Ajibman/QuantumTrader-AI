@@ -1,11 +1,36 @@
-```js
-   
+```// server.js
+
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');  // optional logger
+const cors = require('cors');
+
+// Import route modules
+const traderRoutes = require('./routes/traderRoutes');
+const socialRoutes = require('./routes/socialRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const contributionRoutes = require('./routes/contributionRoutes');
+// Add more as needed (philanthropy, cooperatives, cpilot etc.)
+
 const app = express();
 const PORT = process.env.PORT || 7070;
-```
 
+// === Middleware ===
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));  // optional HTTP request logging
+
+// === Static & Public Assets ===
+// Serve UI templates, modal HTML, images, CSS, JS, etc.
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// If using `views` for templating
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+```
+   
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/admin', adminRoutes);
 
