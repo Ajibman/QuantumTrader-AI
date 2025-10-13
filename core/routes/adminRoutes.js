@@ -27,7 +27,6 @@ router.get('/data/overview', adminController.getOverview);
 router.get('/data/logs', adminController.getContributionLogs);
 
 module.exports = router;
-```
 
 // routes/adminRoutes.js
 
