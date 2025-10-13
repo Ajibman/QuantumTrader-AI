@@ -28,3 +28,24 @@ router.get('/data/logs', adminController.getContributionLogs);
 
 module.exports = router;
 ```
+
+// routes/adminRoutes.js
+
+const express = require('express');
+const router = express.Router();
+const adminController = require('../controllers/adminController');
+
+// Admin dashboard overview
+router.get('/dashboard', adminController.getDashboard);
+
+// View all contributions
+router.get('/contributions', adminController.getContributions);
+
+// View registered NGOs
+router.get('/ngos', adminController.getNGOs);
+
+// Disbursement logs & controls
+router.get('/disbursements', adminController.getDisbursements);
+
+module.exports = router;
+```
