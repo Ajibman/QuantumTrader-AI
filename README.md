@@ -1,7 +1,7 @@
 # QuantumTrader-AI
  This Quantum Trader AI (QT AI) app is a Quantum-origin Neural Exchange System (QonexAI pronounced KonexAI) and network of global significance with 99.99ⁿ% (nano/pico) efficiency.
  
-QonexAI network is an array of concepts and lifelong experiences pooled together and capable of impacting global markets Or businesses from the commumity to global level, minimizing emotional trading, embracing advance philanthropy, advance philosophy and unequivocally raising wellbeing for peoples across borders. 
+QonexAI network is an array of concepts and lifelong and historical experiences pooled together and capable of impacting global markets Or businesses from the local commumity to global level, minimizing emotional trading, embracing advance philanthropy, advance philosophy and unequivocally raising wellbeing for peoples across borders. 
 
 A game changer expected to reach everywhere on the planet.
  
