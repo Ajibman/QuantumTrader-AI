@@ -29,7 +29,6 @@ router.get('/data/logs', adminController.getContributionLogs);
 module.exports = router;
 
 // routes/adminRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
