@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+  <p>Total Wallet Balance:{{totalBalance}}</p>
+
+  <h3>NGO List</h3>
+  <ul>
+    {{#each ngos}}
+      <li>{{this.name}} – Status: {{this.status}}</li>
+    {{/each}}
+  </ul>
+
+  <h3>Audit Log</h3>
+  <pre>
+    {{#each auditLog}}
+      {{this.timestamp}} - {{this.entry}}
+    {{/each}}
+  </pre>
+</body>
+</html>
+```
