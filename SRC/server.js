@@ -44,7 +44,7 @@ tradeEmitter.on('profitTaken', async ({ userId, profit }) => {
 {profit} taken by User ${userId}`);
   await handleProfitConsent(userId, profit); // calls logic to check consent & allocate
 });
-```
+
 
 const socialResponsocialResponsibilityRoutessibilityRoutes = require('./routes/socialResponsibility');
 app.use('/api/social-responsibility', socialResponsibilityRoutes);
