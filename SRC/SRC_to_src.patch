@@ -1,7 +1,8 @@
-'''js
+```js
+
 rename_SRC_to_src_advance.patch
 
-```diff
+a
 --- package.json
 +++ package.json
 @@ -1,10 +1,10 @@
