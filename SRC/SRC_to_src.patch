@@ -1,7 +1,6 @@
-```js
+qqpqqq```js
 
 rename_SRC_to_src_advance.patch
-
 
 --- package.json
 +++ package.json
@@ -12,7 +11,7 @@ rename_SRC_to_src_advance.patch
 -    "dev": "nodemon SRC/server.js"
 +    "dev": "nodemon src/server.js"
    },
-a
+
    +++ server.js
 @@ -1,10 +1,10 @@
 -const traderRoutes = require('./SRC/routes/traderRoutes');
@@ -86,7 +85,5 @@ p+const adminController = require('../../src/controllers/adminController');
 --- src/routes/adminRoutes.js
 +++ src/routes/adminRoutes.js
 @@ -1,5 +1,5 @@
--const adminController = require('../../SRC/controllers/adminController'aaaaaa
-a
-)aa
-aaa
+-const adminController = require('../../SRC/controllers/adminController');
+ 
