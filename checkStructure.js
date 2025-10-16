@@ -1,4 +1,5 @@
 '''js
+ 
  checkStructure.js
  Verifies that src/server.js and other key paths exist after restructuring.
  Run with: node checkStructure.js
@@ -76,6 +77,31 @@ expectedFolders.forEach(folder => {
     }
   });
 });
+
+
+ const fs = require('fs');
+const path = require('path');
+
+function checkFolder(folder) {
+  const fullPath = path.join(__dirname, folder);
+  return fs.existsSync(fullPath);
+}
+
+const checks = [
+  {lower: 'src/assets', upper: 'src/Assets'},
+  {lower: 'src/public', upper: 'src/Public'},
+];
+
+checks.forEach(({lower, upper}) => {
+  if (checkFolder(lower)) {
+    console.log(`✔️  lower exists.`);
+   else 
+    console.log(`❌{lower} is missing.`);
+  }
+
+  if (checkFolder(upper)) {
+    console.warn(`⚠️  Warning: ${upper} folder still exists. Please rename to lowercase.`);
+  }
+});
 ```
 
- 
