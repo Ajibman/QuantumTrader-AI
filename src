@@ -1,0 +1,154 @@
+ ```// server.js
+
+const express = require('express');
+const path = require('path');
+const morgan = require('morgan');  // optional logger
+const cors = require('cors');
+
+// Import route modules
+const traderRoutes = require('./routes/traderRoutes');
+const socialRoutes = require('./routes/socialRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const contributionRoutes = require('./routes/contributionRoutes');
+// Add more as needed (philanthropy, cooperatives, cpilot etc.)
+
+const app = express();
+const PORT = process.env.PORT || 7070;
+
+// === Middleware ===
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));  // optional HTTP request logging
+
+// === Static & Public Assets ===
+// Serve UI templates, modal HTML, images, CSS, JS, etc.
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// If using `views` for templating
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+```
+   
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/admin', adminRoutes);
+
+// inside server.js or a handler module
+const { tradeEmitter } = require('./core/trade/traderLogic');
+const { handleProfitConsent } = require('./core/logic/fundAllocator');
+
+tradeEmitter.on('profitTaken', async ({ userId, profit }) => {
+  console.log(`Profit of 
+    
+{profit} taken by User ${userId}`);
+  await handleProfitConsent(userId, profit); // calls logic to check consent & allocate
+});
+```
+
+const socialResponsocialResponsibilityRoutessibilityRoutes = require('./routes/socialResponsibility');
+app.use('/api/social-responsibility', socialResponsibilityRoutes);
+
+const uiRoutes = require('./routes/uiRoutes');
+app.use('/ui', uiRoutes);
+
+app.use('/api/social', socialRoutes);
+
+const { cpilotEvent } = require('./core/cpilot/cpilotCore');
+
+const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
+
+app.use('/cpilot', (req, res) => {
+  const status = cpilotCore.status();
+  const mission = missionControl.currentMission();
+  const flight = flightManager.track(req.body);
+
+  res.json({ status, mission, flight });
+});
+
+const in = require('./core/cpilot/cpilotCore');
+const flightManager = require('./core/cpilot/flightManager');
+const missionControl = require('./core/cpilot/missionControl');
+    
+app.post('/verify', (req, res) => {
+  const isVerified = verifyUser(req.body);
+  
+  if (!isVerified) {
+    const blocked = trackAttempts(req);
+    if (blocked) {
+      reportThreat(req); // Send to Internet Tiger
+      return res.status(429).json({ error: "Verification failed multiple times. Authorities alerted." });
+      }
+        
+    return res.status(401).json({ error: "Verification failed." });
+  }
+
+  res.status(200).json({ message: "Access granted" });
+});
+
+const { grantAccess } = require('./core/lab/accessGate');
+
+// Use after user is verified
+const accessResult = grantAccess(user);
+if (!accessResult.allowed) {
+  return res.status(403).json({ error: accessResult.reason });
+}
+
+cpilotEvent('FAILED_VERIFICATIONS', { user: req.body.username });
+
+  // Simulated check for GPS header or location data
+  if (!req.headers['x-user-location']) {
+    return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+  }
+
+  const blocked = trackAttempts(req);
+  if (blocked) {
+    return res.status(429).json({ message: "Too many failed attempts. Contact Support." });
+  }
+
+  next();
+});
+
+const geoip = require('geoip-lite');
+const shutdownQonexAI = require('./core/security/shutdown');
+const { trackAttempts, reportThreat, checkProximity } = require('./core/security/securityManager');
+
+const handleRegistration = require('./core/lab/registration');
+const handleVerification = require('./core/lab/verifyUser');
+
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.json({ message: "AI Assist Module Active" });
+});
+
+module.exports = { router }
+
+if (!req.headers['x-user-location']) {
+  cpilotEvent('GPS_DISABLED', { ip: req.ip });
+  return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
+}
+
+const proximity = checkProximity(userLocation, agentsList);
+if (proximity.shutdown) {
+  cpilotEvent('PROXIMITY_BREACH', { location: userLocation });
+  return res.status(403).json({ error: "Access denied. Proximity alert triggered." });
+}
+
+// Mock verification function
+function verifyUser(data) {
+// Example: Assume a token "VALID_USER" is required for access
+  return data && data.token === "VALID_USER";
+}
+{ token: "VALID_USER" }`
+```
+// Example trigger
+CPilotResponder({ type: 'status', status: 'QonexAI Active' });
+
+// On shutdown event
+CPilotResponder({ type: 'shutdown' });
+
+// On system alert
+CPilotResponder({ type: 'alert', message: 'Unauthorized access attempt' });
+
