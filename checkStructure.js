@@ -43,3 +43,39 @@ foldersToCheck.forEach(folder => {
 });
 
 console.log('\n✅ Structure check complete.\n');
+
+Great. Here's an *improved `checkStructure.js` script* that:
+
+- Checks for casing issues (`Assets` → `assets`, `Public` → `public`, etc.)
+- *Optionally renames them automatically* (if you allow it)
+- Helps keep your folder structure consistent for Termux, Git, and Node.js (which are case-sensitive)
+
+const fs = require('fs');
+const path = require('path');
+
+// Expected folder names (all lowercase)
+const expectedFolders = ['views', 'assets', 'public', 'src'];
+
+expectedFolders.forEach(folder => {
+  const entries = fs.readdirSync(__dirname, { withFileTypes: true });
+
+  entries.forEach(entry => {
+    if (entry.isDirectory()) {
+      const actual = entry.name;
+      if (actual.toLowerCase() === folder && actual !== folder) {
+        console.log(`⚠️  Found case mismatch: 'actual' should be '{folder}'`);
+
+        // Attempt rename
+        try {
+          fs.renameSync(path.join(_dirname, actual), path.join(_dirname, folder));
+          console.log(`✅ Renamed 'actual' to '{folder}'`);
+        } catch (err) {
+          console.error(`❌ Failed to rename '${actual}':`, err.message);
+        }
+      }
+    }
+  });
+});
+```
+
+ 
