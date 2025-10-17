@@ -24,4 +24,6 @@ for folder in core modules data config routes utils assets public; do
 done
 
 echo "✅ Prestart validation complete. System structure aligned."
+
+chmod +x prestart.sh
 ```
