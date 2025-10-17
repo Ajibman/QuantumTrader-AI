@@ -1,3 +1,5 @@
+'''js
+
 // validateCoreIntegration.js
 
 const fs = require('fs');
