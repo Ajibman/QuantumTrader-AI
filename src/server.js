@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');  // optional logger
 const cors = require('cors');
+require('./collab/index.js'); // Initialize collaboration before other modules load
 
 // Import route modules
 const traderRoutes = require('./routes/traderRoutes');
