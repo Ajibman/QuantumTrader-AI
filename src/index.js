@@ -25,4 +25,15 @@ collaborators.forEach(({ name, path: relPath }) => {
 });
 
 console.log('✅ QonexAI Node.js Index initialized. All assigned modules managed.');
-```
+
+const collab = {
+  name: 'QonexAI',
+  status: true,
+  timestamp: new Date(),
+  version: '1.0.0',
+  note: 'Core collaboration link established successfully'
+};
+
+console.log(`[Collab] ✅ ${collab.name} collaboration core active.`);
+module.exports = collab;
+'''
