@@ -1,32 +1,27 @@
 '''js
 
-prestart.sh#!/data/data/com.termux/files/usr/bin/bash
+echo "🧭 Prestart Hook Initialized..."
 
-echo "🧭 Starting QonexAI Pre-Launch Structure Check..."
+Define correct entry path
+ENTRY_PATH="QonexAI/src/server.js"
 
-Enforce single entry point
-ENTRY_FILE="src/server.js"
-
-if [ -f "ENTRY_FILE" ]; then
-  echo "✅ Entry point confirmed:ENTRY_FILE"
+Check if server.js exists at correct location
+if [ -f "ENTRY_PATH" ]; then
+  echo "✅ Located server.js atENTRY_PATH"
 else
-  echo "❌ Entry file missing or mislocated: ENTRY_FILE"
+  echo "❌ server.js not found at ENTRY_PATH"
+  echo "Please ensure all root files are properly placed under QonexAI/src/"
   exit 1
 fi
 
-Confirm only one valid route into the app
-echo "🔒 Enforcing single entry route viaENTRY_FILE"
-
-List of essential folders to verify
-ESSENTIAL_FOLDERS=("src" "assets" "public" "core" "routes" "models" "config" "controllers")
-
-for folder in "ESSENTIAL_FOLDERS[@]"; do
-  if [ -d "folder" ]; then
-    echo "📁 Found folder: folder"
+Check for key top-level folders
+for folder in core modules data config routes utils assets public; do
+  if [ -d "QonexAI/folder" ]; then
+    echo "📁 folder folder found"
   else
-    echo "⚠️ Missing folder:folder"
+    echo "⚠️folder folder is missing from QonexAI/"
   fi
 done
 
-echo "🚀 QonexAI is ready for launch through $ENTRY_FILE"
+echo "✅ Prestart validation complete. System structure aligned."
 ```
