@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify User - QonexAI</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .captcha-box { margin-top: 20px; }
+    input { padding: 8px; font-size: 16px; }
+    button { padding: 8px 12px; margin-top: 10px; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>Verify You're Human</h2>
+  <p>Please solve this simple challenge to continue.</p>
+
+  <div class="captcha-box">
+    <p id="challenge"></p>
+    <input type="text" id="userInput" placeholder="Your answer">
+    <button onclick="checkAnswer()">Submit</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const num1 = Math.floor(Math.random() * 10 + 1);
+    const num2 = Math.floor(Math.random() * 10 + 1);
+    const answer = num1 + num2;
+
+   document.getElementById('challenge').innerText = `What is num1 +{num2}?`;
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById('userInput').value);
+      const result = document.getElementById('result');
+      if (userAnswer === answer) {
+
+result.innerText = "✔️ Verified. You may continue.";
+        result.className = "success";
+        // You can redirect from here if needed
+      } else {
+        result.innerText = "❌ Incorrect. Try again.";
+        result.className = "error";
+      }
+    }
+  </script>
+</body>
+</html>
+```
