@@ -92,7 +92,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 // If using `views` for templating
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-```
    
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/admin', adminRoutes);
@@ -204,8 +203,9 @@ function verifyUser(data) {
   return data && data.token === "VALID_USER";
 }
 { token: "VALID_USER" }`
+
 ```
-// Example trigger
+//  trigger
 CPilotResponder({ type: 'status', status: 'QonexAI Active' });
 
 // On shutdown event
