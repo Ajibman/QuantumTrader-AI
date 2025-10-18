@@ -9,6 +9,26 @@ require('./collab/index.js'); // Initialize collaboration before other modules l
 
 const express = require('express');
 const path = require('path');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Import core engine module
+const coreEngine = require(path.join(__dirname, '..', 'SRC', 'core', 'engine.js'));
+
+// Example route using coreEngine
+app.get('/api/data', (req, res) => {
+  // Assume coreEngine has a function getData()
+  const data = coreEngine.getData ? coreEngine.getData() : { error: 'getData not implemented' };
+  res.json(data);
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+const express = require('express');
+const path = require('path');
 const session = require('express-session');
 
 const app = express();
