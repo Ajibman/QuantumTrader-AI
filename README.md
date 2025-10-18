@@ -5,7 +5,7 @@ QonexAI network is an array of concepts with plugin lifelong and historical expe
 
 A game changer expected to reach everywhere on the planet.
  
-QonexAI is crafted with global peace, cosmic logic and ethics in mind 24x7. Knowing that nothing, repeat nothing, is ever possible without a peaceful atmosphere. #peace
+QonexAI is crafted with global peace, cosmic logic and ethics in mind 24x7. Knowing that nothing, repeat nothinga is ever possible without a peaceful atmosphere. #peace
 
 ```Ownership/Identity
 Identity & Ownership
