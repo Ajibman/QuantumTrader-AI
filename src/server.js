@@ -5,6 +5,68 @@ const path = require('path');
 const morgan = require('morgan');  // optional logger
 const cors = require('cors');
 require('./collab/index.js'); // Initialize collaboration before other modules load
+```
+
+const express = require('express');
+const path = require('path');
+const session = require('express-session');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'qonexai-session-secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'assets')));
+
+// CAPTCHA verification middleware
+app.use((req, res, next) => {
+  const isVerified = req.session.isHuman;
+
+  // Allow access to CAPTCHA page and static assets without blocking
+  if (req.path === '/verify-user' || req.path === '/submit-verification' || req.path.startsWith('/assets')) {
+    return next();
+  }
+
+  // If not verified, redirect to CAPTCHA
+  if (!isVerified) {
+    return res.redirect('/verify-user');
+  }
+
+  next();
+});
+
+// Routes
+app.get('/verify-user', (req, res) => {
+  res.sendFile(path.join(__dirname, 'assets', 'verify-user.html'));
+});
+
+app.post('/submit-verification', (req, res) => {
+  const { userResponse } = req.body;
+// Basic check for demonstration (replace with real CAPTCHA logic)
+  if (userResponse === 'i-am-human') {
+    req.session.isHuman = true;
+    return res.redirect('/');
+  }
+
+  res.send('Verification failed. Please try again.');
+});
+
+app.get('/', (req, res) => {
+  res.send('Welcome to QonexAI!');
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 // Import route modules
 const traderRoutes = require('./routes/traderRoutes');
