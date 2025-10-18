@@ -19,6 +19,7 @@ This project, originally known as *QuantumTrader-AI*, is equivalently recognized
 - *EkiNetAI*  
 - *OriNetAI*  
 - *AjibmanAI*
+- *AjibmannAI*
 - *BusinessAI*
 
 All these identities are unified under a single trademark intention and operational umbrella. For details:
