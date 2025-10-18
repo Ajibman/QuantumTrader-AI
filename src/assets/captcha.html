@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Access - QonexAI</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Please verify you are human</h2>
+  <form action="/verify-captcha" method="POST">
+    <div class="g-recaptcha" data-sitekey="*YOUR_SITE_KEY_HERE*"></div>
+    <br />
+    <button type="submit">Continue</button>
+  </form>
+</body>
+</html>
+```
