@@ -8,6 +8,17 @@ require('./collab/index.js'); // Initialize collaboration before other modules l
 ```
 
 const express = require('express');
+const app = express();
+
+// Community Intelligence Modules
+const coopsRouter = require('./core/community/coopsRouter');
+const vigilanteRouter = require('./core/community/vigilanteRouter');
+
+// Mounting Routes
+app.use('/cooperatives', coopsRouter); // Backbone
+app.use('/vigilante', vigilanteRouter); // Dependents
+
+const express = require('express');
 const path = require('path');
 
 const app = express();
