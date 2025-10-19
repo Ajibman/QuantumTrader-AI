@@ -1,30 +1,63 @@
 #!/bin/bash
 # ==============================================================
-# POST-COMMIT HOOK → Auto Sync for QonexAI ↔ QuantumTrader-AI
-# Author: Olagoke Ajibulu
-# Purpose: Automatically mirror repositories after every commit
+# Qonex↔QuantumTrader-AI Auto-Healing Sync Bridge
+# --------------------------------------------------------------
+# Architect: Olagoke Ajibulu
+# Module: Medusa™ Auto-Heal Extension
+# Purpose: Ensure continuous bi-directional repo parity
 # ==============================================================
 
-# Define project root relative to this hook
-PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-SYNC_SCRIPT="$PROJECT_ROOT/scripts/qonex_sync.sh"
+set -e
 
-# Safety check
-if [ ! -f "$SYNC_SCRIPT" ]; then
-  echo "⚠️  Sync script not found at $SYNC_SCRIPT"
-  echo "Please ensure qonex_sync.sh exists and is executable."
-  exit 1
+# 🔍 CONFIGURATION
+QONEX_PATH="$HOME/QonexAI"
+QT_PATH="$HOME/QuantumTrader-AI"
+LOG_FILE="$HOME/.medusa_sync.log"
+MAX_RETRIES=7
+SLEEP_INTERVAL=15  # seconds between retries
+
+timestamp() {
+  date +"[%Y-%m-%d %H:%M:%S]"
+}
+
+echo "$(timestamp) 🧠 Medusa™ Sync Initiated..." >> "$LOG_FILE"
+
+# 🌀 Auto-Heal Loop
+attempt=1
+while [ $attempt -le $MAX_RETRIES ]; do
+  echo "$(timestamp) Attempt $attempt of $MAX_RETRIES..." >> "$LOG_FILE"
+
+  # === Step 1: Sync QonexAI → QuantumTrader-AI ===
+  rsync -av --delete --exclude='.git' "$QONEX_PATH/" "$QT_PATH/" >> "$LOG_FILE" 2>&1 || true
+
+  # === Step 2: Commit and Push to GitHub ===
+  cd "$QT_PATH" || exit
+  git add .
+  git commit -m "🧩 Auto-sync via Medusa™ (attempt $attempt)" >> "$LOG_FILE" 2>&1 || true
+
+  if git push origin main >> "$LOG_FILE" 2>&1; then
+    echo "$(timestamp) ✅ Sync successful on attempt $attempt." >> "$LOG_FILE"
+    break
+  else
+    echo "$(timestamp) ⚠️ Sync failed. Retrying in $SLEEP_INTERVAL seconds..." >> "$LOG_FILE"
+    sleep $SLEEP_INTERVAL
+    ((attempt++))
+  fi
+done
+
+if [ $attempt -gt $MAX_RETRIES ]; then
+  echo "$(timestamp) ❌ Medusa™ exhausted retries. Manual check required." >> "$LOG_FILE"
+else
+  echo "$(timestamp) 🌍 Repositories synchronized successfully." >> "$LOG_FILE"
 fi
 
-# Run the sync bridge
-echo "🔄 Running automatic Qonex↔QuantumTrader sync..."
-bash "$SYNC_SCRIPT"
-
-# Optional: notify via terminal or system log
-if command -v notify-send &>/dev/null; then
-  notify-send "Qonex↔QuantumTrader Sync Complete" "Repositories are now mirrored."
-else
-  echo "✅ Sync complete."
+# 💤 Optional: silent background healing (self-loop)
+if [ "$1" == "--daemon" ]; then
+  while true; do
+    sleep 300
+    bash "$0"
+  done &
+  disown
 fi
 
 chmod +x scripts/qonex_sync.sh
