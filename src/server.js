@@ -309,6 +309,9 @@ app.listen(PORT, () => {
 connectQuantumAPIs();
 initializeLiveBridges();
 
+// =============================
+// END OF SERVER.JS — QT AI MASTER FLOW
+// =============================
 // Stage VI: Final Integration Layer
 // -------------------------
 
@@ -361,9 +364,6 @@ app.listen(PORT, () => {
   console.log(`🌍 QonexAI Server running on port ${PORT}`);
   console.log("💫 Awaiting module integration (Stage II)...");
 });
-// =============================
-// END OF SERVER.JS — QT AI MASTER FLOW
-// =============================
 
 // QonexAI Test Protocol Suite (TPS)
 runSystemDiagnostics();
@@ -429,7 +429,7 @@ async function runDiagnostics() {
   }
 
   // Ethics and Security self-test
-  result.V.peaceLock = quantumBalance.peace > 0.95 ? "Stable" : "Unstable";
+  result.V.peaceLock = quantumBailance.peace > 0.95 ? "Stable" : "Unstable";
   result.VI.ethicalSync = quantumBalance.deviation < 0.001 ? "Aligned" : "Adjusting";
 
   const pass = Object.values(result).every(
