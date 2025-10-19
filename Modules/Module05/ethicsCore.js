@@ -1,6 +1,6 @@
 ```js
 // modules/Module05/ethicsCore.js
-// Author: Olagoke Ajibulu
+// Architect: Olagoke Ajibulu
 // Module05: Ethics Core — Phase 5 Activation (Mar 01, 2026)
 
 function activateEthicsCore() {
