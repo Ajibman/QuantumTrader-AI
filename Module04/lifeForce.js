@@ -1,6 +1,6 @@
 ```js
 // modules/Module04/lifeForce.js
-// Author: Olagoke Ajibulu
+// Architect: Olagoke Ajibulu
 // Module04: Life Force — Phase 4 Activation (Feb 01, 2026)
 
 function activateLifeForce() {
