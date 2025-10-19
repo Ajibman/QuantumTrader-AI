@@ -1,4 +1,4 @@
-`js
+```js
 const express = require('express');
 const router = express.Router();
 
@@ -18,4 +18,5 @@ router.post('/receive-support', (req, res) =>
 });
 
 module.exports = router;
-```
+
+```gg
