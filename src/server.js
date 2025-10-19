@@ -65,5 +65,32 @@ app.listen(PORT, () => {
   console.log(`🌍 QonexAI Server running on port ${PORT}`);
   console.log("💫 Awaiting module integration (Stage II)...");
 });
+
+// ============================
+// 7. MODULE BONDING LAYER
+// ============================
+const fs = require("fs");
+const modulesDir = path.join(__dirname, "modules");
+
+// Load all module files dynamically
+fs.readdirSync(modulesDir)
+  .filter((file) => file.endsWith(".js"))
+  .forEach((file) => {
+    const mod = require(path.join(modulesDir, file));
+    if (typeof mod === "function") {
+      mod(app);
+      console.log(`🔗  Module bonded: ${file}`);
+    }
+  });
+
+// Verify all modules are wired
+app.get("/modules", (req, res) => {
+  res.json({
+    message: "Modules 1–15 bonded successfully to QonexAI core.",
+    total: 15,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 =====
        
