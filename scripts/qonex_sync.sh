@@ -66,3 +66,5 @@ echo "✅ Dual sync completed successfully!"
 echo "   • QonexAI ↔ QuantumTrader-AI parity maintained"
 echo "   • Timestamp: $TIMESTAMP"
 echo "   • Commit recorded in both repositories"
+
+chmod +x scripts/qonex_sync.sh
