@@ -60,4 +60,5 @@ if [ "$1" == "--daemon" ]; then
   disown
 fi
 
+chmod +x .git/hooks/post-commit
 chmod +x scripts/qonex_sync.sh
