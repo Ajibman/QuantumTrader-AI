@@ -1,419 +1,69 @@
-```// server.js
+// server.js
+// Quantum Trader AI (QT AI) - Core Server Reconstruction
+// Project: QonexAI
+// Architect: Olagoke Ajibulu
+// Purpose: Foundational Express Server with Medusa™ and Quantum API placeholders
+// Date: Stage I - October 2025
 
-const express = require('express');
-const path = require('path');
-const morgan = require('morgan');  // optional logger
-const cors = require('cors');
-require('./collab/index.js'); // Initialize collaboration before other modules load
-```
-
-const express = require('express');
-const app = express();
-
-// Community Intelligence Modules
-const coopsRouter = require('./core/community/coopsRouter');
-const vigilanteRouter = require('./core/community/vigilanteRouter');
-
-// Mounting Routes
-app.use('/cooperatives', coopsRouter); // Backbone
-app.use('/vigilante', vigilanteRouter); // Dependents
-
-const express = require('express');
-const path = require('path');
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Import core engine module
-const coreEngine = require(path.join(__dirname, '..', 'SRC', 'core', 'engine.js'));
-
-// Example route using coreEngine
-app.get('/api/data', (req, res) => {
-  // Assume coreEngine has a function getData()
-  const data = coreEngine.getData ? coreEngine.getData() : { error: 'getData not implemented' };
-  res.json(data);
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
-const express = require('express');
-const path = require('path');
-const session = require('express-session');
-
+const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ============================
+// 1. SYSTEM CORE
+// ============================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: 'qonexai-session-secret',
-  resave: false,
-  saveUninitialized: true
-}));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'assets')));
+// Serve static files (public assets)
+app.use(express.static(path.join(__dirname, "public")));
 
-// CAPTCHA verification middleware
-app.use((req, res, next) => {
-  const isVerified = req.session.isHuman;
+// ============================
+// 2. MODULE HOOKS (Placeholder Links)
+// ============================
+// These will connect to Modules 01–15 later in Stage II
+// Example structure for modular attachment
+const modulesPath = path.join(__dirname, "modules");
+app.locals.modulesPath = modulesPath;
 
-  // Allow access to CAPTCHA page and static assets without blocking
-  if (req.path === '/verify-user' || req.path === '/submit-verification' || req.path.startsWith('/assets')) {
-    return next();
-  }
-
-  // If not verified, redirect to CAPTCHA
-  if (!isVerified) {
-    return res.redirect('/verify-user');
-  }
-
-  next();
+// ============================
+// 3. HEALTH ROUTE (System Ping)
+// ============================
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "active",
+    message: "Quantum Trader AI (QonexAI) server online.",
+    timestamp: new Date().toISOString(),
+  });
 });
 
-// Routes
-app.get('/verify-user', (req, res) => {
-  res.sendFile(path.join(__dirname, 'assets', 'verify-user.html'));
+// ============================
+// 4. FALLBACK (Homepage / Index)
+// ============================
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post('/submit-verification', (req, res) => {
-  const { userResponse } = req.body;
-// Basic check for demonstration (replace with real CAPTCHA logic)
-  if (userResponse === 'i-am-human') {
-    req.session.isHuman = true;
-    return res.redirect('/');
-  }
-
-  res.send('Verification failed. Please try again.');
+// ============================
+// 5. MEDUSA™ PLACEHOLDER (Auto-Regeneration Hook)
+// ============================
+// Medusa™ will silently monitor and restart essential services when triggered.
+// Actual logic will be wired in Stage III.
+app.get("/medusa/ping", (req, res) => {
+  res.json({
+    service: "Medusa™ Self-Healing Node",
+    status: "standby",
+    mode: "silent",
+  });
 });
 
-app.get('/', (req, res) => {
-  res.send('Welcome to QonexAI!');
-});
-
-// Start server
+// ============================
+// 6. SERVER STARTUP
+// ============================
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🌍 QonexAI Server running on port ${PORT}`);
+  console.log("💫 Awaiting module integration (Stage II)...");
 });
-
-// Import route modules
-const traderRoutes = require('./routes/traderRoutes');
-const socialRoutes = require('./routes/socialRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const contributionRoutes = require('./routes/contributionRoutes');
-// Add more as needed (philanthropy, cooperatives, cpilot etc.)
-
-const app = express();
-const PORT = process.env.PORT || 7070;
-
-// === Middleware ===
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));  // optional HTTP request logging
-
-// === Static & Public Assets ===
-// Serve UI templates, modal HTML, images, CSS, JS, etc.
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// If using `views` for templating
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-   
-const adminRoutes = require('./routes/adminRoutes');
-app.use('/admin', adminRoutes);
-
-// inside server.js or a handler module
-const { tradeEmitter } = require('./core/trade/traderLogic');
-const { handleProfitConsent } = require('./core/logic/fundAllocator');
-
-tradeEmitter.on('profitTaken', async ({ userId, profit }) => {
-  console.log(`Profit of 
-    
-{profit} taken by User ${userId}`);
-  await handleProfitConsent(userId, profit); // calls logic to check consent & allocate
-});
-
-const socialResponsocialResponsibilityRoutessibilityRoutes = require('./routes/socialResponsibility');
-app.use('/api/social-responsibility', socialResponsibilityRoutes);
-
-const uiRoutes = require('./routes/uiRoutes');
-app.use('/ui', uiRoutes);
-
-app.use('/api/social', socialRoutes);
-
-const { cpilotEvent } = require('./core/cpilot/cpilotCore');
-
-const { CPilotResponder } = require('./core/assist/cpilot/cpilotCore');
-
-app.use('/cpilot', (req, res) => {
-  const status = cpilotCore.status();
-  const mission = missionControl.currentMission();
-  const flight = flightManager.track(req.body);
-
-  res.json({ status, mission, flight });
-});
-
-const in = require('./core/cpilot/cpilotCore');
-const flightManager = require('./core/cpilot/flightManager');
-const missionControl = require('./core/cpilot/missionControl');
-    
-app.post('/verify', (req, res) => {
-  const isVerified = verifyUser(req.body);
-  
-  if (!isVerified) {
-    const blocked = trackAttempts(req);
-    if (blocked) {
-      reportThreat(req); // Send to Internet Tiger
-      return res.status(429).json({ error: "Verification failed multiple times. Authorities alerted." });
-      }
-        
-    return res.status(401).json({ error: "Verification failed." });
-  }
-
-  res.status(200).json({ message: "Access granted" });
-});
-
-const { grantAccess } = require('./core/lab/accessGate');
-
-// Use after user is verified
-const accessResult = grantAccess(user);
-if (!accessResult.allowed) {
-  return res.status(403).json({ error: accessResult.reason });
-}
-
-cpilotEvent('FAILED_VERIFICATIONS', { user: req.body.username });
-
-  // Simulated check for GPS header or location data
-  if (!req.headers['x-user-location']) {
-    return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
-  }
-
-  const blocked = trackAttempts(req);
-  if (blocked) {
-    return res.status(429).json({ message: "Too many failed attempts. Contact Support." });
-  }
-
-  next();
-});
-
-const geoip = require('geoip-lite');
-const shutdownQonexAI = require('./core/security/shutdown');
-const { trackAttempts, reportThreat, checkProximity } = require('./core/security/securityManager');
-
-const handleRegistration = require('./core/lab/registration');
-const handleVerification = require('./core/lab/verifyUser');
-
-const express = require('express');
-const router = express.Router();
-
-router.get('/', (req, res) => {
-  res.json({ message: "AI Assist Module Active" });
-});
-
-module.exports = { router }
-
-if (!req.headers['x-user-location']) {
-  cpilotEvent('GPS_DISABLED', { ip: req.ip });
-  return res.status(403).json({ error: "GPS/GNS must be enabled to use QonexAI." });
-}
-
-const proximity = checkProximity(userLocation, agentsList);
-if (proximity.shutdown) {
-  cpilotEvent('PROXIMITY_BREACH', { location: userLocation });
-  return res.status(403).json({ error: "Access denied. Proximity alert triggered." });
-}
-
-// Mock verification function
-function verifyUser(data) {
-// Example: Assume a token "VALID_USER" is required for access
-  return data && data.token === "VALID_USER";
-}
-{ token: "VALID_USER" }`
-
-```
-//  trigger
-CPilotResponder({ type: 'status', status: 'QonexAI Active' });
-
-// On shutdown event
-CPilotResponder({ type: 'shutdown' });
-
-// On system alert
-CPilotResponder({ type: 'alert', message: 'Unauthorized access attempt' });
-
-// POST /verify endpoint
-app.post('/verify', (req, res) => {
-  const isVerified = verifyUser(req.body);
-
-  if (!isVerified) {
-    return res.status(401).json({ error: "Verification failed." });
-  }
-
-  res.status(200).json({ message: "Access granted" });
-});
-
-
-// 🧠 AI Support Modules
-const userAssist = require('./core/ai/userAssist');
-const gptSentinel = require('./core/ai/gptSentinel');
-
-// === 🧠 INIT COMMIT INFO ===
-try {
-  const child_process = require('child_process');
-  const version = child_process.execSync('git rev-parse --short HEAD').toString().trim();
-  console.log(`🧠 QT AI server.js running at commit: ${version}`);
-} catch (e) {
-  console.log("Commit info unavailable.");
-}
-
-// === 🗓️ Timeline Phases ===
-const PHASES = {
-  dormantUntil: new Date('2025-11-09T00:00:00Z'),
-  phase1: new Date('2025-11-09T00:00:00Z'),   // TraderLab
-  phase2: new Date('2025-11-16T00:00:00Z'),   // VisitorEngine
-  phase3: new Date('2025-11-23T00:00:00Z'),   // Mentor
-  phase4: new Date('2025-12-01T00:00:00Z')    // SignalTools
-};
-
-const now = new Date();
-
-// === 💤 DORMANT MODE ===
-if (now < PHASES.dormantUntil) {
-  console.log("🕊️ QonexAI is dormant until November 09, 2025.");
-  process.exit();
-}
-
-// === 🚀 MODULE LOADING ===
-if (now >= PHASES.phase1) {const  initTraderLab  = require('./core/lab/traderLab');
-  initTraderLab();
-
-
-if (now >= PHASES.phase2) 
-  const  initVisitorEngine  = require('./core/visitor/visitorEngine');
-  initVisitorEngine();
-
-if (now >= PHASES.phase3) 
-  const  initMentor  = require('./core/mentor/mentor');
-  initMentor();
-
-
-if (now >= PHASES.phase4) 
-  const  initSignalTools  = require('./core/signal/signalTools');
-  initSignalTools();
-
- = ==📁 STATIC + ROUTES ===
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-
-
-// === 🎛️ Phase Modules Activation ===
-const traderLab = require('./core/lab/traderLab');
-
-const now = new Date();
-
-if (now >= PHASES.phase1) {
-  console.log("✅ Phase 1: TraderLab™ activated.");
-  traderLab.init();
-}
-
-if (now >= PHASES.phase2) {
-  console.log("✅ Phase 2: Visitor Engine activated.");
-  // require and init visitor engine
-}
-
-if (now >= PHASES.phase3) {
-  console.log("✅ Phase 3: Mentor, Network & Signal Tools activated.");
-  // require and init mentor, network, signal tools
-}
-
-  // === 🎓 TraderLab Graduation Reward Hook ===
-const traderLab = require('./core/lab/traderLab');
-
-app.post('/traderlab/graduate', async (req, res) => {
-  try {
-    const result = await traderLab.evaluateGraduation(req.body);
-    res.json(result);
-  } catch (err) {
-    console.error("TraderLab error:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-  
-const labEntryFee = 5000; // ₦5000 entry fee
-
-class TraderLab {
-  constructor() {
-    this.activeUsers = new Map(); // userId -> { paidEntryFee: bool, progress, etc }
-  }
-
-  async payEntryFee(userId, amount) {
-    if (amount < labEntryFee) {
-      return { success: false, message: `Entry fee is ₦${labEntryFee}. Please pay the full amount.` };
-    }
-    // Mark user as paid
-    this.activeUsers.set(userId, { paidEntryFee: true, progress: 0 });
-    return { success: true, message: "Entry fee received. Welcome to TraderLab™!" };
-  }
-
-  canAccessLab(userId) {
-    const user = this.activeUsers.get(userId);
-    return user?.paidEntryFee === true;
-  }
-
-  // Existing methods...
-}
-
-const TraderLab = require('./core/lab/traderLab');
-const traderLab = new TraderLab();
-
-// Endpoint to pay entry fee
-app.post('/pay-entry-fee', (req, res) => {
-  const { userId, amount } = req.body;
-  if (!userId || typeof amount !== 'number') {
-    return res.status(400).json({ message: "userId and numeric amount are required." });
-  }
-  const result = traderLab.payEntryFee(userId, amount);
-});
-
-// Middleware to protect TraderLab routes
-app.use('/traderlab', (req, res, next) => {
-
-const userId = req.headers['x-user-id'];
-  
-// Or adapt to your auth method
-  if (!userId || !traderLab.canAccessLab(userId)) {
-    return res.status(403).json({ message: "Access denied. Please pay the ₦5000 entry fee to access TraderLab™." });
-  }
-  next();
-});
-
-setInterval(() => {
-  const proximity = checkProximity(); // Dummy check for now
-  if (proximity <=to 50) {
-    console.log("Agent detected nearby. Shutting down QonexAI.");
-    shutdownQonexAI();
-  }
-}, 15000); // Every 15 secs
-                           
-const uiRouter = require('./core/ui/uiRouter');
-app.use('/ui', uiRouter);  
-
-// 📝 TraderLab™ Registration Endpoint
-app.post('/register', handleRegistration);
-
-// ✅ TraderLab™ User Verification Endpoint
-app.post('/verify-user', handleVerification);
-                           
-// Existing TraderLab routes go here (e.g., app.get('/traderlab/someEndpoint', ...))                    
- ommit.
-// === ✅ SERVER START ===
-app.listen(PORT, () => 
-  console.log(`🚀 QonexAI server live on port{PORT}`);
-});
-```
+=====
+       
