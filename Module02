@@ -1,6 +1,6 @@
 ```js
 // modules/Module02/visitorEngine.js
-// Author: Olagoke Ajibulu
+// Architect: Olagoke Ajibulu
 // Module 02: Visitor Engine — Phase 2 Activation (Dec 01, 2025)
 
 function activateVisitorEngine() {
