@@ -1,4 +1,5 @@
- // server.js
+#!/usr/bin/env node
+// server.js
  /**
  * QuantumTrader AI – server.js
  * Master Runtime Build – Stage VI Final Integration Layer
