@@ -27,6 +27,62 @@ const PORT  = process.env.PORT || 7070;
 
 const traderLab = new TraderLab();
 
+// 🧠 QonexAI Core Governance — CCLM²™ Supervisor Layer Integration
+// (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI Unified Build
+
+const fs = require("fs");
+const path = require("path");
+
+// Load CCLM² Supervision Core
+const { CCLM2 } = require("./src/core/CCLM2/coreGovernor");
+
+// Load GPT-01 (Cognitive Kernel)
+const GPT01 = require("./src/core/modules/market/gpt01");
+
+// Initialize CCLM² Supervision Layer
+(async () => {
+  try {
+    console.log("🧠 Initializing CCLM² Supervision Layer...");
+    const cclm = new CCLM2({
+      ethicsMode: "quantum",
+      auditLog: path.join(__dirname, "logs/system.log"),
+      supervision: true,
+    });
+
+    // Attach Module01 to CCLM² as the root cognitive anchor
+    const module01Path = path.join(__dirname, "src/core/modules/market/");
+    const module01 = require(module01Path);
+
+    console.log("🔗 Establishing handshake between CCLM² → Module01 → GPT-01...");
+    const handshake = await cclm.register({
+      id: "GPT-01",
+      name: "Market Data Aggregator",
+      module: module01,
+      kernel: GPT01,
+      level: "root",
+      active: true,
+    });
+
+    // Confirm operational link
+    if (handshake.status === "ok") {
+      console.log("✅ CCLM² Supervision Layer active.");
+      console.log("🧩 Module01 (GPT-01) anchored successfully under CCLM².");
+    } else {
+      console.warn("⚠️ Handshake anomaly detected:", handshake);
+    }
+
+    // Begin watching subordinate modules
+    await cclm.observeAll("src/core/modules/");
+    console.log("👁 CCLM² now monitoring subordinate modules (02–15).");
+  } catch (err) {
+    console.error("❌ Error initializing CCLM² Supervision Layer:", err);
+    fs.appendFileSync(
+      path.join(__dirname, "logs/system.log"),
+      `[${new Date().toISOString()}] ERROR: ${err}\n`
+    );
+  }
+})();
+
 //community, /cooperative, /ngo - to be added/();
 
 // === Security Loop: Proximity Monitoring & Auto‑Shutdown ===
