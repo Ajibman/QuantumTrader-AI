@@ -3,10 +3,11 @@
  * QuantumTrader AI – server.js
  * Master Runtime Build – Stage VI Final Integration Layer
  * Last Recovery Point: TermuxInitBridge.sh
- //Entry point for QonexAI — Neural Exchange System AI  
- // Effective: November 09 2025 launch workflow  
  // Architect: Ajibmann / QuantumTrader‑AI => QonexAI
  /*
+ 
+ //Entry point for QonexAI — Neural Exchange System AI   
+ // Effective: November 09 2025 launch workflow  
 
 const express = require('express');
 const path    = require('path');
