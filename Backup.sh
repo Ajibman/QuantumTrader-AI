@@ -23,3 +23,5 @@ tar -czf "$BACKUP_PATH/QT_AI_Backup_$TIMESTAMP.tar.gz" \
 # === LOG OUTPUT ===
 echo "🧠 Local backup created at: $BACKUP_PATH/QT_AI_Backup_$TIMESTAMP.tar.gz"
 echo "✅ Backup complete — ready for recovery if needed."
+
+chmod +x ~/QonexAI/backup.sh
