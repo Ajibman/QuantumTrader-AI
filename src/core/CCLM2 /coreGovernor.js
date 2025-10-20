@@ -1,23 +1,26 @@
+
 #!/usr/bin/env node
- /**
- *QonexAI server.js
+/**
+ * QonexAI server.js
  * QuantumTrader AI – server.js
  * Master Runtime Build – Stage VI Final Integration Layer
  * Last Recovery Point: TermuxInitBridge.sh
- // Architect: Ajibman / QuantumTrader‑AI => QonexAI
- /*
- 
- // Entry point for QonexAI — Neural Exchange System AI   
- // Effective: November 09 2025 launch workflow  
+ * Architect: Ajibman / QuantumTrader-AI => QonexAI
+ *
+ * Entry point for QonexAI — Neural Exchange System AI
+ * Effective: November 09 2025 launch workflow
+ */
 
+// =============================
+// 0. CORE DEPENDENCIES
+// =============================
 const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
 
 const { checkProximity }    = require('./core/security/proximityMonitor');
 const { shutdownQonexAI }   = require('./core/security/shutdown');
-const { trackAttempts,
-        reportThreat }      = require('./core/security/securityManager');
+const { trackAttempts, reportThreat } = require('./core/security/securityManager');
 const { handleRegistration } = require('./core/lab/registration');
 const { handleVerification } = require('./core/lab/verifyUser');
 const { router: uiRouter }   = require('./core/ui/uiRouter');
@@ -31,16 +34,8 @@ const traderLab = new TraderLab();
 // 🧠 QonexAI Core Governance — CCLM²™ Supervisor Layer Integration
 // (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI Unified Build
 
-const fs   = require("fs");
-const path = require("path");
-
-// ✅ Corrected path (remove extra “src/”)
 const { CCLM2 } = require("./core/CCLM2/coreGovernor");
-
-// ✅ GPT-01 (Cognitive Kernel) should not reload the same file twice
-// If GPT-01 is a separate kernel file, import it directly. 
-// Otherwise, reference it correctly:
-const GPT01 = require("./core/CCLM2/GPT01");
+const GPT01     = require("./core/CCLM2/GPT01");
 
 // ✅ Initialize CCLM² Supervision Layer
 (async () => {
@@ -52,7 +47,6 @@ const GPT01 = require("./core/CCLM2/GPT01");
       supervision: true,
     });
 
-    // ✅ Corrected module path (remove extra 'src/')
     const module01Path = path.join(__dirname, "core/modules/market/");
     const module01 = require(module01Path);
 
@@ -66,27 +60,6 @@ const GPT01 = require("./core/CCLM2/GPT01");
       active: true,
     });
 
-    console.log("✅ CCLM² supervision layer active with Module01 and GPT-01.");
-  } catch (err) {
-    console.error("❌ Error initializing CCLM² Supervision Layer:", err);
-  }
-})();
-  
-  // Attach Module01 to CCLM² as the root cognitive anchor
-    const module01Path = path.join(__dirname, "src/core/modules/market/");
-    const module01 = require(module01Path);
-
-    console.log("🔗 Establishing handshake between CCLM² → Module01 → GPT-01...");
-    const handshake = await cclm.register({
-      id: "GPT-01",
-      name: "Market Data Aggregator",
-      module: module01,
-      kernel: GPT01,
-      level: "root",
-      active: true,
-    });
-
-    // Confirm operational link
     if (handshake.status === "ok") {
       console.log("✅ CCLM² Supervision Layer active.");
       console.log("🧩 Module01 (GPT-01) anchored successfully under CCLM².");
@@ -95,8 +68,9 @@ const GPT01 = require("./core/CCLM2/GPT01");
     }
 
     // Begin watching subordinate modules
-    await cclm.observeAll("src/core/modules/");
+    await cclm.observeAll("core/modules/");
     console.log("👁 CCLM² now monitoring subordinate modules (02–15).");
+
   } catch (err) {
     console.error("❌ Error initializing CCLM² Supervision Layer:", err);
     fs.appendFileSync(
@@ -106,9 +80,13 @@ const GPT01 = require("./core/CCLM2/GPT01");
   }
 })();
 
-//community, /cooperative, /ngo - to be added/();
+// === Cooperative / NGO / Community Vigilanté (Hooks Placeholder) ===
+// Future integrations for welfare + early warning network.
+app.use("/community", require("./core/community/vigilante"));
+app.use("/cooperative", require("./core/community/cooperative"));
+app.use("/ngo", require("./core/community/ngo"));
 
-// === Security Loop: Proximity Monitoring & Auto‑Shutdown ===
+// === Security Loop: Proximity Monitoring & Auto-Shutdown ===
 setInterval(async () => {
   try {
     const result = await checkProximity(/* userLocation */, /* agentsList */);
@@ -126,9 +104,6 @@ app.listen(PORT, () => {
   console.log(`🚀 QonexAI server live on port ${PORT}`);
 });
 
-// =============================
-// 0. CORE DEPENDENCIES
-// =============================
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
@@ -144,25 +119,31 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 const PORT = process.env.PORT || 3000;
 
 // =============================
-// 1. CORE ENGINE INITIALIZATION
+// 1. CORE ENGINE INITIALIZATION EXTENSION
 // =============================
+const http = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-console.log("\n🧠 QuantumTrader AI initializing core engines...");
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, { cors: { origin: "*" } });
+
+console.log("\n🧠 QonexAI initializing Stage VI core engines...");
 console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 console.log("Awaiting module bonding...");
 
 // =============================
 // 2. QUANTUM CORE MODULES 01–15
 // =============================
-
-import {
+const {
   Module01, Module02, Module03, Module04, Module05,
   Module06, Module07, Module08, Module09, Module10,
   Module11, Module12, Module13, Module14, Module15
-} from "./modules/index.js";
+} = require("./core/modules");
 
 // Bind runtime registry
 const QTModules = [
@@ -176,16 +157,18 @@ const QTModules = [
 // =============================
 io.on("connection", (socket) => {
   console.log(`Trader connected: ${socket.id}`);
-  socket.on("disconnect", () => console.log(`Trader disconnected: ${socket.id}`));
+  socket.on("disconnect", () =>
+    console.log(`Trader disconnected: ${socket.id}`)
+  );
 });
 
 // =============================
 // 4. ETHICS & CONSCIOUSNESS LAYER
 // =============================
-
-// STAGE VI – OPERATIONAL MODULE:
-// Neural Ethics Controller & Quantum Conscious Balancer
-import { neuralEthicsBalancer, quantumConsciousRegulator } from "./modules/Module06.js";
+const {
+  neuralEthicsBalancer,
+  quantumConsciousRegulator,
+} = require("./core/modules/Module06");
 
 function runEthicsCycle() {
   try {
@@ -202,7 +185,7 @@ function runEthicsCycle() {
 // 5. MODULE ACTIVATION SEQUENCE
 // =============================
 async function activateModules() {
-  console.log("\n⚙️ Activating QuantumTrader modules...");
+  console.log("\n⚙️ Activating QonexAI modules...");
   for (const [i, module] of QTModules.entries()) {
     try {
       await module.activate();
@@ -219,18 +202,16 @@ async function activateModules() {
 // =============================
 async function connectQuantumAPIs() {
   console.log("\n🌐 Establishing Quantum API channels...");
-  // Stub for external data feeds, trading sockets, analytics APIs
   return Promise.resolve(true);
 }
 
 async function initializeLiveBridges() {
   console.log("🔗 Initializing live bridges and Medusa™ self-healing links...");
-  // Simulated Medusa™ handshake
   return Promise.resolve(true);
 }
 
 // =============================
-// 7. STAGE VI – FINAL INTEGRATION LAYER (QonexAI TPS Supervisor)
+// 7. STAGE VI — FINAL INTEGRATION LAYER (TPS Supervisor)
 // =============================
 async function runSystemDiagnostics() {
   console.log("\n🧩 Running system diagnostics...");
@@ -243,7 +224,6 @@ async function runSystemDiagnostics() {
 
 async function validateQuantumPipelines() {
   console.log("🔍 Validating quantum communication pipelines...");
-  // Simulate validation of module interlinks
   return Promise.resolve("Pipelines stable");
 }
 
@@ -252,13 +232,13 @@ async function benchmarkLatency() {
   const start = Date.now();
   await new Promise((res) => setTimeout(res, 100));
   const latency = Date.now() - start;
-  console.log(`Latency benchmark: ${latency}ms`);
+  console.log(`Latency benchmark: ${latency} ms`);
   return latency;
 }
 
 async function logCompletionStatus() {
-  console.log("\n🚀 QuantumTrader AI system startup sequence completed successfully.");
-  console.log("Medusa™ 24×7 self-healing engaged. QT AI is now fully operational.");
+  console.log("\n🚀 QonexAI system startup sequence completed successfully.");
+  console.log("Medusa™ 24×7 self-healing engaged — system fully operational.");
   console.log("✨ Awaiting trader or visitor interaction on the Trading Floor apex...\n");
 }
 
@@ -277,10 +257,10 @@ async function logCompletionStatus() {
   runEthicsCycle();
 
   httpServer.listen(PORT, () => {
-    console.log(`🌍 QuantumTrader AI active on port ${PORT}`);
+    console.log(`🌍 QonexAI active on port ${PORT}`);
   });
 })();
 
 // =============================
-// END OF SERVER.JS — QT AI MASTER FLOW
+// END OF SERVER.JS — QonexAI MASTER FLOW
 // =============================
