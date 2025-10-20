@@ -1,3 +1,5 @@
+#!/bin/bash
+./localBackup.sh
 # Auto-clean old backups (keep last 10)
 BACKUPS_LIST=$(ls -1t "$BACKUP_DIR"/index_*.html 2>/dev/null)
 BACKUP_COUNT=$(echo "$BACKUPS_LIST" | wc -l)
