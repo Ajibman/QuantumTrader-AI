@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// server.js
  /**
+ *QonexAI server.js
  * QuantumTrader AI – server.js
  * Master Runtime Build – Stage VI Final Integration Layer
  * Last Recovery Point: TermuxInitBridge.sh
