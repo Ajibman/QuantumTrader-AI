@@ -17,11 +17,11 @@ const fs      = require('fs');
 const { checkProximity }    = require('./core/security/proximityMonitor');
 const { shutdownQonexAI }   = require('./core/security/shutdown');
 const { trackAttempts,
-        reportThreat }        = require('./core/security/securityManager');
+        reportThreat }      = require('./core/security/securityManager');
 const { handleRegistration } = require('./core/lab/registration');
 const { handleVerification } = require('./core/lab/verifyUser');
 const { router: uiRouter }   = require('./core/ui/uiRouter');
-const TraderLab               = require('./core/lab/traderLab');
+const TraderLab              = require('./core/lab/traderLab');
 
 const app   = express();
 const PORT  = process.env.PORT || 7070;
@@ -31,15 +31,18 @@ const traderLab = new TraderLab();
 // 🧠 QonexAI Core Governance — CCLM²™ Supervisor Layer Integration
 // (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI Unified Build
 
-const fs = require("fs");
-const path = require("path")
-// Load CCLM² Supervision Core
-const { CCLM2 } = require("./src/core/CCLM2/coreGovernor");
+const fs   = require("fs");
+const path = require("path");
 
-// Load GPT-01 (Cognitive Kernel)
-const GPT01 = require("./src/core/CCLM2/coreGovernor.js");
+// ✅ Corrected path (remove extra “src/”)
+const { CCLM2 } = require("./core/CCLM2/coreGovernor");
 
-// Initialize CCLM² Supervision Layer
+// ✅ GPT-01 (Cognitive Kernel) should not reload the same file twice
+// If GPT-01 is a separate kernel file, import it directly. 
+// Otherwise, reference it correctly:
+const GPT01 = require("./core/CCLM2/GPT01");
+
+// ✅ Initialize CCLM² Supervision Layer
 (async () => {
   try {
     console.log("🧠 Initializing CCLM² Supervision Layer...");
@@ -49,7 +52,27 @@ const GPT01 = require("./src/core/CCLM2/coreGovernor.js");
       supervision: true,
     });
 
-    // Attach Module01 to CCLM² as the root cognitive anchor
+    // ✅ Corrected module path (remove extra 'src/')
+    const module01Path = path.join(__dirname, "core/modules/market/");
+    const module01 = require(module01Path);
+
+    console.log("🔗 Establishing handshake between CCLM² → Module01 → GPT-01...");
+    const handshake = await cclm.register({
+      id: "GPT-01",
+      name: "Market Data Aggregator",
+      module: module01,
+      kernel: GPT01,
+      level: "root",
+      active: true,
+    });
+
+    console.log("✅ CCLM² supervision layer active with Module01 and GPT-01.");
+  } catch (err) {
+    console.error("❌ Error initializing CCLM² Supervision Layer:", err);
+  }
+})();
+  
+  // Attach Module01 to CCLM² as the root cognitive anchor
     const module01Path = path.join(__dirname, "src/core/modules/market/");
     const module01 = require(module01Path);
 
