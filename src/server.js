@@ -6,7 +6,7 @@
  // Architect: Ajibmann / QuantumTrader‑AI => QonexAI
  /*
  
- //Entry point for QonexAI — Neural Exchange System AI   
+ // Entry point for QonexAI — Neural Exchange System AI   
  // Effective: November 09 2025 launch workflow  
 
 const express = require('express');
