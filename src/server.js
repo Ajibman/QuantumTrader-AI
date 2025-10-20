@@ -4,7 +4,7 @@
  * QuantumTrader AI – server.js
  * Master Runtime Build – Stage VI Final Integration Layer
  * Last Recovery Point: TermuxInitBridge.sh
- // Architect: Ajibmann / QuantumTrader‑AI => QonexAI
+ // Architect: Ajibman / QuantumTrader‑AI => QonexAI
  /*
  
  // Entry point for QonexAI — Neural Exchange System AI   
