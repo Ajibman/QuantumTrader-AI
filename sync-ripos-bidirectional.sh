@@ -49,3 +49,5 @@ sync_direction "$QT_REPO" "$QX_REPO"
 sync_direction "$QX_REPO" "$QT_REPO"
 
 echo "[$TIMESTAMP] ✅ Bidirectional sync complete!" | tee -a "$SYNC_LOG"
+
+chmod +x sync-repos-bidirectional.sh
