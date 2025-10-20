@@ -1,47 +1,25 @@
-#!/bin/bash
-# ♻️ QonexAI Local Restore Utility
-# (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI Unified Build
+ #!/data/data/com.termux/files/usr/bin/bash
+# ========================================================
+# QonexAI Local Restore Script
+# (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI
+# ========================================================
 
-BACKUP_DIR="./repo2/backup"
+set -e
 
-echo "🧠 QonexAI Restore System"
-echo "========================="
-echo "Available backups:"
-echo
+BACKUP_DIR="$HOME/QonexAI/repo2/backup"
+RESTORE_DIR="$HOME/QonexAI/src"
+LOG_FILE="$HOME/QonexAI/repo2/logs/backup.log"
 
-# List all available backup archives
-ls -1t $BACKUP_DIR/backup_*.tar.gz 2>/dev/null
+mkdir -p "$RESTORE_DIR"
+mkdir -p "$(dirname "$LOG_FILE")"
 
-if [ $? -ne 0 ]; then
-  echo "⚠️ No backups found in $BACKUP_DIR."
+LATEST_BACKUP=$(ls -t "$BACKUP_DIR"/QonexAI_src_backup_*.tar.gz 2>/dev/null | head -n 1)
+
+if [ -z "$LATEST_BACKUP" ]; then
+  echo "[$(date)] ❌ No backup file found in $BACKUP_DIR." | tee -a "$LOG_FILE"
   exit 1
 fi
 
-echo
-read -p "Enter the exact name of the backup file to restore (without path): " BACKUP_FILE
-
-BACKUP_PATH="$BACKUP_DIR/$BACKUP_FILE"
-
-if [ ! -f "$BACKUP_PATH" ]; then
-  echo "❌ Backup file not found: $BACKUP_PATH"
-  exit 1
-fi
-
-echo
-echo "🚧 Restoring backup from: $BACKUP_FILE"
-sleep 2
-
-# Extract files safely
-tar -xzf "$BACKUP_PATH" -C ./
-echo "✅ Restore completed successfully."
-
-echo
-read -p "Would you like to start QonexAI now? (y/n): " RUN_NOW
-if [[ $RUN_NOW =~ ^[Yy]$ ]]; then
-  echo "🚀 Launching QonexAI..."
-  node ./src/server.js
-else
-  echo "✅ QonexAI restore process finished."
-fi
-
-chmod +x restoreBackup.sh
+echo "[$(date)] 🔁 Restoring from backup: $(basename "$LATEST_BACKUP")" | tee -a "$LOG_FILE"
+tar -xzf "$LATEST_BACKUP" -C "$RESTORE_DIR"
+echo "[$(date)] ✅ Restore completed successfully." | tee -a "$LOG_FILE"
