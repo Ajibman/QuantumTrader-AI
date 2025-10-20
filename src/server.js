@@ -46,7 +46,7 @@ setInterval(async () => {
 app.listen(PORT, () => {
   console.log(`🚀 QonexAI server live on port ${PORT}`);
 });
-```
+
 // =============================
 // 0. CORE DEPENDENCIES
 // =============================
