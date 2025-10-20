@@ -1,10 +1,51 @@
+ //server.js
  /**
  * QuantumTrader AI – server.js
- * Architect: Olagoke Ajibulu
  * Master Runtime Build – Stage VI Final Integration Layer
  * Last Recovery Point: TermuxInitBridge.sh
- */
+ //Entry point for QonexAI — Neural Exchange System AI  
+ // Effective: November 09 2025 launch workflow  
+ // Architect: Ajibmann / QuantumTrader‑AI => QonexAI
+ /*
 
+const express = require('express');
+const path    = require('path');
+const fs      = require('fs');
+
+const { checkProximity }    = require('./core/security/proximityMonitor');
+const { shutdownQonexAI }   = require('./core/security/shutdown');
+const { trackAttempts,
+        reportThreat }        = require('./core/security/securityManager');
+const { handleRegistration } = require('./core/lab/registration');
+const { handleVerification } = require('./core/lab/verifyUser');
+const { router: uiRouter }   = require('./core/ui/uiRouter');
+const TraderLab               = require('./core/lab/traderLab');
+
+const app   = express();
+const PORT  = process.env.PORT || 7070;
+
+const traderLab = new TraderLab();
+
+//community, /cooperative, /ngo - to be added/();
+
+// === Security Loop: Proximity Monitoring & Auto‑Shutdown ===
+setInterval(async () => {
+  try {
+    const result = await checkProximity(/* userLocation */, /* agentsList */);
+    if (result.shutdown) {
+      console.log("🚨 Agent detected nearby. Shutting down QonexAI.");
+      shutdownQonexAI();
+    }
+  } catch (err) {
+    console.error("Security check error:", err);
+  }
+}, 15000); // every 15 seconds
+
+// === Server Startup ===
+app.listen(PORT, () => {
+  console.log(`🚀 QonexAI server live on port ${PORT}`);
+});
+```
 // =============================
 // 0. CORE DEPENDENCIES
 // =============================
