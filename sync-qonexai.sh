@@ -46,3 +46,5 @@ fi
 # Cleanup
 rm -rf "$WORKDIR"
 echo "🧹 Workspace cleaned. Sync completed."
+
+chmod +x sync-qonexai.sh
