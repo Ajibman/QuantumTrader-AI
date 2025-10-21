@@ -51,7 +51,33 @@ jobs:
           git push origin $BRANCH || echo "QuantumTrader-AI up to date"
 
       - name: ✅ Sync complete
-        run: echo "✅ Bidirectional synchronization finished successfully at $(date)
+        run: echo "✅ Bidirectional synchronization finished successfully at $(date)name: Sync QonexAI with QuantumTrader-AI
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # runs every 30 minutes
+  workflow_dispatch:        # allows manual trigger from GitHub
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout QuantumTrader-AI repository
+        uses: actions/checkout@v4
+        with:
+          repository: ajibman/QuantumTrader-AI
+          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Make sync script executable
+        run: chmod +x sync-qonexai.sh
+
+      - name: Run synchronization script
+        run: ./sync-qonexai.sh
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 - name: Make sync script executable
   run: chmod +x sync-qonexai.s 
