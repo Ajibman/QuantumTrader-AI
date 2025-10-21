@@ -66,4 +66,58 @@ echo "✅ Preflight check completed."
 echo "Next: run controlled test flights starting November 02 2025."
 echo "======================================================"
 
+name: QonexAI ↔ QuantumTrader-AI Sync + Email Report
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "*/15 * * * *" # Every 15 minutes
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout QuantumTrader-AI
+        uses: actions/checkout@v4
+        with:
+          repository: Ajibman/QuantumTrader-AI
+          token: ${{ secrets.GH_TOKEN }}
+          path: QuantumTrader-AI
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "ajibulurobotman@gmail.com"
+
+      - name: Bidirectional Sync with QonexAI
+        run: |
+          echo "🔄 Syncing QuantumTrader-AI ↔ QonexAI..."
+          mkdir -p QonexAI
+          rsync -av --exclude '.git' QuantumTrader-AI/ QonexAI/
+          echo "✅ Sync completed at $(date)" > sync-status.log
+
+      - name: Send Email Report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: "ajibulurobotman@gmail.com"
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🧠 QuantumTrader-AI ↔ QonexAI Sync Report"
+          to: "ajibulurobotman@gmail.com"
+          from: "GitHub Sync Bot <ajibulurobotman@gmail.com>"
+          body: |
+            Hello Olagoke Ajibulu,
+
+            The QonexAI ↔ QuantumTrader-AI synchronization just completed successfully.
+
+            Timestamp: ${{ steps.date.outputs.time }}
+            Repository: QuantumTrader-AI
+            Status: ✅ Success
+
+            Regards,
+            GitHub Actions – QonexAI/QuantumTrader-AI Automation
 chmod +x stageV-preflight.sh
