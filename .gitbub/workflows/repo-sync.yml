@@ -78,7 +78,5 @@ jobs:
         env:
           SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-- name: Make sync script executable
-  run: chmod +x sync-qonexai.s 
+ 
   
