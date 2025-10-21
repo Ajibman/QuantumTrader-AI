@@ -1,4 +1,4 @@
-,,,jsll
+,,,js
 name: 🧪 QuantumTrader Module Integrity Test
 
 on:
@@ -66,3 +66,6 @@ function testModules() {
 
 // Run test
 testModules();
+
+const fs = require('fs');
+fs.writeFileSync('test/moduleTest.log', "Module Activation Log:\n" + logOutput.join('\n'), 'utf-8');
