@@ -1,28 +1,48 @@
-#!/bin/bash
-# (c) Olagoke Ajibulu — QuantumTrader AI / QonexAI Unified Sync Script
-# Smart local sync between QuantumTrader-AI core and QonexAI clone
+ #!/bin/bash
+# ===========================================================
+#  QonexAI <-> QuantumTrader-AI Bidirectional Sync Script
+#  Author: Olagoke Ajibulu
+#  Purpose: Keep both repositories in sync automatically
+#  Triggered by GitHub Actions every 30 minutes or on demand
+# ===========================================================
 
-# Define paths
-QT_AI="./src/core"
-QONEX_AI="./QonexAI/src/core"
+set -e  # stop on error
+set -u  # treat unset vars as errors
 
-# Create directories if missing
-mkdir -p "$QONEX_AI"
+# Repo setup
+MAIN_REPO="https://github.com/ajibman/QuantumTrader-AI.git"
+CHILD_REPO="https://github.com/ajibman/QonexAI.git"
 
-# Timestamp
-echo "🕓 $(date): Starting bidirectional sync between QuantumTrader-AI ↔ QonexAI"
+# Temporary workspace
+WORKDIR=$(mktemp -d)
+echo "🔧 Created temp workspace at $WORKDIR"
 
-# Sync QuantumTrader-AI → QonexAI
-rsync -av --update --exclude='.git' "$QT_AI/" "$QONEX_AI/"
+# Clone both repositories
+echo "⬇️ Cloning QuantumTrader-AI..."
+git clone --quiet "$MAIN_REPO" "$WORKDIR/QuantumTrader-AI"
+echo "⬇️ Cloning QonexAI..."
+git clone --quiet "$CHILD_REPO" "$WORKDIR/QonexAI"
 
-# Sync QonexAI → QuantumTrader-AI
-rsync -av --update --exclude='.git' "$QONEX_AI/" "$QT_AI/"
+# Navigate to main repo
+cd "$WORKDIR/QuantumTrader-AI"
 
-echo "✅ Sync completed successfully at $(date)"
+# Sync from QuantumTrader-AI → QonexAI
+echo "🔁 Syncing changes from QuantumTrader-AI → QonexAI..."
+rsync -av --exclude='.git' "$WORKDIR/QuantumTrader-AI/" "$WORKDIR/QonexAI/"
 
-chmod +x sync-qonexai.sh
+# Commit & push to QonexAI if changes exist
+cd "$WORKDIR/QonexAI"
+if [ -n "$(git status --porcelain)" ]; then
+  git config user.name "github-actions[bot]"
+  git config user.email "github-actions[bot]@users.noreply.github.com"
+  git add .
+  git commit -m "🔄 Auto-sync from QuantumTrader-AI → QonexAI [$(date '+%Y-%m-%d %H:%M:%S')]"
+  git push "https://${GH_TOKEN}@github.com/ajibman/QonexAI.git" main
+  echo "✅ QonexAI updated successfully!"
+else
+  echo "⚪ No new changes detected to sync."
+fi
 
-crontab -e
-
-*/15 * * * * cd /path/to/QuantumTrader-AI && ./sync-qonexai.sh >> sync.log 2>&1
-
+# Cleanup
+rm -rf "$WORKDIR"
+echo "🧹 Workspace cleaned. Sync completed."
