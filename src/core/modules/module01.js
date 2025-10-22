@@ -1,4 +1,4 @@
-js
+```js
 const Module01 = {
   name: "Module01",
   async activate() {
@@ -6,6 +6,10 @@ const Module01 = {
     // Module logic here
   }
 };
+```
+  
+const Module01 = require("./src/core/modules/market");
+await Module01.activate();
 
 // Required for server.js to find it
 export default Module01;
