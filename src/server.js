@@ -21,6 +21,8 @@ const fs       = require("fs");
 const path     = require("path");
 require("dotenv").config();
 
+const { observeFlow, neuralObserver } = require('./modules/module03');
+
 const { checkProximity }     = require("./core/security/proximityMonitor");
 const { shutdownQonexAI }    = require("./core/security/shutdown");
 const { trackAttempts,
@@ -187,6 +189,8 @@ async function benchmarkLatency() {
   console.log(`Latency benchmark: ${latency} ms`);
   return latency;
 }
+
+observeFlow('System equilibrium check - QuantumTrader AI baseline sync');
 
 async function logCompletionStatus() {
   console.log("\n🚀 QuantumTrader AI startup sequence completed successfully.");
