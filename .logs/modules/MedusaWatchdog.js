@@ -1,6 +1,5 @@
 ,,,js
 
-[
 // modules/MedusaWatchdog.js
 // ------------------------------------
 // Medusa™ 24×7 Self-Healing Watchdog
