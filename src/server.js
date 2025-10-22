@@ -81,7 +81,7 @@ console.log("Awaiting module bonding...");
     }
 
     await cclm.observeAll("core/modules/");
-    console.log("👁 CCLM² now monitoring subordinate modules (02–15).");
+    console.log("👁 🧭 👂CCLM² now monitoring subordinate modules (02–15).");
   } catch (err) {
     console.error("❌ Error initializing CCLM² Supervision Layer:", err);
     fs.appendFileSync(
