@@ -1,3 +1,4 @@
+,,,js
 cat > modules/module04.js <<'EOF'
 /**
  * QuantumTrader AI — Module04.js
@@ -71,4 +72,20 @@ module.exports = {
   runBehavioralAnalysis,
   behavioralAI
 };
+
+// ======== Module Chaining Layer: Auto-trigger Quantum Correlation Engine ========
+
+try {
+  const { qce } = require('./module05');
+  
+  console.log('\n🔗 Module04 → Module05 Chaining Initialized...');
+  console.log('🧠 Behavioral Report ready — triggering Quantum Correlation Engine (Module05)...');
+  
+  setTimeout(() => {
+    const correlationResult = qce.run();
+    console.log('✅ Module05 completed:', correlationResult.decision, 'with QTCI:', correlationResult.qtci);
+  }, 2500); // 2.5 sec delay to allow behavioral data to finalize
+} catch (err) {
+  console.error('⚠️ Auto-trigger from Module04 to Module05 failed:', err.message);
+}
 EOF
