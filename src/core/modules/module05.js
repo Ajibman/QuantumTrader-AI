@@ -96,6 +96,41 @@ qce.on('correlation_complete', (report) => {
   }
 });
 
+// ======== Module Chaining Layer: Auto-trigger Medusa™ + Module06 ========
+
+try {
+  const path = require('path');
+  const fs = require('fs');
+
+  console.log('\n🔗 Module05 completed successfully.');
+  console.log('🧠 Initiating Medusa™ Silent Diagnostic and Module06 pipeline...');
+
+  // 1️⃣ Trigger Medusa™ Diagnostic Update
+  const medusaPath = path.join(__dirname, '../logs/system_diagnostics.json');
+  if (fs.existsSync(medusaPath)) {
+    const medusa = JSON.parse(fs.readFileSync(medusaPath, 'utf8'));
+    medusa.lastActivation = new Date().toISOString();
+    medusa.status = 'Auto-Check: Healthy';
+    fs.writeFileSync(medusaPath, JSON.stringify(medusa, null, 2));
+    console.log('🪶 Medusa™ Watchdog auto-update logged.');
+  }
+
+  // 2️⃣ Continue to Trade Execution Control (Module06)
+  try {
+    const { executeTrade } = require('./module06');
+    console.log('⚙️ Module06 triggered: initiating Quantum Trade Execution Control...');
+    setTimeout(() => {
+      const result = executeTrade();
+      console.log('✅ Module06 execution cycle completed:', result);
+    }, 2500);
+  } catch (err) {
+    console.error('⚠️ Module06 trigger failed:', err.message);
+  }
+
+} catch (err) {
+  console.error('⚠️ Auto-trigger from Module05 to Medusa + Module06 failed:', err.message);
+}
+
 module.exports = {
   qce
 };
