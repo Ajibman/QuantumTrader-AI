@@ -213,6 +213,31 @@ async function logCompletionStatus() {
   });
 })();
 
+// 🧠 Initialize Medusa™ Diagnostic Watchdog
+const { startWatchdog } = require('./modules/MedusaWatchdog');
+startWatchdog({ io, modules }); // pass in references for live metrics
+
+// 🚀 SERVER STARTUP SEQUENCE
+// ======================================================
+// Final activation sequence after all layers initialized
+
+const PORT = process.env.PORT || 3000;
+
+const serverInstance = server.listen(PORT, () => {
+  console.log('🌍 QuantumTrader AI active on port', PORT);
+  console.log('💫 System in full synchronization mode — Medusa™ 24×7 self-healing engaged.');
+  console.log('🧩 Awaiting incoming QuantumTrader connections and API events...');
+});
+
+// graceful shutdown handling
+process.on('SIGINT', () => {
+  console.log('\n⚠️  Graceful shutdown initiated...');
+  console.log('💤 Saving final diagnostic snapshot...');
+  serverInstance.close(() => {
+    console.log('🧠 QT AI core safely terminated. Goodbye for now, traveler of Aiyalẹ́nujàrà and Aiyalẹ́nujàrọ̀run.');
+    process.exit(0);
+  });
+});
 // =============================
 // END OF SERVER.JS — QT AI MASTER FLOW
 // =============================
