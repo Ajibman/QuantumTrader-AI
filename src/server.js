@@ -288,6 +288,16 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
-// =============================
-// END OF SERVER.JS — QT AI MASTER FLOW
-// =============================
+
+// ==================================================
+// 09. APP LISTENER — QONEXAI MASTER STARTUP PORTAL
+// ==================================================
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`🌀 QonexAI Server online at port ${PORT}`);
+  console.log(`🚀 System ready for quantum handshake on port ${PORT}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
+
