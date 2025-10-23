@@ -285,7 +285,40 @@ const relay07to08 = async (tradeSignal) => {
 
 // Export relay handler for reference or monitoring
 module.exports = { relay07to08 };
+        
+// ===========================================================
+// MODULE09 → MODULE10 RELAY LINKAGE
+// Quantum Ethics → Execution Governance & Transparency Ledger
+// ===========================================================
 
+const { evaluateEthicalCompliance } = require("./modules/module09");
+const { recordGovernedExecution } = require("./modules/module10");
+
+async function ethicsToGovernanceRelay(tradeData) {
+  console.log("🧭 Initiating Quantum Ethics → Governance relay...");
+
+  try {
+    // Step 1: Ethics evaluation
+    const complianceReport = await evaluateEthicalCompliance(tradeData);
+
+    // Step 2: Forward compliance report to Governance Ledger
+    const governanceResult = await recordGovernedExecution(complianceReport);
+
+    // Step 3: Confirm transmission integrity
+    console.log("✅ Ethics → Governance relay completed successfully.");
+
+    return {
+      relayStatus: "complete",
+      complianceReport,
+      governanceResult,
+    };
+  } catch (error) {
+    console.error("⚠️ Relay Error (Ethics → Governance):", error.message);
+    return { relayStatus: "failed", error: error.message };
+  }
+}
+
+module.exports = { ethicsToGovernanceRelay };
 
 // =============================
 // 8. MAIN STARTUP SEQUENCE
