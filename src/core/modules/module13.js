@@ -1,3 +1,4 @@
+,,,js
 // ==========================================================
 // MODULE 13 — Execution Validation & Feedback Layer
 // ==========================================================
@@ -113,10 +114,24 @@ function runSelfCheck() {
     console.table(checkResult);
     return checkResult;
 }
+// ----------------------------------------------------------
+// Handshake forward to Module14
+// ----------------------------------------------------------
+function forwardToModule14(validationResult) {
+    try {
+        const module14 = require("./module14");
+        console.log("🔗 Forwarding validated payload to Module14...");
+        module14.initialize(validationResult);
+    } catch (err) {
+        console.error("❌ Handshake to Module14 failed:", err.message);
+    }
+}
 
 module.exports = {
     initialize,
     computeValidationScore,
     generateFeedback,
     runSelfCheck,
+    forwardToModule14, 
+
 };
