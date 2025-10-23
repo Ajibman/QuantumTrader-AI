@@ -77,5 +77,14 @@ function runFallbackIntegration() {
     console.table(result);
     return result;
 }
+const module15 = require('./module15');
 
+function module14Bridge() {
+  console.log("🧩 Module14 completing verification...");
+  module15.initBridge();
+}
+
+module.exports = {
+  module14Bridge
+};
 module.exports = { initialize };
