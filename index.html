@@ -1,13 +1,11 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>QuantumTrader-AI™</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/dist/output.css" rel="stylesheet">
-</head>
-<body></body>
- <style>
+  <meta charset="UTF-8">
+  <title>QuantumTrader AI™/QonexAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -18,7 +16,6 @@
     header {
       padding: 1rem;
     }
-  
     /* Responsive Logo */
     #qtai-logo {
       width: 200px;
@@ -95,14 +92,27 @@
     <img id="qtai-logo" src="qtai-logo.png" alt="QuantumTrader AI Logo">
     <h1>QuantumTrader AI™</h1>
   </header>
-<div class="logo">
+ <main>
+
+  <div class="logo">
   <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
-   </div>
+</div>
+<div>
+<script src="src/...">
+<link href="src/...">
+</div>
+  
+  <div id="qonex-status" style="padding: 1em; background: #eef; border: 1px solid #ccc;"></div>
+   <div id="qonex-status" style="font-family: monospace; margin-top: 20px;"></div>
+
+    <div id="globe">
+      <!-- Globe Image or Visual Goes Here -->
+    </div>
     <div class="triangle-container">
       <div class="node apex">Trading Floor</div>
       <div class="node base-left">TraderLab™</div>
       <div class="node base-right">CPilot™</div>
-  <main>
+    </div>
     <section id="event-widget">
       <h2>Latest Events</h2>
       <button onclick="location.reload();">Click to Refresh</button>
@@ -110,10 +120,50 @@
     </section>
   </main>
 
+  <script>
+  async function checkQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      console.log("📡 QonexAI Status:", data);
+
+      const statusDiv = document.getElementById('qonex-status');
+      if (statusDiv) {
+        statusDiv.innerHTML = `
+          <p>Status: data.status</p>
+          <p>Modules Active:{data.modules}</p>
+          <p>Timestamp: new Date(data.timestamp).toLocaleString()</p>
+          <p>Integrity:{data.integrity ? '✅ Stable' : '⚠️ Check Required'}</p>
+        `;
+      }
+    } catch (err) {
+      console.error("❌ QonexAI status check failed", err);
+    }
+  }
+
+  window.onload = checkQonexStatus;
+</script>
+
+<script>
+  async function fetchQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      document.getElementById('qonex-status').innerText =
+        `Status: data.status | Modules:{data.modules} | Integrity: data.integrity ? '✅' : '❌' | Time:{new Date(data.timestamp).toLocaleString()}`;
+    } catch (err) {
+      document.getElementById('qonex-status').innerText = 'Error fetching status ❌';
+    }
+  }
+
+  fetchQonexStatus();
+  setInterval(fetchQonexStatus, 10000); // Refresh every 10s
+</script>
+   
   <footer>
     <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
-    <p>© 2025 QuantumTrader AI™</p>
+  <p>Aspiration/Concept: Business at the speed of light...</p>
+  <p>© 2025 QuantumTrader AI™</p>
   </footer>
 </body>
 </html>
-Aspirations/Concept/Ilana: Business at the speed of light... 
