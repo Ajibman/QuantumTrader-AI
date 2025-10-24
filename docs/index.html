@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -97,11 +97,12 @@
   <div class="logo">
   <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
 </div>
-   
 <div>
 <script src="src/...">
 <link href="src/...">
 </div>
+  
+  <div id="qonex-status" style="padding: 1em; background: #eef; border: 1px solid #ccc;"></div>
 
     <div id="globe">
       <!-- Globe Image or Visual Goes Here -->
@@ -117,7 +118,8 @@
       <!-- Dynamic event content can go here -->
     </section>
   </main>
-<script>
+
+  <script>
   async function checkQonexStatus() {
     try {
       const res = await fetch('/qonex-status');
