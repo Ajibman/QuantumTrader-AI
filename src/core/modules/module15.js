@@ -60,7 +60,34 @@ export function module15HandshakeConfirm(sourceModule) {
 
 function initBridge() {
   console.log("🤝 Module15 handshake received.");
-  console.log("🧠 Finalizing module network sync...");
+  console.log("🧠 Finalizing module network sync..."); // --- Existing global bridge function (already on line 14) ---
+function initBridge(channel) {
+  console.log(`[initBridge] Channel established: ${channel}`);
+  return {
+    send: (data) => console.log(`[Bridge:${channel}] Sent →`, data),
+    receive: (callback) => console.log(`[Bridge:${channel}] Ready to receive`)
+  };
+}
+// --- End of existing bridge utility ---
+
+
+// --- Quantum Trader AI - Module 15 Handshake Bridge ---
+// Lethbridge conceptual alignment for QonexAI nanotech/picotech synchronization
+import { module14Handshake } from './module14.js';
+
+// Initialize handshake bridge with Module14
+export function module15HandshakeInit() {
+  const bridge = initBridge('Module14↔Module15');
+  console.log('[Module15] Initiating handshake with Module14…');
+
+  bridge.send('handshake_request_from_Module15');
+  module14Handshake('Handshake request received from Module15');
+}
+
+// Confirmation received back from Module14
+export function module15HandshakeConfirm(fromModule) {
+  console.log(`[Module15] Handshake confirmation received from ${fromModule}. Bridge link active.`);
+}
 }
 
 // ----------------------------------------------------------
