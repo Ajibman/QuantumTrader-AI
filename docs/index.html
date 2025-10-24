@@ -97,6 +97,7 @@
   <div class="logo">
   <img src="assets/coming-soon-logo.png" alt="Coming Soon Logo">
 </div>
+   
 <div>
 <script src="src/...">
 <link href="src/...">
@@ -116,7 +117,29 @@
       <!-- Dynamic event content can go here -->
     </section>
   </main>
+<script>
+  async function checkQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      console.log("📡 QonexAI Status:", data);
 
+      const statusDiv = document.getElementById('qonex-status');
+      if (statusDiv) {
+        statusDiv.innerHTML = `
+          <p>Status: data.status</p>
+          <p>Modules Active:{data.modules}</p>
+          <p>Timestamp: new Date(data.timestamp).toLocaleString()</p>
+          <p>Integrity:{data.integrity ? '✅ Stable' : '⚠️ Check Required'}</p>
+        `;
+      }
+    } catch (err) {
+      console.error("❌ QonexAI status check failed", err);
+    }
+  }
+
+  window.onload = checkQonexStatus;
+</script>
   <footer>
     <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
   <p>Business at the speed of light...</p>
