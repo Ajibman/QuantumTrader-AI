@@ -91,6 +91,14 @@ function module14Bridge() {
   module15.initBridge();
 }
 
+export function module14Handshake(requestSignal) {
+  console.log(`[Module14] Received handshake request: ${requestSignal}`);
+  
+  import('./module15.js').then(({ module15HandshakeConfirm }) => {
+    module15HandshakeConfirm('Module14');
+  });
+}
+
 module.exports = {
   module14Bridge
 };
