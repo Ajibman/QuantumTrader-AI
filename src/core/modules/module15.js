@@ -11,6 +11,53 @@
 const fs = require("fs");
 const path = require("path");
 
+// ==========================
+// Quantum Trader AI - Module 15
+// Handshake Trigger: Module14 ↔ Module15
+// ==========================
+
+// Import or reference shared bridge if available
+import { initBridge } from './bridge.js';  // adjust path if needed
+import { module14Handshake } from './module14.js'; // ensure module14 exports handshake
+
+// Initialize Module 15 context
+export function initModule15() {
+  console.log('[Module15] Initialization sequence started...');
+  
+  // Step 1: Begin handshake with Module 14
+  startHandshakeWithModule14();
+  
+  // Step 2: Announce Module 15 readiness
+  const signal = {
+    module: 'Module15',
+    status: 'ready',
+    timestamp: new Date().toISOString()
+  };
+
+  console.log('[Module15] Broadcasting handshake signal:', signal);
+  initBridge(signal); // triggers global bridge awareness
+
+  // Step 3: Confirm bridge handshake complete
+  console.log('[Module15] Bridge handshake complete ✅');
+}
+
+// Local handshake initiator
+function startHandshakeWithModule14() {
+  console.log('[Module15] Sending handshake request to Module14...');
+  
+  if (typeof module14Handshake === 'function') {
+    module14Handshake('Module15_HS_Request');
+    console.log('[Module15] Handshake signal sent to Module14.');
+  } else {
+    console.warn('[Module15] Module14 handshake function not detected.');
+  }
+}
+
+// Optional receive handshake confirmation
+export function module15HandshakeConfirm(sourceModule) {
+  console.log(`[Module15] Handshake confirmed by ${sourceModule}. ✅`);
+}
+
 function initBridge() {
   console.log("🤝 Module15 handshake received.");
   console.log("🧠 Finalizing module network sync...");
@@ -128,6 +175,63 @@ module.exports = {
     computeCoherenceScore,
     summarizeFeedback,
     runSelfDiagnostics,
+};
+
+// ==========================================================
+// 🔄 Handshake Trigger — Module14 ⇄ Module15 Synchronization
+// ==========================================================
+
+const path = require("path");
+const module14 = require(path.join(__dirname, "module14.js"));
+
+async function triggerHandshake() {
+    console.log("🤝 Initiating final handshake between Module14 ⇄ Module15...");
+
+    try {
+        // Step 1: Request Module14 status
+        const m14Status = await module14.getStatus?.() || { sync: false };
+
+        if (!m14Status.sync) {
+            console.warn("⚠️ Module14 not ready for handshake. Awaiting stabilization...");
+            return { success: false, message: "Module14 pending stabilization." };
+        }
+
+        // Step 2: Handshake payload for Module15
+        const handshakePayload = {
+            timestamp: new Date(),
+            source: "Module14",
+            target: "Module15",
+            status: "stable-sync",
+            metrics: m14Status.metrics || {},
+        };
+
+        console.log("📡 Handshake payload received from Module14:");
+        console.log(JSON.stringify(handshakePayload, null, 2));
+
+        // Step 3: Initialize Module15 with payload
+        const m15Response = await initialize(handshakePayload);
+
+        // Step 4: Acknowledge completion both ways
+        console.log("✅ Handshake successful between Module14 ⇄ Module15");
+        return {
+            success: true,
+            module14: m14Status,
+            module15: m15Response,
+        };
+    } catch (err) {
+        console.error("❌ Handshake error between Module14 ⇄ Module15:", err.message);
+        return { success: false, error: err.message };
+    }
+}
+
+// Optionally auto-run handshake on load (safely)
+(async () => {
+    await triggerHandshake();
+})();
+
+module.exports = {
+    initialize,
+    triggerHandshake,
 };
 
 module.exports = {
