@@ -19,7 +19,7 @@ const http     = require("http");
 const { Server } = require("socket.io");
 const fs       = require("fs");
 const path     = require("path");
-require("dotenv").config();
+                 require("dotenv").config();
 
 const { observeFlow, neuralObserver } = require('./modules/module03');
 
@@ -34,6 +34,8 @@ const TraderLab              = require("./core/lab/traderLab");
 
 const { CCLM2 } = require("./core/CCLM2/coreGovernor");
 const GPT01     = require("./core/CCLM2/GPT01");
+                  require('./utils/envCheck
+
 
 // =============================
 // APP & SERVER INITIALIZATION
@@ -396,6 +398,17 @@ process.on('SIGINT', () => {
 // ==================================================
 
 const PORT = process.env.PORT || 8080;
+
+`/qonex-status` route
+app.get("/qonex-status", (req, res) => {
+     res.json({
+       status: "✅ QonexAI Live",
+       modules: 15,
+       timestamp: new Date(),
+       integrity: true,
+     });
+   });
+   ```
 
 app.listen(PORT, () => {
   console.log(`🌀 QonexAI Server online at port ${PORT}`);
