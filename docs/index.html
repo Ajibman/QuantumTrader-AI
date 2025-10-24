@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -103,6 +103,7 @@
 </div>
   
   <div id="qonex-status" style="padding: 1em; background: #eef; border: 1px solid #ccc;"></div>
+   <div id="qonex-status" style="font-family: monospace; margin-top: 20px;"></div>
 
     <div id="globe">
       <!-- Globe Image or Visual Goes Here -->
@@ -142,10 +143,28 @@
 
   window.onload = checkQonexStatus;
 </script>
+
+<script>
+  async function fetchQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      document.getElementById('qonex-status').innerText =
+        `Status: data.status | Modules:{data.modules} | Integrity: data.integrity ? '✅' : '❌' | Time:{new Date(data.timestamp).toLocaleString()}`;
+    } catch (err) {
+      document.getElementById('qonex-status').innerText = 'Error fetching status ❌';
+    }
+  }
+
+  fetchQonexStatus();
+  setInterval(fetchQonexStatus, 10000); // Refresh every 10s
+</script>
+   
   <footer>
     <img id="ori-olokun" src="ori-olokun.png" alt="Ori Olokun">
-  <p>Business at the speed of light...</p>
+  <p>Aspiration/Concept: Business at the speed of light...</p>
   <p>© 2025 QuantumTrader AI™</p>
   </footer>
 </body>
 </html>
+   
