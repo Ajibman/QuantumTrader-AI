@@ -10,6 +10,98 @@
  * Effective Workflow: November 09 2025 Launch
  */
 
+// ============================================================
+// PATH EQUIVALENCE BRIDGE v2
+// (SRC IS MASTER, src IS MIRROR)
+// Mirror Audit Mode – Read-only Integrity Layer
+// ============================================================
+
+import fs from "fs";
+import path from "path";
+
+const base = path.resolve(".");
+const roots = [
+  path.join(base, "QuantumTrader-AI"),
+  path.join(base, "QonexAI"),
+];
+
+// Detect active root
+let activeRoot = roots.find(p => fs.existsSync(p));
+if (!activeRoot) {
+  console.error("❌ No valid project root found (QuantumTrader-AI or QonexAI).");
+  process.exit(1);
+}
+
+// Define core paths
+const SRC_CORE = path.join(activeRoot, "SRC/core");
+const src_CORE = path.join(activeRoot, "src/core");
+
+let coreRoot = fs.existsSync(SRC_CORE)
+  ? SRC_CORE
+  : fs.existsSync(src_CORE)
+  ? src_CORE
+  : null;
+
+if (!coreRoot) {
+  console.error("❌ No valid core folder found (SRC/core or src/core).");
+  process.exit(1);
+}
+
+// Announce
+console.log(`✅ Active Project Root: ${activeRoot}`);
+console.log(`✅ Core Source: ${coreRoot}`);
+
+if (fs.existsSync(SRC_CORE) && fs.existsSync(src_CORE)) {
+  console.warn("⚠️ Both SRC/core and src/core exist — SRC/core treated as MASTER.");
+}
+
+// Global paths
+global.QT_PATHS = {
+  ROOT: activeRoot,
+  CORE: SRC_CORE,
+  MIRROR: src_CORE,
+  MODULES: path.join(SRC_CORE, "modules"),
+  MARKET: path.join(SRC_CORE, "modules", "market"),
+  LOGS: path.join(SRC_CORE, "logs"),
+};
+
+// Universal resolver (SRC priority)
+global.resolveQT = function (...segments) {
+  const srcPath = path.join(global.QT_PATHS.MIRROR, ...segments);
+  const SRCPath = path.join(global.QT_PATHS.CORE, ...segments);
+  return fs.existsSync(SRCPath) ? SRCPath : srcPath;
+};
+
+// ============================================================
+// MIRROR AUDIT SECTION (Read-Only)
+// Detects missing modules in src/ vs SRC/
+// ============================================================
+try {
+  if (fs.existsSync(SRC_CORE) && fs.existsSync(src_CORE)) {
+    const SRCModules = fs.readdirSync(path.join(SRC_CORE, "modules"));
+    const srcModules = fs.existsSync(path.join(src_CORE, "modules"))
+      ? fs.readdirSync(path.join(src_CORE, "modules"))
+      : [];
+
+    const missingInSrc = SRCModules.filter(m => !srcModules.includes(m));
+    if (missingInSrc.length > 0) {
+      console.log("🔍 Mirror Audit:");
+      console.table(
+        missingInSrc.map(m => ({ "Missing in src/core/modules": m }))
+      );
+      console.log("⚠️ Recommendation: Consider syncing these modules later (manual only).");
+    } else {
+      console.log("✅ Mirror Audit: src/core is fully aligned with SRC/core.");
+    }
+  }
+} catch (err) {
+  console.error("⚠️ Mirror audit error:", err.message);
+}
+
+// ============================================================
+// END OF PATH EQUIVALENCE BRIDGE v2
+// ============================================================
+
 // =============================
 // 0. CORE DEPENDENCIES
 // =============================
