@@ -102,6 +102,45 @@ try {
 // END OF PATH EQUIVALENCE BRIDGE v2
 // ============================================================
 
+// ======================================================================
+// PATH VALIDATION TEST v1.0 — SRC ⇄ src Integrity Checker
+// Author: Olagoke Ajibulu / QT AI Core Systems
+// Purpose: Ensures both directory trees (SRC & src) remain synchronized
+// Context: Runs immediately after "Path Equivalence Bridge v2"
+// ======================================================================
+
+const fs = require("fs");
+const path = require("path");
+
+const SRC_DIR = path.resolve(__dirname, "SRC/core/modules");
+const src_DIR = path.resolve(__dirname, "src/core/modules");
+
+function validatePathSync() {
+  console.log("🔍 Validating SRC ⇄ src directory parity...");
+
+  if (!fs.existsSync(SRC_DIR) || !fs.existsSync(src_DIR)) {
+    console.warn("⚠️ One or both directories missing. Skipping parity check.");
+    return;
+  }
+
+  const SRC_modules = fs.readdirSync(SRC_DIR).sort();
+  const src_modules = fs.readdirSync(src_DIR).sort();
+
+  // Compare file and folder lists
+  const missing_in_SRC = src_modules.filter(m => !SRC_modules.includes(m));
+  const missing_in_src = SRC_modules.filter(m => !src_modules.includes(m));
+
+  if (missing_in_SRC.length === 0 && missing_in_src.length === 0) {
+    console.log("✅ SRC ⇄ src structures are synchronized.");
+  } else {
+    console.warn("⚠️ SRC ⇄ src parity mismatch detected!");
+    if (missing_in_SRC.length) console.warn("→ Missing in SRC:", missing_in_SRC);
+    if (missing_in_src.length) console.warn("→ Missing in src:", missing_in_src);
+  }
+}
+
+validatePathSync();
+
 // =============================
 // 0. CORE DEPENDENCIES
 // =============================
