@@ -1,549 +1,198 @@
-#!/usr/bin/env node
-/**
- * QonexAI server.js
- * QuantumTrader AI – Master Runtime Build
- * Stage VI: Final Integration Layer
- * Last Recovery Point: TermuxInitBridge.sh
- * Architect: Olagoke Ajibulu / QuantumTrader-AI ⇒ QonexAI
- *
- * Entry Point for QonexAI — Neural Exchange System AI
- * Effective Workflow: November 09 2025 Launch
- */
+ // ================================================================
+// QUANTUMTRADER AI — UNIFIED SERVER CORE
+// Author/Creator: Olagoke Ajibulu
+// Architect: QuantumTrader AI (QT-AI) Framework
+// ================================================================
 
-// ============================================================
-// PATH EQUIVALENCE BRIDGE v2
-// (SRC IS MASTER, src IS MIRROR)
-// Mirror Audit Mode – Read-only Integrity Layer
-// ============================================================
-
-import fs from "fs";
-import path from "path";
-
-const base = path.resolve(".");
-const roots = [
-  path.join(base, "QuantumTrader-AI"),
-  path.join(base, "QonexAI"),
-];
-
-// Detect active root
-let activeRoot = roots.find(p => fs.existsSync(p));
-if (!activeRoot) {
-  console.error("❌ No valid project root found (QuantumTrader-AI or QonexAI).");
-  process.exit(1);
-}
-
-// Define core paths
-const SRC_CORE = path.join(activeRoot, "SRC/core");
-const src_CORE = path.join(activeRoot, "src/core");
-
-let coreRoot = fs.existsSync(SRC_CORE)
-  ? SRC_CORE
-  : fs.existsSync(src_CORE)
-  ? src_CORE
-  : null;
-
-if (!coreRoot) {
-  console.error("❌ No valid core folder found (SRC/core or src/core).");
-  process.exit(1);
-}
-
-// Announce
-console.log(`✅ Active Project Root: ${activeRoot}`);
-console.log(`✅ Core Source: ${coreRoot}`);
-
-if (fs.existsSync(SRC_CORE) && fs.existsSync(src_CORE)) {
-  console.warn("⚠️ Both SRC/core and src/core exist — SRC/core treated as MASTER.");
-}
-
-// Global paths
-global.QT_PATHS = {
-  ROOT: activeRoot,
-  CORE: SRC_CORE,
-  MIRROR: src_CORE,
-  MODULES: path.join(SRC_CORE, "modules"),
-  MARKET: path.join(SRC_CORE, "modules", "market"),
-  LOGS: path.join(SRC_CORE, "logs"),
-};
-
-// Universal resolver (SRC priority)
-global.resolveQT = function (...segments) {
-  const srcPath = path.join(global.QT_PATHS.MIRROR, ...segments);
-  const SRCPath = path.join(global.QT_PATHS.CORE, ...segments);
-  return fs.existsSync(SRCPath) ? SRCPath : srcPath;
-};
-
-// ============================================================
-// MIRROR AUDIT SECTION (Read-Only)
-// Detects missing modules in src/ vs SRC/
-// ============================================================
-try {
-  if (fs.existsSync(SRC_CORE) && fs.existsSync(src_CORE)) {
-    const SRCModules = fs.readdirSync(path.join(SRC_CORE, "modules"));
-    const srcModules = fs.existsSync(path.join(src_CORE, "modules"))
-      ? fs.readdirSync(path.join(src_CORE, "modules"))
-      : [];
-
-    const missingInSrc = SRCModules.filter(m => !srcModules.includes(m));
-    if (missingInSrc.length > 0) {
-      console.log("🔍 Mirror Audit:");
-      console.table(
-        missingInSrc.map(m => ({ "Missing in src/core/modules": m }))
-      );
-      console.log("⚠️ Recommendation: Consider syncing these modules later (manual only).");
-    } else {
-      console.log("✅ Mirror Audit: src/core is fully aligned with SRC/core.");
-    }
-  }
-} catch (err) {
-  console.error("⚠️ Mirror audit error:", err.message);
-}
-
-// ============================================================
-// END OF PATH EQUIVALENCE BRIDGE v2
-// ============================================================
-
-// ======================================================================
-// PATH VALIDATION TEST v1.0 — SRC ⇄ src Integrity Checker
-// Author: Olagoke Ajibulu / QT AI Core Systems
-// Purpose: Ensures both directory trees (SRC & src) remain synchronized
-// Context: Runs immediately after "Path Equivalence Bridge v2"
-// ======================================================================
-
-const fs = require("fs");
+// ================================================================
+// 01. CORE DEPENDENCIES
+// ================================================================
+const express = require("express");
+const http = require("http");
 const path = require("path");
+const fs = require("fs");
+const dotenv = require("dotenv");
 
-const SRC_DIR = path.resolve(__dirname, "SRC/core/modules");
-const src_DIR = path.resolve(__dirname, "src/core/modules");
+dotenv.config();
+const app = express();
+const server = http.createServer(app);
 
-function validatePathSync() {
-  console.log("🔍 Validating SRC ⇄ src directory parity...");
+// ================================================================
+// 02. PATH EQUIVALENCE BRIDGE v2
+//    Resolves SRC/core ↔ src/core ambiguity created during dual build
+// ================================================================
+const rootDir = __dirname;
+const upperSRC = path.join(rootDir, "SRC");
+const lowerSrc = path.join(rootDir, "src");
 
-  if (!fs.existsSync(SRC_DIR) || !fs.existsSync(src_DIR)) {
-    console.warn("⚠️ One or both directories missing. Skipping parity check.");
-    return;
-  }
-
-  const SRC_modules = fs.readdirSync(SRC_DIR).sort();
-  const src_modules = fs.readdirSync(src_DIR).sort();
-
-  // Compare file and folder lists
-  const missing_in_SRC = src_modules.filter(m => !SRC_modules.includes(m));
-  const missing_in_src = SRC_modules.filter(m => !src_modules.includes(m));
-
-  if (missing_in_SRC.length === 0 && missing_in_src.length === 0) {
-    console.log("✅ SRC ⇄ src structures are synchronized.");
+function ensurePathEquivalence() {
+  if (fs.existsSync(upperSRC) && !fs.existsSync(lowerSrc)) {
+    fs.symlinkSync(upperSRC, lowerSrc, "dir");
+    console.log("🔗 Path Equivalence Bridge v2: Linked SRC → src");
+  } else if (fs.existsSync(lowerSrc) && !fs.existsSync(upperSRC)) {
+    fs.symlinkSync(lowerSrc, upperSRC, "dir");
+    console.log("🔗 Path Equivalence Bridge v2: Linked src → SRC");
   } else {
-    console.warn("⚠️ SRC ⇄ src parity mismatch detected!");
-    if (missing_in_SRC.length) console.warn("→ Missing in SRC:", missing_in_SRC);
-    if (missing_in_src.length) console.warn("→ Missing in src:", missing_in_src);
+    console.log("🧭 Path Equivalence Bridge v2: Directories already aligned.");
   }
 }
+ensurePathEquivalence();
 
-validatePathSync();
+// ================================================================
+// 03. LOGS FOLDER INITIALIZATION
+// ================================================================
+const logsDir = path.join(rootDir, "logs");
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+console.log("🗂️  Logs directory initialized at:", logsDir);
 
-// =============================
-// 0. CORE DEPENDENCIES
-// =============================
-const express  = require("express");
-const cors     = require("cors");
-const http     = require("http");
-const { Server } = require("socket.io");
-const fs       = require("fs");
-const path     = require("path");
-                 require("dotenv").config();
-
-const { observeFlow, neuralObserver } = require('./modules/module03');
-
-const { checkProximity }     = require("./core/security/proximityMonitor");
-const { shutdownQonexAI }    = require("./core/security/shutdown");
-const { trackAttempts,
-        reportThreat }       = require("./core/security/securityManager");
-const { handleRegistration } = require("./core/lab/registration");
-const { handleVerification } = require("./core/lab/verifyUser");
-const { router: uiRouter }   = require("./core/ui/uiRouter");
-const TraderLab              = require("./core/lab/traderLab");
-
-const { CCLM2 } = require("./core/CCLM2/coreGovernor");
-const GPT01     = require("./core/CCLM2/GPT01");
-                  require('./utils/envCheck
-
-
-// =============================
-// APP & SERVER INITIALIZATION
-// =============================
-const app        = express();
-const httpServer = http.createServer(app);
-const io         = new Server(httpServer, { cors: { origin: "*" } });
-const PORT       = process.env.PORT || 7070;
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static("public"));
-
-console.log("\n🧠 QuantumTrader AI initializing core engines...");
-console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-console.log("Awaiting module bonding...");
-
-// =============================
-// 🧠 CCLM² SUPERVISION LAYER
-// =============================
-(async () => {
-  try {
-    console.log("🧠 Initializing CCLM² Supervision Layer...");
-    const cclm = new CCLM2({
-      ethicsMode: "quantum",
-      auditLog: path.join(__dirname, "logs/system.log"),
-      supervision: true,
-    });
-
-    const module01Path = path.join(__dirname, "core/modules/market/");
-    const module01 = require(module01Path);
-
-    console.log("🔗 Handshake CCLM² → Module01 → GPT-01...");
-    const handshake = await cclm.register({
-      id: "GPT-01",
-      name: "Market Data Aggregator",
-      module: module01,
-      kernel: GPT01,
-      level: "root",
-      active: true,
-    });
-
-    if (handshake.status === "ok") {
-      console.log("✅ CCLM² Supervision Layer active and stable.");
-    } else {
-      console.warn("⚠️ Handshake anomaly detected:", handshake);
-    }
-
-    await cclm.observeAll("core/modules/");
-    console.log("👁 🧭 👂CCLM² now monitoring subordinate modules (02–15).");
-  } catch (err) {
-    console.error("❌ Error initializing CCLM² Supervision Layer:", err);
-    fs.appendFileSync(
-      path.join(__dirname, "logs/system.log"),
-      `[${new Date().toISOString()}] ERROR: ${err}\n`
-    );
-  }
-})();
-
-// =============================
-// 2. QUANTUM CORE MODULES 01–15
-// =============================
-const {
-  Module01, Module02, Module03, Module04, Module05,
-  Module06, Module07, Module08, Module09, Module10,
-  Module11, Module12, Module13, Module14, Module15,
-} = require("./modules");
-
-const QTModules = [
-  Module01, Module02, Module03, Module04, Module05,
-  Module06, Module07, Module08, Module09, Module10,
-  Module11, Module12, Module13, Module14, Module15,
-];
-
-// =============================
-// 3. LIVE MONITORING CHANNELS
-// =============================
-io.on("connection", (socket) => {
-  console.log(`Trader connected: ${socket.id}`);
-  socket.on("disconnect", () => console.log(`Trader disconnected: ${socket.id}`));
-});
-
-// =============================
-// 4. ETHICS & CONSCIOUSNESS LAYER
-// =============================
-const {
-  neuralEthicsBalancer,
-  quantumConsciousRegulator,
-} = require("./modules/Module06.js");
-
-function runEthicsCycle() {
-  try {
-    const ethicsState = neuralEthicsBalancer();
-    const consciousnessState = quantumConsciousRegulator(ethicsState);
-    console.log("🧭 Neural Ethics balance maintained:", ethicsState.status);
-    console.log("🌀 Quantum Conscious coherence:", consciousnessState.integrity);
-  } catch (error) {
-    console.error("Ethics Controller error:", error);
-  }
-}
-
-// =============================
-// 5. MODULE ACTIVATION SEQUENCE
-// =============================
-async function activateModules() {
-  console.log("\n⚙️ Activating QuantumTrader modules...");
-  for (const [i, module] of QTModules.entries()) {
-    try {
-      await module.activate();
-      console.log(`Module ${String(i + 1).padStart(2, "0")} activated successfully`);
-    } catch (error) {
-      console.error(`Module ${i + 1} failed to activate:`, error);
-    }
-  }
-  console.log("✅ All operational modules initialized");
-}
-
-// =============================
-// 6. MODULE BONDING LAYER
-// =============================
-async function connectQuantumAPIs() {
-  console.log("\n🌐 Establishing Quantum API channels...");
-  return Promise.resolve(true);
-}
-
-async function initializeLiveBridges() {
-  console.log("🔗 Initializing live bridges and Medusa™ self-healing links...");
-  return Promise.resolve(true);
-}
-
-// =============================
-// 7. STAGE VI – FINAL INTEGRATION LAYER
-// =============================
-async function runSystemDiagnostics() {
-  console.log("\n🧩 Running system diagnostics...");
-  return {
-    memoryUsage: process.memoryUsage(),
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-  };
-}
-
-async function validateQuantumPipelines() {
-  console.log("🔍 Validating quantum communication pipelines...");
-  return Promise.resolve("Pipelines stable");
-}
-
-async function benchmarkLatency() {
-  console.log("⏱ Benchmarking neural latency...");
-  const start = Date.now();
-  await new Promise((res) => setTimeout(res, 100));
-  const latency = Date.now() - start;
-  console.log(`Latency benchmark: ${latency} ms`);
-  return latency;
-}
-
-observeFlow('System equilibrium check - QuantumTrader AI baseline sync');
-
-async function logCompletionStatus() {
-  console.log("\n🚀 QuantumTrader AI startup sequence completed successfully.");
-  console.log("Medusa™ 24×7 self-healing engaged. QT AI fully operational.");
-  console.log("✨ Awaiting trader or visitor interaction on the Trading Floor apex…\n");
-}
-
-// ====== [TAB MARKER: MODULE07 RELAY LOGIC REGISTERED ABOVE MAIN STARTUP SEQUENCE] ======
-();Import Module07
-const Module07 = require('./Module07.js');
-
-// Function to monitor and trigger Module07 consolidation cycle
-function initiateModule07Relay() {
-  console.log("🔄 QuantumTraderAI: Initiating Module07 Relay Process...");
-  
-  try {
-    const consolidated = Module07.consolidateOutputs();
-    
-    if (consolidated) {
-      console.log("✅ Module07 relay completed successfully.");
-    } else {
-      console.warn("⚠️ Module07 did not receive valid relay data.");
-    }
-  } catch (err) {
-    console.error("❌ Error during Module07 relay:", err);
-  }
-}
-
-initiateModule07Relay
-
-// ====== [TAB MARKER: MODULE07 RELAY LOGIC REGISTERED ABOVE MAIN STARTUP SEQUENCE] ======
-Import Module07
-const Module07 = require('./Module07.js');
-
-// Function to monitor and trigger Module07 consolidation cycle
-function initiateModule07Relay() {
-  console.log("🔄 QuantumTraderAI: Initiating Module07 Relay Process...");
-  
-  try {
-    const consolidated = Module07.consolidateOutputs();
-    
-    if (consolidated) {
-      console.log("✅ Module07 relay completed successfully.");
-    } else {
-      console.warn("⚠️ Module07 did not receive valid relay data.");
-    }
-  } catch (err) {
-    console.error("❌ Error during Module07 relay:", err);
-  }
-}
-
- relay
-initiateModule07Relay();(async () => {
-        
-// Schedule or trigger the Module07
-// ===========================================================
-// MODULE07 → MODULE08 RELAY LINKAGE
-// ===========================================================
-
-const relay07to08 = async (tradeSignal) => {
-  try {
-    console.log("🔄 Relay initiated between Module07 and Module08...");
-    
-    // Step 1: Validate trade signal from Module07
-    if (!tradeSignal || !tradeSignal.id || !tradeSignal.meta) {
-      throw new Error("Invalid trade signal passed to relay.");
-    }
-
-    // Step 2: Normalize and encode signal for quantum interpretation
-    const quantumEncoded = {
-      id: tradeSignal.id,
-      type: tradeSignal.type || "market",
-      meta: tradeSignal.meta,
-      timestamp: new Date().toISOString(),
-      qSignature: Buffer.from(JSON.stringify(tradeSignal.meta)).toString("base64"),
-    };
-
-    // Step 3: Forward to Module08 for quantum interpretation
-    const module08 = require("./modules/module08");
-    const result = await module08.interpretQuantumSignal(quantumEncoded);
-
-    // Step 4: Capture feedback loop into relay memory
-    console.log("✅ Relay complete. Module08 feedback:");
-    console.log(result);
-
-    return result;
-  } catch (error) {
-    console.error("❌ Relay linkage error between Module07 and Module08:", error.message);
-    return { status: "failed", error: error.message };
-  }
+// ================================================================
+// 04. CORE MODULE IMPORTS
+// ================================================================
+const modules = {
+  1: require("./modules/module01"),
+  2: require("./modules/module02"),
+  3: require("./modules/module03"),
+  4: require("./modules/module04"),
+  5: require("./modules/module05"),
+  6: require("./modules/module06"),
+  7: require("./modules/module07"),
+  8: require("./modules/module08"),
+  9: require("./modules/module09"),
+  10: require("./modules/module10"),
+  11: require("./modules/module11"),
+  12: require("./modules/module12"),
+  13: require("./modules/module13"),
+  14: require("./modules/module14"),
+  15: require("./modules/module15"),
 };
 
-// Export relay handler for reference or monitoring
-module.exports = { relay07to08 };
-        
-// ===========================================================
-// MODULE09 → MODULE10 RELAY LINKAGE
-// Quantum Ethics → Execution Governance & Transparency Ledger
-// ===========================================================
+// ================================================================
+// 05. SYSTEM INITIALIZATION SEQUENCE
+// ================================================================
+async function activateModules() {
+  console.log("⚙️  Activating QuantumTrader-AI modules...");
+  for (const id in modules) {
+    if (modules[id]?.initialize) {
+      await modules[id].initialize();
+      console.log(`✅ Module${id.padStart(2, "0")} initialized successfully.`);
+    }
+  }
+  console.log("🌐 All modules activated.");
+}
 
+// ================================================================
+// 06. MODULE RELAY SEQUENCES
+// ================================================================
+
+// === MODULE09 → MODULE10 RELAY (Ethics → Governance) ===
 const { evaluateEthicalCompliance } = require("./modules/module09");
 const { recordGovernedExecution } = require("./modules/module10");
 
 async function ethicsToGovernanceRelay(tradeData) {
   console.log("🧭 Initiating Quantum Ethics → Governance relay...");
-
   try {
-    // Step 1: Ethics evaluation
     const complianceReport = await evaluateEthicalCompliance(tradeData);
-
-    // Step 2: Forward compliance report to Governance Ledger
     const governanceResult = await recordGovernedExecution(complianceReport);
-
-    // Step 3: Confirm transmission integrity
     console.log("✅ Ethics → Governance relay completed successfully.");
-
-    return {
-      relayStatus: "complete",
-      complianceReport,
-      governanceResult,
-    };
+    return { relayStatus: "complete", complianceReport, governanceResult };
   } catch (error) {
     console.error("⚠️ Relay Error (Ethics → Governance):", error.message);
     return { relayStatus: "failed", error: error.message };
   }
 }
-
 module.exports = { ethicsToGovernanceRelay };
 
-// === BEGIN RELAY11_12 ===
-// MODULE 11 => MODULE 12 RELAY
+// === MODULE11 → MODULE12 RELAY (Governance → Adaptive Evaluation) ===
 try {
-    console.log("⏩ Initiating Relay: Module11 ➜ Module12 ...");
-
-    // Ensure Module11 completed its evaluation phase
-    if (global.Module11 && global.Module11.status === "stable") {
-        // Initialize Module12 dynamically
-        const module12 = require("./modules/module12");
-        global.Module12 = module12;
-
-        // Activate governance & adaptive evaluation link
-        module12.initialize({
-            source: "Module11",
-            timestamp: new Date(),
-            complianceStatus: global.Module11.ethicalSync || "pending",
-        });
-
-        console.log("✅ Relay Complete: Module12 successfully linked to Module11 state.");
-    } else {
-        console.warn("⚠️ Relay paused: Module11 not stable or missing.");
-    }
+  console.log("⏩ Initiating Relay: Module11 ➜ Module12 ...");
+  if (global.Module11 && global.Module11.status === "stable") {
+    const module12 = require("./modules/module12");
+    global.Module12 = module12;
+    module12.initialize({
+      source: "Module11",
+      timestamp: new Date(),
+      complianceStatus: global.Module11.ethicalSync || "pending",
+    });
+    console.log("✅ Relay Complete: Module12 successfully linked to Module11 state.");
+  } else {
+    console.warn("⚠️ Relay paused: Module11 not stable or missing.");
+  }
 } catch (err) {
-    console.error("❌ Relay11_12 Error:", err.message);
+  console.error("❌ Relay11_12 Error:", err.message);
 }
-// === END RELAY11_12 ===
 
-// =============================
-// 8. MAIN STARTUP SEQUENCE
-// =============================
+// ================================================================
+// 07. QUANTUMTRADER MAIN STARTUP SEQUENCE
+// ================================================================
+async function mainStartup() {
+  console.log("🚀 Initiating QuantumTrader-AI core sequence...");
   await activateModules();
-  await connectQuantumAPIs();
-  await initializeLiveBridges();
-  await runSystemDiagnostics();
-  await validateQuantumPipelines();
-  await benchmarkLatency();
-  await logCompletionStatus();
 
-  runEthicsCycle();
+  if (global.connectQuantumAPIs) await global.connectQuantumAPIs();
+  if (global.initializeLiveBridges) await global.initializeLiveBridges();
+  if (global.runSystemDiagnostics) await global.runSystemDiagnostics();
+  if (global.validateQuantumPipelines) await global.validateQuantumPipelines();
+  if (global.benchmarkLatency) await global.benchmarkLatency();
+  if (global.logCompletionStatus) await global.logCompletionStatus();
+  if (global.runEthicsCycle) global.runEthicsCycle();
 
-  httpServer.listen(PORT, () => {
-    console.log(`🌍 QuantumTrader AI active on port ${PORT}`);
-  });
-})();
+  console.log("💫 QuantumTrader-AI initialization complete.");
+}
+mainStartup().catch(err => console.error("Startup error:", err));
 
-// 🧠 Initialize Medusa™ Diagnostic Watchdog
-const { startWatchdog } = require('./modules/MedusaWatchdog');
-startWatchdog({ io, modules }); // pass in references for live metrics
+// ================================================================
+// 08. MEDUSA™ WATCHDOG INITIALIZATION
+// ================================================================
+try {
+  const { startWatchdog } = require("./modules/MedusaWatchdog");
+  startWatchdog({ modules });
+  console.log("🧠 Medusa™ Diagnostic Watchdog engaged (24×7 self-healing).");
+} catch (err) {
+  console.error("⚠️ Medusa Watchdog failed to start:", err.message);
+}
 
-// 🚀 SERVER STARTUP SEQUENCE
-// ======================================================
-// Final activation sequence after all layers initialized
-
-const PORT = process.env.PORT || 3000;
-
-const serverInstance = server.listen(PORT, () => {
-  console.log('🌍 QuantumTrader AI active on port', PORT);
-  console.log('💫 System in full synchronization mode — Medusa™ 24×7 self-healing engaged.');
-  console.log('🧩 Awaiting incoming QuantumTrader connections and API events...');
+// ================================================================
+// 09. CORE SERVER LAUNCH (QuantumTrader-AI)
+// ================================================================
+const CORE_PORT = process.env.CORE_PORT || 3000;
+const httpServer = server.listen(CORE_PORT, () => {
+  console.log(`🌍 QuantumTrader-AI active on port ${CORE_PORT}`);
+  console.log("🧩 Awaiting incoming QuantumTrader connections and API events...");
 });
 
-// graceful shutdown handling
-process.on('SIGINT', () => {
-  console.log('\n⚠️  Graceful shutdown initiated...');
-  console.log('💤 Saving final diagnostic snapshot...');
-  serverInstance.close(() => {
-    console.log('🧠 QT AI core safely terminated. Goodbye for now, traveler of Aiyalẹ́nujàrà and Aiyalẹ́nujàrọ̀run.');
+// graceful shutdown
+process.on("SIGINT", () => {
+  console.log("\n⚠️  Graceful shutdown initiated...");
+  console.log("💤 Saving final diagnostic snapshot...");
+  httpServer.close(() => {
+    console.log(
+      "🧠 QT-AI core safely terminated. Goodbye, traveler of Ayélùjàrà and Ayélùjàròrùn."
+    );
     process.exit(0);
   });
 });
 
-// ==================================================
-// 09. APP LISTENER — QONEXAI MASTER STARTUP PORTAL
-// ==================================================
+// ================================================================
+// 10. QONEXAI MASTER STARTUP PORTAL
+// ================================================================
+const QONEX_PORT = process.env.QONEX_PORT || 8080;
 
-const PORT = process.env.PORT || 8080;
-
-`/qonex-status` route
+// /qonex-status route
 app.get("/qonex-status", (req, res) => {
-     res.json({
-       status: "✅ QonexAI Live",
-       modules: 15,
-       timestamp: new Date(),
-       integrity: true,
-     });
-   });
-   ```
-
-app.listen(PORT, () => {
-  console.log(`🌀 QonexAI Server online at port ${PORT}`);
-  console.log(`🚀 System ready for quantum handshake on port ${PORT}`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  res.json({
+    status: "✅ QonexAI Live",
+    modules: 15,
+    timestamp: new Date(),
+    integrity: true,
+  });
 });
-//EOF
+
+app.listen(QONEX_PORT, () => {
+  console.log(`🌀 QonexAI Server online at port ${QONEX_PORT}`);
+  console.log(`🚀 System ready for quantum handshake on port ${QONEX_PORT}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
+});
+
+// ================================================================
+// EOF
+// ================================================================
