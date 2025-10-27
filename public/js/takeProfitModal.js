@@ -1,5 +1,4 @@
 // /public/js/takeProfitModal.js
-
 function openTakeProfitModal(profitAmount) {
   window.profitAmount = profitAmount;
   document.getElementById('takeProfitModal').style.display = 'block';
