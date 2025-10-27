@@ -1,0 +1,13 @@
+<div id="cpilotModalContainer"></div>
+
+<script>
+  fetch('js/cpilotModal.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('cpilotModalContainer').innerHTML = html;
+      const script = document.createElement('script');
+      script.src = 'js/cpilotModal.js';
+      document.body.appendChild(script);
+    });
+</script>
+```
