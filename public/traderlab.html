@@ -64,6 +64,18 @@
       }, 2000);
     }
   });
+
+<div id="modalContainer"></div>
+
+<script>
+  fetch('js/takeProfitModal.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('modalContainer').innerHTML = html;
+      const script = document.createElement('script');
+      script.src = 'js/takeProfitModal.js';
+      document.body.appendChild(script);
+    });
 </script>
 </body>
 </html>
