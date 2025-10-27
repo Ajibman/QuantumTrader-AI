@@ -1,4 +1,3 @@
-```js
 // /public/js/takeProfitModal.js
 
 function openTakeProfitModal(profitAmount) {
