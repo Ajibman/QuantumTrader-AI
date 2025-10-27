@@ -31,6 +31,39 @@
   <p>This is your AI-driven experimentation and simulation ground.</p>
 
   <button class="back-button" onclick="window.location.href='index.html'">← Back to Home</button>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Retrieve handshake data
+    const handshakeData = sessionStorage.getItem("QT_AI_HANDSHAKE");
+
+    if (handshakeData) {
+      const handshake = JSON.parse(handshakeData);
+      console.log("Handshake received:", handshake);
+
+      // Verify handshake origin and continuity
+      if (handshake.origin === "QuantumTrader-AI") {
+        document.body.innerHTML = `
+          <h2>Welcome to TraderLab™</h2>
+          <p>Handshake verified from <strong>${handshake.origin}</strong>.</p>
+          <p>Timestamp: ${new Date(handshake.timestamp).toLocaleString()}</p>
+        `;
+      } else {
+        document.body.innerHTML = `
+          <h2>Unauthorized Access</h2>
+          <p>Handshake invalid or expired. Please return to QuantumTrader-AI main portal.</p>
+        `;
+      }
+    } else {
+      document.body.innerHTML = `
+        <h2>No Handshake Detected</h2>
+        <p>Redirecting to QuantumTrader-AI for proper session start...</p>
+      `;
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+    }
+  });
+</script>
 </body>
 </html>
-```
