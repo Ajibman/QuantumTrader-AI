@@ -89,7 +89,44 @@
 <script src="src/...">
 <link href="src/...">
 </div>
+
+<div class="triangle-container">
+  <div class="node traderlab">
+    <button onclick="navigateTo('traderlab')">TraderLab™</button>
+  </div>
   
+  <div class="node cpilot">
+    <button onclick="startRelay()">CPilot™</button>
+  </div>
+  
+  <div class="node tradingfloor">
+    <button onclick="navigateTo('tradingfloor')">Trading Floor</button><br>
+    <small>Launches Nov 09, 2025</small>
+  </div>
+</div>
+
+<script>
+  function navigateTo(destination) {
+    alert(`Redirecting to ${destination}...`);
+    // Replace these with actual URLs/routes when ready
+    if (destination === 'traderlab') {
+      window.location.href = '/traderlab.html';
+    } else if (destination === 'tradingfloor') {
+      window.location.href = '/tradingfloor.html';
+    }
+  }
+
+  function startRelay() {
+    alert("🧠 CPilot™ activated.\nRouting commands...");
+    setTimeout(() => {
+      navigateTo('traderlab');
+      setTimeout(() => {
+        navigateTo('tradingfloor');
+      }, 2000); // Delay for dramatic handover
+    }, 1000);
+  }
+</script>
+ 
   <div id="qonex-status" style="padding: 1em; background: #eef; border: 1px solid #ccc;"></div>
    <div id="qonex-status" style="font-family: monospace; margin-top: 20px;"></div>
 
@@ -146,7 +183,6 @@
 </script>
    
   <footer>
-     
   <p>Aspiration/Concept: Business at the speed of light...</p>
   <p>© 2025 QuantumTrader AI™</p>
   </footer>
