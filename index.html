@@ -185,8 +185,34 @@
 
   fetchQonexStatus();
   setInterval(fetchQonexStatus, 10000); // Refresh every 10s
+</script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Optional: handshake token or version check
+    const handshake = {
+      origin: "QuantumTrader-AI",
+      next: "traderlab.html",
+      timestamp: Date.now()
+    };
+
+    sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+    console.log("Handshake stored:", handshake);
+
+    // Auto-forward after 1 second
+    setTimeout(() => {
+      window.location.href = "traderlab.html";
+    }, 1000);
+  });
 </script>
-   
+
+<h2>Initializing QuantumTrader AI...</h2>
+<p>Please wait while we establish secure handshake with TraderLab™...</p>
+
   <footer>
   <p>Aspiration/Concept: Business at the speed of light...</p>
   <p>© 2025 QuantumTrader AI™</p>
