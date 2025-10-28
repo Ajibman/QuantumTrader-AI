@@ -32,7 +32,23 @@
 <p>Handshake received from TraderLab™...</p>
   <p>Your command panel for intelligent commercial cruise across QuantumTrader-AI.</p>
 
+  <script>
+  const handshake = {
+    origin: "CPilot",
+    next: "tradingfloor.html",
+    timestamp: Date.now()
+  };
+
+  sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+  console.log("Routing to Trading Floor...");
+
+  setTimeout(() => {
+window.location.href = "tradingfloor.html";
+  }, 1500);
+</script>
+
   <button class="back-button" onclick="window.location.href='index.html'">← Back to Home</button>
 </body>
 </html>
-```
+
+
