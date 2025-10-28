@@ -77,5 +77,23 @@
       document.body.appendChild(script);
     });
 </script>
+
+<script>
+  const handshake = {
+    origin: "TraderLab",
+    next: "cpilot.html",
+    timestamp: Date.now()
+  };
+
+  sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+  console.log("Handshake updated:", handshake);
+
+  setTimeout(() => {
+    window.location.href = "cpilot.html";
+  }, 1500); // slight delay before auto-forward
+</script>
+
+<h2>Loading CPilot™...</h2>
+<p>Routing securely from TraderLab™...</p>
 </body>
 </html>
