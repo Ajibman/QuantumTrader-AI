@@ -1,9 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>CPilot™ | QuantumTrader-AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const handshakeData = sessionStorage.getItem("QT_AI_HANDSHAKE");
+      if (handshakeData) {
+        const handshake = JSON.parse(handshakeData);
+        console.log("Handshake received:", handshake);
+
+        if (handshake.origin === "TraderLab™") {
+          document.body.innerHTML = `
+            <h2>Welcome to CPilot™</h2>
+            <p>Handshake verified from <strong>${handshake.origin}</strong>.</p>
+            <button id="goTradingFloor">Enter TradingFloor™</button>
+          `;
+
+          document.getElementById("goTradingFloor").addEventListener("click", () => {
+            const nextHandshake = {
+              origin: "CPilot™",
+              next: "tradingfloor.html",
+              timestamp: Date.now()
+            };
+            sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(nextHandshake));
+            window.location.href = "tradingfloor.html";
+          });
+        }
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
   <style>
     body {
       background: #0d1117;
