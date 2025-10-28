@@ -269,7 +269,24 @@
       modal.classList.remove('active');
     });
   </script>
- 
+
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const handshake = {
+    origin: "QuantumTrader-AI",
+    next: "traderlab.html",
+    timestamp: Date.now()
+  };
+  sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+  console.log("Handshake stored:", handshake);
+  setTimeout(() => {
+    window.location.href = "traderlab.html";
+  }, 1000);
+});
+</script>
+
+<h2>Initializing QuantumTrader-AI...</h2>
+<p>Please wait while we establish secure handshake with TraderLab™...</p>
   <!-- Living Ori Olokun -->
   <img src="./assets/qtai-logo-ori-olokun.png" alt="Ori Olokun" class="ori-olokun" />
 
