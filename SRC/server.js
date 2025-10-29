@@ -1,16 +1,30 @@
- // ============================================================
+// ============================================================
 // 🌐 QuantumTrader AI — QonexAI Unified Server Kernel
 // Architect/Builder: Olagoke Ajibulu
 // Build Channel: Core Synchronization Layer
 // Date: 25:10:2025
 // ============================================================
 
+// server.js
 "use strict";
 
-const express = require("express");
-const http = require("http");
-const path = require("path");
-const fs = require("fs");
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Fallback route to index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`QuantumTrader-AI running at http://localhost:${PORT}`);
+});
 
 // ============================================================
 // PATH EQUIVALENCE BRIDGE v2
