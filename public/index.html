@@ -199,12 +199,12 @@
     }
   </style>
 </head>
-<body>
 
-  <!-- Top Rotating Globe -->
+<body>
+  <!-- === Top Rotating Globe === -->
   <img src="./Assets/qtai-logo-globe.png" alt="Quantum Globe" class="globe" />
 
-  <!-- Central Triangle Structure -->
+  <!-- === Central Triangle Structure === -->
   <div class="triangle-container">
     <svg>
       <line id="line1" x1="50%" y1="100%" x2="0%" y2="50%" class="connection" />
@@ -231,7 +231,7 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- === Modal === -->
   <div class="modal" id="traderlabModal">
     <div class="modal-content">
       <h2>TraderLab™</h2>
@@ -243,12 +243,32 @@
       </div>
     </div>
   </div>
-<div class="navigation">
-  <button onclick="window.location.href='traderlab.html'">Enter TraderLab™</button>
-  <button onclick="window.location.href='cpilot.html'">Enter CPilot™</button>
-</div>
 
+  <!-- === Navigation Buttons === -->
+  <div class="navigation">
+    <button onclick="window.location.href='traderlab.html'">Enter TraderLab™</button>
+    <button onclick="window.location.href='cpilot.html'">Enter CPilot™</button>
+  </div>
 
+  <!-- === Handshake Script === -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const handshake = {
+        origin: "QuantumTrader-AI",
+        next: "traderlab.html",
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+      console.log("Handshake stored:", handshake);
+
+      // 🔄 Uncomment to auto-redirect to TraderLab
+      // setTimeout(() => {
+      //   window.location.href = "traderlab.html";
+      // }, 1000);
+    });
+  </script>
+
+  <!-- === Modal Logic === -->
   <script>
     const traderlabNode = document.getElementById('traderlabNode');
     const modal = document.getElementById('traderlabModal');
@@ -257,7 +277,6 @@
 
     traderlabNode.addEventListener('click', () => {
       modal.classList.add('active');
-      // Pulse connecting arcs once
       connections.forEach(line => {
         line.classList.add('pulse');
         setTimeout(() => line.classList.remove('pulse'), 1600);
@@ -270,27 +289,9 @@
     });
   </script>
 
- <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const handshake = {
-    origin: "QuantumTrader-AI",
-    next: "traderlab.html",
-    timestamp: Date.now()
-  };
-  sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
-  console.log("Handshake stored:", handshake);
-  setTimeout(() => {
-    window.location.href = "traderlab.html";
-  }, 1000);
-});
-</script>
+  <!-- === Footer and Ori Olokun === -->
+  <img src="./Assets/qtai-logo-ori-olokun.png" alt="Ori Olokun" class="ori-olokun" />
 
-<h2>Initializing QuantumTrader-AI...</h2>
-<p>Please wait while we establish secure handshake with TraderLab™...</p>
-  <!-- Living Ori Olokun -->
-  <img src="./assets/qtai-logo-ori-olokun.png" alt="Ori Olokun" class="ori-olokun" />
-
-  <!-- Footer -->
   <div class="footer">
     © 2025 QuantumTrader-AI™ | In collaboration with Olagoke Ajibulu — Architect & Builder
   </div>
