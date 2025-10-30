@@ -52,3 +52,15 @@ Each module is continuously supervised by **CCLM²™** — the Cognitive Contro
 
 git clone https://github.com/<your-username>/QuantumTrader-AI.git
    
+📜 Copyright
+
+© 2025 Olagoke Ajibulu
+All Rights Reserved.
+Proudly rooted in the spirit of Ayélùjàrà (the Internet) — A Yoruba insight into universal connection
+and Aiyelujaorun - The Yorubaland terminology for everything Quantum [Biology, Chemistry, Physics...].
+
+---
+
+🕊️ Motto
+
+“Peace with afterburners — for all time.”
