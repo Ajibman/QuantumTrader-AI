@@ -1,17 +1,197 @@
- // ============================================================
+// server.js/
+// ============================
+// QuantumTrader AI — server.js
+// Core runtime and logic harness
+// Created by Olagoke Ajibulu
+// ============================
+
+const express = require("express");
+const path = require("path");
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// --- 1. Core Initialization ---
+console.log("⚙️ Initializing QuantumTrader AI runtime...");
+
+// ----------------------------
+// Games Pavilion Guard Middleware
+// ----------------------------
+
+/**
+ * Simple in-memory request tracker + optional persistent bans.
+ * Place after your logAudit/ensureLogsDir functions so they can be used here.
+ */
+
+const RATE_WINDOW_MS = 60 * 1000;      // 60s sliding window
+const RATE_LIMIT = 80;                 // >80 requests per window => throttle
+const BAN_SECONDS = 15 * 60;           // 15 minutes ban duration
+const PERSIST_BANS = true;             // toggle persistence to logs/bans.json
+
+const requestMap = new Map(); // ip -> { timestamps: [t1,t2...], bannedUntil: Date|null }
+
+// load persisted bans if present
+const BANS_FILE = path.join(LOGS_DIR, "bans.json");
+function loadPersistedBans() {
+  try {
+    if (PERSIST_BANS && fs.existsSync(BANS_FILE)) {
+      const raw = fs.readFileSync(BANS_FILE, "utf8");
+      const data = JSON.parse(raw);
+      Object.entries(data).forEach(([ip, until]) => {
+        const obj = { timestamps: [], bannedUntil: new Date(until) };
+        requestMap.set(ip, obj);
+        logAudit(`[GUARD] Restored ban for ${ip} until ${until}`);
+      });
+    }
+  } catch (err) {
+    logAudit(`[GUARD] Failed to load persisted bans: ${err.message}`);
+  }
+}
+function persistBans() {
+  if (!PERSIST_BANS) return;
+  try {
+    const out = {};
+    requestMap.forEach((v, ip) => {
+      if (v.bannedUntil && v.bannedUntil > new Date()) {
+        out[ip] = v.bannedUntil.toISOString();
+      }
+    });
+    fs.writeFileSync(BANS_FILE, JSON.stringify(out, null, 2), "utf8");
+    logAudit("[GUARD] Persisted bans to disk");
+  } catch (err) {
+    logAudit(`[GUARD] Failed to persist bans: ${err.message}`);
+  }
+}
+loadPersistedBans();
+
+/**
+ * Middleware: guardRequests
+ * - If IP is banned -> redirect to /games-pavilion
+ * - Otherwise count requests in sliding window; if over threshold, ban and redirect
+ */
+function guardRequests(req, res, next) {
+  try {
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || "").split(",")[0].trim();
+    if (!ip) return next();
+
+    let state = requestMap.get(ip);
+    if (!state) {
+      state = { timestamps: [], bannedUntil: null };
+      requestMap.set(ip, state);
+    }
+
+    // If currently banned
+    if (state.bannedUntil && new Date() < new Date(state.bannedUntil)) {
+      logAudit(`[GUARD] Rejected request from banned IP ${ip}`);
+      return res.redirect(302, "/games-pavilion");
+    }
+
+    // Clean up timestamps older than window
+    const now = Date.now();
+    state.timestamps = state.timestamps.filter((t) => now - t <= RATE_WINDOW_MS);
+    state.timestamps.push(now);
+
+    // If exceeds threshold => ban
+    if (state.timestamps.length > RATE_LIMIT) {
+      const until = new Date(now + BAN_SECONDS * 1000);
+      state.bannedUntil = until.toISOString();
+      logAudit(`[GUARD] IP ${ip} exceeded rate limit (${state.timestamps.length}). Banned until ${state.bannedUntil}`);
+      persistBans();
+      return res.redirect(302, "/games-pavilion");
+    }
+
+    // Otherwise proceed
+    return next();
+  } catch (err) {
+    // Non-fatal — log then continue
+    logAudit(`[GUARD] middleware error: ${err.message}`);
+    return next();
+  }
+}
+
+// Attach guard middleware early in the chain so it screens all requests
+app.use(guardRequests);
+
+// Add a simple route for the games pavilion (harmless)
+app.get("/games-pavilion", (req, res) => {
+  res.type("html").send(`
+    <!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Games Pavilion</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <style>
+          body { font-family: Arial, sans-serif; text-align:center; padding:3rem; background:#0b0f1a; color:#dceefc; }
+          .box { max-width:640px; margin:0 auto; padding:2rem; border-radius:12px; background:rgba(255,255,255,0.03); }
+          h1 { margin-top:0; color:#78f3ff; }
+          p { color:#bcd; }
+          a { color:#8ef; text-decoration:none; }
+        </style>
+      </head>
+      <body>
+        <div class="box">
+          <h1>Welcome to the Games Pavilion 🎮</h1>
+          <p>Looks like you were a bit too curious — relax and enjoy a short time out. If you're a legitimate user, please try again later.</p>
+          <p><small>This is a friendly timeout page served by QuantumTrader AI.</small></p>
+          <p><a href="/">Return to QuantumTrader AI</a></p>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
+// à--- 2. Static File Routing (Frontend Gateway) ---
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+// --- 3. Root Route ---
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// --- 4. Placeholder for Future Modules (CCLM²™ Integration) ---
+try {
+  const modulesPath = path.join(__dirname, "modules");
+  console.log("🔗 Modules directory detected:", modulesPath);
+  // Future: dynamically load modules here
+  // Example: require("./modules/module01_tradercore.js");
+} catch (err) {
+  console.warn("⚠️ Module loader initialization skipped:", err.message);
+}
+
+// --- 5. Medusa™ Silent Watcher (Self-Healing Placeholder) ---
+function medusaWatcher() {
+  console.log("🕊️ Medusa™ active: monitoring system resilience...");
+  // Future: silent recovery and thread regeneration routines
+}
+setTimeout(medusaWatcher, 3000);
+
+// --- 6. Server Start ---
+app.listen(PORT, () => {
+  console.log(`🚀 QuantumTrader AI server active on port ${PORT}`);
+  console.log("🌐 Access via http://localhost:" + PORT);
+  console.log("🧠 CCLM²™ supervision engaged.");
+});
+
+// --- 7. Graceful Exit Handling ---
+process.on("SIGINT", () => {
+  console.log("\n🛑 QuantumTrader AI shutdown initiated...");
+  console.log("🧩 Medusa™ preserving state before exit.");
+  process.exit();
+});
+
+// ============================================================
 // 🌐 QuantumTrader AI — QonexAI Unified Server Kernel
 // Architect/Builder: Olagoke Ajibulu
 // Build Channel: Core Synchronization Layer
 // Date: 25:10:2025
 // ============================================================
-
 "use strict";
 
 const express = require("express");
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
-
 // ============================================================
 // PATH EQUIVALENCE BRIDGE v2
 // Ensures SRC/core and src/core remain fully resolvable
