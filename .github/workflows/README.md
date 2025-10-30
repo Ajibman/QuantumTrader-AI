@@ -7,9 +7,10 @@
 ## 🌍 Vision
 
 QuantumTrader AI is not just a trading assistant — it is a **cognitive ecosystem**.  
-It listens, learns, adapts and evolves within **Ayélùjàrà** (the Yoruba term for the Internet), blending quantum logic with human intuition.
+It listens, learns, adapts and evolves within **Ayélùjàrà** (the Yoruba terminology for the Internet) and **Ayélùjàọ̀run** the term for everything Quantum.
+blending quantum logic with human intuition.
 
-It is also in business as QonexAI (Quantum-origen Neural Exchange AI Network). Qonex is pronounced "Konex."
+It is also in business as QonexAI (Quantum-origin Neural Exchange AI Network). Qonex is pronounced "Konex."
 
 ## ⚙️ Project Structure
 
