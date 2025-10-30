@@ -2,6 +2,8 @@
 # scripts/log-test.sh
 # Run visitor simulation tests and log results safely
 
+"main": "server.js"
+
 LOG_FILE="TEST_LOG.md"
 
 echo "You are about to run visitor interaction tests and log results."
