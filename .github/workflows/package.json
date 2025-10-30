@@ -1,0 +1,24 @@
+{
+  "name": "quantumtrader-ai",
+  "version": "1.0.0",
+  "description": "QuantumTrader AI — a next-generation autonomous trading intelligence system created by Olagoke Ajibulu, blending cosmic logic with ethical AI for real-time market orchestration.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "keywords": [
+    "QuantumTrader",
+    "AI",
+    "Autonomous",
+    "Trading",
+    "Node.js",
+    "Olagoke Ajibulu"
+  ],
+  "author": "Olagoke Ajibulu",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "path": "^0.12.7"
+  }
+}
