@@ -1,1 +1,221 @@
-index html
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuantumTrader AI™/QonexAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      text-align: center;
+    }
+    header {
+      padding: 1rem;
+    }
+    }
+    @media (min-width: 768px) {
+      #qtai-logo {
+        width: 250px;
+        height: 250px;
+      }
+    }
+    main {
+      padding: 2rem;
+    }
+    }
+    /* Triangular layout */
+    .triangle-container {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 2rem auto;
+    }
+    .node {
+      position: absolute;
+      background: #161b22;
+      border: 2px solid #58a6ff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #238636;
+      border-color: #2ea043;
+    }
+    .base-left {
+      bottom: 0;
+      left: 0;
+    }
+    .base-right {
+      bottom: 0;
+      right: 0;
+    }
+    /* Event widget */
+    #event-widget {
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #161b22;
+      border-radius: 8px;
+      width: 300px;
+    }
+    /* Footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+      
+<div id="globe">
+<img src="/Assets/qtai_globe.png" alt="Quantum Globe" style="width: 100%; height: auto;" />
+</div>
+    <h1>QuantumTrader-AI™</h1>
+  </header>
+ <main>
+
+  <div class="logo">
+  <img src="Assets/coming-soon-logo.png" alt="Coming Soon Logo">
+</div>
+<div>
+<script src="src/...">
+<link href="src/...">
+</div>
+ 
+<div class="triangle-container">
+  <div class="node traderlab">
+    <button onclick="navigateTo('traderlab')">TraderLab™</button>
+  </div>
+  
+  <div class="node cpilot">
+    <button onclick="startRelay()">CPilot™</button>
+  </div>
+  
+  <div class="node tradingfloor">
+    <button onclick="navigateTo('tradingfloor')">Trading Floor</button><br>
+    <small>Launches Nov 09, 2025</small>
+  </div>
+</div>
+
+<script>
+  function navigateTo(destination) {
+    alert(`Redirecting to ${destination}...`);
+    // Replace these with actual URLs/routes when ready
+    if (destination === 'traderlab') {
+      window.location.href = '/traderlab.html';
+    } else if (destination === 'tradingfloor') {
+      window.location.href = '/tradingfloor.html';
+    }
+  }
+
+  function startRelay() {
+    alert("🧠 CPilot™ activated.\nRouting commands...");
+    setTimeout(() => {
+      navigateTo('traderlab');
+      setTimeout(() => {
+        navigateTo('tradingfloor');
+      }, 2000); // Delay for dramatic handover
+    }, 1000);
+  }
+</script>
+ 
+  <div id="qonex-status" style="padding: 1em; background: #eef; border: 1px solid #ccc;"></div>
+   <div id="qonex-status" style="font-family: monospace; margin-top: 20px;"></div>
+
+    <div class="triangle-container">
+      <div class="node apex">Trading Floor</div>
+      <div class="node base-left">TraderLab™</div>
+      <div class="node base-right">CPilot™</div>
+    </div>
+
+<a href="traderlabtraderlab.html">
+  <button>Enter TraderLab™</button>
+</a>
+ 
+    <section id="event-widget">
+      <h2>Latest Events</h2>
+      <button onclick="location.reload();">Click to Refresh</button>
+      <!-- Dynamic event content can go here -->
+    </section>
+  </main>
+
+  <script>
+  async function checkQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      console.log("📡 QonexAI Status:", data);
+
+      const statusDiv = document.getElementById('qonex-status');
+      if (statusDiv) {
+        statusDiv.innerHTML = `
+          <p>Status: data.status</p>
+          <p>Modules Active:{data.modules}</p>
+          <p>Timestamp: new Date(data.timestamp).toLocaleString()</p>
+          <p>Integrity:{data.integrity ? '✅ Stable' : '⚠️ Check Required'}</p>
+        `;
+      }
+    } catch (err) {
+      console.error("❌ QonexAI status check failed", err);
+    }
+  }
+
+  window.onload = checkQonexStatus;
+</script>
+
+<script>
+  async function fetchQonexStatus() {
+    try {
+      const res = await fetch('/qonex-status');
+      const data = await res.json();
+      document.getElementById('qonex-status').innerText =
+        `Status: data.status | Modules:{data.modules} | Integrity: data.integrity ? '✅' : '❌' | Time:{new Date(data.timestamp).toLocaleString()}`;
+    } catch (err) {
+      document.getElementById('qonex-status').innerText = 'Error fetching status ❌';
+    }
+  }
+
+  fetchQonexStatus();
+  setInterval(fetchQonexStatus, 10000); // Refresh every 10s
+</script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Optional: handshake token or version check
+    const handshake = {
+      origin: "QuantumTrader-AI",
+      next: "traderlab.html",
+      timestamp: Date.now()
+    };
+
+    sessionStorage.setItem("QT_AI_HANDSHAKE", JSON.stringify(handshake));
+    console.log("Handshake stored:", handshake);
+
+    // Auto-forward after 1 second
+    setTimeout(() => {
+      window.location.href = "traderlab.html";
+    }, 1000);
+  });
+</script>
+
+<h2>Initializing QuantumTrader AI...</h2>
+<p>Please wait while we establish secure handshake with TraderLab™...</p>
+
+  <footer>
+  <p>Aspiration/Concept: Business at the speed of light...</p>
+  <p>© 2025 QuantumTrader AI™</p>
+  </footer>
+</body>
+</html>
