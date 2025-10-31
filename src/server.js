@@ -10,6 +10,39 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// === QuantumTrader-AI™ Asset Verification System ===
+// (c) 2025 QuantumTrader-AI™ | Olagoke Ajibulu — Architect & Builder
+
+import fs from 'fs';
+import path from 'path';
+
+// Define public assets directory
+const assetsDir = path.join(process.cwd(), 'public', 'assets', 'images');
+
+// List all required assets for verification
+const requiredAssets = [
+  'qtai_globe.png',
+  'traderlab_icon.png',
+  'tradingfloor_main.png',
+  'cpilot_panel.png',
+  'ori_olokun.png',
+  'background_cosmic.png'
+];
+
+// Perform a self-check during server start
+console.log('\n🔍 QuantumTrader-AI Asset Verification in Progress...\n');
+
+requiredAssets.forEach(file => {
+  const filePath = path.join(assetsDir, file);
+  if (fs.existsSync(filePath)) {
+    console.log(`✅ Verified: ${file}`);
+  } else {
+    console.warn(`⚠️ Missing: ${file} — please ensure it's in /public/assets/images/`);
+  }
+});
+
+console.log('\nAsset verification completed.\n');
+
 // --- 1. Core Initialization ---
 console.log("⚙️ Initializing QuantumTrader AI runtime...");
 
