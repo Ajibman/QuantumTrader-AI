@@ -202,7 +202,7 @@
 
 <body>
   <!-- === Top Rotating Globe === -->
-  <img src="./Assets/qtai-logo-globe.png" alt="Quantum Globe" class="globe" />
+  <img src="./Assets/qtai_globe.png" alt="Quantum Globe" class="globe" />
 
   <!-- === Central Triangle Structure === -->
   <div class="triangle-container">
@@ -288,9 +288,33 @@
       modal.classList.remove('active');
     });
   </script>
+  
+  <script>
+  // QuantumTrader-AI Image Audit Script
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = [
+      "Assets/qtai_globe.png",
+      "Assets/qtai_ori_olokun.png",
+      "Assets/traderlab_icon.png",
+      "Assets/cpilot_panel.png",
+      "Assets/tradingfloor_main.png"
+    ];
+
+    console.log("🔍 QuantumTrader-AI Image Audit: Starting verification...");
+
+    images.forEach(src => {
+      const img = new Image();
+      img.onload = () => console.log(`✅ ${src} — OK (loaded successfully)`);
+      img.onerror = () => console.warn(`❌ ${src} — MISSING or not accessible`);
+      img.src = src + "?t=" + Date.now(); // cache-busting timestamp
+    });
+
+    console.log("🛰️ Audit initialized — results will appear in the console.");
+  });
+</script>
 
   <!-- === Footer and Ori Olokun === -->
-  <img src="./Assets/qtai-logo-ori-olokun.png" alt="Ori Olokun" class="ori-olokun" />
+  <img src="./Assets/qtai_ori_olokun.png" alt="Ori Olokun" class="ori_olokun" />
 
   <div class="footer">
     © 2025 QuantumTrader-AI™ | In collaboration with Olagoke Ajibulu — Architect & Builder
