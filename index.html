@@ -1,113 +1,158 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader-AI™</title>
+<style>
+    /* Global styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-image: url('Assets/background_cosmic.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        color: white;
+        overflow-x: hidden;
     }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
+    /* Main container */
+    .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 
-    .logo-container {
-      margin-top: 80px;
+    /* Rotating globe */
+    #globe {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 2rem;
+        transition: opacity 0.5s ease;
+        animation: rotateGlobe 20s linear infinite;
     }
 
-    .logo-container img {
-      width: 250px;
-      height: auto;
+    @keyframes rotateGlobe {
+        0% { transform: rotateY(0deg); }
+        100% { transform: rotateY(360deg); }
     }
 
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
+    /* Triangle Node Layout */
+    .triangle {
+        position: relative;
+        width: 300px;
+        height: 260px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-bottom: 3rem;
     }
 
+    .node {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(0, 255, 255, 0.6); /* stronger base color */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.9); /* stronger glow */
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        animation: pulseNode 2.5s infinite alternate;
+    }
+
+    @keyframes pulseNode {
+        0% { box-shadow: 0 0 15px rgba(0,255,255,0.7); background: rgba(0,255,255,0.5); }
+        100% { box-shadow: 0 0 30px rgba(0,255,255,1); background: rgba(0,255,255,0.8); }
+    }
+
+    .node:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 35px rgba(0,255,255,1);
+    }
+
+    .trading-floor { top: 0; left: 50%; transform: translateX(-50%); }
+    .trader-lab { bottom: 0; left: 0; }
+    .c-pilot { bottom: 0; right: 0; }
+
+    /* Ori_Olokun */
+    #ori_olokun {
+        width: 80px;
+        height: 80px;
+        margin: 1rem 0;
+        animation: blinkRoll 3s infinite;
+    }
+
+    @keyframes blinkRoll {
+        0%, 60%, 100% { transform: rotate(0deg); opacity: 1; }
+        30% { transform: rotate(10deg); opacity: 0.8; }
+    }
+
+    /* Footer */
     footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+        background: rgba(0,0,0,0.4);
     }
 
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
+    /* Responsive scaling */
+    @media (max-width: 480px) {
+        .triangle { width: 220px; height: 200px; }
+        .node { width: 80px; height: 80px; font-size: 0.9rem; }
+        #globe { width: 150px; height: 150px; }
+        #ori_olokun { width: 60px; height: 60px; }
     }
-
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
+</style>
 </head>
 <body>
+<div class="container">
+    <!-- Rotating globe -->
+    <img src="Assets/qtai_globe.png" id="globe" alt="QuantumTrader Globe">
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+    <!-- Triangle Node Layout -->
+    <div class="triangle">
+        <div class="node trading-floor">TradingFloor™</div>
+        <div class="node trader-lab">TraderLab™</div>
+        <div class="node c-pilot">CPilot™</div>
+    </div>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
-  </div>
+    <!-- Ori_Olokun -->
+    <img src="Assets/ori_olokun.png" id="ori_olokun" alt="Ori Olokun">
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
+</div>
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
+<!-- Footer -->
+<footer>
+    © 2025 QuantumTrader-AI™ | Architect: Olagoke Ajibulu
+</footer>
 
-  <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+<script>
+    // Globe rotation pause/resume logic
+    const globe = document.getElementById('globe');
+    const nodes = document.querySelectorAll('.node');
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
-    }
-  </script>
+    nodes.forEach(node => {
+        node.addEventListener('click', () => {
+            globe.style.animationPlayState = 'paused';
+            globe.style.opacity = 0.6;
+            // simulate modal close after 2 seconds for demo
+            setTimeout(() => {
+                globe.style.animationPlayState = 'running';
+                globe.style.opacity = 1;
+            }, 2000);
+        });
+    });
+</script>
 </body>
 </html>
