@@ -16,10 +16,17 @@ const PORT = process.env.PORT || 3000;
 import fs from 'fs';
 import path from 'path';
 
-// Define public assets directory
-const assetsDir = path.join(process.cwd(), 'public', 'assets', 'images');
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
 
-// List all required assets for verification
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// === QuantumTrader-AI™ Asset Verification & Audit System ===
+const assetsDir = path.join(process.cwd(), 'public', 'assets', 'images');
+const auditFile = path.join(process.cwd(), 'public', 'assets', 'assets_audit.json');
+
 const requiredAssets = [
   'qtai_globe.png',
   'traderlab_icon.png',
@@ -29,7 +36,39 @@ const requiredAssets = [
   'background_cosmic.png'
 ];
 
-// Perform a self-check during server start
+console.log('\n🔍 QuantumTrader-AI Asset Verification Started...\n');
+
+let auditResults = [];
+
+requiredAssets.forEach(file => {
+  const filePath = path.join(assetsDir, file);
+  const exists = fs.existsSync(filePath);
+  if (exists) console.log(`✅ Verified: ${file}`);
+  else console.warn(`⚠️ Missing: ${file}`);
+  auditResults.push({
+    file,
+    status: exists ? 'verified' : 'missing',
+    checkedAt: new Date().toISOString()
+  });
+});
+
+try {
+  fs.writeFileSync(auditFile, JSON.stringify(auditResults, null, 2));
+  console.log(`\n📘 Audit saved: ${auditFile}`);
+} catch (err) {
+  console.error('❌ Error writing audit file:', err);
+}
+
+console.log('\n✨ Asset verification completed.\n');
+
+// === Static Files + App Logic ===
+app.use(express.static('public'));
+
+app.listen(PORT, () => {
+  console.log(`🚀 QuantumTrader-AI running at http://localhost:${PORT}`);
+});
+ 
+  // Perform a self-check during server start
 console.log('\n🔍 QuantumTrader-AI Asset Verification in Progress...\n');
 
 requiredAssets.forEach(file => {
