@@ -1,9 +1,0 @@
-```js
-const sectors = [
-  "SMEs & African SMEs",
-  "African Heavy Industries",
-  "Commodities (including African resources)",
-  "Metals (African mining markets)",
-  "Indexes (African stock indices, global indices)",
-  "Global Fortune 500",
-  "US Fortune 500"

@@ -1,1 +1,0 @@
-Cooperatives.js
