@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader-AI™ Companion</title>
+<link rel="stylesheet" href="Assets/style.css">
+</head>
+<body>
+<div class="container">
+    <!-- Rotating globe -->
+    <img src="Assets/qtai_globe.png" id="globe" alt="QuantumTrader Globe">
+
+    <!-- Triangle Node Layout -->
+    <div class="triangle">
+        <div class="node trading-floor">TradingFloor™</div>
+        <div class="node trader-lab">TraderLab™</div>
+        <div class="node c-pilot">CPilot™</div>
+    </div>
+
+    <!-- Ori_Olokun -->
+    <img src="Assets/ori_olokun.png" id="ori_olokun" alt="Ori Olokun">
+
+</div>
+
+<!-- Peace Index Button -->
+<button id="peaceIndex">Peace Index</button>
+
+<footer>
+    © 2025 QuantumTrader-AI™ | Architect & Builder: Olagoke Ajibulu
+</footer>
+
+<script src="Assets/script.js"></script>
+<script>
+/* Handshake bridge logic with index.html via server.js */
+// Example: internal communication and load distribution
+// index2.html listens for messages or commands from index.html
+// Heavy computations or offloaded functions are processed here
+window.addEventListener('message', (event) => {
+    // validate origin if needed
+    const { action, data } = event.data;
+    switch(action) {
+        case 'updateNodeState':
+            // handle node updates from index.html
+            console.log('Node update received:', data);
+            break;
+        case 'performHeavyTask':
+            // simulate heavy backend computation
+            console.log('Processing heavy task:', data);
+            break;
+        default:
+            console.log('Unknown action from index.html:', action);
+    }
+});
+</script>
+</body>
+</html>
