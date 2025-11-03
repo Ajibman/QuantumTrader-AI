@@ -1,501 +1,361 @@
- <!DOCTYPE html>
+ <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>QuantumTrader-AI™ — Landing</title>
 
-  <!-- Styles: mobile-first, cosmic glass theme -->
+  <!-- Basic styles & responsive layout -->
   <style>
     :root{
       --accent: #00ffe0;
       --accent-2: #2ea043;
-      --bg-1: #050505;
-      --bg-2: #0b0b0f;
+      --bg: #050509;
+      --panel: rgba(21,25,30,0.85);
       --glass: rgba(255,255,255,0.04);
-      --glass-strong: rgba(255,255,255,0.06);
-      --mono: "Poppins", system-ui, -apple-system, "Helvetica Neue", Arial;
-      --node-size: 100px;
     }
-
-    html,body{height:100%;margin:0;padding:0;background: radial-gradient(circle at 30% 10%, rgba(0,60,60,0.08), transparent 20%), url('./Assets/background_cosmic.png'); background-color:var(--bg-1); color:#e6f6f8; font-family:var(--mono); -webkit-font-smoothing:antialiased;}
-
-    /* Top header */
-    header{
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 16px;
-      box-sizing:border-box;
-      position:relative;
-      z-index:6;
-      gap:12px;
-      backdrop-filter: blur(4px);
-    }
-    .brand {display:flex;align-items:center;gap:12px}
-    .brand img{width:56px;height:56px;border-radius:12px;object-fit:contain}
-    .brand h1{font-size:1.05rem;margin:0;letter-spacing:0.4px}
-    .header-right{display:flex;align-items:center;gap:8px}
-
-    /* Peace Index button */
-    .peace-wrap{position:relative}
-    #peace-btn{
-      background:linear-gradient(180deg,var(--glass-strong),var(--glass));
-      border:1px solid rgba(255,255,255,0.06);
-      color:var(--accent);
-      padding:.35rem .6rem;
-      border-radius:8px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      font-size:0.75rem;
-      box-shadow:0 6px 18px rgba(0,0,0,0.6);
-    }
-    .finger{
-      font-size:1rem;
-      display:inline-block;
-      transform-origin:center;
-      animation: finger-bob 1.6s ease-in-out infinite;
-    }
-    @keyframes finger-bob {
-      0%{ transform: translateY(0) rotate(-10deg) }
-      50%{ transform: translateY(-4px) rotate(-6deg) }
-      100%{ transform: translateY(0) rotate(-10deg) }
-    }
-
-    /* Main content */
-    main{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 12px 60px;box-sizing:border-box;gap:18px;min-height:calc(100vh - 120px);}
-
-    /* Globe */
-    #globe {
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      filter: drop-shadow(0 8px 30px rgba(0,255,224,0.06));
-    }
-    #globe img{width:100%;height:100%;object-fit:contain;animation:spin 30s linear infinite;display:block}
-    .globe-paused img{animation-play-state:paused}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background: radial-gradient(circle at 20% 10%, rgba(0,50,40,0.08), transparent 10%), url('./Assets/background_cosmic.png') no-repeat center/cover, var(--bg); color:#e8f6f5; -webkit-font-smoothing:antialiased;}
+    .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 16px 40px;box-sizing:border-box;}
+    header{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;padding:10px 8px;}
+    .brand{display:flex;align-items:center;gap:12px;}
+    .brand img{width:60px;height:60px;object-fit:contain;border-radius:12px}
+    .brand h1{font-size:1.15rem;margin:0;font-weight:600;letter-spacing:0.6px}
+    /* Peace Index button top-right */
+    .controls{display:flex;align-items:center;gap:12px;}
+    .peace-btn{position:relative;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);cursor:pointer;font-weight:600}
+    .finger{display:inline-block;transform-origin:center;animation:bounce 2s infinite; font-size:1.05rem}
+    @keyframes bounce{0%{transform:translateY(0);}50%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+    /* Main triangle layout */
+    .main {width:100%;max-width:900px;padding:22px 12px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;}
+    .globe-wrap{display:flex;align-items:center;justify-content:center;margin:8px 0 18px;}
+    .globe {width:140px;height:140px;border-radius:50%;overflow:hidden;display:block;animation:spin 36s linear infinite;border:2px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(0,255,224,0.06)}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
     /* Triangle container */
-    .triangle-container{
-      position:relative;
-      width:320px;
-      height:260px;
-      max-width:92vw;
-      margin-top:6px;
-    }
-    svg.connect{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-
-    /* Nodes */
-    .node{
-      position:absolute;
-      width:var(--node-size);
-      height:var(--node-size);
-      min-width:var(--node-size);
-      min-height:var(--node-size);
-      border-radius:18px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.06);
-      transition:transform .28s cubic-bezier(.2,.9,.28,1), box-shadow .28s;
-      cursor:pointer;
-      backdrop-filter: blur(6px);
-    }
-    .node img{width:48px;height:48px;margin-bottom:6px;display:block;border-radius:8px}
-    .node p{margin:0;font-size:0.78rem}
-    .node:active,.node:focus,.node:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
-    /* positions: apex on top center, traderlab left base, cpilot right base */
-    .node.apex{top:6%;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:14px}
-    .node.base-left{left:6%;bottom:6%}
-    .node.base-right{right:6%;bottom:6%}
-
-    /* Modal style (shared) */
-    .modal {
-      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-      background:rgba(3,6,9,0.72);backdrop-filter: blur(6px);opacity:0;visibility:hidden;transition:all .22s ease;z-index:40;
-    }
-    .modal.active{opacity:1;visibility:visible}
-    .modal-card{width:92%;max-width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
-
-    .modal-card h2{margin:0 0 8px 0;color:var(--accent)}
-    .modal-card p{margin:0 0 12px;color: #dffdf8;font-size:0.95rem}
-    .modal-row{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:var(--accent);cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--accent), #8cf7e7); color:#002; border:none}
-    .close-x{position:absolute;right:14px;top:14px;opacity:0.8;cursor:pointer;color:#bfeee8}
-
-    /* Payment UI (glass panel) */
-    .payment-grid{display:flex;flex-direction:column;gap:12px}
-    .payment-methods{display:flex;gap:8px;flex-wrap:wrap}
-    .payment-method{flex:1 1 120px;padding:10px;border-radius:8px;text-align:center;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
-    .payment-method.active{outline:2px solid rgba(0,255,224,0.12);box-shadow:0 8px 30px rgba(0,255,224,0.04)}
-
-    .card-form{display:flex;flex-direction:column;gap:8px}
-    .input{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:transparent;color:#e6f6f8}
-
-    /* small print & legal row */
-    .legal{font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:6px}
-
-    /* Footer */
-    footer{width:100%;padding:10px 12px;text-align:center;color:rgba(255,255,255,0.42);font-size:0.82rem;position:relative;z-index:4}
-
-    /* Ori olokun image */
-    .ori-olokun{position:relative; width:90px; height:auto; margin-top:10px; animation:breathe 6s ease-in-out infinite}
-    @keyframes breathe{0%,100%{opacity:0.92}50%{opacity:1}}
-
-    /* Responsive tweaks */
-    @media(min-width:800px){
-      header{padding:16px 40px}
-      .brand h1{font-size:1.15rem}
-      .node{--node-size:120px}
-      .node img{width:56px;height:56px}
-      .triangle-container{width:420px;height:320px}
+    .triangle-container{position:relative;width:340px;height:300px;max-width:94vw;margin:6px auto 18px;}
+    .triangle-svg{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none}
+    .node{position:absolute;width:110px;height:110px;border-radius:16px;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1px solid var(--glass);cursor:pointer;backdrop-filter: blur(6px);transition:transform .22s ease,box-shadow .22s ease;}
+    .node img{width:56px;height:56px;object-fit:contain;border-radius:10px}
+    .node p{margin:0;font-size:0.88rem;font-weight:600;color:#dffefa}
+    .node:active{transform:scale(.98)}
+    .apex{top:6px;left:50%;transform:translateX(-50%);border:1px solid rgba(255,190,80,0.12)}
+    .base-left{bottom:6px;left:6px}
+    .base-right{bottom:6px;right:6px}
+    /* static styling for CPilot & TradingFloor according to request */
+    .apex .tag {background:linear-gradient(90deg,#ffdd88,#ffbb66);padding:6px 8px;border-radius:8px;color:#000;font-weight:700;margin-top:6px;font-size:.75rem}
+    .node:hover{box-shadow:0 10px 30px rgba(0,255,224,0.07)}
+    /* Ori Olokun image (slight breathing + soft blink) */
+    .ori{position:relative;margin-top:18px;width:120px;height:auto;animation:breathe 6s ease-in-out infinite;filter:drop-shadow(0 6px 28px rgba(0,255,224,0.06))}
+    @keyframes breathe{0%,100%{opacity:.94}50%{opacity:1.0}}
+    /* Footer & payment area */
+    .payment-area{width:100%;max-width:900px;margin-top:18px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.18));border:1px solid rgba(255,255,255,0.03);box-sizing:border-box;display:flex;flex-direction:column;gap:12px}
+    .pay-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .pay-amount{font-size:1rem;font-weight:700;color:var(--accent)}
+    .pay-btn{padding:10px 14px;border-radius:9px;border:0;background:linear-gradient(90deg,var(--accent),#00c8b6);color:#021312;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,255,224,0.06);opacity:.35}
+    .pay-btn.enabled{opacity:1;pointer-events:auto}
+    .small{font-size:.85rem;color:rgba(255,255,255,0.6)}
+    /* modals */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:60;visibility:hidden;opacity:0;transition:all .2s ease}
+    .modal-backdrop.show{visibility:visible;opacity:1}
+    .modal-panel{width:92%;max-width:680px;background:linear-gradient(180deg,#0c0f11, #0b0b0b);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 18px 65px rgba(0,0,0,0.5);color:#e9fbf8}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:14px}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:#d8fff6;cursor:pointer}
+    button.primary{background:linear-gradient(90deg,var(--accent),#00c8b6);border:0;padding:10px 14px;border-radius:8px;color:#012;font-weight:800;cursor:pointer}
+    /* responsive smaller */
+    @media (max-width:540px){
+      .triangle-container{width:92vw;height:300px}
+      .node{width:94px;height:94px}
+      .globe{width:100px;height:100px}
     }
   </style>
 </head>
 <body>
+  <div class="wrap">
 
-  <!-- Header -->
-  <header>
-    <div class="brand" aria-hidden="true">
-      <img src="./Assets/qtai_logo.png" alt="QuantumTrader-AI logo" onerror="this.style.display='none'">
-      <h1>QuantumTrader-AI™</h1>
-    </div>
-
-    <div class="header-right">
-      <div class="peace-wrap" title="Peace Index">
-        <button id="peace-btn" aria-haspopup="dialog" aria-controls="peace-modal">
-          <span class="finger">👉</span>
-          <span style="font-weight:600">Peace Index</span>
-        </button>
-      </div>
-
-      <div style="width:8px"></div>
-      <div style="font-size:0.86rem;color:rgba(255,255,255,0.6)">v2025.11</div>
-    </div>
-  </header>
-
-  <!-- Main -->
-  <main>
-    <!-- Rotating Globe -->
-    <div id="globe" aria-hidden="true">
-      <img src="./Assets/qtai_globe.png" alt="Quantum rotating globe" id="globe-img" />
-    </div>
-
-    <!-- Triangle -->
-    <div class="triangle-container" role="application" aria-label="Trading modules">
-      <svg class="connect" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <!-- These are decorative connecting lines — CSS pulse added when nodes activated -->
-        <polyline id="poly" points="50,10 10,85 90,85 50,10" stroke="rgba(0,255,224,0.08)" stroke-width="0.7" fill="none"/>
-      </svg>
-
-      <!-- Trading Floor Apex -->
-      <div class="node apex" id="tradingfloorNode" role="button" tabindex="0" aria-label="Trading Floor — opens November 09 2025">
-        <img src="./Assets/tradingfloor_main.png" alt="" />
-        <p>Trading Floor</p>
-      </div>
-
-      <!-- TraderLab base-left -->
-      <div class="node base-left" id="traderlabNode" role="button" tabindex="0" aria-label="TraderLab — click to explore">
-        <img src="./Assets/traderlab_icon.png" alt="" />
-        <p>TraderLab™</p>
-      </div>
-
-      <!-- CPilot base-right -->
-      <div class="node base-right" id="cpilotNode" role="button" tabindex="0" aria-label="CPilot">
-        <img src="./Assets/cpilot_panel.png" alt="" />
-        <p>CPilot™</p>
-      </div>
-    </div>
-
-    <!-- Ori Olokun (animated but subtle) -->
-    <img class="ori-olokun" src="./Assets/qtai_ori_olokun.png" alt="Ori Olokun symbol" aria-hidden="true" />
-
-    <!-- Activation / Payment CTA -->
-    <section style="width:100%;max-width:720px;margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:10px;">
-      <div style="width:100%;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <button class="btn primary" id="open-terms">Activate / Pay NGN 5,000</button>
-        <button class="btn" id="timeline-btn">Rollout Path • Nov 02 → Nov 09</button>
-      </div>
-      <div class="legal">Activation fee: <strong>NGN 5,000 / month</strong> — Rent model until 500,000 subscribers. Cooperatives & NGOs placeholders integrated in backend.</div>
-    </section>
-
-  </main>
-
-  <!-- Footer (light) -->
-  <footer>
-    © 2025 QuantumTrader-AI™ — Built by Olagoke Ajibulu | <a href="#" id="terms-link" style="color:var(--accent)">Terms</a>
-  </footer>
-
-  <!-- ========== Peace Index Modal ========== -->
-  <div id="peace-modal" class="modal" role="dialog" aria-hidden="true" aria-labelledby="peace-title">
-    <div class="modal-card">
-      <div style="display:flex;align-items:start;justify-content:space-between;">
+    <!-- header -->
+    <header>
+      <div class="brand">
+        <img src="./Assets/qtai_logo.png" alt="QuantumTrader AI" />
         <div>
-          <h2 id="peace-title">Peace Index — MacArthur Map</h2>
-          <p>Live global peace/stability map (placeholder). Connect your MacArthur map feed here.</p>
+          <h1>QuantumTrader-AI™</h1>
+          <div style="font-size:.78rem;color:rgba(255,255,255,0.6)">Launch window: Nov 09, 2025 — Test flights started</div>
         </div>
-        <div class="close-x" id="close-peace">✕</div>
       </div>
+
+      <div class="controls">
+        <!-- Peace index button & finger -->
+        <div class="peace-btn" id="openPeace">
+          <span class="finger" aria-hidden>👉</span>
+          <span style="font-weight:700">Peace Index</span>
+        </div>
+
+        <!-- status / quick -->
+        <div style="font-size:.86rem;color:rgba(255,255,255,0.65)">Status: <strong style="color:var(--accent)">Test</strong></div>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <!-- rotating globe (pauses when interacting) -->
+      <div class="globe-wrap" aria-hidden>
+        <img id="globeImg" src="./Assets/qtai_globe.png" alt="Quantum Globe" class="globe" />
+      </div>
+
+      <!-- triangle -->
+      <div class="triangle-container" role="navigation" aria-label="Main nodes">
+        <!-- decorative svg connections -->
+        <svg class="triangle-svg" viewBox="0 0 340 300" preserveAspectRatio="none">
+          <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="rgba(0,255,224,0.15)"/><stop offset="1" stop-color="rgba(46,160,67,0.12)"/></linearGradient></defs>
+          <path d="M170 8 L330 240 L10 240 Z" stroke="url(#g1)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:.18" />
+        </svg>
+
+        <!-- Trading Floor (apex) -->
+        <div class="node apex" id="tradingFloor">
+          <img src="./Assets/tradingfloor_main.png" alt="Trading Floor">
+          <p>Trading Floor</p>
+          <div class="tag" style="display:inline-block;margin-top:6px;font-size:.72rem">Apex</div>
+        </div>
+
+        <!-- TraderLab — left base -->
+        <div class="node base-left" id="traderLab">
+          <img src="./Assets/traderlab_icon.png" alt="TraderLab">
+          <p>TraderLab™</p>
+        </div>
+
+        <!-- CPilot — right base -->
+        <div class="node base-right" id="cPilot">
+          <img src="./Assets/cpilot_panel.png" alt="CPilot">
+          <p>CPilot™</p>
+        </div>
+      </div>
+
+      <!-- Ori Olokun decorative -->
+      <img src="./Assets/qtai_ori_olokun.png" alt="Ori Olokun" class="ori" style="width:120px;height:auto" />
+
+      <!-- payment / activation area -->
+      <section class="payment-area" aria-labelledby="payTitle">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div>
+            <div id="payTitle" class="small">Activation (monthly rental)</div>
+            <div class="pay-amount">NGN 5,000 <span class="small" style="margin-left:8px;color:rgba(255,255,255,0.6)">per month</span></div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <div class="small">Terms accepted: <strong id="termsState" style="color:rgba(255,255,255,0.6)">No</strong></div>
+            <button id="openTerms" class="ghost">View Terms</button>
+            <button id="payBtn" class="pay-btn" disabled title="Accept terms to enable">Activate (NGN 5,000)</button>
+          </div>
+        </div>
+
+        <div class="small">By activating you agree to the <button id="quickTerms" class="ghost">Activation & Use Terms</button>. Funds will be directed to the configured Alat Pay account on successful checkout.</div>
+      </section>
+
+    </main>
+
+    <!-- footer -->
+    <footer style="margin-top:18px;color:rgba(255,255,255,0.42);font-size:.86rem;text-align:center;width:100%;max-width:900px">
+      © 2025 QuantumTrader-AI™ | Architect: Olagoke Ajibulu — Powered by Cosmic Good
+    </footer>
+  </div>
+
+  <!-- ====== Modals (Peace Index & Terms & Payment) ====== -->
+  <div id="peaceModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Peace Index">
+      <h3>Peace Index — MacArthur Global Map (Placeholder)</h3>
+      <p class="small">Live map feed placeholder. Replace with MacArthur map embed or API frame when available. This opens as a modal overlay so investors can inspect global peace/stability regions before committing funds.</p>
+      <div style="height:420px;background:#071018;border-radius:8px;margin:12px 0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.18);font-weight:700">MacArthur map feed goes here</div>
+      <div class="modal-actions"><button class="ghost" id="closePeace">Close</button></div>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Activation and Use Terms">
+      <h3>Activation and Use Terms</h3>
+      <div style="max-height:44vh;overflow:auto;padding-right:6px;margin-top:8px;color:rgba(255,255,255,0.88);font-size:.95rem;line-height:1.45">
+        <strong>Effective:</strong> November 09, 2025<br><br>
+        By activating QonexAI / QuantumTrader-AI you confirm that you are 18+ and accept that the app provides data-driven trading insights and not financial advice. Activation is a monthly rental (NGN 5,000). Funds will be used for platform operations and designated philanthropic & cooperative pools per policy. The platform aims for 99% uptime but does not guarantee profits. See the Privacy Policy for data handling. Registered NGOs and cooperatives will be used for disbursement when thresholds are reached.
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px">
+        <label style="display:flex;gap:8px;align-items:center">
+          <input type="checkbox" id="acceptTerms" /> <span class="small">I accept the Activation and Use Terms</span>
+        </label>
+        <div class="modal-actions">
+          <button class="ghost" id="declineTerms">Decline</button>
+          <button class="primary" id="confirmTerms" disabled>Accept & enable payment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="paymentModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Payment">
+      <h3>Activate — NGN 5,000 / month</h3>
+      <p class="small">Choose a payment method. This is a staging flow — integrate with real payment gateway (Alat, Paystack, Flutterwave, Stripe) during production.</p>
 
       <div style="margin-top:12px">
-        <!-- Map placeholder: replace with real iframe/feed when API available -->
-        <div style="width:100%;height:340px;border-radius:10px;overflow:hidden;background:linear-gradient(180deg,#011 10%,#022 100%);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6)">
-          <div>
-            <strong>MacArthur Map Feed</strong>
-            <div style="font-size:0.85rem;margin-top:10px">API placeholder — embed interactive map here.</div>
-          </div>
-        </div>
-      </div>
+        <div class="row" style="margin-bottom:12px">
+          <label style="flex:1">
+            <div class="small">Full name</div>
+            <input id="payName" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#eafffa" placeholder="Your name" />
+          </label>
 
-      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px">
-        <button class="btn" id="peace-details">More</button>
-        <button class="btn primary" id="close-peace-2">Close</button>
+          <label style="width:180px">
+            <div class="small">Method</div>
+            <select id="payMethod" style="width:100%;padding:8px;border-radius:8px;background:transparent;color:#eafffa;border:1px solid rgba(255,255,255,0.06)">
+              <option value="alat">Alat Pay (Nigeria)</option>
+              <option value="card">Credit/Debit Card</option>
+            </select>
+          </label>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px">
+          <button class="ghost" id="cancelPay">Cancel</button>
+          <button class="primary" id="doPay">Proceed to Pay NGN 5,000</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== Terms & Payment Modal ========== -->
-  <div id="terms-modal" class="modal" role="dialog" aria-hidden="true" aria-labelledby="terms-title">
-    <div class="modal-card" role="document">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <h2 id="terms-title">Activation and Use Terms</h2>
-        <div class="close-x" id="close-terms">✕</div>
-      </div>
-      <p>
-        Effective: November 09, 2025. By accepting you confirm that you are 18+, accept the Terms of Use and Privacy Policy, and consent to the activation process.
-      </p>
-
-      <div style="margin-top:8px">
-        <label style="display:flex;gap:8px;align-items:center">
-          <input type="checkbox" id="accept-terms"> <span style="font-size:0.94rem">I accept the Activation and Use Terms.</span>
-        </label>
-      </div>
-
-      <div id="payment-panel" style="margin-top:14px;display:none">
-        <div class="payment-grid">
-          <div style="font-size:0.9rem;color:rgba(255,255,255,0.8)">Choose payment method</div>
-
-          <div class="payment-methods" role="tablist" aria-label="Payment methods">
-            <div class="payment-method" data-method="paystack" tabindex="0">Paystack (NG)</div>
-            <div class="payment-method" data-method="flutterwave" tabindex="0">Flutterwave</div>
-            <div class="payment-method" data-method="card" tabindex="0">Card (Stripe)</div>
-            <div class="payment-method" data-method="bank" tabindex="0">Bank Transfer</div>
-          </div>
-
-          <!-- Card form placeholder -->
-          <div id="card-form" style="display:none">
-            <div class="card-form">
-              <input class="input" id="card-name" placeholder="Cardholder name" />
-              <input class="input" id="card-number" placeholder="Card number" />
-              <div style="display:flex;gap:8px">
-                <input class="input" id="card-exp" placeholder="MM/YY" />
-                <input class="input" id="card-cvv" placeholder="CVV" style="width:120px" />
-              </div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px">
-            <div style="font-weight:700">Amount</div>
-            <div style="font-size:1.05rem">NGN 5,000</div>
-          </div>
-
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
-            <button class="btn" id="cancel-pay">Cancel</button>
-            <button class="btn primary" id="submit-pay" disabled>Pay & Activate</button>
-          </div>
-
-          <div class="legal">By activating you agree to recurring billing (monthly) until deactivated. 5% of net profits may be allocated to Cooperatives/Philanthropy by consent flow inside the dashboard.</div>
-        </div>
-      </div>
-
-      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px">
-        <button class="btn" id="open-privacy">Privacy Policy</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== Minimal success / feedback toast ========== -->
-  <div id="toast" style="position:fixed;right:14px;bottom:18px;background:linear-gradient(90deg,var(--accent),#8cf7e7);padding:12px 14px;border-radius:10px;display:none;z-index:60;color:#012">
-    Activation successful — welcome to TraderLab™
-  </div>
-
-  <!-- ========== Scripts ========== -->
+  <!-- ====== Scripts: modal logic, handshake, payment simulation ====== -->
   <script>
-    // short helper
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    // Helpers
+    const showModal = (el)=>{el.classList.add('show');el.setAttribute('aria-hidden','false');}
+    const hideModal = (el)=>{el.classList.remove('show');el.setAttribute('aria-hidden','true');}
 
-    // Modal elements
-    const peaceBtn = $('#peace-btn');
-    const peaceModal = $('#peace-modal');
-    const closePeace = $('#close-peace');
-    const closePeace2 = $('#close-peace-2');
+    // DOM refs
+    const openPeace = document.getElementById('openPeace');
+    const peaceModal = document.getElementById('peaceModal');
+    const closePeace = document.getElementById('closePeace');
 
-    const openTermsBtn = $('#open-terms');
-    const termsModal = $('#terms-modal');
-    const closeTerms = $('#close-terms');
-    const closeTermsX = $('#close-terms');
-    const acceptCheckbox = $('#accept-terms');
-    const paymentPanel = $('#payment-panel');
-    const paymentMethods = $$('.payment-method');
-    const cardForm = $('#card-form');
-    const submitPay = $('#submit-pay');
-    const cancelPay = $('#cancel-pay');
-    const toast = $('#toast');
+    const openTerms = document.getElementById('openTerms');
+    const quickTerms = document.getElementById('quickTerms');
+    const termsModal = document.getElementById('termsModal');
+    const acceptTermsCheckbox = document.getElementById('acceptTerms');
+    const confirmTermsBtn = document.getElementById('confirmTerms');
+    const declineTermsBtn = document.getElementById('declineTerms');
+    const termsState = document.getElementById('termsState');
 
-    // globe pause/resume
-    const globe = $('#globe');
-    function pauseGlobe(){ globe.classList.add('globe-paused') }
-    function resumeGlobe(){ globe.classList.remove('globe-paused') }
+    const payBtn = document.getElementById('payBtn');
+    const paymentModal = document.getElementById('paymentModal');
+    const cancelPay = document.getElementById('cancelPay');
+    const doPay = document.getElementById('doPay');
 
-    // Peace modal open/close
-    function openPeace(){ peaceModal.classList.add('active'); peaceModal.setAttribute('aria-hidden','false'); pauseGlobe(); }
-    function closePeaceModal(){ peaceModal.classList.remove('active'); peaceModal.setAttribute('aria-hidden','true'); resumeGlobe(); }
-    peaceBtn.addEventListener('click', openPeace);
-    closePeace.addEventListener('click', closePeaceModal);
-    closePeace2.addEventListener('click', closePeaceModal);
+    // handshake stored on first load (keeps track of flow)
+    (function initHandshake(){
+      const handshake = {origin:"QuantumTrader-AI",ts:Date.now()};
+      sessionStorage.setItem('QT_HANDSHAKE', JSON.stringify(handshake));
+      console.log('Handshake:',handshake);
+    })();
 
-    // Terms modal open/close
-    function openTerms(){ termsModal.classList.add('active'); termsModal.setAttribute('aria-hidden','false'); pauseGlobe(); }
-    function closeTermsModal(){ termsModal.classList.remove('active'); termsModal.setAttribute('aria-hidden','true'); resumeGlobe(); }
-    openTermsBtn.addEventListener('click', openTerms);
-    closeTerms.addEventListener('click', closeTermsModal);
+    // Peace modal
+    openPeace.addEventListener('click',()=>showModal(peaceModal));
+    closePeace.addEventListener('click',()=>hideModal(peaceModal));
+    peaceModal.addEventListener('click', (e)=>{ if(e.target===peaceModal) hideModal(peaceModal); });
 
-    // Accept terms toggles payment UI
-    acceptCheckbox.addEventListener('change', (e) => {
-      if (e.target.checked){
-        paymentPanel.style.display = 'block';
+    // Terms modal open
+    [openTerms, quickTerms].forEach(btn=>btn.addEventListener('click',()=>showModal(termsModal)));
+    termsModal.addEventListener('click',(e)=>{ if(e.target===termsModal) hideModal(termsModal); });
+
+    // Accept/confirm logic
+    acceptTermsCheckbox.addEventListener('change',(e)=>{
+      confirmTermsBtn.disabled = !e.target.checked;
+    });
+    confirmTermsBtn.addEventListener('click',()=>{
+      // mark terms accepted, enable pay button
+      termsState.textContent = "Yes";
+      sessionStorage.setItem('QONEX_TERMS_ACCEPTED','1');
+      hideModal(termsModal);
+      payBtn.classList.add('enabled');
+      payBtn.disabled = false;
+      payBtn.title = "Click to activate";
+      // reflect UI
+      confirmTermsBtn.disabled = true;
+      acceptTermsCheckbox.checked = false;
+    });
+    declineTermsBtn.addEventListener('click',()=>{
+      hideModal(termsModal);
+    });
+
+    // Payment button
+    payBtn.addEventListener('click',()=>{
+      if(payBtn.classList.contains('enabled')){
+        showModal(paymentModal);
+        // pause globe rotation while taking action
+        document.getElementById('globeImg').style.animationPlayState = 'paused';
       } else {
-        paymentPanel.style.display = 'none';
+        // user must accept terms
+        showModal(termsModal);
       }
-      updateSubmitState();
     });
 
-    // Payment method selection
-    paymentMethods.forEach(el=>{
-      el.addEventListener('click', ()=> {
-        paymentMethods.forEach(m=>m.classList.remove('active'));
-        el.classList.add('active');
-        const method = el.dataset.method;
-        // if card selected show card form
-        if(method==='card'){ cardForm.style.display='block' } else { cardForm.style.display='none' }
-        updateSubmitState();
-      });
-      el.addEventListener('keydown', (ev)=>{
-        if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); el.click() }
-      });
+    cancelPay.addEventListener('click',()=>{
+      hideModal(paymentModal);
+      document.getElementById('globeImg').style.animationPlayState = 'running';
     });
 
-    function updateSubmitState(){
-      const hasAccepted = acceptCheckbox.checked;
-      const activeMethod = document.querySelector('.payment-method.active');
-      submitPay.disabled = !(hasAccepted && activeMethod);
-    }
-
-    // Simulate payment flow (placeholder)
-    submitPay.addEventListener('click', async () => {
-      submitPay.disabled = true;
-      submitPay.textContent = 'Processing...';
-
-      // TODO: replace with real API integration: call your server endpoint (e.g., /api/pay)
-      // Example: POST /api/pay {method:'paystack', amount:5000, user:...}
-      await new Promise(r=>setTimeout(r,1500)); // simulate latency
-
-      // simulate success
-      closeTermsModal();
-      toast.style.display = 'block';
-      setTimeout(()=>{ toast.style.display='none' }, 4200);
-
-      // store activation in session for demo purposes
-      sessionStorage.setItem('qonex_activated','true');
-      submitPay.textContent = 'Pay & Activate';
-      submitPay.disabled = false;
-      // show success — you can trigger additional flows here (open dashboard etc.)
+    // simulate payment (replace with real gateway)
+    doPay.addEventListener('click',()=>{
+      doPay.disabled = true;
+      doPay.textContent = 'Processing...';
+      // ephemeral simulation
+      setTimeout(()=>{
+        // success
+        doPay.textContent = 'Done';
+        alert('Activation successful — NGN 5,000 processed (simulation). Your account is active.');
+        // set activation flag
+        sessionStorage.setItem('QONEX_ACTIVE','1');
+        payBtn.textContent = 'Active ✓';
+        payBtn.classList.remove('enabled');
+        payBtn.disabled = true;
+        hideModal(paymentModal);
+        document.getElementById('globeImg').style.animationPlayState = 'running';
+      }, 1400);
     });
 
-    cancelPay.addEventListener('click', () => {
-      acceptCheckbox.checked = false;
-      paymentPanel.style.display = 'none';
-      submitPay.disabled = true;
+    // Node interactions: clicking a node opens a small modal or directs to local page (static for now)
+    document.getElementById('traderLab').addEventListener('click', ()=>{
+      // pause globe while user interacts
+      document.getElementById('globeImg').style.animationPlayState = 'paused';
+      // small info popup (reuse terms modal for compact info)
+      const t = document.getElementById('termsModal');
+      t.querySelector('h3').textContent = 'TraderLab™ — Demo';
+      t.querySelector('.modal-panel > div').innerHTML = '<p class="small">TraderLab is the sandbox: AI-driven simulation and practice lab. To enter fully you must activate your account.</p>';
+      showModal(t);
     });
 
-    // Clicking nodes opens the relevant pages (currently placeholders)
-    $('#traderlabNode').addEventListener('click', ()=> {
-      // Save handshake and go to traderlab.html (make sure file exists)
-      sessionStorage.setItem('QT_AI_HANDSHAKE', JSON.stringify({origin:'QuantumTrader-AI', next:'traderlab.html', ts:Date.now()}));
-      window.location.href = 'traderlab.html';
-    });
-    $('#cpilotNode').addEventListener('click', ()=> {
-      sessionStorage.setItem('QT_AI_HANDSHAKE', JSON.stringify({origin:'QuantumTrader-AI', next:'cpilot.html', ts:Date.now()}));
-      window.location.href = 'cpilot.html';
-    });
-    $('#tradingfloorNode').addEventListener('click', ()=> {
-      // trading floor opens (if paid / allowed)
-      window.location.href = 'tradingfloor.html';
+    document.getElementById('cPilot').addEventListener('click', ()=>{
+      document.getElementById('globeImg').style.animationPlayState = 'paused';
+      const t = document.getElementById('termsModal');
+      t.querySelector('h3').textContent = 'CPilot™ — Command Pilot';
+      t.querySelector('.modal-panel > div').innerHTML = '<p class="small">CPilot orchestrates your trading journey. Activation required for full control.</p>';
+      showModal(t);
     });
 
-    // Close modal by clicking overlay (accessible)
-    Array.from(document.querySelectorAll('.modal')).forEach(mod=>{
-      mod.addEventListener('click', (ev)=>{
-        if(ev.target === mod){
-          // close specific modal
-          if(mod === peaceModal) closePeaceModal();
-          if(mod === termsModal) closeTermsModal();
-        }
-      });
+    document.getElementById('tradingFloor').addEventListener('click', ()=>{
+      document.getElementById('globeImg').style.animationPlayState = 'paused';
+      const t = document.getElementById('termsModal');
+      t.querySelector('h3').textContent = 'Trading Floor — Live';
+      t.querySelector('.modal-panel > div').innerHTML = '<p class="small">Trading Floor is the live decision environment. Access is gated by activation & account privileges.</p>';
+      showModal(t);
     });
 
-    // Basic image audit to help diagnose missing assets (logs)
-    (function imageAudit(){
-      const images = [
-        './Assets/qtai_globe.png',
-        './Assets/qtai_ori_olokun.png',
-        './Assets/traderlab_icon.png',
-        './Assets/cpilot_panel.png',
-        './Assets/tradingfloor_main.png',
-        './Assets/qtai_logo.png'
-      ];
-      console.log('🔍 Image audit starting — verifying asset availability');
-      images.forEach(src=>{
-        const i = new Image();
-        i.onload = ()=>console.log(`✅ ${src} loaded`);
-        i.onerror = ()=>console.warn(`❌ ${src} missing / not accessible`);
-        i.src = src + '?t=' + Date.now();
+    // close terms modal return globe to spin when closed
+    document.getElementById('termsModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('termsModal')) document.getElementById('globeImg').style.animationPlayState='running'; });
+
+    // ensure globe resumes if user navigates anywhere
+    window.addEventListener('focus', ()=>{ document.getElementById('globeImg').style.animationPlayState='running'; });
+
+    // quick image audit (console)
+    (function imgAudit(){
+      const imgs = ['./Assets/qtai_globe.png','./Assets/qtai_ori_olokun.png','./Assets/traderlab_icon.png','./Assets/cpilot_panel.png','./Assets/tradingfloor_main.png'];
+      imgs.forEach(src=>{
+        const i=new Image();
+        i.onload=()=>console.log('IMG OK:',src); i.onerror=()=>console.warn('IMG MISSING:',src);
+        i.src = src + '?v=' + Date.now();
       });
     })();
 
-    // keyboard accessibility for escape to close modals
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape'){
-        if(peaceModal.classList.contains('active')) closePeaceModal();
-        if(termsModal.classList.contains('active')) closeTermsModal();
-      }
-    });
-
-    // On page load: if session says activated, show subtle toast
-    document.addEventListener('DOMContentLoaded', () => {
-      const activated = sessionStorage.getItem('qonex_activated');
-      if(activated){
-        toast.textContent = 'Welcome back — QonexAI activated';
-        toast.style.display = 'block';
-        setTimeout(()=>toast.style.display='none',3200);
-      }
-    });
-
   </script>
-
-  <!-- end body -->
 </body>
 </html>
