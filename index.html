@@ -137,6 +137,17 @@
       font-weight: 600;
     }
   </style>
+
+ <!-- QuantumTrader-AI™ PWA Integration -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ffff">
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("QuantumTrader-AI™ service worker registered."))
+      .catch(err => console.error("Service worker registration failed:", err));
+  }
+</script>
 </head>
 <body>
   <header>
