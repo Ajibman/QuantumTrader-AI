@@ -4,8 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <meta name="theme-color" content="#000000">
+ <!-- iOS support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="QT-AI">
  <title>QuantumTrader-AI™ | Activation</title>
-  <link rel="manifest" href="manifest.json">aaa
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0b1b2b">
+<link rel="apple-touch-icon" href="./assets/icon_192.png">
+ <link rel="manifest" href="manifest.json">aaa
  <link rel="icon" href="src/assets/images/qtai_globe.png" />
   <style>
     body {
@@ -285,6 +292,7 @@
       }
     };
   </script>
+ 
  <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -295,5 +303,12 @@
     });
   }
 </script>
+ 
+ if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(reg => console.log('Service Worker registered:', reg))
+    .catch(err => console.warn('SW registration failed:', err));
+}
+ 
 </body>
 </html>
