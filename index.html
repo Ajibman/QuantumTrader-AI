@@ -310,5 +310,19 @@
     .catch(err => console.warn('SW registration failed:', err));
 }
  
+<script>
+  // Set flag when button is clicked
+  function openAlatModal() {
+    localStorage.setItem('fromLanding', 'true');
+    showAlatModal();
+  }
+
+  // Only show modal if flag is set
+  function showAlatModal() {
+    if (localStorage.getItem('fromLanding') === 'true') {
+      document.getElementById('alatModal').style.display = 'block';
+    }
+  }
+</script>
 </body>
 </html>
