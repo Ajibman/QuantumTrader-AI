@@ -255,9 +255,8 @@
       <p style="font-size:0.75rem;color:#ccc;margin-top:8px;">
         Payment processed via Alat Pay, Nigeria
       </p>
-      <div>
-
-       <!-- ===================== FRONTEND IMAGES ===================== -->
+    </div>
+<!-- ===================== FRONTEND IMAGES (RESPONSIVE) ===================== -->
 
 <div id="frontend-images">
 
@@ -291,13 +290,16 @@
         <p>CPilot Panel</p>
     </div>
 
-<!-- Optional CSS for layout -->
+</div>
+
+<!-- Responsive CSS -->
 <style>
 #frontend-images {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
-    justify-content: center;
+    justify-items: center;
+    padding: 20px;
 }
 
 .image-container {
@@ -305,14 +307,25 @@
 }
 
 .image-container img {
+    width: 100%;
     max-width: 150px;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
 }
-</style>
-    </div>
 
+.image-container img:hover {
+    transform: scale(1.05);
+}
+
+.image-container p {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #333;
+}
+ 
+</style>
     <footer class="footer">
       © 2025 QuantumTrader-AI™ | All Rights Reserved | Visionary, Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good
     </footer>
