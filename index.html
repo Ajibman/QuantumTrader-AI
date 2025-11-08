@@ -3,38 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <meta name="theme-color" content="#000000">
- <!-- iOS support -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="QT-AI">
- <title>QuantumTrader-AI™ | Activation</title>
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0b1b2b">
-<link rel="apple-touch-icon" href="./assets/icon_192.png">
- <link rel="manifest" href="manifest.json">aaa
- <link rel="icon" href="src/assets/images/qtai_globe.png" />
+  <meta name="theme-color" content="#0b1b2b" />
+
+  <!-- iOS / PWA Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="QT-AI" />
+
+  <title>QuantumTrader-AI™ | Activation</title>
+
+  <!-- Manifest & Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="./assets/icon_192.png" />
+  <link rel="icon" href="src/assets/images/qtai_globe.png" />
+
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
       color: #e0e0e0;
-      background: url('src/assets/images/background_cosmic.png') no-repeat center center fixed;
+      background: url("src/assets/images/background_cosmic.png") no-repeat center center fixed;
       background-size: cover;
       text-align: center;
       overflow-x: hidden;
     }
+
     header {
-      position: relative;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       padding: 8px 16px;
     }
+
     #peaceIndexBtn {
-      position: relative;
-      background: rgba(20,20,20,0.7);
+      background: rgba(20, 20, 20, 0.7);
       border: 1px solid #00ffff80;
       border-radius: 8px;
       color: #00ffff;
@@ -42,11 +45,14 @@
       padding: 4px 12px;
       cursor: pointer;
       animation: softGlow 2s infinite alternate;
+      position: relative;
     }
+
     @keyframes softGlow {
       from { box-shadow: 0 0 4px #00ffff80; }
       to { box-shadow: 0 0 10px #00ffffc0; }
     }
+
     #fingerIcon {
       position: absolute;
       right: -24px;
@@ -54,12 +60,14 @@
       font-size: 1.2rem;
       animation: bounce 1.5s infinite;
     }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
     }
 
     .triangle-wrapper { margin-top: 30px; }
+
     .footer {
       margin-top: 20px;
       opacity: 0.42;
@@ -67,22 +75,24 @@
       padding: 16px;
     }
 
-    /* Payment section */
+    /* Payment Section */
     .payment-section {
       margin: 20px auto;
       width: 90%;
       max-width: 380px;
-      background: rgba(0,0,0,0.55);
+      background: rgba(0, 0, 0, 0.55);
       border: 1px solid #00ffff33;
       border-radius: 16px;
       padding: 16px;
     }
+
     .payment-section h3 {
       color: #00ffff;
       margin-top: 0;
     }
+
     .payment-section button {
-      background: linear-gradient(90deg,#00ffff66,#00ffffcc);
+      background: linear-gradient(90deg, #00ffff66, #00ffffcc);
       border: none;
       border-radius: 8px;
       padding: 10px 20px;
@@ -91,10 +101,12 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
+
     .payment-section button.enabled {
-      background: linear-gradient(90deg,#00ffffcc,#00ffff);
+      background: linear-gradient(90deg, #00ffffcc, #00ffff);
       box-shadow: 0 0 10px #00ffffa0;
     }
+
     .payment-section button:hover {
       transform: scale(1.03);
     }
@@ -107,12 +119,13 @@
       animation: blink 3s infinite ease-in-out;
       filter: drop-shadow(0 0 6px #00ffffa0);
     }
+
     @keyframes blink {
       0%, 80%, 100% { opacity: 1; }
       90% { opacity: 0.75; filter: drop-shadow(0 0 3px #00ffff40); }
     }
 
-    /* Terms modal */
+    /* Modal Base Styles */
     .modal {
       display: none;
       position: fixed;
@@ -121,10 +134,11 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.85);
+      background-color: rgba(0, 0, 0, 0.85);
       justify-content: center;
       align-items: center;
     }
+
     .modal-content {
       background-color: #0a0a0a;
       border: 1px solid #00ffff60;
@@ -135,6 +149,7 @@
       text-align: left;
       color: #e0e0e0;
     }
+
     .modal-content button {
       margin-top: 10px;
       background: #00ffffcc;
@@ -147,16 +162,17 @@
     }
   </style>
 
- <!-- QuantumTrader-AI™ PWA Integration -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00ffff">
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js")
-      .then(() => console.log("QuantumTrader-AI™ service worker registered."))
-      .catch(err => console.error("Service worker registration failed:", err));
-  }
-</script>
+  <script>
+    // QuantumTrader-AI™ PWA Integration
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .then(() => console.log("QuantumTrader-AI™ service worker registered ✅"))
+          .catch(err => console.error("Service worker registration failed ❌", err));
+      });
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -168,66 +184,69 @@
 
   <main>
     <div class="triangle-wrapper">
-      <!-- Rotating globe and triangle nodes area already defined above -->
       <h2>QuantumTrader-AI™ Activation Portal</h2>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- >>>>>>>>>>>>  HORIZON MARKER: ADMIN-TEST-SNIPPET START ↑↑↑  >>>>>>> -->
+    <!-- ADMIN-TEST-SNIPPET -->
     <script>
-    (function adminTestMode() {
-      const ADMIN_SECRET = 'qonex-admin-2025';
-      const ADMIN_FLAG = 'QONEX_ADMIN';
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('admin') === ADMIN_SECRET) {
-        sessionStorage.setItem(ADMIN_FLAG, '1');
-        console.log('Admin/Test mode enabled via URL param.');
-      }
-      window.enableAdminMode = function(secret) {
-        if (secret === ADMIN_SECRET) {
-          sessionStorage.setItem(ADMIN_FLAG, '1');
-          enableAdminUI();
+      (function adminTestMode() {
+        const ADMIN_SECRET = "qonex-admin-2025";
+        const ADMIN_FLAG = "QONEX_ADMIN";
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get("admin") === ADMIN_SECRET) {
+          sessionStorage.setItem(ADMIN_FLAG, "1");
+          console.log("Admin/Test mode enabled via URL param.");
         }
-      };
-      window.disableAdminMode = function() {
-        sessionStorage.removeItem(ADMIN_FLAG);
-        disableAdminUI();
-      };
-      function enableAdminUI() {
-        if (sessionStorage.getItem(ADMIN_FLAG) !== '1') return;
-        const payBtn = document.getElementById('payBtn');
-        if (payBtn) {
-          payBtn.classList.add('enabled');
-          payBtn.disabled = false;
-          payBtn.textContent = 'Activate (Admin Test)';
+
+        window.enableAdminMode = function(secret) {
+          if (secret === ADMIN_SECRET) {
+            sessionStorage.setItem(ADMIN_FLAG, "1");
+            enableAdminUI();
+          }
+        };
+
+        window.disableAdminMode = function() {
+          sessionStorage.removeItem(ADMIN_FLAG);
+          disableAdminUI();
+        };
+
+        function enableAdminUI() {
+          if (sessionStorage.getItem(ADMIN_FLAG) !== "1") return;
+          const payBtn = document.getElementById("payBtn");
+          if (payBtn) {
+            payBtn.classList.add("enabled");
+            payBtn.disabled = false;
+            payBtn.textContent = "Activate (Admin Test)";
+          }
+          if (!document.getElementById("adminBadge")) {
+            const badge = document.createElement("div");
+            badge.id = "adminBadge";
+            badge.textContent = "ADMIN TEST MODE";
+            badge.style.cssText =
+              "font-weight:700;color:#000;background:#ffdd57;padding:6px 8px;border-radius:8px;margin-left:8px;font-size:0.76rem";
+            document.body.insertBefore(badge, document.body.firstChild);
+          }
         }
-        if (!document.getElementById('adminBadge')) {
-          const badge = document.createElement('div');
-          badge.id = 'adminBadge';
-          badge.textContent = 'ADMIN TEST MODE';
-          badge.style.cssText = 'font-weight:700;color:#000;background:#ffdd57;padding:6px 8px;border-radius:8px;margin-left:8px;font-size:0.76rem';
-          document.body.insertBefore(badge, document.body.firstChild);
+
+        function disableAdminUI() {
+          const payBtn = document.getElementById("payBtn");
+          if (payBtn) {
+            payBtn.classList.remove("enabled");
+            payBtn.disabled = true;
+            payBtn.textContent = "Activate (NGN 5,000)";
+          }
+          const badge = document.getElementById("adminBadge");
+          if (badge) badge.remove();
         }
-      }
-      function disableAdminUI() {
-        const payBtn = document.getElementById('payBtn');
-        if (payBtn) {
-          payBtn.classList.remove('enabled');
-          payBtn.disabled = true;
-          payBtn.textContent = 'Activate (NGN 5,000)';
-        }
-        const badge = document.getElementById('adminBadge');
-        if (badge) badge.remove();
-      }
-      document.addEventListener('DOMContentLoaded', () => {
-        if (sessionStorage.getItem(ADMIN_FLAG) === '1') {
-          enableAdminUI();
-        }
-      });
-    })();
+
+        document.addEventListener("DOMContentLoaded", () => {
+          if (sessionStorage.getItem(ADMIN_FLAG) === "1") {
+            enableAdminUI();
+          }
+        });
+      })();
     </script>
-    <!-- >>>>>>>>>>>>  HORIZON MARKER: ADMIN-TEST-SNIPPET END ↓↓↓  >>>>>>> -->
-    <!-- ============================================================= -->
 
     <div class="payment-section">
       <h3>Activate and Begin Trading</h3>
@@ -240,7 +259,7 @@
     </div>
 
     <footer class="footer">
-      © 2025 QuantumTrader-AI™ | All Rights Reserved | Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good 
+      © 2025 QuantumTrader-AI™ | All Rights Reserved | Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good
     </footer>
   </main>
 
@@ -249,7 +268,7 @@
     <div class="modal-content">
       <h3>Activation and Use Terms</h3>
       <p>
-        By activating QuantumTrader-AI™, you agree to use the app responsibly and renew monthly access at NGN 5,000. 
+        By activating QuantumTrader-AI™, you agree to use the app responsibly and renew monthly access at NGN 5,000.
         Payment provides one-month access. After 30 days, access will be locked until renewed.
       </p>
       <button id="acceptTerms">Accept and Continue</button>
@@ -260,78 +279,58 @@
   <div id="peaceIndexModal" class="modal">
     <div class="modal-content">
       <h3>Global Peace & Stability Map</h3>
-      <img src="src/assets/image/MacArthur.png" alt="MacArthur Global Peace Map" style="width:100%;border-radius:8px;">
+      <img src="src/assets/image/MacArthur.png" alt="MacArthur Global Peace Map" style="width:100%;border-radius:8px;" />
+    </div>
+  </div>
+
+  <!-- ALAT Activation Modal -->
+  <div id="alatModal" class="modal" style="background:rgba(0,0,0,0.5);">
+    <div class="modal-content" style="background:white; color:black;">
+      <h2>Activate Your WEMA ALAT Account</h2>
+      <!-- Your ALAT activation form or logic here -->
+      <button onclick="document.getElementById('alatModal').style.display='none'">Close</button>
     </div>
   </div>
 
   <script>
     // Peace Index modal
-    const peaceBtn = document.getElementById('peaceIndexBtn');
-    const peaceModal = document.getElementById('peaceIndexModal');
-    peaceBtn.onclick = () => { peaceModal.style.display = 'flex'; };
-    peaceModal.onclick = () => { peaceModal.style.display = 'none'; };
+    const peaceBtn = document.getElementById("peaceIndexBtn");
+    const peaceModal = document.getElementById("peaceIndexModal");
+    peaceBtn.onclick = () => (peaceModal.style.display = "flex");
+    peaceModal.onclick = () => (peaceModal.style.display = "none");
 
     // Terms modal & payment activation
-    const modal = document.getElementById('termsModal');
-    const payBtn = document.getElementById('payBtn');
-    const acceptBtn = document.getElementById('acceptTerms');
+    const modal = document.getElementById("termsModal");
+    const payBtn = document.getElementById("payBtn");
+    const acceptBtn = document.getElementById("acceptTerms");
 
     window.onload = () => {
-      modal.style.display = 'flex';
+      modal.style.display = "flex";
     };
 
     acceptBtn.onclick = () => {
-      modal.style.display = 'none';
+      modal.style.display = "none";
       payBtn.disabled = false;
-      payBtn.classList.add('enabled');
+      payBtn.classList.add("enabled");
     };
 
     payBtn.onclick = () => {
       if (!payBtn.disabled) {
-        alert('Redirecting to secure payment...');
+        alert("Redirecting to secure payment...");
       }
     };
-  </script>
- 
- <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./service-worker.js")
-        .then(() => console.log("QT-AI service worker registered ✅"))
-        .catch(err => console.error("QT-AI SW registration failed ❌", err));
-    });
-  }
-</script>
- 
- if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js')
-    .then(reg => console.log('Service Worker registered:', reg))
-    .catch(err => console.warn('SW registration failed:', err));
-}
- 
-<script>
-  // Set flag when button is clicked
-  function openAlatModal() {
-    localStorage.setItem('fromLanding', 'true');
-    showAlatModal();
-  }
 
-  // Only show modal if flag is set
-  function showAlatModal() {
-    if (localStorage.getItem('fromLanding') === 'true') {
-      document.getElementById('alatModal').style.display = 'block';
+    // ALAT Modal logic
+    function openAlatModal() {
+      localStorage.setItem("fromLanding", "true");
+      showAlatModal();
     }
-  }
-</script>
 
-<!-- ALAT Activation Modal -->
-<div id="alatModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;">
-  <div style="background:white; margin:10% auto; padding:20px; width:80%; max-width:400px; border-radius:8px;">
-    <h2>Activate Your WEMA ALAT Account</h2>
-    <!-- Your form or logic here -->
-    <button onclick="document.getElementById('alatModal').style.display='none'">Close</button>
-  </div>
-</div>
+    function showAlatModal() {
+      if (localStorage.getItem("fromLanding") === "true") {
+        document.getElementById("alatModal").style.display = "flex";
+      }
+    }
+  </script>
 </body>
 </html>
