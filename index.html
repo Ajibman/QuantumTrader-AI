@@ -6,6 +6,142 @@
   <title>QuantumTrader-AI™ | Activation Portal</title>
   <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />
 
+  <!-- CSS: Mobile-first, extendable for desktop -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0b0b0b;
+      color: #ffffff;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background-color: #101010;
+    }
+    header img {
+      height: 50px;
+    }
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: bold;
+    }
+    main {
+      padding: 1rem;
+    }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .module {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .module:hover {
+      transform: scale(1.05);
+      border-color: #00ffcc;
+    }
+    .globe {
+      display: block;
+      margin: 2rem auto;
+      width: 200px;
+      height: 200px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #101010;
+      font-size: 0.9rem;
+    }
+    @media(min-width: 768px){
+      .globe {
+        width: 400px;
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="assets/images/qtai_logo.png" alt="QuantumTrader AI Logo">
+  <nav>
+    <a href="#traderlab">TraderLab™</a>
+    <a href="#cpilot">CPilot™</a>
+    <a href="#floor">Trading Floor</a>
+  </nav>
+</header>
+
+<main>
+  <img src="assets/images/qtai_globe.png" alt="Rotating Globe" class="globe">
+
+  <div class="module-grid">
+    <!-- Modules 01–15 -->
+    <div class="module" data-module="01">Module 01</div>
+    <div class="module" data-module="02">Module 02</div>
+    <div class="module" data-module="03">Module 03</div>
+    <div class="module" data-module="04">Module 04</div>
+    <div class="module" data-module="05">Module 05</div>
+    <div class="module" data-module="06">Module 06</div>
+    <div class="module" data-module="07">Module 07</div>
+    <div class="module" data-module="08">Module 08</div>
+    <div class="module" data-module="09">Module 09</div>
+    <div class="module" data-module="10">Module 10</div>
+    <div class="module" data-module="11">Module 11</div>
+    <div class="module" data-module="12">Module 12</div>
+    <div class="module" data-module="13">Module 13</div>
+    <div class="module" data-module="14">Module 14</div>
+    <div class="module" data-module="15">Module 15</div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 QuantumTrader AI — Visionary, Architect and Builder: Olagoke Ajibulu
+</footer>
+
+<!-- Handshake Script to connect frontend with server.js -->
+<script>
+  // Minimal handshake
+  const handshake = async () => {
+    try {
+      const response = await fetch('/handshake', { method: 'POST' });
+      const data = await response.json();
+      console.log('Handshake success:', data);
+    } catch (error) {
+      console.error('Handshake failed:', error);
+    }
+  };
+
+  handshake(); // Initiate handshake on page load
+
+  // Module click events
+  document.querySelectorAll('.module').forEach(module => {
+    module.addEventListener('click', async () => {
+      const moduleId = module.getAttribute('data-module');
+      try {
+        const response = await fetch(`/activate-module/${moduleId}`, { method: 'POST' });
+        const data = await response.json();
+        console.log(`Module ${moduleId} activated:`, data);
+        alert(`Module ${moduleId} activated.`);
+      } catch (error) {
+        console.error(`Module ${moduleId} activation failed:`, error);
+      }
+    });
+  });
+</script>
+
   <style>
     body {
       background-color: #000;
@@ -132,9 +268,7 @@
       }
     }
   </style>
-</head>
 
-<body>
   <!-- Top Symbolic Globe -->
   <div class="qtai-globe">
     <img src="assets/images/qtai_globe.png" alt="QuantumTrader-AI Symbolic Globe" />
