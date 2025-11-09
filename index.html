@@ -258,50 +258,194 @@
     </div>
 </style>
    
-   <!-- ===================== FRONTEND IMAGES (STAGGERED FADE-IN + CENTRAL MACARTHUR WITH OVERLAY) ===================== -->
-<div id="frontend-images">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader-AI™</title>
+  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
 
-    <!-- Ori Olokun -->
-    <div class="image-container fade-in" style="animation-delay: 0.1s;">
-        <img src="assets/images/qtai_ori_olokun.png?v=4" alt="Ori Olokun">
-        <p>Ori Olokun</p>
+    header {
+      position: relative;
+      padding-top: 20px;
+    }
+
+    .qtai-logo {
+      width: 150px;
+      margin-bottom: 15px;
+    }
+
+    .activation-logo {
+      width: 120px;
+      margin-bottom: 25px;
+    }
+
+    .peace-index {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .peace-index:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .macarthur-section {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .macarthur-map {
+      width: 100%;
+      height: auto;
+      opacity: 0.95;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .macarthur-map:hover {
+      transform: scale(1.02);
+    }
+
+    .trading-floor {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+      font-size: 1.2rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .bottom-links {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      max-width: 500px;
+      margin: 20px auto 10px;
+    }
+
+    .bottom-links div {
+      flex: 1;
+      padding: 10px;
+      margin: 0 10px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .bottom-links div:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .logo-label {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    footer img {
+      width: 100px;
+      height: auto;
+    }
+
+    @media (max-width: 600px) {
+      .qtai-logo {
+        width: 110px;
+      }
+
+      .activation-logo {
+        width: 90px;
+      }
+
+      .peace-index {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+
+      .bottom-links {
+        flex-direction: column;
+      }
+
+      .bottom-links div {
+        margin: 8px 0;
+      }
+
+      .trading-floor {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Symbolic Globe" class="qtai-logo">
+    <img src="assets/images/activation_payment_logo.png" alt="Activation Payment" class="activation-logo">
+    <div class="peace-index" onclick="window.location.href='peace-index.html'">Peace Index 🌍</div>
+  </header>
+
+  <main>
+    <div class="macarthur-section">
+      <div class="trading-floor">Trading Floor</div>
+      <img src="assets/images/MacArthur.png" alt="MacArthur Global Market Map" class="macarthur-map">
     </div>
 
-    <!-- Quantum Trader AI Globe -->
-    <div class="image-container fade-in" style="animation-delay: 0.2s;">
-        <img src="assets/images/qtai_globe.png?v=4" alt="QT AI Globe">
-        <p>Quantum Trader AI Globe</p>
+    <div class="bottom-links">
+      <div onclick="window.location.href='traderlab.html'">TraderLab™</div>
+      <div onclick="window.location.href='cpilot.html'">CPilot™</div>
     </div>
+  </main>
 
-    <!-- TraderLab Icon -->
-    <div class="image-container fade-in" style="animation-delay: 0.3s;">
-        <img src="assets/images/traderlab_icon.png?v=4" alt="TraderLab Icon">
-        <p>TraderLab Icon</p>
-    </div>
+  <footer>
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun Logo">
+    <div class="logo-label">Ori Olokun</div>
+  </footer>
 
-    <!-- MacArthur (CENTRAL IMAGE + OVERLAY TAG "Peace Index") -->
-    <div class="image-container macarthur fade-in" style="animation-delay: 0.4s;">
-        <div class="overlay-container">
-            <img src="assets/images/MacArthur.png?v=4" alt="MacArthur">
-            <div class="overlay">
-                <span class="overlay-text">Peace Index</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Trading Floor Main -->
-    <div class="image-container fade-in" style="animation-delay: 0.5s;">
-        <img src="assets/images/tradingfloor_main.png?v=4" alt="Trading Floor Main">
-        <p>Trading Floor Main</p>
-    </div>
-
-    <!-- CPilot Panel -->
-    <div class="image-container fade-in" style="animation-delay: 0.6s;">
-        <img src="assets/images/cpilot_panel.png?v=4" alt="CPilot Panel">
-        <p>CPilot Panel</p>
-    </div>
-
-</div>
+  <script>
+    // Optional: smooth fade-in animations
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.opacity = 0;
+      setTimeout(() => {
+        document.body.style.transition = "opacity 1s";
+        document.body.style.opacity = 1;
+      }, 100);
+    });
+  </script>
 
 <!-- ===================== CSS STYLES ===================== -->
 <style>
@@ -364,7 +508,8 @@
     letter-spacing: 0.5px;
     opacity: 0;
     transition: opacity 0.4s ease, transform 0.4s ease;
-}
+
+ 
 
 .overlay-container:hover .overlay {
     opacity: 1;
