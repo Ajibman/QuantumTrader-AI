@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="QT-AI" />
 
-  <title>QuantumTrader-AI™ | Activation</title>
+  <title>QuantumTrader-AI™ = QonexAI | Activation</title>
 
   <!-- Manifest & Icons -->
   <link rel="manifest" href="manifest.json" />
@@ -256,62 +256,67 @@
         Payment processed via Alat Pay, Nigeria
       </p>
     </div>
-
-   <!-- ===================== FRONTEND IMAGES (STAGGERED FADE-IN + UNIFORM SIZE) ===================== -->
-
+</style>
+   
+   <!-- ===================== FRONTEND IMAGES (STAGGERED FADE-IN + CENTRAL MACARTHUR WITH OVERLAY) ===================== -->
 <div id="frontend-images">
 
     <!-- Ori Olokun -->
     <div class="image-container fade-in" style="animation-delay: 0.1s;">
-        <img src="assets/images/qtai_ori_olokun.png?v=2" alt="Ori Olokun">
+        <img src="assets/images/qtai_ori_olokun.png?v=4" alt="Ori Olokun">
         <p>Ori Olokun</p>
     </div>
 
     <!-- Quantum Trader AI Globe -->
     <div class="image-container fade-in" style="animation-delay: 0.2s;">
-        <img src="assets/images/qtai_globe.png?v=2" alt="QT AI Globe">
+        <img src="assets/images/qtai_globe.png?v=4" alt="QT AI Globe">
         <p>Quantum Trader AI Globe</p>
     </div>
 
     <!-- TraderLab Icon -->
     <div class="image-container fade-in" style="animation-delay: 0.3s;">
-        <img src="assets/images/traderlab_icon.png?v=2" alt="TraderLab Icon">
+        <img src="assets/images/traderlab_icon.png?v=4" alt="TraderLab Icon">
         <p>TraderLab Icon</p>
     </div>
 
+    <!-- MacArthur (CENTRAL IMAGE + OVERLAY TAG "Peace Index") -->
+    <div class="image-container macarthur fade-in" style="animation-delay: 0.4s;">
+        <div class="overlay-container">
+            <img src="assets/images/MacArthur.png?v=4" alt="MacArthur">
+            <div class="overlay">
+                <span class="overlay-text">Peace Index</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Trading Floor Main -->
-    <div class="image-container fade-in" style="animation-delay: 0.4s;">
-        <img src="assets/images/tradingfloor_main.png?v=2" alt="Trading Floor Main">
+    <div class="image-container fade-in" style="animation-delay: 0.5s;">
+        <img src="assets/images/tradingfloor_main.png?v=4" alt="Trading Floor Main">
         <p>Trading Floor Main</p>
     </div>
 
     <!-- CPilot Panel -->
-    <div class="image-container fade-in" style="animation-delay: 0.5s;">
-        <img src="assets/images/cpilot_panel.png?v=2" alt="CPilot Panel">
-        <p>CPilot Panel</p>
-    </div>
-
-    <!-- MacArthur -->
     <div class="image-container fade-in" style="animation-delay: 0.6s;">
-        <img src="assets/images/MacArthur.png?v=2" alt="MacArthur">
-        <p>MacArthur</p>
+        <img src="assets/images/cpilot_panel.png?v=4" alt="CPilot Panel">
+        <p>CPilot Panel</p>
     </div>
 
 </div>
 
-<!-- CSS: Uniform size, responsive, staggered fade-in -->
+<!-- ===================== CSS STYLES ===================== -->
 <style>
 #frontend-images {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 20px;
     justify-items: center;
+    align-items: center;
     padding: 20px;
 }
 
 .image-container {
     text-align: center;
-    opacity: 0;                 
+    opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards;
 }
@@ -319,20 +324,64 @@
 .image-container img {
     width: 160px;
     height: 160px;
-    object-fit: cover;          
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: transform 0.2s ease;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* CENTRAL MACARTHUR IMAGE */
+.macarthur {
+    grid-column: 1 / -1; /* spans entire width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.macarthur .overlay-container {
+    position: relative;
+    display: inline-block;
+}
+
+.macarthur img {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Overlay effect for Peace Index */
+.overlay {
+    position: absolute;
+    bottom: 15%; /* lifted upward for balance */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.overlay-container:hover .overlay {
+    opacity: 1;
+    transform: translate(-50%, -4px); /* slight lift when visible */
+}
+
+/* Hover effects */
 .image-container img:hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0, 128, 255, 0.4);
 }
 
 .image-container p {
     margin-top: 8px;
     font-size: 0.9rem;
-    color: #333;
+    color: #222;
+    font-weight: 500;
 }
 
 @keyframes fadeInUp {
@@ -343,7 +392,7 @@
 }
 </style>
     <footer class="footer">
-      © 2025 QuantumTrader-AI™ | All Rights Reserved | Visionary, Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good
+      © 2025 QuantumTrader-AI™ = QonexAI | All Rights Reserved | Visionary, Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good
     </footer>
   </main>
 
