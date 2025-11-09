@@ -257,42 +257,49 @@
       </p>
     </div>
 
-   <!-- ===================== FRONTEND IMAGES (UNIFORM SIZE + FADE-IN) ===================== -->
+   <!-- ===================== FRONTEND IMAGES (STAGGERED FADE-IN + UNIFORM SIZE) ===================== -->
+
 <div id="frontend-images">
 
     <!-- Ori Olokun -->
-    <div class="image-container fade-in">
+    <div class="image-container fade-in" style="animation-delay: 0.1s;">
         <img src="assets/images/qtai_ori_olokun.png?v=2" alt="Ori Olokun">
         <p>Ori Olokun</p>
     </div>
 
     <!-- Quantum Trader AI Globe -->
-    <div class="image-container fade-in">
+    <div class="image-container fade-in" style="animation-delay: 0.2s;">
         <img src="assets/images/qtai_globe.png?v=2" alt="QT AI Globe">
         <p>Quantum Trader AI Globe</p>
     </div>
 
     <!-- TraderLab Icon -->
-    <div class="image-container fade-in">
+    <div class="image-container fade-in" style="animation-delay: 0.3s;">
         <img src="assets/images/traderlab_icon.png?v=2" alt="TraderLab Icon">
         <p>TraderLab Icon</p>
     </div>
 
     <!-- Trading Floor Main -->
-    <div class="image-container fade-in">
+    <div class="image-container fade-in" style="animation-delay: 0.4s;">
         <img src="assets/images/tradingfloor_main.png?v=2" alt="Trading Floor Main">
         <p>Trading Floor Main</p>
     </div>
 
     <!-- CPilot Panel -->
-    <div class="image-container fade-in">
+    <div class="image-container fade-in" style="animation-delay: 0.5s;">
         <img src="assets/images/cpilot_panel.png?v=2" alt="CPilot Panel">
         <p>CPilot Panel</p>
     </div>
 
+    <!-- MacArthur -->
+    <div class="image-container fade-in" style="animation-delay: 0.6s;">
+        <img src="assets/images/MacArthur.png?v=2" alt="MacArthur">
+        <p>MacArthur</p>
+    </div>
+
 </div>
 
-<!-- CSS: Uniform size, responsive, fade-in -->
+<!-- CSS: Uniform size, responsive, staggered fade-in -->
 <style>
 #frontend-images {
     display: grid;
@@ -304,16 +311,15 @@
 
 .image-container {
     text-align: center;
-    opacity: 0;                 /* Start invisible */
+    opacity: 0;                 
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards;
 }
 
-/* Uniform image size */
 .image-container img {
-    width: 160px;               /* fixed width for all */
-    height: 160px;              /* fixed height for all */
-    object-fit: cover;          /* maintain aspect ratio, crop if necessary */
+    width: 160px;
+    height: 160px;
+    object-fit: cover;          
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: transform 0.2s ease;
@@ -329,7 +335,6 @@
     color: #333;
 }
 
-/* Keyframes for fade-in + slide-up */
 @keyframes fadeInUp {
     to {
         opacity: 1;
@@ -337,7 +342,6 @@
     }
 }
 </style>
-
     <footer class="footer">
       © 2025 QuantumTrader-AI™ | All Rights Reserved | Visionary, Architect and Builder: Olagoke Ajibulu | Powered by: Cosmic Good
     </footer>
