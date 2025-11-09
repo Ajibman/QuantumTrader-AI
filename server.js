@@ -1,4 +1,4 @@
-//server.js/
+ //server.js/
 
 // QuantumTrader AI™ Node Server (Full PWA Build)
 // Architect & Builder: Olagoke Ajibulu
@@ -24,6 +24,9 @@ app.use(helmet({
 
 // ✅ Compression for faster delivery
 app.use(compression());
+
+// ✅ Parse JSON bodies for POST requests (handshake + module activation)
+app.use(express.json());
 
 // ✅ Static assets (CSS, JS, images, etc.)
 app.use(express.static(__dirname, {
@@ -76,6 +79,25 @@ app.get("/robots.txt", (req, res) => {
 // ✅ Health-check endpoint
 app.get("/status", (req, res) => {
   res.status(200).json({ status: "ok", app: "QuantumTrader AI™", time: new Date() });
+});
+
+// --------------------
+// Handshake endpoint
+// --------------------
+app.post("/handshake", (req, res) => {
+  console.log("Handshake received from frontend");
+  res.json({ status: "success", message: "Handshake established" });
+});
+
+// --------------------
+// Module activation endpoint
+// --------------------
+app.post("/activate-module/:id", (req, res) => {
+  const moduleId = req.params.id;
+  console.log(`Module ${moduleId} activation request received`);
+
+  // Add any module-specific logic here if needed
+  res.json({ status: "success", module: moduleId, message: `Module ${moduleId} activated` });
 });
 
 // ✅ 404 fallback
