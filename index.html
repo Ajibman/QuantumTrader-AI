@@ -181,12 +181,110 @@
       <span id="fingerIcon"></span>
     </button>
   </header>
-
+ 
   <main>
-   <!-- QuantumTrader-AI Mobile Layout -->
-<div class="qtai-container">
+   <!-- QuantumTrader-AI Mobile Layout --> 
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
 
-  <!-- Top Symbolic Logo -->
+    /* Top symbolic globe logo */
+    .qtai-logo-top img {
+      width: 120px;
+      margin: 20px auto 10px;
+      display: block;
+    }
+
+    /* Activation section */
+    .activation-card {
+      background: #2b2b2b;
+      border-radius: 15px;
+      padding: 20px 15px;
+      margin: 0 auto 25px;
+      width: 85%;
+      box-shadow: 0 0 12px rgba(0, 214, 214, 0.25);
+    }
+
+    .activation-card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #bdbdbd;
+      margin-bottom: 12px;
+    }
+
+    .activation-card p {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .activate-btn {
+      background: #00d6d6;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 25px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .activate-btn:hover {
+      background: #00ffff;
+    }
+
+    small {
+      display: block;
+      margin-top: 8px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    /* Pyramid structure below activation */
+    .pyramid-apex,
+    .pyramid-middle,
+    .pyramid-base,
+    .ori-olokun {
+      margin-bottom: 18px;
+    }
+
+    .pyramid-apex img,
+    .pyramid-middle img,
+    .pyramid-base img,
+    .ori-olokun img {
+      width: 100px;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 5px;
+    }
+
+    .pyramid-base {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .pyramid-label {
+      font-size: 13px;
+      margin-top: 4px;
+      color: #ccc;
+    }
+
+    /* Footer-like base */
+    footer {
+      font-size: 10px;
+      color: #666;
+      margin: 20px 0 10px;
+    }
+
+<body>
+  <!-- Symbolic Logo at Top -->
   <div class="qtai-logo-top">
     <img src="assets/images/qtai_globe.png" alt="Quantum Trader AI Globe">
   </div>
@@ -194,48 +292,46 @@
   <!-- Activation Section -->
   <div class="activation-card">
     <h2>QuantumTrader-AI™ Activation Portal</h2>
-    <div class="activation-box">
-      <p>Activate and Begin Trading</p>
-      <p>Activation fee: NGN 5,000 per month.</p>
-      <button class="activate-btn">Activate (NGN 5,000)</button>
-      <small>Payment processed via Alat Pay, Nigeria</small>
-    </div>
+    <p>Activate and Begin Trading</p>
+    <p>Activation fee: NGN 5,000 per month.</p>
+    <button class="activate-btn">Activate (NGN 5,000)</button>
+    <small>Payment processed via Alat Pay, Nigeria</small>
   </div>
 
-  <!-- Trading Floor Pyramid Layout -->
-  <div class="trading-pyramid">
+  <!-- Trading Floor Pyramid -->
+  <div class="pyramid-apex">
+    <img src="assets/images/trading_floor.png" alt="Trading Floor">
+    <div class="pyramid-label">Trading Floor™ Main</div>
+  </div>
 
-    <!-- Apex -->
-    <div class="pyramid-apex">
-      <img src="assets/images/trading_floor.png" alt="Trading Floor Main">
-      <p>Trading Floor™ Main</p>
+  <div class="pyramid-middle">
+    <img src="assets/images/macarthur.png" alt="MacArthur Map">
+    <div class="pyramid-label">MacArthur Map</div>
+  </div>
+
+  <div class="pyramid-base">
+    <div>
+      <img src="assets/images/traderlab.png" alt="TraderLab Icon">
+      <div class="pyramid-label">TraderLab™</div>
     </div>
-
-    <!-- Middle -->
-    <div class="pyramid-middle">
-      <img src="assets/images/macarthur.png" alt="MacArthur Map">
-      <p>MacArthur Map</p>
-    </div>
-
-    <!-- Base Left & Right -->
-    <div class="pyramid-base">
-      <div>
-        <img src="assets/images/traderlab.png" alt="TraderLab">
-        <p>TraderLab™</p>
-      </div>
-      <div>
-        <img src="assets/images/cpilot.png" alt="CPilot Panel">
-        <p>CPilot™ Panel</p>
-      </div>
+    <div>
+      <img src="assets/images/cpilot.png" alt="CPilot Panel">
+      <div class="pyramid-label">CPilot™ Panel</div>
     </div>
   </div>
 
   <!-- Ori Olokun at Bottom -->
   <div class="ori-olokun">
     <img src="assets/images/ori_olokun.png" alt="Ori Olokun">
-    <p>Ori Olokun</p>
+    <div class="pyramid-label">Ori Olokun</div>
   </div>
-</div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 QuantumTrader-AI™ | Visionary, Architect and Builder: Olagoke Ajibulu
+  </footer>
+</body>
+</html>
 
 <!-- CSS Styling -->
 <style>
@@ -376,14 +472,7 @@ p {
       </p>
     </div>
 </style>
-   
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI™</title>
-  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png">
+  
   <style>
     body {
       margin: 0;
