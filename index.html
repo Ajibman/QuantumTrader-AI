@@ -44,6 +44,22 @@
     }
     .brand img{max-width:170px;width:32vw;height:auto;display:block;object-fit:contain;}
 
+/* --- Activation Button Styling --- */
+.activation button {
+  background-color: #0078ff;
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.activation button:hover {
+  background-color: #005fcc;
+}
+   
     /* ---------- Activation card ---------- */
     .card{
       background:var(--card);
@@ -119,12 +135,16 @@
     <button class="peace-index" onclick="location.href='peace-index.html'">🕊️ Peace Index</button>
   </div>
 
+<div style="text-align: center; margin-bottom: 10px;">
+  <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Logo" style="max-width: 120px; height: auto;">
+</div>
+ 
   <div class="container">
     <!-- Top logo: symbolic globe (must exist at assets/images/qtai_globe.png) -->
     <div class="brand" aria-hidden="false">
       <img src="assets/images/qtai_globe.png" alt="Quantum Trader AI Globe (symbol)" />
     </div>
-
+   
     <!-- Activation card (centered) -->
     <div class="card" role="region" aria-label="Activation Portal">
       <h1>QuantumTrader-AI™ Activation Portal</h1>
@@ -133,6 +153,12 @@
       <button class="activate-btn" id="activateBtn">Activate Now</button>
       <p style="font-size:12px;color:var(--muted);margin-top:10px">Payment processed via Alat Pay, Nigeria</p>
 
+ <section id="activation-section" class="activation">
+  <h2>Activate QuantumTrader AI™</h2>
+  <p>Activate your access and begin exploring TraderLab™ or Trading Floor™.</p>
+  <button onclick="openAlatModal()">Activate Now</button>
+</section>
+     
       <!-- Trading Floor above MacArthur -->
       <div class="map-group">
         <div class="tile" title="Trading Floor">
@@ -188,5 +214,43 @@
       alert('Activation flow starting — integrate your payment handler here.');
     });
   </script>
+ <!-- ALAT Activation Modal -->
+<div id="alatModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.6); z-index:999;">
+  <div style="background:white; color:black; margin:15% auto; padding:25px;
+      width:85%; max-width:420px; border-radius:10px; text-align:center;">
+    <h2>Activate Your QuantumTrader-AI™ Account</h2>
+    <p>You will be redirected to WEMA ALAT secure payment portal.</p>
+    <button onclick="proceedToAlat()" style="background:#00e0ff; color:#000;
+            border:none; border-radius:8px; padding:10px 20px; margin:10px;">Proceed to Activate</button>
+    <button onclick="closeAlatModal()" style="background:#ccc; border:none;
+            border-radius:8px; padding:10px 20px;">Cancel</button>
+  </div>
+</div>
+
+<script>
+function openAlatModal() {
+  document.getElementById('alatModal').style.display = 'block';
+}
+
+function closeAlatModal() {
+  document.getElementById('alatModal').style.display = 'none';
+}
+
+function proceedToAlat() {
+  // redirect to WEMA ALAT payment gateway
+  window.location.href = "https://alat.wemabank.com";  // replace with your secure endpoint
+  // after confirmation, you can set:
+  // localStorage.setItem('qtaiActivated', 'true');
+}
+
+// check if activated and show unlocked modules
+window.addEventListener('load', function() {
+  const active = localStorage.getItem('qtaiActivated');
+  if (active === 'true') {
+    document.querySelectorAll('.module-locked').forEach(el => el.classList.remove('module-locked'));
+  }
+});
+</script>
 </body>
 </html>
