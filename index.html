@@ -1,164 +1,192 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>QuantumTrader-AI™ Activation Portal</title>
+
   <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
+    /* ---------- Base ---------- */
+    :root{
+      --bg:#000;
+      --card:#1f1f1f;
+      --muted:#9aa0a6;
+      --accent:#00e6e6;
+      --max-width:760px;
     }
-    .logo {
-      margin-top: 20px;
-      width: 140px;
-    }
-    .peace-index {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-[11/10, 4:58 AM] ChatGPT 1-800-242-8478: <p style="font-size: 12px; margin-top: 10px;">Payment processed via Alat Pay, Nigeria</p>
-  </div>
+    html,body{height:100%;margin:0;padding:0;background:var(--bg);color:#fff;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;-webkit-font-smoothing:antialiased;}
+    .container{max-width:var(--max-width);margin:0 auto;padding:18px;}
 
-  <!-- Trading Floor -->
-  <div class="section">
-    <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
-    <div class="section-label">Trading Floor™ Main</div>
-  </div>
-
-  <!-- MacArthur Map -->
-  <div class="section">
-    <img src="assets/images/MacArthur.png" alt="MacArthur Map" />
-    <div class="section-label">MacArthur Map</div>
-  </div>
-
-  <!-- TraderLab and CPilot -->
-  <div class="icon-row">
-    <div>
-      <img src="assets/images/traderlab_icon.png" alt="TraderLab Icon" />
-      <div class="section-label">TraderLab™</div>
-    </div>
-    <div>
-      <img src="assets/images/cpilot_panel.png" alt="CPilot Panel" />
-      <div class="section-label">CPilot™ Panel</div>
-    </div>
-  </div>
-
-  <!-- Ori Olokun -->
-  <div class="section">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
-    <div class="section-label">Ori Olokun</div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    © 2025 QuantumTrader-AI™ | All Rights Reserved | Architect and Builder: Olagoke Ajibulu | Powered by Cosmic Good
-  </footer>
-
-</body>
-</html>
-
- background-color: #444;
-      padding: 6px 10px;
-      border-radius: 12px;
-      color: #fff;
-      font-size: 14px;
+    /* ---------- Top bar / Peace Index ---------- */
+    .topbar{position:relative;}
+    .peace-index{
+      position:fixed;
+      top:12px;
+      right:12px;
+      z-index:1200;
+      background:rgba(255,255,255,0.06);
+      color:var(--accent);
+      padding:8px 12px;
+      border-radius:14px;
+      font-weight:600;
+      box-shadow:0 3px 10px rgba(0,0,0,0.4);
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.04);
     }
-    .card {
-      background-color: #333;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
+
+    /* ---------- Logo (top) ---------- */
+    .brand {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin-top:8px;
+      margin-bottom:6px;
     }
-    .card button {
-      background-color: #00e0ff;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      font-weight: bold;
-      margin-top: 10px;
-      border-radius: 8px;
+    .brand img{max-width:170px;width:32vw;height:auto;display:block;object-fit:contain;}
+
+    /* ---------- Activation card ---------- */
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:18px;
+      margin:18px auto;
+      width:94%;
+      max-width:460px;
+      box-shadow:0 6px 22px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
     }
-    .section img {
-      width: 80px;
-      margin: 10px;
+    .card h1{font-size:18px;margin:0 0 8px 0}
+    .card p{margin:6px 0;color:var(--muted);font-size:14px}
+    .activate-btn{
+      background:var(--accent);
+      border:none;
+      color:#000;
+      font-weight:700;
+      padding:10px 18px;
+      border-radius:9px;
+      font-size:15px;
+      margin-top:10px;
+      cursor:pointer;
     }
-    .section-label {
-      font-size: 14px;
-      margin-bottom: 20px;
+
+    /* ---------- Sections & images ---------- */
+    .section{margin-top:18px;text-align:center;}
+    .section .title{color:var(--muted);font-size:12px;margin-top:8px}
+
+    /* image tiles: preserve aspect & avoid distortion */
+    .tile{display:inline-block;background:rgba(0,0,0,0.15);padding:12px;border-radius:12px;margin:10px 8px;}
+    .tile img{
+      display:block;
+      max-width:160px;     /* limits growth on wide screens */
+      width:40vw;          /* responsive width for mobile */
+      height:auto;         /* preserve aspect ratio */
+      object-fit:contain;  /* don't crop or stretch */
+      border-radius:8px;
+      margin:0 auto;
+      box-shadow:0 6px 18px rgba(0,0,0,0.6);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
     }
-    .icon-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 10px;
+    .tile-label{font-size:13px;color:var(--muted);margin-top:8px}
+
+    /* Trading floor positioned above MacArthur: group container */
+    .map-group{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px}
+
+    /* TraderLab & CPilot row under MacArthur */
+    .bottom-row{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:8px}
+
+    /* Ori Olokun anchor above footer */
+    .ori{
+      margin-top:22px;
+      margin-bottom:18px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
-    footer {
-      font-size: 12px;
-      color: #888;
-      margin: 30px 10px;
+    .ori img{width:78px;height:auto;object-fit:contain;border-radius:8px}
+
+    footer{color:rgba(255,255,255,0.25);font-size:12px;text-align:center;padding:12px 6px 40px 6px;}
+
+    /* ---------- Accessibility / small screens ---------- */
+    @media (max-width:420px){
+      .tile img{width:46vw; max-width:140px}
+      .brand img{width:36vw}
+      .card{padding:16px}
+      .peace-index{top:10px;right:8px;padding:6px 10px}
     }
   </style>
 </head>
 <body>
-
-  <div class="peace-index">Peace Index 🌍</div>
-
-  <!-- Main Logo -->
-  <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Logo" class="logo" />
-
-  <!-- Activation Card -->
-  <div class="card">
-    <h3>QuantumTrader-AI™ Activation Portal</h3>
-    <p>Activate your account to begin trading</p>
-    <p><strong>Subscription: NGN 5,000/month</strong></p>
-    <button>Activate Now</button>
-
-   <div>
-<p style="font-size: 12px; margin-top: 10px;">Payment processed via Alat Pay, Nigeria</p>
+  <div class="topbar">
+    <button class="peace-index" onclick="location.href='peace-index.html'">🕊️ Peace Index</button>
   </div>
 
-  <!-- Trading Floor -->
-  <div class="section">
-    <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
-    <div class="section-label">Trading Floor™ Main</div>
-  </div>
-
-  <!-- MacArthur Map -->
-  <div class="section">
-    <img src="assets/images/MacArthur.png" alt="MacArthur Map" />
-    <div class="section-label">MacArthur Map</div>
-  </div>
-
-  <!-- TraderLab and CPilot -->
-  <div class="icon-row">
-    <div>
-      <img src="assets/images/traderlab_icon.png" alt="TraderLab Icon" />
-      <div class="section-label">TraderLab™</div>
+  <div class="container">
+    <!-- Top logo: symbolic globe (must exist at assets/images/qtai_globe.png) -->
+    <div class="brand" aria-hidden="false">
+      <img src="assets/images/qtai_globe.png" alt="Quantum Trader AI Globe (symbol)" />
     </div>
-    <div>
-      <img src="assets/images/cpilot_panel.png" alt="CPilot Panel" />
-      <div class="section-label">CPilot™ Panel</div>
-    </div>
-  </div>
 
-  <!-- Ori Olokun -->
-  <div class="section">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
-    <div class="section-label">Ori Olokun</div>
-  </div>
+    <!-- Activation card (centered) -->
+    <div class="card" role="region" aria-label="Activation Portal">
+      <h1>QuantumTrader-AI™ Activation Portal</h1>
+      <p style="font-weight:600;color:#fff">Activate your account to begin trading</p>
+      <p><strong style="color:#fff">Subscription: NGN 5,000 / month</strong></p>
+      <button class="activate-btn" id="activateBtn">Activate Now</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px">Payment processed via Alat Pay, Nigeria</p>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 QuantumTrader-AI™ | All Rights Reserved | Visionary, Architect and Builder: Olagoke Ajibulu | Powered by Cosmic Good
-  </footer>
+      <!-- Trading Floor above MacArthur -->
+      <div class="map-group">
+        <div class="tile" title="Trading Floor">
+          <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
+          <div class="tile-label">Trading Floor™ Main</div>
+        </div>
 
+        <div class="tile" title="MacArthur Map">
+          <img src="assets/images/MacArthur.png" alt="MacArthur Global Map" />
+          <div class="tile-label">MacArthur Map</div>
+        </div>
+      </div>
+
+      <!-- TraderLab (left) and CPilot (right) under MacArthur -->
+      <div class="bottom-row" aria-hidden="false">
+        <div class="tile" onclick="location.href='traderlab.html'" style="cursor:pointer">
+          <img src="assets/images/traderlab_icon.png" alt="TraderLab Icon" />
+          <div class="tile-label">TraderLab™</div>
+        </div>
+
+        <div class="tile" onclick="location.href='cpilot.html'" style="cursor:pointer">
+          <img src="assets/images/cpilot_panel.png" alt="CPilot Panel" />
+          <div class="tile-label">CPilot™</div>
+        </div>
+      </div>
+
+      <!-- Ori Olokun (anchor above footer) -->
+      <div class="ori">
+        <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
+        <div class="tile-label">Ori Olokun</div>
+      </div>
+
+    </div> <!-- /card -->
+
+    <footer>
+      © 2025 QuantumTrader-AI™ | Architect & Builder: Olagoke Ajibulu
+    </footer>
+  </div> <!-- /container -->
+
+  <script>
+    // Prevent distortion caused by accidental CSS overrides:
+    document.querySelectorAll('img').forEach(img=>{
+      // if the image fails to load, we won't substitute; we display alt text
+      img.addEventListener('error', ()=>{ 
+        console.warn('Image failed to load:', img.src);
+      });
+    });
+
+    // Activation button hook (replace or wire to your payment flow)
+    document.getElementById('activateBtn').addEventListener('click', function(){
+      // open modal or start payment flow here
+      // example: location.href='activation-modal.html' or call your payment API
+      alert('Activation flow starting — integrate your payment handler here.');
+    });
+  </script>
 </body>
 </html>
