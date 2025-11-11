@@ -4,17 +4,27 @@
 // Architect & Builder: Olagoke Ajibulu
 // Updated: November 2025
 
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import compression from "compression"; // for performance
-import helmet from "helmet"; // for security headers
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// --- Handshake endpoint ---
+app.post('/handshake', (req, res) => {
+  console.log('Handshake request received');
+  res.json({ status: 'ok' });
+});
+
+// Serve static files from 'public' folder
+app.use(express.static('public'));
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
 
 // ✅ Security middleware (recommended for PWA)
 app.use(helmet({
