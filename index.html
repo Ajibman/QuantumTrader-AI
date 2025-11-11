@@ -1,387 +1,136 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QuantumTrader-AI™ Activation Portal</title>
-=======
-  <link rel="icon" href="assets/images/qtai_globe.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Trader AI</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(to bottom right, #020817, #0a1e33);
-      color: white;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      flex-direction: column;
       text-align: center;
+      padding-top: 20px;
     }
 
-    header {
-      padding: 20px;
+    #app {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .globe {
-      width: 180px;
-      height: 180px;
-      margin: 30px auto;
-      animation: rotateGlobe 12s linear infinite;
+    #globe-container {
+      width: 300px;
+      height: 300px;
+      margin: 0 auto 40px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      perspective: 1000px;
     }
 
-    @keyframes rotateGlobe {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(360deg); }
+    #globe {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear;
     }
 
-    .activation {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 20px;
-      width: 85%;
-      max-width: 400px;
-      margin: 0 auto 60px auto;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .activation h2 {
-      margin-top: 0;
-      color: #00b4ff;
-      font-weight: 600;
-    }
-
-    .activation p {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #cfd8dc;
-    }
-
-    .activation-button {
-  background-color: #0078ff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-}
-
-.activation-button:hover {
-  background-color: #005fcc;
-}
-
-.activation-button.alt {
-  background-color: #999;
-}
-
-    .activation button:hover {
-      background-color: #005fcc;
-    }
-
-    footer {
-      font-size: 0.8rem;
-      color: #94a3b8;
+    /* --- Triangle Node Layout --- */
+    #triangle-layout {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
       margin-top: 40px;
     }
-  </style>
-</head>
-<body>
 
-  <header>
-    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" class="globe">
-  </header>
-
-  <main>
-    <section class="activation">
-      <h2>Activate QuantumTrader AI™</h2>
-      <p>Access the <strong>TraderLab™</strong> for hands-on learning, or go directly to the <strong>Trading Floor™</strong> once your activation is confirmed.</p>
-      <button onclick="openAlatModal()">Activate Now</button>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 QuantumTrader AI™ — Visionary, Architect & Builder: Olagoke Ajibulu
-  </footer>
-
-  <script>
-    // --- Activation Trigger ---
-    function openAlatModal() {
-      alert("Activation gateway initializing... Redirecting to payment.");
-      // After successful payment, grant access:
-      // window.location.href = "dashboard.html"; // or TraderLab page
-    }
-  </script>
-
-  <style>
-    /* ---------- Base ---------- */
-    :root{
-      --bg:#000;
-      --card:#1f1f1f;
-      --muted:#9aa0a6;
-      --accent:#00e6e6;
-      --max-width:760px;
-    }
-    html,body{height:100%;margin:0;padding:0;background:var(--bg);color:#fff;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;-webkit-font-smoothing:antialiased;}
-    .container{max-width:var(--max-width);margin:0 auto;padding:18px;}
-
-    /* ---------- Top bar / Peace Index ---------- */
-    .topbar{position:relative;}
-    .peace-index{
-      position:fixed;
-      top:12px;
-      right:12px;
-      z-index:1200;
-      background:rgba(255,255,255,0.06);
-      color:var(--accent);
-      padding:8px 12px;
-      border-radius:14px;
-      font-weight:600;
-      box-shadow:0 3px 10px rgba(0,0,0,0.4);
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,0.04);
+    .node {
+      width: 200px;
+      height: 120px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    /* ---------- Logo (top) ---------- */
-    .brand {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-top:8px;
-      margin-bottom:6px;
-    }
-    .brand img{max-width:170px;width:32vw;height:auto;display:block;object-fit:contain;}
-
-/* --- Activation Button Styling --- */
-.activation button {
-  background-color: #0078ff;
-  color: white;
-  padding: 12px 28px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.activation button:hover {
-  background-color: #005fcc;
-}
-   
-    /* ---------- Activation card ---------- */
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      padding:18px;
-      margin:18px auto;
-      width:94%;
-      max-width:460px;
-      box-shadow:0 6px 22px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-    .card h1{font-size:18px;margin:0 0 8px 0}
-    .card p{margin:6px 0;color:var(--muted);font-size:14px}
-    .activate-btn{
-      background:var(--accent);
-      border:none;
-      color:#000;
-      font-weight:700;
-      padding:10px 18px;
-      border-radius:9px;
-      font-size:15px;
-      margin-top:10px;
-      cursor:pointer;
+    .node:hover {
+      transform: scale(1.05);
     }
 
-    /* ---------- Sections & images ---------- */
-    .section{margin-top:18px;text-align:center;}
-    .section .title{color:var(--muted);font-size:12px;margin-top:8px}
+    /* Responsive adjustments */
+    @media(min-width: 768px){
+      #globe-container {
+        width: 400px;
+        height: 400px;
+      }
 
-    /* image tiles: preserve aspect & avoid distortion */
-    .tile{display:inline-block;background:rgba(0,0,0,0.15);padding:12px;border-radius:12px;margin:10px 8px;}
-    .tile img{
-      display:block;
-      max-width:160px;     /* limits growth on wide screens */
-      width:40vw;          /* responsive width for mobile */
-      height:auto;         /* preserve aspect ratio */
-      object-fit:contain;  /* don't crop or stretch */
-      border-radius:8px;
-      margin:0 auto;
-      box-shadow:0 6px 18px rgba(0,0,0,0.6);
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
-    }
-    .tile-label{font-size:13px;color:var(--muted);margin-top:8px}
-
-    /* Trading floor positioned above MacArthur: group container */
-    .map-group{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px}
-
-    /* TraderLab & CPilot row under MacArthur */
-    .bottom-row{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:8px}
-
-    /* Ori Olokun anchor above footer */
-    .ori{
-      margin-top:22px;
-      margin-bottom:18px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-    }
-    .ori img{width:78px;height:auto;object-fit:contain;border-radius:8px}
-
-    footer{color:rgba(255,255,255,0.25);font-size:12px;text-align:center;padding:12px 6px 40px 6px;}
-
-    /* ---------- Accessibility / small screens ---------- */
-    @media (max-width:420px){
-      .tile img{width:46vw; max-width:140px}
-      .brand img{width:36vw}
-      .card{padding:16px}
-      .peace-index{top:10px;right:8px;padding:6px 10px}
+      .node {
+        width: 220px;
+        height: 140px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <button class="peace-index" onclick="location.href='peace-index.html'">🕊️ Peace Index</button>
+  <div id="app">
+    <h1>Welcome to Quantum Trader AI</h1>
+
+    <div id="globe-container">
+      <img src="assets/images/globe.png" alt="Rotating Globe" id="globe" />
+    </div>
+
+    <div id="status">Initializing handshake...</div>
+
+    <!-- Triangle Node Layout -->
+    <div id="triangle-layout">
+      <div class="node" id="trading-floor">Trading Floor</div>
+      <div class="node" id="trader-lab">TraderLab</div>
+      <div class="node" id="cpilot">CPilot</div>
+    </div>
   </div>
 
-  <div class="container">
-    <!-- Top logo: symbolic globe (must exist at assets/images/qtai_globe.png) -->
-    <div class="brand" aria-hidden="false">
-      <img src="assets/images/qtai_globe.png" alt="Quantum Trader AI Globe (symbol)" />
-    </div>
-   
-    <!-- Activation card (centered) -->
-    <div class="card" role="region" aria-label="Activation Portal">
-      <h1>QuantumTrader-AI™ Activation Portal</h1>
-      <p style="font-weight:600;color:#fff">Activate your account to begin trading</p>
-      <p><strong style="color:#fff">Subscription: NGN 10,000 / month</strong></p>
-      <button class="activate-btn" id="activateBtn">Activate Now</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:10px">Payment processed via Alat Pay, Nigeria</p>
-
- <section id="activation-section" class="activation">
-  <h2>Activate QuantumTrader AI™</h2>
-  <p>Activate your access and begin exploring TraderLab™ or Trading Floor™.</p>
-  <button onclick="openAlatModal()">Activate Now</button>
-</section>
-     
-      <!-- Trading Floor above MacArthur -->
-      <div class="map-group">
-        <div class="tile" title="Trading Floor">
-          <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
-          <div class="tile-label">Trading Floor™ Main</div>
-        </div>
-
-        <div class="tile" title="MacArthur Map">
-          <img src="assets/images/MacArthur.png" alt="MacArthur Global Map" />
-          <div class="tile-label">MacArthur Map</div>
-        </div>
-      </div>
-
-      <!-- TraderLab (left) and CPilot (right) under MacArthur -->
-      <div class="bottom-row" aria-hidden="false">
-        <div class="tile" onclick="location.href='traderlab.html'" style="cursor:pointer">
-          <img src="assets/images/traderlab_icon.png" alt="TraderLab Icon" />
-          <div class="tile-label">TraderLab™</div>
-        </div>
-
-        <div class="tile" onclick="location.href='cpilot.html'" style="cursor:pointer">
-          <img src="assets/images/cpilot_panel.png" alt="CPilot Panel" />
-          <div class="tile-label">CPilot™</div>
-        </div>
-      </div>
-
-      <!-- Ori Olokun (anchor above footer) -->
-      <div class="ori">
-        <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
-        <div class="tile-label">Ori Olokun</div>
-      </div>
-
-    </div> <!-- /card -->
-
-    <footer>
-      © 2025 QuantumTrader-AI™ | Architect & Builder: Olagoke Ajibulu
-    </footer>
-  </div> <!-- /container -->
-
   <script>
-    // Prevent distortion caused by accidental CSS overrides:
-    document.querySelectorAll('img').forEach(img=>{
-      // if the image fails to load, we won't substitute; we display alt text
-      img.addEventListener('error', ()=>{ 
-        console.warn('Image failed to load:', img.src);
-      });
-    });
+    // --- Handshake script ---
+    async function initHandshake() {
+      try {
+        const response = await fetch('/handshake', { method: 'POST' });
+        const data = await response.json();
+        if(data.status === 'ok'){
+          console.log('Handshake successful with server.');
+          document.getElementById('status').textContent = 'Handshake successful!';
+        } else {
+          console.error('Handshake failed.');
+          document.getElementById('status').textContent = 'Handshake failed.';
+        }
+      } catch(err){
+        console.error('Error during handshake:', err);
+        document.getElementById('status').textContent = 'Error during handshake.';
+      }
+    }
 
-    // Activation button hook (replace or wire to your payment flow)
-    document.getElementById('activateBtn').addEventListener('click', function(){
-      // open modal or start payment flow here
-      // example: location.href='activation-modal.html' or call your payment API
-      alert('Activation flow starting — integrate your payment handler here.');
-    });
+    window.addEventListener('DOMContentLoaded', initHandshake);
+
+    // --- Rotating globe animation ---
+    const globe = document.getElementById('globe');
+    let rotation = 0;
+    function rotateGlobe(){
+      rotation += 0.018; // ~20 seconds per full rotation
+      globe.style.transform = `rotateY(${rotation*360}deg)`;
+      requestAnimationFrame(rotateGlobe);
+    }
+    rotateGlobe();
   </script>
- <!-- ALAT Activation Modal -->
-<div id="alatModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-     background:rgba(0,0,0,0.6); z-index:999;">
-  <div style="background:white; color:black; margin:15% auto; padding:25px;
-      width:85%; max-width:420px; border-radius:10px; text-align:center;">
-    <h2>Activate Your QuantumTrader-AI™ Account</h2>
-    <p>You will be redirected to WEMA ALAT secure payment portal.</p>
-    <button onclick="proceedToAlat()" style="background:#00e0ff; color:#000;
-            border:none; border-radius:8px; padding:10px 20px; margin:10px;">Proceed to Activate</button>
-    <button onclick="closeAlatModal()" style="background:#ccc; border:none;
-            border-radius:8px; padding:10px 20px;">Cancel</button>
-  </div>
-</div>
-
-<script>
-function openAlatModal() {
-  document.getElementById('alatModal').style.display = 'block';
-}
-
-function closeAlatModal() {
-  document.getElementById('alatModal').style.display = 'none';
-}
-
-function proceedToAlat() {
-  // redirect to WEMA ALAT payment gateway
-  window.location.href = "https://alat.wemabank.com";  // replace with your secure endpoint
-  // after confirmation, you can set:
-  // localStorage.setItem('qtaiActivated', 'true');
-}
-
-// check if activated and show unlocked modules
-window.addEventListener('load', function() {
-  const active = localStorage.getItem('qtaiActivated');
-  if (active === 'true') {
-    document.querySelectorAll('.module-locked').forEach(el => el.classList.remove('module-locked'));
-  }
-});
-</script>
-
- Manual Activation Modal -->
-<div id="alatModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
-  <div style="background:#fff; margin:10% auto; padding:20px; width:90%; max-width:400px; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position:relative;">
-    <h2 style="text-align:center; margin-bottom:10px;">Activate Your Account</h2>
-    <p style="font-size:14px; text-align:center;">
-      Please make a payment of <strong>₦10,000</strong> to the ALAT WEMA account below:
-    </p>
-    <div style="background:#f4f4f4; padding:15px; border-radius:8px; margin:15px 0;">
-      <p><strong>Bank:</strong> WEMA (ALAT)</p>
-      <p><strong>Account Name:</strong> Your Name</p>
-      <p><strong>Account Number:</strong> 0299134895</p>
-    </div>
-    <p style="font-size:14px;">After payment, click the button below and complete the form:</p>
-    <button onclick="showActivationForm()" style="width:100%; margin-top:10px;" class="activation-button">I Have Paid</button>
-
-  <script>
-  function openAlatModal() {
-    document.getElementById("alatModal").style.display = "block";
-  }
-l
-  function closeAlatModal() {
-    document.getElementById("alatModal").style.display = "none";
-  }
-
-  function showActivationForm() {
-    document.getElementById("activationForm").style.display = "block";
-  }
-  </script>
-  </body>lll
+</body>
 </html>
