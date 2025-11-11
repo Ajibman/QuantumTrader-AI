@@ -26,8 +26,8 @@
     }
 
     #globe-container {
-      width: 300px;
-      height: 300px;
+      width: 250px;
+      height: 250px;
       margin: 0 auto 40px auto;
       border-radius: 50%;
       overflow: hidden;
@@ -72,8 +72,8 @@
     /* Responsive adjustments */
     @media(min-width: 768px){
       #globe-container {
-        width: 400px;
-        height: 400px;
+        width: 250px;
+        height: 250px;
       }
 
       .node {
@@ -126,7 +126,7 @@
     const globe = document.getElementById('globe');
     let rotation = 0;
     function rotateGlobe(){
-      rotation += 0.018; // ~20 seconds per full rotation
+      rotation += 0.018; // ~2.5 seconds per full rotation
       globe.style.transform = `rotateY(${rotation*360}deg)`;
       requestAnimationFrame(rotateGlobe);
     }
