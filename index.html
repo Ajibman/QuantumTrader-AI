@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +7,6 @@
   <title>Quantum Trader AI</title>
   <link rel="stylesheet" href="assets/css/styles.css">
   <style>
-    /* --- Base Styles --- */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -18,21 +18,13 @@
       text-align: center;
     }
 
-    #app {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    #app { width: 100%; max-width: 1200px; margin: 0 auto; }
+    h1 { margin-bottom: 40px; font-size: 2em; }
 
-    h1 {
-      margin-bottom: 40px;
-      font-size: 2em;
-    }
-
-    /* --- Globe Container --- */
+    /* Globe */
     #globe-wrapper {
-      width: 500px;
-      height: 500px;
+      width: 400px;
+      height: 400px;
       margin-bottom: 60px;
       border-radius: 50%;
       overflow: hidden;
@@ -40,27 +32,54 @@
       perspective: 1000px;
     }
 
-    #globe {
+    #globe { width: 100%; height: 100%; display: block; transform-style: preserve-3d; }
+    #status { margin-bottom: 40px; font-size: 1.2em; color: #333; }
+
+    /* Payments & Activation Center */
+    #payments-center {
       width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.05s linear;
+      max-width: 800px;
+      margin: 40px auto;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    /* --- Status --- */
-    #status {
-      margin-bottom: 60px;
-      font-size: 1.2em;
-      color: #333;
+    .payment-card {
+      flex: 1 1 250px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      padding: 20px;
+      text-align: center;
+      font-size: 1em;
     }
 
-    /* --- Triangle Node Layout Wrapper --- */
+    .payment-card h3 { margin-bottom: 10px; }
+    .payment-card p { color: #555; }
+    .connect-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: not-allowed;
+      transition: background 0.2s;
+    }
+
+    .connect-btn:disabled { opacity: 0.6; }
+    .connect-btn:not(:disabled):hover { background: #45a049; }
+
+    /* Triangle Node Layout */
     #triangle-layout-wrapper {
       position: relative;
       width: 100%;
       max-width: 900px;
       height: 300px;
-      margin: 0 auto;
+      margin: 40px auto 0 auto;
     }
 
     .node {
@@ -78,111 +97,45 @@
       transition: transform 0.2s;
     }
 
-    .node:hover {
-      transform: scale(1.05);
-    }
+    .node:hover { transform: scale(1.05); }
+    #trading-floor { top: 0; left: 50%; transform: translateX(-50%); }
+    #trader-lab { bottom: 0; left: 10%; }
+    #cpilot { bottom: 0; right: 10%; }
 
-    /* Triangle positions */
-    #trading-floor {
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    /* Footer */
+    footer { margin-top: 80px; font-size: 0.9em; color: #666; }
+    footer p { margin: 6px 0; }
 
-    #trader-lab {
-      bottom: 0;
-      left: 10%;
-    }
-
-    #cpilot {
-      bottom: 0;
-      right: 10%;
-    }
-
-    /* --- Footer --- */
-    footer {
-      margin-top: 80px;
-      font-size: 0.9em;
-      color: #666;
-    }
-
-    /* --- Responsive --- */
-    @media (max-width: 1024px) {
-      #globe-wrapper {
-        width: 400px;
-        height: 400px;
-      }
-      .node {
-        width: 180px;
-        height: 110px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      #globe-wrapper {
-        width: 350px;
-        height: 350px;
-      }
-      .node {
-        width: 150px;
-        height: 100px;
-      }
-      #trader-lab {
-        left: 5%;
-      }
-      #cpilot {
-        right: 5%;
-      }
-      #triangle-layout-wrapper {
-        height: 250px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      #globe-wrapper {
-        width: 300px;
-        height: 300px;
-      }
-      .node {
-        width: 120px;
-        height: 80px;
-        font-size: 0.9em;
-      }
-      #triangle-layout-wrapper {
-        height: 200px;
-      }
-    }
-
-.hero-section {
-  text-align: center;
-  padding: 30px 10px;
-}
-
-.globe {
-  width: 180px;
-  height: 180px;
-  animation: spin 20s linear infinite;
-  margin: 0 auto 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-   
+    /* Responsive */
+    @media (max-width: 1024px) { #globe-wrapper { width: 350px; height: 350px; } .node { width: 180px; height: 110px; } }
+    @media (max-width: 768px) { #globe-wrapper { width: 300px; height: 300px; } .node { width: 150px; height: 100px; } #trader-lab { left: 5%; } #cpilot { right: 5%; } #triangle-layout-wrapper { height: 250px; } }
+    @media (max-width: 480px) { #globe-wrapper { width: 250px; height: 250px; } .node { width: 120px; height: 80px; font-size: 0.9em; } #triangle-layout-wrapper { height: 200px; } footer { font-size: 0.8em; margin-top: 60px; } #payments-center { flex-direction: column; align-items: center; gap: 15px; } }
   </style>
 </head>
 <body>
-<div class="hero-section">
-  <img src="assets/images/qtai_globe.png" alt="Rotating Globe" class="globe" />
-  <h1>Welcome to Quantum Trader AI</h1>
-</div>
+  <div id="app">
+    <h1>Welcome to Quantum Trader AI</h1>
+
     <!-- Globe -->
     <div id="globe-wrapper">
-      <img src="assets/images/globe.png" alt="Rotating Globe" id="globe">
+      <img src="assets/images/globe.png" alt="Globe" id="globe">
     </div>
 
     <div id="status">Initializing handshake...</div>
+
+    <!-- Payments & Activation Center -->
+    <div id="payments-center">
+      <div class="payment-card">
+        <h3>WEMA Bank API Integration</h3>
+        <p>Awaiting API activation approval.</p>
+        <button id="wema-connect" class="connect-btn" disabled>Connect</button>
+      </div>
+      <div class="payment-card">
+        <h3>Paystack API Integration</h3>
+        <p>Awaiting API activation approval.</p>
+        <button id="paystack-connect" class="connect-btn" disabled>Connect</button>
+      </div>
+    </div>
 
     <!-- Triangle Node Layout -->
     <div id="triangle-layout-wrapper">
@@ -191,36 +144,69 @@
       <div class="node" id="cpilot">CPilot</div>
     </div>
 
-    <!-- Footer / Attributions -->
+    <!-- Footer -->
     <footer>
       <p>© 2025 Quantum Trader AI. All rights reserved.</p>
-      <p>Globe image &copy; contributors, TraderLab & CPilot modules developed in-house.</p>
+      <p>Globe image &copy; contributors. TraderLab & CPilot modules developed in-house.</p>
     </footer>
   </div>
 
   <script>
-    // --- Handshake Script ---
+    // --- Handshake Script with Static Fallback ---
     async function initHandshake() {
       try {
-        const response = await fetch('/handshake', { method: 'POST' });
-        const data = await response.json();
-        if (data.status === 'ok') {
-          console.log('Handshake successful with server.');
-          document.getElementById('status').textContent = 'Handshake successful!';
-        } else {
-          console.error('Handshake failed.');
-          document.getElementById('status').textContent = 'Handshake failed.';
+        let response;
+        try {
+          response = await fetch('/handshake', { method: 'POST' });
+          const data = await response.json();
+          if (data.status === 'ok') {
+            document.getElementById('status').textContent = 'Handshake successful!';
+            console.log('Handshake successful with server.');
+            return;
+          }
+        } catch {
+          console.warn('Server handshake unavailable, using static fallback.');
         }
+       
+        // Static fallback
+        document.getElementById('status').textContent = 'Handshake simulated (static fallback).';
+        console.log('Handshake simulated (static fallback).');
       } catch (err) {
         console.error('Error during handshake:', err);
         document.getElementById('status').textContent = 'Error during handshake.';
       }
     }
-
     window.addEventListener('DOMContentLoaded', initHandshake);
 
-    // --- Rotating Globe ---
+    // --- Gentle 180° Globe Rotation (~20s full rotation) ---
     const globe = document.getElementById('globe');
+    let rotation = 0;
+    function rotateGlobe() {
+      rotation += 0.005;
+      globe.style.transform = `rotateY(${rotation * 360}deg)`;
+      requestAnimationFrame(rotateGlobe);
+    }
+    rotateGlobe();
+
+    // --- Payments & Activation Skeleton ---
+    function enablePaymentButtons() {
+      const wemaBtn = document.getElementById('wema-connect');
+      const paystackBtn = document.getElementById('paystack-connect');
+
+      // Uncomment when API approvals are confirmed
+      // wemaBtn.disabled = false;
+      // paystackBtn.disabled = false;
+
+      wemaBtn.addEventListener('click', () => { alert('WEMA Bank payment process will initiate here.'); });
+      paystackBtn.addEventListener('click', () => { alert('Paystack payment process will initiate here.'); });
+    }
+    window.addEventListener('DOMContentLoaded', enablePaymentButtons);
+  </script>
+
+ 
+    // --- Rotating Globe ---
+    <script>
+ const globe = document.getElementById('globe');
     let rotation = 0;
     function rotateGlobe() {
       rotation += 0.111; // ~3 seconds per 360°
