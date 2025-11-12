@@ -3,15 +3,63 @@
 // QuantumTrader AI™ Node Server (Full PWA Build)
 // Architect & Builder: Olagoke Ajibulu
 // Updated: November 2025
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ---------------------------------------------------
 
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
+// Resolve current directory (since __dirname is not available in ES modules)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Initialize app
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Serve static files (assets, html, css, etc.)
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
+
+// --- Handshake Route --------------------------------
+app.get("/handshake", (req, res) => {
+  console.log("🔗 Handshake initiated between index.html and index2.html");
+  res.json({
+    status: "success",
+    message: "QuantumTrader-AI™ handshake established successfully.",
+    timestamp: new Date().toISOString()
+  });
+});
+
+// --- Activation Confirmation Endpoint ---------------
+app.post("/activate", (req, res) => {
+  const { userId } = req.body;
+  console.log(`✅ Activation received for user: ${userId}`);
+  
+  // Placeholder logic — extend for Paystack/WEMA ALAT verification
+  res.json({
+    success: true,
+    userId,
+    message: "Activation confirmed. TraderLab™ and Trading Floor™ unlocked."
+  });
+});
+
+// --- Route to Backend (index2.html) -----------------
+app.get("/backend", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index2.html"));
+});
+
+// --- Default Route (Frontend) -----------------------
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// --- Start Server -----------------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 QuantumTrader-AI server.mjs running on http://localhost:${PORT}`);
+});
 
 // --- Handshake endpoint ---
 app.post('/handshake', (req, res) => {
