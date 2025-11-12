@@ -254,5 +254,11 @@ fetch('/handshake')
   .then(data => console.log('Handshake confirmed:', data.message))
   .catch(err => console.error('Handshake failed:', err));
 </script>
+ <script>
+  fetch('/handshake')
+    .then(response => response.json())
+    .then(data => console.log(data.message))
+    .catch(err => console.error('Handshake failed:', err));
+ </script>
 </body>
 </html>
