@@ -1,0 +1,42 @@
+# QuantumTrader-AI .gitignore
+# ==========================
+
+# Node dependencies
+node_modules/
+
+# Logs and debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.cache/
+.tmp/
+coverage/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Runtime artifacts
+*.pid
+*.seed
+*.log
+
+# Temporary data
+*.tmp
+*.bak
+
+# Local server/test folders
+/.vscode/
+/.idea/
+/test/
+/drafts/
