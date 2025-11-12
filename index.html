@@ -1,40 +1,64 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>QuantumTrader AI</title>
+  <link rel="icon" href="assets/images/traderlab_icon.png" type="image/png" />
+
+  <!-- Styles -->
   <style>
+    /* --- Base Styles --- */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('assets/images/background_cosmic.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      min-height: 100vh;
       text-align: center;
+      padding: 20px;
     }
 
-    #app { width: 100%; max-width: 1200px; margin: 0 auto; }
-    h1 { margin-bottom: 40px; font-size: 2em; }
+    h1, h2 { margin: 1rem 0; }
+    .glow { text-shadow: 0 0 8px rgba(255,255,255,0.7); }
 
-    /* Globe */
-    #globe-wrapper {
-      width: 400px;
-      height: 400px;
-      margin-bottom: 60px;
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      perspective: 1000px;
+    /* --- Header --- */
+    header img { width: 180px; height: auto; border-radius: 12px; margin-bottom: 10px; }
+
+    /* --- Main Sections --- */
+    main img { max-width: 350px; height: auto; margin: 1rem auto; display: block; }
+
+    /* --- Triangle Node Layout --- */
+    #triangle-layout-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      height: 300px;
+      margin: 40px auto;
     }
+    .node {
+      width: 200px;
+      height: 120px;
+      background: rgba(255,255,255,0.95);
+      color: #000;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .node:hover { transform: scale(1.05); }
+    #trading-floor-node { top: 0; left: 50%; transform: translateX(-50%); }
+    #trader-lab-node { bottom: 0; left: 10%; }
+    #cpilot-node { bottom: 0; right: 10%; }
 
-    #globe { width: 100%; height: 100%; display: block; transform-style: preserve-3d; }
-    #status { margin-bottom: 40px; font-size: 1.2em; color: #333; }
-
-    /* Payments & Activation Center */
+    /* --- Payments & Activation Center --- */
     #payments-center {
       width: 100%;
       max-width: 800px;
@@ -44,207 +68,149 @@
       flex-wrap: wrap;
       gap: 20px;
     }
-
     .payment-card {
       flex: 1 1 250px;
-      background: #fff;
+      background: rgba(255,255,255,0.95);
+      color: #000;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.15);
       padding: 20px;
+      font-weight: bold;
       text-align: center;
-      font-size: 1em;
     }
-
-    .payment-card h3 { margin-bottom: 10px; }
-    .payment-card p { color: #555; }
     .connect-btn {
       margin-top: 15px;
       padding: 10px 20px;
       background: #4CAF50;
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
       cursor: not-allowed;
-      transition: background 0.2s;
+      font-weight: bold;
     }
-
-    .connect-btn:disabled { opacity: 0.6; }
     .connect-btn:not(:disabled):hover { background: #45a049; }
 
-    /* Triangle Node Layout */
-    #triangle-layout-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      height: 300px;
-      margin: 40px auto 0 auto;
+    /* --- Globe --- */
+    #globe-wrapper {
+      width: 400px;
+      height: 400px;
+      margin: 0 auto 40px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    #globe { width: 100%; height: 100%; display: block; }
+
+    /* --- Footer --- */
+    footer {
+      margin-top: auto;
+      font-size: 0.9em;
+      color: #ccc;
+      padding: 1.5rem;
+      background: rgba(0,0,0,0.4);
     }
 
-    .node {
-      width: 200px;
-      height: 120px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      cursor: pointer;
-      position: absolute;
-      transition: transform 0.2s;
+    /* --- Responsive --- */
+    @media(max-width: 768px) {
+      #globe-wrapper { width: 300px; height: 300px; }
+      .node { width: 150px; height: 100px; font-size: 0.9em; }
+      #triangle-layout-wrapper { height: 250px; }
+      #payments-center { flex-direction: column; align-items: center; gap: 15px; }
     }
-
-    .node:hover { transform: scale(1.05); }
-    #trading-floor { top: 0; left: 50%; transform: translateX(-50%); }
-    #trader-lab { bottom: 0; left: 10%; }
-    #cpilot { bottom: 0; right: 10%; }
-
-    /* Footer */
-    footer { margin-top: 80px; font-size: 0.9em; color: #666; }
-    footer p { margin: 6px 0; }
-
-    /* Responsive */
-    @media (max-width: 1024px) { #globe-wrapper { width: 350px; height: 350px; } .node { width: 180px; height: 110px; } }
-    @media (max-width: 768px) { #globe-wrapper { width: 300px; height: 300px; } .node { width: 150px; height: 100px; } #trader-lab { left: 5%; } #cpilot { right: 5%; } #triangle-layout-wrapper { height: 250px; } }
-    @media (max-width: 480px) { #globe-wrapper { width: 250px; height: 250px; } .node { width: 120px; height: 80px; font-size: 0.9em; } #triangle-layout-wrapper { height: 200px; } footer { font-size: 0.8em; margin-top: 60px; } #payments-center { flex-direction: column; align-items: center; gap: 15px; } }
+    @media(max-width: 480px) {
+      #globe-wrapper { width: 250px; height: 250px; }
+      .node { width: 120px; height: 80px; font-size: 0.8em; }
+      #triangle-layout-wrapper { height: 200px; }
+    }
   </style>
 </head>
+
 <body>
-<div class="activation-panel">
-  <h2>QuantumTrader-AI™ Activation Portal</h2>
-  <p>Activate your account to begin trading</p>
-  <p><strong>Subscription: NGN 10,000 / month</strong></p>
-  <button class="activate-btn">Activate Now</button>
-  <p class="note">Payment processed via Alat Pay, Nigeria</p>
-</div>
 
-<div class="features-grid">
-  <div class="feature">
-    <img src="assets/images/trading_floor.png" alt="Trading Floor™" />
-    <p><strong>Trading Floor™</strong> Main</p>
-  </div>
+  <!-- HEADER -->
+  <header>
+    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" />
+    <h1 class="glow">QuantumTrader AI</h1>
+    <p>Visionary: Olagoke Ajibulu</p>
+  </header>
 
-  <div class="feature">
-    <img src="assets/images/macarthur_map.png" alt="MacArthur Map" />
-    <p>MacArthur Map</p>
-  </div>
-
-  <div class="feature">
-    <img src="assets/images/traderlab.png" alt="TraderLab™" />
-    <p><strong>TraderLab™</strong></p>
-  </div>
-
-  <div class="feature">
-    <img src="assets/images/cpilot.png" alt="CPilot™" />
-    <p><strong>CPilot™</strong> Panel</p>
-  </div>
-
-  <div class="feature">
-    <img src="assets/images/ori_olokun.png" alt="Ori Olokun" />
-    <p>Ori Olokun</p>
-  </div>
-</div>
-
-    <!-- Globe -->
+  <!-- MAIN BODY -->
+  <main>
+    <!-- Globe Section (Safe to remove if not needed) -->
     <div id="globe-wrapper">
       <img src="assets/images/globe.png" alt="Globe" id="globe">
     </div>
 
-    <div id="status">Initializing handshake...</div>
+    <!-- Core Sections (Safe to remove individually if desired) -->
+    <section>
+      <h2>Trading Floor</h2>
+      <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
+      <p>Experience real-time, omni-directional trading intelligence.</p>
+    </section>
 
-    <!-- Payments & Activation Center -->
+    <section>
+      <h2>Control Pilot Panel</h2>
+      <img src="assets/images/cpilot_panel.png" alt="Control Pilot Panel" />
+      <p>Precision controls and analytic dashboards for every trader.</p>
+    </section>
+
+    <section>
+      <h2>Ori Olokun</h2>
+      <img src="assets/images/ori_olokun.png" alt="Ori Olokun Symbol" />
+      <p>A symbol of depth, clarity, and divine intelligence within QuantumTrader AI.</p>
+    </section>
+
+    <!-- Triangle Node Layout (Safe to remove if not using interactive nodes) -->
+    <div id="triangle-layout-wrapper">
+      <div class="node" id="trading-floor-node">Trading Floor</div>
+      <div class="node" id="trader-lab-node">TraderLab</div>
+      <div class="node" id="cpilot-node">CPilot</div>
+    </div>
+
+    <!-- Payments & Activation Center (Safe to remove if APIs are not ready) -->
     <div id="payments-center">
       <div class="payment-card">
-        <h3>WEMA Bank API Integration</h3>
-        <p>Awaiting API activation approval.</p>
-        <button id="wema-connect" class="connect-btn" disabled>Connect</button>
+        <h3>WEMA Bank API</h3>
+        <p>Awaiting activation approval</p>
+        <button class="connect-btn" id="wema-btn" disabled>Connect</button>
       </div>
       <div class="payment-card">
-        <h3>Paystack API Integration</h3>
-        <p>Awaiting API activation approval.</p>
-        <button id="paystack-connect" class="connect-btn" disabled>Connect</button>
+        <h3>Paystack API</h3>
+        <p>Awaiting activation approval</p>
+        <button class="connect-btn" id="paystack-btn" disabled>Connect</button>
       </div>
     </div>
+  </main>
 
-    <!-- Triangle Node Layout -->
-    <div id="triangle-layout-wrapper">
-      <div class="node" id="trading-floor">Trading Floor</div>
-      <div class="node" id="trader-lab">TraderLab</div>
-      <div class="node" id="cpilot">CPilot</div>
-    </div>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 QuantumTrader AI — All rights reserved.</p>
+    <p>Globe & assets © contributors. TraderLab & CPilot modules developed in-house.</p>
+  </footer>
 
-    <!-- Footer -->
-    <footer>
-      <p>© 2025 Quantum Trader AI. All rights reserved | Visionar, Architect & Builder: Olagoke Ajibulu</p><p> Powered by: Cosmic Good</p>
-      <p>Globe image &copy; contributors. TraderLab & CPilot modules developed in-house.</p>
-    </footer>
-  </div>
-
+  <!-- SCRIPTS -->
   <script>
-    // --- Handshake Script with Static Fallback ---
+    // --- Handshake Script (DO NOT REMOVE unless replacing) ---
     async function initHandshake() {
       try {
-        let response;
-        try {
-          response = await fetch('/handshake', { method: 'POST' });
-          const data = await response.json();
-          if (data.status === 'ok') {
-            document.getElementById('status').textContent = 'Handshake successful!';
-            console.log('Handshake successful with server.');
-            return;
-          }
-        } catch {
-          console.warn('Server handshake unavailable, using static fallback.');
+        const response = await fetch('/handshake', { method: 'POST' });
+        const data = await response.json();
+        if(data.status === 'ok') {
+          console.log('Handshake successful with server.');
+        } else {
+          console.warn('Handshake failed.');
         }
-       
-        // Static fallback
-        document.getElementById('status').textContent = 'Handshake simulated (static fallback).';
-        console.log('Handshake simulated (static fallback).');
-      } catch (err) {
-        console.error('Error during handshake:', err);
-        document.getElementById('status').textContent = 'Error during handshake.';
+      } catch(err) {
+        console.warn('Handshake error:', err);
       }
     }
     window.addEventListener('DOMContentLoaded', initHandshake);
 
-    // --- Gentle 180° Globe Rotation (~20s full rotation) ---
-    const globe = document.getElementById('globe');
-    let rotation = 0;
-    function rotateGlobe() {
-      rotation += 0.005;
-      globe.style.transform = `rotateY(${rotation * 360}deg)`;
-      requestAnimationFrame(rotateGlobe);
-    }
-    rotateGlobe();
-
-    // --- Payments & Activation Skeleton ---
-    function enablePaymentButtons() {
-      const wemaBtn = document.getElementById('wema-connect');
-      const paystackBtn = document.getElementById('paystack-connect');
-
-      // Uncomment when API approvals are confirmed
-      // wemaBtn.disabled = false;
-      // paystackBtn.disabled = false;
-
-      wemaBtn.addEventListener('click', () => { alert('WEMA Bank payment process will initiate here.'); });
-      paystackBtn.addEventListener('click', () => { alert('Paystack payment process will initiate here.'); });
-    }
-    window.addEventListener('DOMContentLoaded', enablePaymentButtons);
+    // --- Payments Buttons (Safe to remove until API is live) ---
+    const wemaBtn = document.getElementById('wema-btn');
+    const paystackBtn = document.getElementById('paystack-btn');
+    wemaBtn.addEventListener('click', () => alert('WEMA Bank payment process here.'));
+    paystackBtn.addEventListener('click', () => alert('Paystack payment process here.'));
   </script>
 
- 
-    // --- Rotating Globe ---
-    <script>
- const globe = document.getElementById('globe');
-    let rotation = 0;
-    function rotateGlobe() {
-      rotation += 0.111; // ~3 seconds per 360°
-      globe.style.transform = `rotateY(${rotation*360}deg)`;
-      requestAnimationFrame(rotateGlobe);
-    }
-    rotateGlobe();
-  </script>
 </body>
 </html>
