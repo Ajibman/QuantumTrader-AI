@@ -12,6 +12,72 @@ import compression from "compression";
 import express from "express";
 const app = express();
 
+// server.mjs — QuantumTrader-AI™ Node.js backend
+// --------------------------------------------------
+// Using ES Modules and Express for smooth handshake and placeholder routing.
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files (your index.html and assets)
+app.use(express.static(path.join(__dirname, "docs")));
+
+// ---------------------------------------------
+// Handshake route (front-end ↔ back-end bridge)
+// ---------------------------------------------
+app.get("/handshake", (req, res) => {
+  res.json({ message: "✅ QuantumTrader-AI handshake successful." });
+});
+
+// ---------------------------------------------
+// Paystack placeholder route
+// ---------------------------------------------
+app.get("/paystack-placeholder", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Paystack Placeholder</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            padding-top: 100px;
+            color: #222;
+          }
+          h2 {
+            color: #007bff;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>Paystack Placeholder Active</h2>
+        <p>Awaiting approval to enable payment gateway integration...</p>
+      </body>
+    </html>
+  `);
+});
+
+// ---------------------------------------------
+// Fallback to index.html for all other routes
+// ---------------------------------------------
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "docs", "index.html"));
+});
+
+// ---------------------------------------------
+// Start the server
+// ---------------------------------------------
+app.listen(PORT, () =>
+  console.log(`🚀 QuantumTrader-AI server running at http://localhost:${PORT}`)
+);
+
 app.use(express.static("docs")); // front end location
 
 app.get("/handshake", (req, res) => {
