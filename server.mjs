@@ -1,189 +1,164 @@
- //server.js/
-
+ // server.mjs
 // QuantumTrader AI™ Node Server (Full PWA Build)
 // Architect & Builder: Olagoke Ajibulu
 // Updated: November 2025
-// ---------------------------------------------------
-// ---------------------------------------------------
 // ---------------------------------------------------
 
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import express from "express";
-const app = express();
-const PORT = process.env.PORT || 3000;
+import helmet from "helmet";
+import compression from "compression";
 
-app.use(express.static("docs"));
-
-// Handshake route
-app.get("/handshake", (req, res) => {
-  res.json({ message: "QuantumTrader-AI™ handshake acknowledged ✅" });
-});
-
-// Paystack placeholder route
-app.get("/paystack-status", (req, res) => {
-// Default placeholder — will update after Paystack approval
-  res.json({ status: "pending" });
-});
-
-app.listen(PORT, () => {
-  console.log(`✅ QuantumTrader-AI™ server running on port ${PORT}`);
-});
-=====
-// Resolve current directory (since __dirname is not available in ES modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Initialize app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files (assets, html, css, etc.)
-app.use(express.static(path.join(__dirname, "public")));
+// ✅ Security & performance middleware
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+  })
+);
+app.use(compression());
 app.use(express.json());
 
-// --- Handshake Route --------------------------------
+// ✅ Serve static files (HTML, assets, etc.)
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    extensions: ["html", "htm"],
+    maxAge: "1y",
+  })
+);
+
+// ✅ Cache control for static resources
+app.use((req, res, next) => {
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json)$/)) {
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+  }
+  next();
+});
+
+// ---------------------------------------------------
+// Handshake route — index.html ↔ index2.html sync
+// ---------------------------------------------------
 app.get("/handshake", (req, res) => {
   console.log("🔗 Handshake initiated between index.html and index2.html");
   res.json({
     status: "success",
     message: "QuantumTrader-AI™ handshake established successfully.",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
-// --- Activation Confirmation Endpoint ---------------
+// ---------------------------------------------------
+// Activation Confirmation Endpoint
+// ---------------------------------------------------
 app.post("/activate", (req, res) => {
   const { userId } = req.body;
   console.log(`✅ Activation received for user: ${userId}`);
-  
-  // Placeholder logic — extend for Paystack/WEMA ALAT verification
   res.json({
     success: true,
     userId,
-    message: "Activation confirmed. TraderLab™ and Trading Floor™ unlocked."
+    message: "Activation confirmed. TraderLab™ and Trading Floor™ unlocked.",
   });
 });
 
-// --- Route to Backend (index2.html) -----------------
-app.get("/backend", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index2.html"));
+// ---------------------------------------------------
+// Paystack Placeholder Route
+// ---------------------------------------------------
+app.get("/paystack-status", (req, res) => {
+  console.log("💳 Paystack placeholder route hit.");
+  res.json({ status: "pending" }); // Change to "active" after approval
 });
 
-// --- Default Route (Frontend) -----------------------
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// ---------------------------------------------------
+// QuantumTrader-AI™ Modules (Dynamic Route)
+// ---------------------------------------------------
+const modules = [
+  "Module 01: Quantum Market Scanner™",
+  "Module 02: Sentiment Wave Analyzer™",
+  "Module 03: Liquidity Pulse Tracker™",
+  "Module 04: Volatility Lens™",
+  "Module 05: Trade Emotion Decoder™",
+  "Module 06: PatternNet Engine™",
+  "Module 07: Profit Quantumizer™",
+  "Module 08: AI Broker Bridge™",
+  "Module 09: GeoRisk Visualizer™",
+  "Module 10: Global Peace Index Feed™",
+  "Module 11: TraderLab™",
+  "Module 12: Trading Floor™",
+  "Module 13: CPilot™",
+  "Module 14: Medusa™ (Auto-Regeneration Core)",
+  "Module 15: CCLM²™ Ethics Supervisor"
+];
+
+app.get("/modules", (req, res) => {
+  console.log("📊 Module list requested.");
+  res.status(200).json({
+    status: "ok",
+    totalModules: modules.length,
+    modules,
+  });
 });
 
-// --- Start Server -----------------------------------
-app.listen(PORT, () => {
-  console.log(`🚀 QuantumTrader-AI server.mjs running on http://localhost:${PORT}`);
-});
-
-// --- Handshake endpoint ---
-app.post('/handshake', (req, res) => {
-  console.log('Handshake request received');
-  res.json({ status: 'ok' });
-});
-
-// Serve static files from 'public' folder
-app.use(express.static('public'));
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
-// ✅ Security middleware (recommended for PWA)
-app.use(helmet({
-  crossOriginEmbedderPolicy: false,
-  contentSecurityPolicy: false
-}));
-
-// ✅ Compression for faster delivery
-app.use(compression());
-
-// ✅ Parse JSON bodies for POST requests (handshake + module activation)
-app.use(express.json());
-
-// ✅ Static assets (CSS, JS, images, etc.)
-app.use(express.static(__dirname, {
-  extensions: ['html', 'htm'],
-  maxAge: '1y'
-}));
-
-// ✅ Cache-control header for static resources
-app.use((req, res, next) => {
-  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json)$/)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-  }
-  next();
-});
-
-// ✅ Root route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-// ✅ Public subpage route
-app.get("/public/index2.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index2.html"));
-});
-
-// ✅ Manifest file
+// ---------------------------------------------------
+// Core PWA Assets
+// ---------------------------------------------------
 app.get("/manifest.json", (req, res) => {
   res.type("application/manifest+json");
   res.sendFile(path.join(__dirname, "manifest.json"));
 });
 
-// ✅ Service worker
 app.get("/service-worker.js", (req, res) => {
   res.type("application/javascript");
   res.sendFile(path.join(__dirname, "service-worker.js"));
 });
 
-// ✅ Sitemap
 app.get("/sitemap.xml", (req, res) => {
   res.type("application/xml");
   res.sendFile(path.join(__dirname, "sitemap.xml"));
 });
 
-// ✅ Robots.txt
 app.get("/robots.txt", (req, res) => {
   res.type("text/plain");
   res.sendFile(path.join(__dirname, "robots.txt"));
 });
 
-// ✅ Health-check endpoint
+// ---------------------------------------------------
+// Health Check Endpoint
+// ---------------------------------------------------
 app.get("/status", (req, res) => {
-  res.status(200).json({ status: "ok", app: "QuantumTrader AI™", time: new Date() });
+  res.status(200).json({
+    status: "ok",
+    app: "QuantumTrader AI™",
+    time: new Date(),
+  });
 });
 
-// --------------------
-// Handshake endpoint
-// --------------------
-app.post("/handshake", (req, res) => {
-  console.log("Handshake received from frontend");
-  res.json({ status: "success", message: "Handshake established" });
+// ---------------------------------------------------
+// Fallback Routes
+// ---------------------------------------------------
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// --------------------
-// Module activation endpoint
-// --------------------
-app.post("/activate-module/:id", (req, res) => {
-  const moduleId = req.params.id;
-  console.log(`Module ${moduleId} activation request received`);
-
-  // Add any module-specific logic here if needed
-  res.json({ status: "success", module: moduleId, message: `Module ${moduleId} activated` });
+app.get("/backend", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index2.html"));
 });
 
-// ✅ 404 fallback
+// ---------------------------------------------------
+// 404 fallback
+// ---------------------------------------------------
 app.use((req, res) => {
   res.status(404).send("404 - Page Not Found");
 });
 
-// ✅ Start the server
+// ---------------------------------------------------
+// Start Server
+// ---------------------------------------------------
 app.listen(PORT, () => {
-  console.log(`🚀 QuantumTrader AI™ server live on http://localhost:${PORT}`);
+  console.log(`🚀 QuantumTrader-AI™ server live on http://localhost:${PORT}`);
 });
