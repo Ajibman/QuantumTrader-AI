@@ -1,57 +1,127 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader-AI™ Companion</title>
-<link rel="stylesheet" href="Assets/style.css">
-</head>
-<body>
-<div class="container">
-    <!-- Rotating globe -->
-    <img src="Assets/qtai_globe.png" id="globe" alt="QuantumTrader Globe">
-
-    <!-- Triangle Node Layout -->
-    <div class="triangle">
-        <div class="node trading-floor">TradingFloor™</div>
-        <div class="node trader-lab">TraderLab™</div>
-        <div class="node c-pilot">CPilot™</div>
-    </div>
-
-    <!-- Ori_Olokun -->
-    <img src="Assets/ori_olokun.png" id="ori_olokun" alt="Ori Olokun">
-
-</div>
-
-<!-- Peace Index Button -->
-<button id="peaceIndex">Peace Index</button>
-
-<footer>
-    © 2025 QuantumTrader-AI™ | Architect: Olagoke Ajibulu
-</footer>
-
-<script src="Assets/script.js"></script>
-<script>
-/* Handshake bridge logic with index.html via server.js */
-// Example: internal communication and load distribution
-// index2.html listens for messages or commands from index.html
-// Heavy computations or offloaded functions are processed here
-window.addEventListener('message', (event) => {
-    // validate origin if needed
-    const { action, data } = event.data;
-    switch(action) {
-        case 'updateNodeState':
-            // handle node updates from index.html
-            console.log('Node update received:', data);
-            break;
-        case 'performHeavyTask':
-            // simulate heavy backend computation
-            console.log('Processing heavy task:', data);
-            break;
-        default:
-            console.log('Unknown action from index.html:', action);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI — Backend Handshake</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
     }
-});
-</script>
+
+    header {
+      padding-top: 30px;
+    }
+
+    .globe {
+      width: 100px;
+      height: 100px;
+      animation: spin 20s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .section {
+      margin: 30px auto;
+      padding: 10px;
+      max-width: 420px;
+    }
+
+    .btn {
+      background-color: #0078ff;
+      color: white;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 10px;
+    }
+
+    .btn:hover {
+      background-color: #005fcc;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 20px 0;
+      background: #111;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .handshake-status {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" class="globe">
+    <h2>Backend Handshake Portal</h2>
+    <p>Synchronizing secure access between <strong>index.html</strong> and <strong>server.js</strong></p>
+  </header>
+
+  <main>
+    <section class="section handshake-status" id="statusBox">
+      <h3>Establishing Secure Handshake...</h3>
+      <p id="handshakeText">Waiting for confirmation from QuantumTrader AI core.</p>
+    </section>
+
+    <section class="section">
+      <h3>Select Your Access Path</h3>
+      <button class="btn" onclick="routeTo('traderlab')">Enter TraderLab™</button>
+      <button class="btn" onclick="routeTo('tradingfloor')">Enter Trading Floor</button>
+      <button class="btn" onclick="routeTo('cpilot')">Access CPilot™</button>
+    </section>
+  </main>
+
+  <footer>
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun Symbol">
+    <p>© QuantumTrader AI | Visionary, Architect and Builder — Olagoke Ajibulu</p>
+  </footer>
+
+  <script>
+    // Simulate handshake process
+    document.addEventListener("DOMContentLoaded", () => {
+      const statusBox = document.getElementById("statusBox");
+      const text = document.getElementById("handshakeText");
+
+      setTimeout(() => {
+        text.textContent = "Handshake established successfully with server.js ✅";
+        statusBox.style.background = "rgba(0,255,0,0.1)";
+      }, 2500);
+    });
+
+    function routeTo(destination) {
+      alert(`Redirecting to ${destination}...`);
+      // Placeholder routing — replace with your actual links when ready
+      switch(destination) {
+        case "traderlab":
+          window.location.href = "traderlab.html";
+          break;
+        case "tradingfloor":
+          window.location.href = "tradingfloor.html";
+          break;
+        case "cpilot":
+          window.location.href = "cpilot.html";
+          break;
+      }
+    }
+  </script>
 </body>
 </html>
