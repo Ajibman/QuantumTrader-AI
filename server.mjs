@@ -10,7 +10,27 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import express from "express";
+const app = express();
+const PORT = process.env.PORT || 3000;
 
+app.use(express.static("docs"));
+
+// Handshake route
+app.get("/handshake", (req, res) => {
+  res.json({ message: "QuantumTrader-AI™ handshake acknowledged ✅" });
+});
+
+// Paystack placeholder route
+app.get("/paystack-status", (req, res) => {
+// Default placeholder — will update after Paystack approval
+  res.json({ status: "pending" });
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ QuantumTrader-AI™ server running on port ${PORT}`);
+});
+=====
 // Resolve current directory (since __dirname is not available in ES modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
