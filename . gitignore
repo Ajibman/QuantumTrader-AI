@@ -1,42 +1,84 @@
-# QuantumTrader-AI .gitignore
-# ==========================
+ # ==============================
+# QuantumTrader-AI™ .gitignore
+# Architect & Builder: Olagoke Ajibulu
+# ==============================
 
 # Node dependencies
 node_modules/
-
-# Logs and debug files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Environment variables
+# Environment & API keys
 .env
 .env.local
-.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Build outputs
-dist/
-build/
-.cache/
-.tmp/
-coverage/
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Runtime artifacts
+# Logs & Diagnostics
+logs/
+*.log
+*.csv
+*.dat
 *.pid
 *.seed
-*.log
+*.pid.lock
+nohup.out
+debug/
+coverage/
 
-# Temporary data
-*.tmp
+# Build artifacts & temporary files
+dist/
+build/
+.tmp/
+.cache/
+.cache-loader/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# System & OS
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Local test files
+test-results/
+playwright-report/
+cypress/videos/
+cypress/screenshots/
+
+# PWA auto-generated files
+service-worker.js.map
+manifest.webmanifest
+firebase-debug.log
+firebase.json
+*.firebase/
+*.runtimeconfig.json
+
+# Backups or local archives
+backup/
 *.bak
+*.old
+*.orig
+*.save
+*.zip
+*.tar.gz
 
-# Local server/test folders
-/.vscode/
-/.idea/
-/test/
-/drafts/
+# GitHub Pages build folder (optional)
+# comment out if you serve docs/ directly
+# /docs/
+
+# Paystack logs (placeholder)
+paystack_log.json
+paystack_transaction_*
+
+# Private keys or credentials (security)
+*.pem
+*.key
+*.crt
+*.pfx
