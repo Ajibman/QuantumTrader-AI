@@ -9,6 +9,20 @@ import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
 import compression from "compression";
+import express from "express";
+const app = express();
+
+app.use(express.static("docs")); // front end location
+
+app.get("/handshake", (req, res) => {
+  res.json({ message: "QuantumTrader-AI handshake successful." });
+});
+
+app.get("/paystack-placeholder", (req, res) => {
+  res.send("<h2>Paystack placeholder active. Awaiting approval...</h2>");
+});
+
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
