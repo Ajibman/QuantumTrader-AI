@@ -97,8 +97,25 @@
       border-radius: 50%;
       overflow: hidden;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      perspective: 1000px;
     }
-    #globe { width: 100%; height: 100%; display: block; }
+
+    /* Globe Rotation Animation */
+    @keyframes rotateGlobe {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+    #globe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transform-style: preserve-3d;
+      animation: rotateGlobe 60s linear infinite;
+    }
+
+    /* Pause rotation on hover */
+    #globe:hover { animation-play-state: paused; }
 
     /* --- Footer --- */
     footer {
@@ -125,11 +142,11 @@
 </head>
 
 <body>
-<a href="
- https://www.visionofhumanity.org/maps/" target="_blank">
+  <!-- Peace Index Link -->
+  <a href="https://www.visionofhumanity.org/maps/" target="_blank">
     <img src="assets/images/peace_index_logo.png" alt="Peace Index" style="position: absolute; top: 20px; right: 20px; height: 64px; z-index: 100;" />
   </a>
- 
+
   <!-- HEADER -->
   <header>
     <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" />
@@ -139,12 +156,12 @@
 
   <!-- MAIN BODY -->
   <main>
-    <!-- Globe Section (Safe to remove if not needed) -->
+    <!-- Globe Section -->
     <div id="globe-wrapper">
       <img src="assets/images/globe.png" alt="Globe" id="globe">
     </div>
 
-    <!-- Core Sections (Safe to remove individually if desired) -->
+    <!-- Core Sections -->
     <section>
       <h2>Trading Floor</h2>
       <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
@@ -163,14 +180,14 @@
       <p>A symbol of depth, clarity, and divine intelligence within QuantumTrader AI.</p>
     </section>
 
-    <!-- Triangle Node Layout (Safe to remove if not using interactive nodes) -->
+    <!-- Triangle Node Layout -->
     <div id="triangle-layout-wrapper">
       <div class="node" id="trading-floor-node">Trading Floor</div>
       <div class="node" id="trader-lab-node">TraderLab</div>
       <div class="node" id="cpilot-node">CPilot</div>
     </div>
 
-    <!-- Payments & Activation Center (Safe to remove if APIs are not ready) -->
+    <!-- Payments & Activation Center -->
     <div id="payments-center">
       <div class="payment-card">
         <h3>WEMA Bank API</h3>
@@ -193,72 +210,41 @@
 
   <!-- SCRIPTS -->
   <script>
-    // --- Handshake Script (DO NOT REMOVE unless replacing) ---
-    async function initHandshake() {
-      try {
-        const response = await fetch('/handshake', { method: 'POST' });
-        const data = await response.json();
-        if(data.status === 'ok') {
-          console.log('Handshake successful with server.');
-        } else {
-          console.warn('Handshake failed.');
-        }
-      } catch(err) {
-        console.warn('Handshake error:', err);
-      }
-    }
-    window.addEventListener('DOMContentLoaded', initHandshake);
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.log("Initializing QuantumTrader-AI™ handshake...");
 
-    // --- Payments Buttons (Safe to remove until API is live) ---
+      try {
+        // Handshake
+        const handshakeRes = await fetch("/handshake");
+        const handshakeData = await handshakeRes.json();
+        if(handshakeData.status === 'ok') {
+          console.log("Handshake successful:", handshakeData.message || handshakeData.status);
+        } else {
+          console.warn("Handshake failed:", handshakeData.message || handshakeData.status);
+        }
+
+        // Paystack placeholder
+        const paystackRes = await fetch("/paystack-status");
+        const paystackData = await paystackRes.json();
+
+        if(paystackData.status === "pending") {
+          console.log("Paystack integration is pending approval...");
+        } else if(paystackData.status === "active") {
+          console.log("Paystack gateway active!");
+        } else {
+          console.warn("Paystack status unknown:", paystackData.status);
+        }
+
+      } catch(err) {
+        console.error("Handshake or Paystack check failed:", err);
+      }
+    });
+
+    // Payment buttons (still disabled until APIs are live)
     const wemaBtn = document.getElementById('wema-btn');
     const paystackBtn = document.getElementById('paystack-btn');
     wemaBtn.addEventListener('click', () => alert('WEMA Bank payment process here.'));
     paystackBtn.addEventListener('click', () => alert('Paystack payment process here.'));
   </script>
-
-<script>
-fetch('/handshake')
-  .then(res => res.json())
-  .then(data => console.log('Handshake status:', data.message))
-  .catch(err => console.error('Handshake failed:', err));
-</script>
-
-<!-- Handshake + Paystack Placeholder -->
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      console.log("Initializing QuantumTrader-AI™ handshake...");
-
-      try {
-        const response = await fetch("/handshake");
-        const data = await response.json();
-        console.log("Handshake successful:", data.message);
-
-        // Paystack placeholder check
-        const paystackCheck = await fetch("/paystack-status");
-        const paystackData = await paystackCheck.json();
-
-        if (paystackData.status === "pending") {
-          console.log("Paystack integration is pending approval...");
-        } else if (paystackData.status === "active") {
-          console.log("Paystack gateway active!");
-        } else {
-          console.warn("Paystack route unknown.");
-        }
-      } catch (err) {
-        console.error("Handshake or Paystack placeholder failed:", err);
-      }
-    });
-  </script>
-<script>fetch('/handshake')
-  .then(response => response.json())
-  .then(data => console.log('Handshake confirmed:', data.message))
-  .catch(err => console.error('Handshake failed:', err));
-</script>
- <script>
-  fetch('/handshake')
-    .then(response => response.json())
-    .then(data => console.log(data.message))
-    .catch(err => console.error('Handshake failed:', err));
- </script>
 </body>
 </html>
