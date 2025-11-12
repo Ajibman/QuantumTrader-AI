@@ -216,5 +216,38 @@
     paystackBtn.addEventListener('click', () => alert('Paystack payment process here.'));
   </script>
 
+<script>
+fetch('/handshake')
+  .then(res => res.json())
+  .then(data => console.log('Handshake status:', data.message))
+  .catch(err => console.error('Handshake failed:', err));
+</script>
+
+<!-- Handshake + Paystack Placeholder -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.log("Initializing QuantumTrader-AI™ handshake...");
+
+      try {
+        const response = await fetch("/handshake");
+        const data = await response.json();
+        console.log("Handshake successful:", data.message);
+
+        // Paystack placeholder check
+        const paystackCheck = await fetch("/paystack-status");
+        const paystackData = await paystackCheck.json();
+
+        if (paystackData.status === "pending") {
+          console.log("Paystack integration is pending approval...");
+        } else if (paystackData.status === "active") {
+          console.log("Paystack gateway active!");
+        } else {
+          console.warn("Paystack route unknown.");
+        }
+      } catch (err) {
+        console.error("Handshake or Paystack placeholder failed:", err);
+      }
+    });
+  </script>
 </body>
 </html>
