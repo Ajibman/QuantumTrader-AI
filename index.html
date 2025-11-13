@@ -159,5 +159,34 @@
 
   handshake();
  </script>
+ <script>
+// Function to check Paystack status
+async function checkPaystackStatus() {
+  try {
+    const response = await fetch('/handshake', { method: 'POST' });
+    const data = await response.json();
+
+    if (data.paystackActive) {
+      console.log('💳 Paystack is active!');
+      // Update UI here, e.g., enable the "Activate" button
+      const activateBtn = document.getElementById('activateBtn');
+      if (activateBtn) activateBtn.disabled = false;
+
+      // Optionally, stop polling once active
+      clearInterval(pollingInterval);
+    } else {
+      console.log('Paystack not active yet.');
+    }
+  } catch (err) {
+    console.error('Error checking Paystack status:', err);
+  }
+}
+
+// Poll every 5 seconds
+const pollingInterval = setInterval(checkPaystackStatus, 5000);
+
+// Initial check immediately
+checkPaystackStatus();
+ </script>
 </body>
 </html>
