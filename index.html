@@ -1,254 +1,150 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader AI</title>
-  <link rel="icon" href="assets/images/traderlab_icon.png" type="image/png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader-AI™ Activation</title>
 
-  <!-- Styles -->
   <style>
-    /* --- Base Styles --- */
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: url('assets/images/background_cosmic.png') no-repeat center center fixed;
-      background-size: cover;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
       color: #fff;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
       text-align: center;
-      padding: 20px;
     }
 
-    h1, h2 { margin: 1rem 0; }
-    .glow { text-shadow: 0 0 8px rgba(255,255,255,0.7); }
-
-    /* --- Header --- */
-    header img { width: 180px; height: auto; border-radius: 12px; margin-bottom: 10px; }
-
-    /* --- Main Sections --- */
-    main img { max-width: 350px; height: auto; margin: 1rem auto; display: block; }
-
-    /* --- Triangle Node Layout --- */
-    #triangle-layout-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      height: 300px;
-      margin: 40px auto;
-    }
-    .node {
-      width: 200px;
-      height: 120px;
-      background: rgba(255,255,255,0.95);
-      color: #000;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      position: absolute;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .node:hover { transform: scale(1.05); }
-    #trading-floor-node { top: 0; left: 50%; transform: translateX(-50%); }
-    #trader-lab-node { bottom: 0; left: 10%; }
-    #cpilot-node { bottom: 0; right: 10%; }
-
-    /* --- Payments & Activation Center --- */
-    #payments-center {
-      width: 100%;
-      max-width: 800px;
-      margin: 40px auto;
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .payment-card {
-      flex: 1 1 250px;
-      background: rgba(255,255,255,0.95);
-      color: #000;
-      border-radius: 12px;
-      padding: 20px;
-      font-weight: bold;
-      text-align: center;
-    }
-    .connect-btn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: not-allowed;
-      font-weight: bold;
-    }
-    .connect-btn:not(:disabled):hover { background: #45a049; }
-
-    /* --- Globe --- */
-    #globe-wrapper {
-      width: 350px;
-      height: 350px;
-      margin: 0 auto 20px auto;
+    .globe {
+      width: 180px;
+      height: 180px;
+      margin-top: 20px;
       border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      perspective: 1000px;
+      background-image: url("assets/images/qtai_globe.png");
+      background-size: cover;
+      animation: spin 20s linear infinite;
     }
 
-    /* Globe Rotation Animation */
-    @keyframes rotateGlobe {
-      from { transform: rotateY(0deg); }
-      to { transform: rotateY(360deg); }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
-    #globe {
-      width: 100%;
-      height: 100%;
-      display: block;
-      transform-style: preserve-3d;
-      animation: rotateGlobe 60s linear infinite;
+    h1 {
+      font-size: 1.5rem;
+      margin-top: 10px;
     }
 
-    #globe:hover { animation-play-state: paused; }
+    .activation {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      width: 85%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
+    }
 
-    /* --- Footer --- */
+    .activation button {
+      background-color: #0078ff;
+      color: white;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .activation button:hover {
+      background-color: #005fcc;
+    }
+
+    .ori {
+      margin-top: 30px;
+      width: 120px;
+      height: auto;
+    }
+
+    .map {
+      margin-top: 30px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
     footer {
-      margin-top: auto;
-      font-size: 0.9em;
-      color: #ccc;
-      padding: 1.5rem;
-      background: rgba(0,0,0,0.4);
-    }
-
-    /* --- Responsive --- */
-    @media(max-width: 768px) {
-      #globe-wrapper { width: 300px; height: 300px; }
-      .node { width: 150px; height: 100px; font-size: 0.9em; }
-      #triangle-layout-wrapper { height: 250px; }
-      #payments-center { flex-direction: column; align-items: center; gap: 15px; }
-    }
-    @media(max-width: 480px) {
-      #globe-wrapper { width: 250px; height: 250px; }
-      .node { width: 120px; height: 80px; font-size: 0.8em; }
-      #triangle-layout-wrapper { height: 200px; }
+      margin-top: 40px;
+      font-size: 0.8rem;
+      opacity: 0.8;
     }
   </style>
 </head>
-
 <body>
-  <!-- Peace Index Link -->
-  <a href="https://www.visionofhumanity.org/maps/" target="_blank">
-    <img src="assets/images/peace_index_logo.png" alt="Peace Index" style="position: absolute; top: 20px; right: 20px; height: 64px; z-index: 100;" />
-  </a>
 
-  <!-- HEADER -->
-  <header>
-    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" />
-    <h1 class="glow">QuantumTrader AI</h1>
-    <p>Visionary: Olagoke Ajibulu</p>
-  </header>
+  <!-- 🟢 TOP HANDSHAKE SCRIPT -->
+  <script>
+    console.log("Initializing QuantumTrader-AI™ handshake... (index.html top)");
+    const handshakeInit = { source: "index.html", target: "server.mjs", stage: "init" };
+    sessionStorage.setItem("QT_HANDSHAKE", JSON.stringify(handshakeInit));
 
-  <!-- MAIN BODY -->
-  <main>
-    <!-- Globe Section -->
-    <div id="globe-wrapper">
-      <img src="assets/images/globe.png" alt="Globe" id="globe">
-    </div>
+    // Attempt early ping
+    fetch("/handshake", {
+      method: "GET"
+    })
+    .then(res => res.json())
+    .then(data => console.log("🔗 Handshake (top):", data))
+    .catch(err => console.warn("⚠️ Handshake top failed:", err));
+  </script>
 
-    <!-- MacArthur Image below Globe -->
-    <div style="margin: 20px auto; max-width: 350px;">
-      <img src="assets/images/MacArthur.png" alt="MacArthur Symbol" style="width: 100%; height: auto; display: block;">
-    </div>
+  <!-- 🌍 Rotating Globe -->
+  <div class="globe"></div>
 
-    <!-- Core Sections -->
-    <section>
-      <h2>Trading Floor</h2>
-      <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" />
-      <p>Experience real-time, omni-directional trading intelligence.</p>
-    </section>
+  <h1>QuantumTrader-AI™ Activation Portal</h1>
 
-    <section>
-      <h2>Control Pilot Panel</h2>
-      <img src="assets/images/cpilot_panel.png" alt="Control Pilot Panel" />
-      <p>Precision controls and analytic dashboards for every trader.</p>
-    </section>
+  <!-- ⚙️ Activation Panel -->
+  <div class="activation">
+    <p>Activate your QuantumTrader-AI™ license for ₦10,000</p>
+    <button onclick="openAlatModal()">Activate Now</button>
+  </div>
 
-    <section>
-      <h2>Ori Olokun</h2>
-      <img src="assets/images/ori_olokun.png" alt="Ori Olokun Symbol" />
-      <p>A symbol of depth, clarity, and divine intelligence within QuantumTrader AI.</p>
-    </section>
+  <!-- 🌀 Ori Olokun Image -->
+  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" class="ori" />
 
-    <!-- Triangle Node Layout -->
-    <div id="triangle-layout-wrapper">
-      <div class="node" id="trading-floor-node">Trading Floor</div>
-      <div class="node" id="trader-lab-node">TraderLab</div>
-      <div class="node" id="cpilot-node">CPilot</div>
-    </div>
+  <!-- 🗺️ MacArthur Map -->
+  <img src="assets/images/macarthur_map.png" alt="MacArthur Map" class="map" />
 
-    <!-- Payments & Activation Center -->
-    <div id="payments-center">
-      <div class="payment-card">
-        <h3>WEMA Bank API</h3>
-        <p>Awaiting activation approval</p>
-        <button class="connect-btn" id="wema-btn" disabled>Connect</button>
-      </div>
-      <div class="payment-card">
-        <h3>Paystack API</h3>
-        <p>Awaiting activation approval</p>
-        <button class="connect-btn" id="paystack-btn" disabled>Connect</button>
-      </div>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
   <footer>
-    <p>© 2025 QuantumTrader AI — All rights reserved. Visionary, Concept, Architect & Builder: Olagoke Ajibulu | Powered by: Cosmic Good</p>
-    <p>Globe & assets © contributors. TraderLab & CPilot modules developed in-house.</p>
+    QuantumTrader-AI™ © 2025 · Visionary, Architect & Builder: Olagoke Ajibulu
   </footer>
 
-  <!-- SCRIPTS -->
+  <!-- 🟢 BOTTOM HANDSHAKE SCRIPT -->
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      console.log("Initializing QuantumTrader-AI™ handshake...");
+    console.log("Handshake ready: index.html ↔ server.mjs ↔ index2.html");
 
+    async function verifyHandshake() {
       try {
-        // Handshake
-        const handshakeRes = await fetch("/handshake");
-        const handshakeData = await handshakeRes.json();
-        if(handshakeData.status === 'ok') {
-          console.log("Handshake successful:", handshakeData.message || handshakeData.status);
-        } else {
-          console.warn("Handshake failed:", handshakeData.message || handshakeData.status);
-        }
-
-        // Paystack placeholder
-        const paystackRes = await fetch("/paystack-status");
-        const paystackData = await paystackRes.json();
-
-        if(paystackData.status === "pending") {
-          console.log("Paystack integration is pending approval...");
-        } else if(paystackData.status === "active") {
-          console.log("Paystack gateway active!");
-        } else {
-          console.warn("Paystack status unknown:", paystackData.status);
-        }
-
-      } catch(err) {
-        console.error("Handshake or Paystack check failed:", err);
+        const response = await fetch("/handshake");
+        const data = await response.json();
+        console.log("🤝 Handshake (bottom):", data);
+      } catch (err) {
+        console.warn("Handshake verification failed:", err);
       }
-    });
+    }
 
-    // Payment buttons (still disabled until APIs are live)
-    const wemaBtn = document.getElementById('wema-btn');
-    const paystackBtn = document.getElementById('paystack-btn');
-    wemaBtn.addEventListener('click', () => alert('WEMA Bank payment process here.'));
-    paystackBtn.addEventListener('click', () => alert('Paystack payment process here.'));
+    verifyHandshake();
+
+    function openAlatModal() {
+      alert("ALAT activation modal will open here once Paystack/WEMA integration is approved.");
+      fetch("/paystack-status")
+        .then(res => res.json())
+        .then(status => console.log("Paystack placeholder:", status));
+    }
   </script>
 </body>
 </html>
