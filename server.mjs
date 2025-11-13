@@ -4,20 +4,61 @@
 // Updated: November 2025
 // ---------------------------------------------------
 
-// QuantumTrader-AI™ Server Configuration
-// Handles handshake bridge, security, and backend routing.
-
+// 1. Core imports
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
 import compression from "compression";
+import bodyParser from "body-parser";
+import cors from "cors"; // optional, if front-end is on a different port
 
+// 2. Directory setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 3. App setup
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// 4. Middleware
+app.use(helmet());          // security headers
+app.use(compression());     // gzip compression
+app.use(cors());            // enable cross-origin requests
+app.use(bodyParser.json()); // parse JSON bodies
+app.use(express.static(path.join(__dirname, 'public'))); // serve static files
+
+// ----------------------
+// PAYSTACK ACTIVATION PLACEHOLDER
+let paystackActive = false;
+
+// Endpoint to handle Paystack events
+app.post('/paystack-event', (req, res) => {
+  const { event, status } = req.body;
+
+  if (event === 'charge.success' && status === 'active') {
+    paystackActive = true;
+    console.log('💳 Paystack is now active!');
+  } else {
+    console.log('Paystack event received, but not activation:', req.body);
+  }
+
+  res.sendStatus(200);
+});
+
+// ----------------------
+// HANDSHAKE ROUTE
+app.post('/handshake', (req, res) => {
+  console.log('Handshake requested by front-end.');
+  res.json({ status: 'ok', paystackActive });
+});
+
+// ----------------------
+// SERVER START
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // 🛡️ Security & Performance Middlewares
 app.use(helmet());
