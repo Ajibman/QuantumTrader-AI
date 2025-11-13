@@ -1,192 +1,207 @@
- <!DOCTYPE html>
+ <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader-AI™ Activation</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QuantumTrader-AI™ Activation</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-    }
+<!-- PWA meta -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#002244" />
+<meta name="description" content="QuantumTrader-AI™ Activation Portal — Visionary, Architect & Builder: Olagoke Ajibulu" />
+<!-- icons in assets/icons/ (ensure you have these) -->
+<link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="assets/icons/icon-512.png" />
 
-    .globe {
-      width: 180px;
-      height: 180px;
-      margin-top: 20px;
-      border-radius: 50%;
-      background-image: url("assets/images/qtai_globe.png");
-      background-size: cover;
-      animation: spin 20s linear infinite;
-    }
+<style>
+  /* --- RESET --- */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg,#071226 0%, #001827 100%);
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px 12px 40px;
+  }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+  /* central column */
+  .wrap { width:100%; max-width:760px; display:flex; flex-direction:column; align-items:center; }
 
-    h1 {
-      font-size: 1.5rem;
-      margin-top: 10px;
-    }
+  /* --- GLOBE (X-axis spin) --- */
+  .globe-outer { width:200px; height:170px; perspective:1000px; display:flex; align-items:center; justify-content:center; margin-top:6px; }
+  .globe {
+    width:170px; height:170px; border-radius:50%; object-fit:contain;
+    transform-style:preserve-3d;
+    animation: spinX 20s linear infinite;
+    box-shadow: 0 8px 30px rgba(0,150,200,0.12);
+    background-color:transparent;
+  }
+  @keyframes spinX {
+    from { transform: rotateX(0deg); }
+    to   { transform: rotateX(360deg); }
+  }
 
-    .activation {
-      margin-top: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px;
-      border-radius: 12px;
-      width: 85%;
-      max-width: 400px;
-      box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
-    }
+  /* Title */
+  h1 { margin-top:12px; font-size:1.15rem; letter-spacing:0.3px; font-weight:600; color:#dfefff; text-align:center; }
 
-    .activation button {
-      background-color: #0078ff;
-      color: white;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
+  /* --- ACTIVATION PANEL --- */
+  .activation {
+    width:92%; max-width:420px; background: rgba(255,255,255,0.04);
+    border-radius:14px; padding:18px; margin-top:18px; text-align:center;
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+  .activation p { color:#d7e9ff; margin-bottom:12px; font-size:0.98rem; }
+  .activation .fee { font-weight:700; color:#fff; font-size:1.02rem; margin-bottom:10px; }
+  .btn {
+    background:#00aaff; color:#001018; border:none; padding:11px 22px; border-radius:10px; font-weight:700; cursor:pointer;
+  }
+  .btn:active{transform:translateY(1px)}
+  .muted { color: rgba(255,255,255,0.65); font-size:0.9rem; margin-top:10px; }
 
-    .activation button:hover {
-      background-color: #005fcc;
-    }
+  /* --- MAP / TRADING FLOOR --- centered stack --- */
+  .center-stack { display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; margin-top:22px; }
 
-    .ori {
-      margin-top: 30px;
-      width: 120px;
-      height: auto;
-    }
+  .tile { width:92%; max-width:520px; background:rgba(255,255,255,0.02); border-radius:12px; padding:12px; text-align:center; }
+  .tile img { width:100%; height:auto; display:block; border-radius:10px; object-fit:contain; }
 
-    .map {
-      margin-top: 30px;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    }
+  .trading-floor { width:160px; height:auto; margin-top:6px; display:block; }
 
-    footer {
-      margin-top: 40px;
-      font-size: 0.8rem;
-      opacity: 0.8;
-    }
-  </style>
+  /* --- modules row --- */
+  .modules-row { display:flex; gap:16px; margin-top:12px; justify-content:center; width:100%; max-width:520px; }
+  .module { flex:1; background:rgba(255,255,255,0.02); padding:10px; border-radius:10px; text-align:center; cursor:pointer; }
+  .module h3{font-size:0.95rem; font-weight:700; color:#e8f7ff}
+
+  /* Ori Olokun */
+  .ori { margin-top:18px; width:110px; height:auto; border-radius:12px; object-fit:contain; }
+
+  footer { margin-top:26px; font-size:0.86rem; color:rgba(255,255,255,0.65); text-align:center; }
+
+  /* Responsive */
+  @media(min-width:900px){
+    .globe-outer{ width:260px; height:220px }
+    .globe{ width:200px; height:200px }
+    .activation p{font-size:1.02rem}
+    .modules-row{ gap:24px }
+  }
+</style>
 </head>
 <body>
+  <div class="wrap">
 
-  <!-- 🟢 TOP HANDSHAKE SCRIPT -->
+    <!-- TOP HANDSHAKE (early ping + session) -->
+    <script>
+      // top handshake anchor
+      sessionStorage.setItem('QT_HANDSHAKE', JSON.stringify({source:'index.html', when:Date.now()}));
+      fetch('/handshake').then(r=>r.json()).then(j=>console.log('handshake(top):',j)).catch(e=>console.warn('handshake(top) failed',e));
+    </script>
+
+    <!-- Globe (X-axis spin) -->
+    <div class="globe-outer">
+      <!-- Use img so user-supplied asset is used; fallback alt will appear if missing -->
+      <img src="assets/images/qtai_globe.png" alt="QuantumTrader Globe" class="globe" />
+    </div>
+
+    <h1>QuantumTrader-AI™ Activation Portal</h1>
+
+    <!-- Activation panel -->
+    <div class="activation" role="region" aria-label="Activation panel">
+      <p>Activate access to TraderLab™ and the Trading Floor™.</p>
+      <div class="fee">Activation Fee: NGN 10,000</div>
+      <button class="btn" id="activateBtn">Activate Now</button>
+      <div class="muted">Payment gateway: WEMA ALAT (Paystack placeholder active)</div>
+    </div>
+
+    <!-- Centered stack: Trading Floor then MacArthur map -->
+    <div class="center-stack">
+
+      <!-- Trading Floor (prominent) -->
+      <div class="tile" style="max-width:260px;">
+        <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" class="trading-floor">
+        <div style="margin-top:8px;color:#dfefff;font-weight:700">Trading Floor™ Main</div>
+      </div>
+
+      <!-- MacArthur Map (centered beneath Trading Floor) -->
+      <div class="tile">
+        <img src="assets/images/MacArthur.png" alt="MacArthur Global Map" />
+        <div style="margin-top:8px;color:#dfefff;font-weight:700">MacArthur Map</div>
+      </div>
+
+      <!-- Modules row: TraderLab (left) and CPilot (right) -->
+      <div class="modules-row">
+        <div class="module" onclick="location.href='traderlab.html'">
+          <h3>TraderLab™</h3>
+          <div class="muted" style="margin-top:6px">Guided learning</div>
+        </div>
+        <div class="module" onclick="location.href='cpilot.html'">
+          <h3>CPilot™</h3>
+          <div class="muted" style="margin-top:6px">Assistant & automation</div>
+        </div>
+      </div>
+
+      <!-- Ori Olokun centered -->
+      <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" class="ori" />
+
+    </div> <!-- center-stack -->
+
+    <footer>
+      © QuantumTrader-AI™ by Olagoke Ajibulu — Visionary, Architect & Builder
+    </footer>
+  </div> <!-- wrap -->
+
+  <!-- BOTTOM SCRIPTS: handshake verify, paystack-status check, service worker registration, PWA install prompt -->
   <script>
-    console.log("Initializing QuantumTrader-AI™ handshake... (index.html top)");
-    const handshakeInit = { source: "index.html", target: "server.mjs", stage: "init" };
-    sessionStorage.setItem("QT_HANDSHAKE", JSON.stringify(handshakeInit));
-
-    // Attempt early ping
-    fetch("/handshake", {
-      method: "GET"
-    })
-    .then(res => res.json())
-    .then(data => console.log("🔗 Handshake (top):", data))
-    .catch(err => console.warn("⚠️ Handshake top failed:", err));
-  </script>
-
-  <!-- 🌍 Rotating Globe -->
-  <div class="globe"></div>
-
-  <h1>QuantumTrader-AI™ Activation Portal</h1>
-
-  <!-- ⚙️ Activation Panel -->
-  <div class="activation">
-    <p>Activate your QuantumTrader-AI™ license for ₦10,000</p>
-    <button onclick="openAlatModal()">Activate Now</button>
-  </div>
-
-  <!-- 🌀 Ori Olokun Image -->
-  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" class="ori" />
-
-  <!-- 🗺️ MacArthur Map -->
-  <img src="assets/images/macarthur_map.png" alt="MacArthur Map" class="map" />
-
-  <footer>
-    QuantumTrader-AI™ © 2025 · Visionary, Architect & Builder: Olagoke Ajibulu
-  </footer>
-
-  <!-- 🟢 BOTTOM HANDSHAKE SCRIPT -->
-  <script>
-    console.log("Handshake ready: index.html ↔ server.mjs ↔ index2.html");
-
-    async function verifyHandshake() {
+    // bottom handshake verify
+    async function verifyHandshake(){
       try {
-        const response = await fetch("/handshake");
-        const data = await response.json();
-        console.log("🤝 Handshake (bottom):", data);
-      } catch (err) {
-        console.warn("Handshake verification failed:", err);
-      }
+        const res = await fetch('/handshake');
+        const json = await res.json();
+        console.log('handshake(bottom):', json);
+      } catch(e){ console.warn('handshake(bottom) failed', e); }
     }
-
     verifyHandshake();
 
-    function openAlatModal() {
-      alert("ALAT activation modal will open here once Paystack/WEMA integration is approved.");
-      fetch("/paystack-status")
-        .then(res => res.json())
-        .then(status => console.log("Paystack placeholder:", status));
+    // Activate button opens ALAT modal or placeholder
+    document.getElementById('activateBtn').addEventListener('click', async () => {
+      // open modal or redirect to payment gateway when ready
+      alert('Activation flow starting — Paystack/ALAT placeholder active.');
+      try {
+        const r = await fetch('/paystack-status');
+        const j = await r.json();
+        console.log('paystack-status:', j);
+      } catch(e) {
+        console.warn('paystack-status check failed', e);
+      }
+    });
+
+    // Register service worker (PWA)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(reg => {
+        console.log('Service Worker registered:', reg.scope);
+      }).catch(err => console.warn('SW registration failed:', err));
     }
+
+    // Install prompt immediate (best-effort; browsers gate behavior)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // prompt immediately (best-effort)
+      setTimeout(async ()=> {
+        try {
+          await deferredPrompt.prompt();
+          const choice = await deferredPrompt.userChoice;
+          console.log('A2HS choice', choice);
+          deferredPrompt = null;
+        } catch(err) {
+          console.warn('A2HS prompt failed', err);
+        }
+      }, 900); // small delay so UI is visible
+    });
   </script>
- <script>
-  async function handshake() {
-    try {
-      const response = await fetch('/handshake');
-      const data = await response.text();
-      console.log('Handshake success:', data);
-    } catch (error) {
-      console.error('Handshake failed:', error);
-    }
-  }
-
-  handshake();
- </script>
- <script>
-// Function to check Paystack status
-async function checkPaystackStatus() {
-  try {
-    const response = await fetch('/handshake', { method: 'POST' });
-    const data = await response.json();
-
-    if (data.paystackActive) {
-      console.log('💳 Paystack is active!');
-      // Update UI here, e.g., enable the "Activate" button
-      const activateBtn = document.getElementById('activateBtn');
-      if (activateBtn) activateBtn.disabled = false;
-
-      // Optionally, stop polling once active
-      clearInterval(pollingInterval);
-    } else {
-      console.log('Paystack not active yet.');
-    }
-  } catch (err) {
-    console.error('Error checking Paystack status:', err);
-  }
-}
-
-// Poll every 5 seconds
-const pollingInterval = setInterval(checkPaystackStatus, 5000);
-
-// Initial check immediately
-checkPaystackStatus();
- </script>
 </body>
 </html>
