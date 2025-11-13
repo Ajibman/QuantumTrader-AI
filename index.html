@@ -146,5 +146,18 @@
         .then(status => console.log("Paystack placeholder:", status));
     }
   </script>
+ <script>
+  async function handshake() {
+    try {
+      const response = await fetch('/handshake');
+      const data = await response.text();
+      console.log('Handshake success:', data);
+    } catch (error) {
+      console.error('Handshake failed:', error);
+    }
+  }
+
+  handshake();
+ </script>
 </body>
 </html>
