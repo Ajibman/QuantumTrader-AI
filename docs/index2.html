@@ -3,125 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI — Backend Handshake</title>
+  <title>QuantumTrader-AI™ Backend Console</title>
+
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #000;
-      color: #fff;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       text-align: center;
     }
 
-    header {
-      padding-top: 30px;
+    .status {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      width: 85%;
+      max-width: 400px;
+      box-shadow: 0 0 12px rgba(0, 255, 140, 0.4);
     }
 
-    .globe {
-      width: 100px;
-      height: 100px;
-      animation: spin 20s linear infinite;
+    .status h2 {
+      color: #00ff90;
+      margin-bottom: 10px;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    .section {
-      margin: 30px auto;
-      padding: 10px;
-      max-width: 420px;
-    }
-
-    .btn {
+    button {
+      margin-top: 15px;
       background-color: #0078ff;
-      color: white;
-      padding: 12px 28px;
+      color: #fff;
       border: none;
       border-radius: 10px;
+      padding: 10px 22px;
       cursor: pointer;
       font-size: 1rem;
-      margin: 10px;
     }
 
-    .btn:hover {
+    button:hover {
       background-color: #005fcc;
     }
 
     footer {
-      margin-top: 60px;
-      padding: 20px 0;
-      background: #111;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .handshake-status {
-      background: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 8px;
-      margin: 20px;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      opacity: 0.8;
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Globe" class="globe">
-    <h2>Backend Handshake Portal</h2>
-    <p>Synchronizing secure access between <strong>index.html</strong> and <strong>server.js</strong></p>
-  </header>
 
-  <main>
-    <section class="section handshake-status" id="statusBox">
-      <h3>Establishing Secure Handshake...</h3>
-      <p id="handshakeText">Waiting for confirmation from QuantumTrader AI core.</p>
-    </section>
+  <!-- 🟢 TOP HANDSHAKE CONFIRMATION SCRIPT -->
+  <script>
+    console.log("🔄 Backend handshake initializing (index2.html)");
+    const stored = sessionStorage.getItem("QT_HANDSHAKE");
+    if (stored) {
+      console.log("📦 Retrieved handshake data:", JSON.parse(stored));
+    }
 
-    <section class="section">
-      <h3>Select Your Access Path</h3>
-      <button class="btn" onclick="routeTo('traderlab')">Enter TraderLab™</button>
-      <button class="btn" onclick="routeTo('tradingfloor')">Enter Trading Floor</button>
-      <button class="btn" onclick="routeTo('cpilot')">Access CPilot™</button>
-    </section>
-  </main>
+    // Early backend verification
+    fetch("/handshake")
+      .then(res => res.json())
+      .then(data => console.log("✅ Backend handshake verified (top):", data))
+      .catch(err => console.warn("⚠️ Backend handshake top failed:", err));
+  </script>
+
+  <!-- 🧠 Backend Console UI -->
+  <div class="status">
+    <h2>Backend Console Connected</h2>
+    <p>Your QuantumTrader-AI™ backend is live and synchronized.</p>
+    <button onclick="checkServer()">Re-verify Connection</button>
+  </div>
 
   <footer>
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun Symbol">
-    <p>© QuantumTrader AI | Visionary, Architect and Builder — Olagoke Ajibulu</p>
+    QuantumTrader-AI™ Backend · Version 1.1 · © 2025 Olagoke Ajibulu
   </footer>
 
+  <!-- 🟢 BOTTOM HANDSHAKE VALIDATION SCRIPT -->
   <script>
-    // Simulate handshake process
-    document.addEventListener("DOMContentLoaded", () => {
-      const statusBox = document.getElementById("statusBox");
-      const text = document.getElementById("handshakeText");
-
-      setTimeout(() => {
-        text.textContent = "Handshake established successfully with server.js ✅";
-        statusBox.style.background = "rgba(0,255,0,0.1)";
-      }, 2500);
-    });
-
-    function routeTo(destination) {
-      alert(`Redirecting to ${destination}...`);
-      // Placeholder routing — replace with your actual links when ready
-      switch(destination) {
-        case "traderlab":
-          window.location.href = "traderlab.html";
-          break;
-        case "tradingfloor":
-          window.location.href = "tradingfloor.html";
-          break;
-        case "cpilot":
-          window.location.href = "cpilot.html";
-          break;
+    async function checkServer() {
+      console.log("🧭 Re-verifying handshake via /status...");
+      try {
+        const res = await fetch("/status");
+        const data = await res.json();
+        console.log("✅ Server status:", data);
+        alert("Handshake verified successfully ✅");
+      } catch (error) {
+        console.error("Handshake verification error:", error);
+        alert("Handshake failed ❌");
       }
     }
+
+    // Confirm activation readiness from frontend handshake
+    async function confirmActivation() {
+      try {
+        const res = await fetch("/activate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: "QT_AI_Pioneer" })
+        });
+        const data = await res.json();
+        console.log("⚙️ Activation confirmation:", data);
+      } catch (err) {
+        console.warn("⚠️ Activation confirmation failed:", err);
+      }
+    }
+
+    // Run both confirmation processes automatically
+    checkServer();
+    confirmActivation();
   </script>
 </body>
 </html>
