@@ -1,17 +1,16 @@
-
-/* Service Worker — simple cache-first strategy for images and core assets */
+ /* Service Worker — simple cache-first strategy for images and core assets */
 const CACHE_NAME = 'qtai-cache-v1';
 const CORE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/service-worker.js',
+  '/service-worker.mjs',
   '/assets/images/qtai_globe.png',
   '/assets/images/qtai_ori_olokun.png',
   '/assets/images/MacArthur.png',
   '/assets/images/tradingfloor_main.png',
-  '/assets/icons/icon-192.png',
-  '/assets/icons/icon-512.png'
+  '/assets/image/globe.png',
+  '/assets/image/globe.png'
 ];
 
 self.addEventListener('install', (evt) => {
