@@ -1,16 +1,75 @@
- // server.mjs
+// server.mjs
 // QuantumTrader AI™ Node Server (Full PWA Build)
 // Architect & Builder: Olagoke Ajibulu
 // Updated: November 2025
 // ---------------------------------------------------
+
+// QuantumTrader-AI™ Server Configuration
+// Handles handshake bridge, security, and backend routing.
 
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
 import compression from "compression";
-import express from "express";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// 🛡️ Security & Performance Middlewares
+app.use(helmet());
+app.use(compression());
+
+// 📦 Static Files (Front-end assets)
+app.use(express.static(path.join(__dirname)));
+
+// 🤝 Handshake Route
+app.get("/handshake", (req, res) => {
+  console.log("Handshake initiated with QuantumTrader-AI...");
+  res.send("Handshake acknowledged by server.mjs ✅");
+});
+
+// ⚙️ Backend Route (Index2)
+app.get("/index2", (req, res) => {
+  res.sendFile(path.join(__dirname, "docs", "index2.html"));
+});
+
+// 🏠 Default Route (Frontend)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// 🚀 Server Start
+app.listen(PORT, () => {
+  console.log(`QuantumTrader-AI server active at http://localhost:${PORT}`);
+});
+
+// Serve static files (like assets, css, js)
+app.use(express.static(path.join(__dirname)));
+
+// Handshake route
+app.get('/handshake', (req, res) => {
+  console.log('Handshake initiated with QuantumTrader-AI...');
+  res.send('Handshake acknowledged by server.mjs ✅');
+});
+
+// Route to backend HTML (Index2)
+app.get('/index2', (req, res) => {
+  res.sendFile(path.join(__dirname, 'docs', 'index2.html'));
+});
+
+// Default route (frontend)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`QuantumTrader-AI server running at http://localhost:${PORT}`);
+});
 
 // server.mjs — QuantumTrader-AI™ Node.js backend
 // --------------------------------------------------
