@@ -1,109 +1,146 @@
-DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader AI™ Activation</title>
-  </style>
-</head>
-<body>
-  <div class="section">
-    <img src="assets/image/qtai_globe.png" alt="Spinning Globe" class="globe" />
-    <a href="https://www.visionofhumanity.org/maps/#/" class="pulsating-link" target="_blank">Peace Index Dashboard</a>
-  </div>
-
-  <div class="section">
-    <h2>Activate Your Trading Account</h2>
-    <p>Pay NGN 10,000 to unlock TraderLab™ and Trading Floor™</p>
-    <button onclick="openAlatModal()">Activate Now</button>
-  </div>
-
-  <div class="section">
-    <h3>MacArthur Map</h3>
-    <img src="assets/image/macarthur_map.png" alt="MacArthur Projection" style="max-width: 90%;" />
-  </div>
-
-  <div class="section">
-    <h3>Trading Floor™</h3>
-    <img src="assets/image/trading_desks.png" alt="Trading Floor" style="max-width: 100%;" />
-  </div>
-
-  <div class="section" style="display: flex; justify-content: center; gap: 40px;">
-    <div>
-      <h3>TraderLab™</h3>
-    </div>
-    <div>
-      <h3>CPilot</h3>
-    </div>
-  </div>
-
-  <div class="section">
-    <img src="assets/image/qtai_ori_olokun.png" alt="Ori Olokun" style="max-width: 120px;" />
-  </div>
-
-  <footer>
-    Architect & Builder: Olagoke Ajibulu<br/>
-    Powered by: Cosmic Good<br/>
-    © 2025 QuantumTrader AI™
-  </footer>
-
-  <script>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI™</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="assets/icons/favicon.ico" />
+  <meta name="theme-color" content="#000000" />
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #000;
+      background-color: #000;
       color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
     }
-    .section {
-      padding: 40px 20px;
-    }
     .globe {
+      width: 180px;
+      height: 180px;
+      margin: 20px auto;
       animation: spin 20s linear infinite;
-      max-width: 200px;
     }
     @keyframes spin {
       from { transform: rotateX(0deg); }
       to { transform: rotateX(360deg); }
     }
-    .pulsating-link {
-      display: inline-block;
-      padding: 10px 20px;
-      background: purple;
-      border-radius: 10px;
+[11/14, 10:05 AM] ChatGPT 1-800-242-8478: <button onclick="activate()">Activate Now – NGN 10,000</button>
+  </div>
+
+  <!-- Payment Notice -->
+  <div class="section">
+    <h2>Payment Gateway</h2>
+    <p>Paystack integration coming soon...</p>
+  </div>
+
+  <!-- MacArthur Map -->
+  <div class="section">
+    <h2>MacArthur World Projection</h2>
+    <img src="assets/image/macarthur_projection.png" alt="MacArthur Map">
+  </div>
+
+  <!-- Trading Floor -->
+  <div class="section">
+    <h2>Trading Floor™</h2>
+    <img src="assets/image/trading_desk.png" alt="Trading Floor Image">
+  </div>
+
+  <!-- TraderLab and CPilot -->
+  <div class="section dual">
+    <div><h3>TraderLab™</h3></div>
+    <div><h3>CPilot</h3></div>
+  </div>
+
+  <!-- Ori Olokun -->
+  <div class="section">
+    <img src="assets/image/ori_olokun.png" alt="Ori Olokun">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    Powered by: Cosmic Good | Architect and Builder: Olagoke Ajibulu  
+  </footer>
+
+  <!-- Activation Script -->
+  <script>
+    function activate() {
+      fetch('/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 'demoUser' })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message || "Activated successfully!"))
+      .catch(err => alert("Activation failed."));
+   .peace-index {
+      position: absolute;
+      top: 10px;
+      right: 10px;
       animation: pulse 2s infinite;
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
     }
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(128,0,128,0.7); }
-      70% { box-shadow: 0 0 0 15px rgba(128,0,128,0); }
-      100% { box-shadow: 0 0 0 0 rgba(128,0,128,0); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .section {
+      margin: 40px auto;
+      max-width: 800px;
+    }
+    .section img {
+      max-width: 90%;
+      height: auto;
+    }
+    button {
+      background-color: #0078ff;
+      color: white;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #005fcc;
     }
     footer {
-[11/14, 9:36 AM] ChatGPT 1-800-242-8478: function openAlatModal() {
-      alert("Redirecting to activation/payment...");
-      // Insert ALAT Pay/Paystack logic here
+      margin-top: 40px;
+      padding: 20px;
+      background: #111;
+      font-size: 0.85rem;
     }
+    .dual {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
 
-    fetch('/handshake', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => console.log('🤝 Handshake:', data));
+  <!-- Peace Index Logo -->
+  <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
+  <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
+  </a>    
+    <img src="assets/image/peace_index_logo.svg" alt="Peace Index" width="60">
+  </a>
+
+  <!-- Rotating Globe -->
+  <div class="section">
+    <img src="assets/image/qtai_globe.png" alt="Spinning Globe" class="globe">
+  </div>
+
+  <!-- Activation Panel -->
+  <div class="section">
+    <h2>Activate Your Access</h2>
+ }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('✅ Service Worker registered'))
+        .catch(err => console.error('SW registration failed:', err));
+    }
   </script>
+
 </body>
 </html>
-```
-
-Let me know when you're ready for it to be bundled into your deployment folder or need the `index2.html` adapted too.
