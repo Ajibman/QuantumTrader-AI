@@ -3,146 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™</title>
+  <title>QuantumTrader-AI™</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" />
   <style>
     body {
       margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #000;
       color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
     }
-    .globe {
-      width: 180px;
-      height: 180px;
-      margin: 20px auto;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    #globe {
+      width: 80px;
       animation: spin 20s linear infinite;
     }
+
+    #peace-index {
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #a020f0;
+      padding: 6px 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px #a020f0;
+      animation: pulse 2s infinite;
+    }
+
     @keyframes spin {
       from { transform: rotateX(0deg); }
       to { transform: rotateX(360deg); }
     }
 
-   <div> 
-    <button onclick="activate()">Activate Now – NGN 10,000</button>
-  </div>
-
-  <!-- Payment Notice -->
-  <div class="section">
-    <h2>Payment Gateway</h2>
-    <p>Paystack integration coming soon...</p>
-  </div>
-
-  <!-- MacArthur Map -->
-  <div class="section">
-    <h2>MacArthur World Projection</h2>
-    <img src="assets/image/macarthur_projection.png" alt="MacArthur Map">
-  </div>
-
-  <!-- Trading Floor -->
-  <div class="section">
-    <h2>Trading Floor™</h2>
-    <img src="assets/image/trading_desk.png" alt="Trading Floor Image">
-  </div>
-
-  <!-- TraderLab and CPilot -->
-  <div class="section dual">
-    <div><h3>TraderLab™</h3></div>
-    <div><h3>CPilot</h3></div>
-  </div>
-
-  <!-- Ori Olokun -->
-  <div class="section">
-    <img src="assets/image/qtai_ori_olokun.png" alt="Ori Olokun">
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    Powered by: Cosmic Good | Architect and Builder: Olagoke Ajibulu  
-  </footer>
-
-  <!-- Activation Script -->
-  <script>
-    function activate() {
-      fetch('/activate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'demoUser' })
-      })
-      .then(res => res.json())
-      .then(data => alert(data.message || "Activated successfully!"))
-      .catch(err => alert("Activation failed."));
-   .peace-index {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      animation: pulse 2s infinite;
-    }
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+      0% { box-shadow: 0 0 8px #a020f0; }
+      50% { box-shadow: 0 0 20px #a020f0; }
+      100% { box-shadow: 0 0 8px #a020f0; }
     }
-    .section {
-      margin: 40px auto;
-      max-width: 800px;
+
+    section {
+ margin: 2rem 0;
     }
-    .section img {
+
+    .double-columns {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .module {
+      background: #111;
+      border-radius: 8px;
+      padding: 1rem;
+      width: 200px;
+      margin: 1rem;
+      box-shadow: 0 0 10px #333;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 2rem;
+      font-size: 0.9rem;
+      background-color: #111;
+      border-top: 1px solid #333;
+    }
+
+    img {
       max-width: 90%;
       height: auto;
     }
-    button {
-      background-color: #0078ff;
-      color: white;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover {
-      background-color: #005fcc;
-    }
-    footer {
-      margin-top: 40px;
-      padding: 20px;
-      background: #111;
-      font-size: 0.85rem;
-    }
-    .dual {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      margin-top: 20px;
+
+    .ori-olokun {
+      width: 180px;
+      border-radius: 8px;
     }
   </style>
 </head>
+
 <body>
-
-  <!-- Peace Index Logo -->
-  <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
+  <header>
+    <img id="globe" src="qtai_globe.png" alt="QuantumTrader AI Globe" />
+    <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
   <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-  </a>    
-    <img src="assets/image/peace_index_logo.svg" alt="Peace Index" width="60">
-  </a>
+</a> 
+  </header>
+  <main>
+    <section>
+      <h2>Activate Your Access</h2>
+      <p>One-time Activation Fee: <strong>₦10,000</strong></p>
+      <button>Activate Now</button>
+    </section>
 
-  <!-- Rotating Globe -->
-  <div class="section">
-    <img src="assets/image/qtai_globe.png" alt="Spinning Globe" class="globe">
-  </div>
+    <section>
+      <h2>MacArthur Map</h2>
+      <img src="macarthur_projection.png" alt="World Map - MacArthur Projection" />
+    </section>
 
-  <!-- Activation Panel -->
-  <div class="section">
-    <h2>Activate Your Access</h2>
- }
+    <section>
+      <h2>Trading Floor</h2>
+      <img src="trading_floor.png" alt="Trading Desk Layout" />
+    </section>
+    <div class="double-columns">
+      <div class="module">
+        <h3>TraderLab™</h3>
+        <p>Modules for advanced strategy development. Experimental</p>
+      </div>
+      <div class="module">
+        <h3>CPilot™</h3>
+        <p>Your Companion Pilot for assisted trade navigation.</p>
+      </div>
+    </div>
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('✅ Service Worker registered'))
-        .catch(err => console.error('SW registration failed:', err));
-    }
+    <section>
+      <img class="ori-olokun" src="qtai_ori_olokun.png" alt="Ori Olokun" />
+    </section>
+  </main>
+
+  <footer>
+    <p>© QuantumTrader-AI™ by Olagoke Ajibulu — Visionary, Architect & Builder</p>
+    <p>Powered by: Cosmic Good</p>
+  </footer>
+
+  <script>
+    // Handshake with server.mjs
+    fetch("/handshake")
+      .then(res => res.json())
+      .then(data => console.log("🤝 Handshake:", data))
+      .catch(err => console.error("Handshake failed", err));
   </script>
-
 </body>
 </html>
