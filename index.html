@@ -1,154 +1,113 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>QuantumTrader-AI Activation Portal</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0f0f1a;
-    color: #eee;
-    text-align: center;
-  }
-  header {
-    padding: 10px 20px;
-    background-color: #121224;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-  }
-  header img {
-    height: 20px;
-    width: auto;
-  }
-  #peaceIndexLogo {
-    width: 20px;
-    height: auto;
-    animation: pulseGlow 2s infinite;
-  }
-  @keyframes pulseGlow {
-    0% { box-shadow: 0 0 5px 2px #9b59b6; }
-    50% { box-shadow: 0 0 15px 5px #8e44ad; }
-    100% { box-shadow: 0 0 5px 2px #9b59b6; }
-  }
-  main {
-    padding: 50px;
-    max-width: 500px;
-    margin: 20px auto;
-  }
-  .activation {
-    background-color: #1f1f3a;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 30px;
-  }
-  .activation h1 {
-    font-weight: normal;
-  }
- .activation p {
-    margin: 12px 0;
-    font-size: 1.1em;
-  }
-  .activate-btn {
-    background-color: #2196f3;
-    border: none;
-    color: white;
-    padding: 12px 25px;
-    font-size: 1em;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .dashboard-item {
-    margin: 20px 0;
-  }
-  .dashboard-item img {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 8px;
-  }
-  .dashboard-caption {
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-top: 8px;
-  }
-  .modules {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 25px;
-  }
-  .module {
-    background-color: #1f1f3a;
-    border-radius: 8px;
-    padding: 15px;
-    width: 45%;
-    font-size: 1em;
-  }
-  .module strong {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-  }
-  footer {
-    margin-top: 40px;
-    padding: 15px 0;
-    font-size: 0.9em;
-    color: #bbb;
-  }
-  footer img {
-    width: 80px;
-    height: auto;
-    border-radius: 50%;
-    margin: 12px 0 8px 0;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader-AI™</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b1020">
+
+  <style>
+    body { margin:0; padding:0; font-family:Inter, Arial, sans-serif; background:#0b1020; color:#e6eef6; text-align:center; }
+    #hero-center { display:flex; flex-direction:column; align-items:center; padding:20px; gap:16px; position:relative; }
+    #qtai-main-globe { width:220px; max-width:90vw; height:auto; animation:globe-rotate 20s linear infinite; border-radius:12px; box-shadow:0 8px 20px rgba(79,209,197,0.3); }
+    #peace-index-logo { width:64px; height:auto; opacity:0.85; position:absolute; top:20px; right:20px; transition: transform 0.8s ease-in-out; }
+    #payment-gate-section { padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; animation:fadeIn 1.5s ease forwards; }
+    #macarthur-img { width:120px; height:auto; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+    #triangular-nodes { display:flex; flex-direction:column; align-items:center; gap:20px; padding:30px 0; }
+    .triangle-node { width:100px; animation:node-glow 3s ease-in-out infinite alternate; }
+    .node-img { width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.4); }
+    .node-title { margin-top:8px; font-weight:bold; font-size:14px; color:#a0dcd1; }
+    #ori-olokun-section { padding:30px 0 20px; }
+    #ori-olokun-img { width:80px; height:auto; opacity:0.9; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.35); }
+
+    @media(min-width:600px){ #hero-center { flex-direction:row; justify-content:space-between; align-items:center; } #qtai-main-globe { width:280px; } #peace-index-logo { width:84px; } #triangular-nodes { flex-direction:row; gap:40px; } .triangle-node { width:120px; } #ori-olokun-img { width:100px; } }
+    @media(min-width:980px){ #qtai-main-globe { width:400px; } #triangular-nodes { gap:60px; } .triangle-node { width:140px; } #ori-olokun-img { width:120px; } }
+
+    @keyframes globe-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes node-glow { from { box-shadow: 0 0 6px #4fd1c5; } to { box-shadow: 0 0 18px #4fd1c5; } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    #handshake-output { margin-top:12px; font-size:14px; color:#4fd1c5; font-weight:bold; }
+
+    button { cursor:pointer; transition: transform 0.3s ease; }
+    button:hover { transform: scale(1.05); }
+  </style>
 </head>
 <body>
 
-<header>
-  <img src="qtai_globe.png" alt="Quantum Trader AI Globe Logo" />
-  <img src="peace_index_logo.png" alt="Peace Index Logo" id="peaceIndexLogo" />
-</header>
+  <div id="hero-center">
+    <div></div>
+    <div><img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" /></div>
+    <div><img src="./assets/peace_index_logo.png" id="peace-index-logo" alt="Peace Index API" /></div>
+  </div>
 
-<main>
+  <div id="payment-gate-section">
+    <h2>Activation Payment Gateway</h2>
+    <img src="./assets/MacArthur.png" id="macarthur-img" alt="MacArthur" />
+  </div>
 
-  <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
-  <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-</a>
-
-  <section class="activation">
-    <h1>Activate Your Access</h1>
-    <p><strong>Activation Fee:</strong> and ₦10,000 monthly subscription</p>
-    <button class="activate-btn">Activate Now</button>
-  </section>
-
-  <section class="dashboard-item">
-    <img src="macarthur.png" alt="World Map MacArthur Projection " />
-    <div class="dashboard-caption">MacArthur Map</div>
-  </section>
-
-  <section class="dashboard-item">
-    <img src="trading_floor.png" alt="Trading Desk Layout" />
-    <div class="dashboard-caption">Trading Floor</div>
-  </section>
-
-  <section class="modules">
-    <div class="module">
-      <strong>TraderLab™</strong>
-      <p>Modules for advanced strategy development and Training.</p>
+  <div id="triangular-nodes">
+    <div class="triangle-node top-node">
+      <img src="./assets/tradingfloor_main.png" class="node-img" alt="Trading Floor" />
+      <div class="node-title">Trading Floor</div>
     </div>
-    <div class="module">
-      <strong>CPilot™</strong>
-      <p>Your Companion Pilot for assisted trade navigation.</p>
-    </div>
-  </section>
-</main>
 
-<footer>
-  <img src="qtai_ori_olokun.png" alt="Ori Olokun Icon" />
-  <div>© QuantumTrader-AI™ by Olagoke Ajibulu — Visionary, Architect &amp; Builder</div>
-</footer>
+    <div class="triangle-node left-node">
+      <img src="./assets/traderlab_icon.png" class="node-img" alt="TraderLab" />
+      <div class="node-title">TraderLab</div>
+    </div>
+
+    <div class="triangle-node right-node">
+      <img src="./assets/cpilot_panel.png" class="node-img" alt="CPilot" />
+      <div class="node-title">CPilot</div>
+    </div>
+  </div>
+
+  <div id="ori-olokun-section">
+    <img src="./assets/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
+  </div>
+
+  <!-- Handshake Front-End -->
+  <div style="padding:20px; text-align:center;">
+    <button id="run-handshake" style="padding:10px 16px; border-radius:8px; background:#4fd1c5; border:none; color:#072328; font-weight:bold;">Run Handshake</button>
+    <div id="handshake-output">—</div>
+  </div>
+
+  <script>
+    async function performHandshake(payload = {}){
+      try{
+        const res = await fetch('/handshake',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('Handshake failed: '+res.status);
+        return await res.json();
+      }catch(e){ return {error:String(e)}; }
+    }
+
+    document.getElementById('run-handshake').addEventListener('click', async ()=>{
+      const output = document.getElementById('handshake-output');
+      output.textContent = 'Running handshake...';
+      try{
+        const result = await performHandshake({source:'index.html',timestamp:Date.now()});
+        output.textContent = result && result.status ? result.status : JSON.stringify(result);
+      }catch(e){
+        output.textContent = 'Error: '+String(e);
+      }
+    });
+
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('./service-worker.js')
+        .then(reg=>console.log('Service Worker registered.', reg))
+        .catch(err=>console.error('SW registration failed:', err));
+      });
+    }
+  </script>
+
 </body>
 </html>
