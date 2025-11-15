@@ -1,113 +1,53 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI™</title>
-
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#0b1020">
-
-  <style>
-    body { margin:0; padding:0; font-family:Inter, Arial, sans-serif; background:#0b1020; color:#e6eef6; text-align:center; }
-    #hero-center { display:flex; flex-direction:column; align-items:center; padding:20px; gap:16px; position:relative; }
-    #qtai-main-globe { width:220px; max-width:90vw; height:auto; animation:globe-rotate 20s linear infinite; border-radius:12px; box-shadow:0 8px 20px rgba(79,209,197,0.3); }
-    #peace-index-logo { width:64px; height:auto; opacity:0.85; position:absolute; top:20px; right:20px; transition: transform 0.8s ease-in-out; }
-    #payment-gate-section { padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; animation:fadeIn 1.5s ease forwards; }
-    #macarthur-img { width:120px; height:auto; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.3); }
-    #triangular-nodes { display:flex; flex-direction:column; align-items:center; gap:20px; padding:30px 0; }
-    .triangle-node { width:100px; animation:node-glow 3s ease-in-out infinite alternate; }
-    .node-img { width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.4); }
-    .node-title { margin-top:8px; font-weight:bold; font-size:14px; color:#a0dcd1; }
-    #ori-olokun-section { padding:30px 0 20px; }
-    #ori-olokun-img { width:80px; height:auto; opacity:0.9; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.35); }
-
-    @media(min-width:600px){ #hero-center { flex-direction:row; justify-content:space-between; align-items:center; } #qtai-main-globe { width:280px; } #peace-index-logo { width:84px; } #triangular-nodes { flex-direction:row; gap:40px; } .triangle-node { width:120px; } #ori-olokun-img { width:100px; } }
-    @media(min-width:980px){ #qtai-main-globe { width:400px; } #triangular-nodes { gap:60px; } .triangle-node { width:140px; } #ori-olokun-img { width:120px; } }
-
-    @keyframes globe-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes node-glow { from { box-shadow: 0 0 6px #4fd1c5; } to { box-shadow: 0 0 18px #4fd1c5; } }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-    #handshake-output { margin-top:12px; font-size:14px; color:#4fd1c5; font-weight:bold; }
-
-    button { cursor:pointer; transition: transform 0.3s ease; }
-    button:hover { transform: scale(1.05); }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuantumTrader-AI</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <div id="hero-center">
-    <div></div>
-    <div><img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" /></div>
-    <div><img src="./assets/peace_index_logo.png" id="peace-index-logo" alt="Peace Index API" /></div>
-  </div>
+  <header class="header">
+    <img src="assets/images/globe.png" alt="QT AI Globe" class="globe-logo"/>
+    <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
+      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo"/>
+    </a>
+  </header>
 
-  <div id="payment-gate-section">
-    <h2>Activation Payment Gateway</h2>
-    <img src="./assets/MacArthur.png" id="macarthur-img" alt="MacArthur" />
-  </div>
+  <main>
+    <h1>Activation Payment Gateway</h1>
 
-  <div id="triangular-nodes">
-    <div class="triangle-node top-node">
-      <img src="./assets/tradingfloor_main.png" class="node-img" alt="Trading Floor" />
-      <div class="node-title">Trading Floor</div>
-    </div>
+    <section class="section">
+      <img src="assets/MacArthur.png" alt="MacArthur Map" class="icon"/>
+      <p>MacArthur</p>
+    </section>
 
-    <div class="triangle-node left-node">
-      <img src="./assets/traderlab_icon.png" class="node-img" alt="TraderLab" />
-      <div class="node-title">TraderLab</div>
-    </div>
+    <section class="section">
+      <img src="assets/images/trading_icon.png" alt="Trading Floor Icon" class="icon"/>
+      <p>Trading Floor</p>
+    </section>
 
-    <div class="triangle-node right-node">
-      <img src="./assets/cpilot_panel.png" class="node-img" alt="CPilot" />
-      <div class="node-title">CPilot</div>
-    </div>
-  </div>
+    <section class="section">
+      <img src="assets/images/traderlab_icon.png" alt="TraderLab Icon" class="icon"/>
+<p>TraderLab</p>
+    </section>
 
-  <div id="ori-olokun-section">
-    <img src="./assets/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
-  </div>
+    <section class="section">
+      <img src="assets/images/cpilot_icon.png" alt="CPilot Icon" class="icon"/>
+      <p>CPilot</p>
+    </section>
 
-  <!-- Handshake Front-End -->
-  <div style="padding:20px; text-align:center;">
-    <button id="run-handshake" style="padding:10px 16px; border-radius:8px; background:#4fd1c5; border:none; color:#072328; font-weight:bold;">Run Handshake</button>
-    <div id="handshake-output">—</div>
-  </div>
+    <section class="section">
+      <img src="assets/images/oriolokun.png" alt="Ori Olokun" class="icon"/>
+      <p>Ori Olokun</p>
+    </section>
+  </main>
 
-  <script>
-    async function performHandshake(payload = {}){
-      try{
-        const res = await fetch('/handshake',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
-        if(!res.ok) throw new Error('Handshake failed: '+res.status);
-        return await res.json();
-      }catch(e){ return {error:String(e)}; }
-    }
-
-    document.getElementById('run-handshake').addEventListener('click', async ()=>{
-      const output = document.getElementById('handshake-output');
-      output.textContent = 'Running handshake...';
-      try{
-        const result = await performHandshake({source:'index.html',timestamp:Date.now()});
-        output.textContent = result && result.status ? result.status : JSON.stringify(result);
-      }catch(e){
-        output.textContent = 'Error: '+String(e);
-      }
-    });
-
-    if('serviceWorker' in navigator){
-      window.addEventListener('load', ()=>{
-        navigator.serviceWorker.register('./service-worker.js')
-        .then(reg=>console.log('Service Worker registered.', reg))
-        .catch(err=>console.error('SW registration failed:', err));
-      });
-    }
-  </script>
+  <footer>
+    <img src="assets/images/oriolokun.png" alt="Ori Olokun" class="ori-footer"/>
+    <p>© QuantumTrader-AI™ by Olagoke Ajibulu — Visionary, Architect & Builder</p>
+  </footer>
 
 </body>
 </html>
