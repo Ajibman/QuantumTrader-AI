@@ -1,0 +1,46 @@
+# === QuantumTrader-AI™ .gitattributes ===
+# Architect & Builder: Olagoke Ajibulu
+# Purpose: Ensure consistent text encoding, line endings, and file behavior
+# -------------------------------------------------------------
+
+# Enforce UTF-8 encoding across all text files
+* text=auto eol=lf working-tree-encoding=UTF-8
+
+# Handle common web assets properly
+*.html  text
+*.css   text
+*.js    text
+*.json  text
+*.md    text
+*.txt   text
+
+# Ensure binary assets are treated as binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.svg   binary
+*.webp  binary
+*.mp4   binary
+*.mov   binary
+*.zip   binary
+*.pdf   binary
+
+# Keep CRLF endings in Windows-only scripts if any
+*.bat eol=crlf
+*.cmd eol=crlf
+
+# Maintain Linux LF endings in shell scripts
+*.sh eol=lf
+
+# Ensure license and documentation are treated as text
+LICENSE text
+README.md text
+CONTRIBUTING.md text
+CHANGELOG.md text
+
+# Protect Docs folder from auto-compression or reformatting
+docs/** text eol=lf
+
+# === END QuantumTrader-AI™ .gitattributes ===

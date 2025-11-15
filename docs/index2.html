@@ -1,0 +1,124 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader-AI™ Backend Console</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .status {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      width: 85%;
+      max-width: 400px;
+      box-shadow: 0 0 12px rgba(0, 255, 140, 0.4);
+    }
+
+    .status h2 {
+      color: #00ff90;
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      background-color: #0078ff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #005fcc;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🟢 TOP HANDSHAKE CONFIRMATION SCRIPT -->
+  <script>
+    console.log("🔄 Backend handshake initializing (index2.html)");
+    const stored = sessionStorage.getItem("QT_HANDSHAKE");
+    if (stored) {
+      console.log("📦 Retrieved handshake data:", JSON.parse(stored));
+    }
+
+    // Early backend verification
+    fetch("/handshake")
+      .then(res => res.json())
+      .then(data => console.log("✅ Backend handshake verified (top):", data))
+      .catch(err => console.warn("⚠️ Backend handshake top failed:", err));
+  </script>
+
+  <!-- 🧠 Backend Console UI -->
+  <div class="status">
+    <h2>Backend Console Connected</h2>
+    <p>Your QuantumTrader-AI™ backend is live and synchronized.</p>
+    <button onclick="checkServer()">Re-verify Connection</button>
+  </div>
+
+  <footer>
+    QuantumTrader-AI™ Backend · Version 1.1 · © 2025 Olagoke Ajibulu
+  </footer>
+
+  <!-- 🟢 BOTTOM HANDSHAKE VALIDATION SCRIPT -->
+  <script>
+    async function checkServer() {
+      console.log("🧭 Re-verifying handshake via /status...");
+      try {
+        const res = await fetch("/status");
+        const data = await res.json();
+        console.log("✅ Server status:", data);
+        alert("Handshake verified successfully ✅");
+      } catch (error) {
+        console.error("Handshake verification error:", error);
+        alert("Handshake failed ❌");
+      }
+    }
+
+    // Confirm activation readiness from frontend handshake
+    async function confirmActivation() {
+      try {
+        const res = await fetch("/activate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: "QT_AI_Pioneer" })
+        });
+        const data = await res.json();
+        console.log("⚙️ Activation confirmation:", data);
+      } catch (err) {
+        console.warn("⚠️ Activation confirmation failed:", err);
+      }
+    }
+
+    // Run both confirmation processes automatically
+    checkServer();
+    confirmActivation();
+  </script>
+ <!-- PAYSTACK PLACEHOLDER ROUTE (inactive) -->
+<!-- Future integration: connect Paystack payment gateway for activation -->
+</body>
+</html>
