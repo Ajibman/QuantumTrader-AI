@@ -1,1 +1,16 @@
-package.json
+ {
+  "name": "quantumtrader-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend server for QuantumTrader-AI powered by server.mjs",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [],
+  "author": "Olagoke Ajibulu",
+  "license": "MIT"
+ }
