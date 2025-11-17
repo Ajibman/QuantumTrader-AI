@@ -1,0 +1,27 @@
+{
+  "name": "quantumtrader-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "register-sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ajibman/QuantumTrader-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ajibman/QuantumTrader-AI/issues"
+  },
+  "homepage": "https://github.com/Ajibman/QuantumTrader-AI#readme",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  }
+}
