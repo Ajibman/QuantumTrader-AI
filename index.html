@@ -1,384 +1,189 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader-AI™ | Activation Portal</title>
-  <link rel="images" type="image/png" href="assets/images/qtai_globe.png" />
+  <meta name="description" content="QuantumTrader-AI™ — Activation portal. Trading floor, activation card, pyramid structure and Ori Olokun." />
 
-  <!-- CSS: Mobile-first, extendable for desktop -->
+  <!-- Consolidated CSS: mobile-first, extendable for desktop -->
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #0b0b0b;
-      color: #ffffff;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      background-color: #101010;
-    }
-    header img {
-      height: 50px;
-    }
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      margin-left: 1rem;
-      font-weight: bold;
-    }
-    main {
-      padding: 1rem;
+    :root{
+      --bg:#000;
+      --card:#1e1e1e;
+      --muted:#bbb;
+      --accent:#00d6d6;
+      --glass: rgba(255,255,255,0.03);
+      --max-width:1100px;
+      --radius:12px;
     }
 
-    .module-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 20px;
-}
-
-.module-grid button {
-  background-color: #222;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 16px;
-}
-    .module:hover {
-      transform: scale(1.05);
-      border-color: #00ffcc;
-    }
-    .globe {
-      display: block;
-      margin: 2rem auto;
-      width: 200px;
-      height: 200px;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #101010;
-      font-size: 0.9rem;
-    }
-    @media(min-width: 768px){
-      .globe {
-        width: 400px;
-        height: 400px;
-      }
-    }
-  </style>
-
-<body style="background-color: #000; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 30px;">
-
-  <img src="assets/images/qtai_logo.png" alt="QuantumTrader AI Logo" style="max-width: 120px; margin-bottom: 20px;" />
-
-  <h1>QuantumTrader AI™</h1>
-
-  <main>
- <div style="margin: 30px auto; max-width: 500px; line-height: 1.6;">
-    <p>QuantumTrader AI: Trading assistant built for precision and speed.</p>
-    <p>Backed by AI logic: Analyzes trends, minimizes emotional trades, and optimizes entry errors.</p>
-    <p>Beginner or pro: It simplifies complex decisions with clear insights.</p>
-    <p>Tested on real scenarios. Designed for bold results.</p>
-    <p><strong>Activate for ₦10,000 to unlock full trading power.</strong></p>
-  </div>
-  </main>
- 
-<main>
-  <img src="assets/images/qtai_globe.png" alt="Rotating Globe" class="globe">
-  <div class="module-grid">
-<!-- Modules Section (Hidden by default) -->
-<div id="modules" style="display: none;">
-  <div class="module-grid">
-    <button>Module 01</button>
-    <button>Module 02</button>
-    <button>Module 03</button>
-    <button>Module 04</button>
-    <button>Module 05</button>
-    <button>Module 06</button>
-    <button>Module 07</button>
-    <button>Module 08</button>
-    <button>Module 09</button>
-    <button>Module 10</button>
-    <button>Module 11</button>
-    <button>Module 12</button>
-    <button>Module 13</button>
-    <button>Module 14</button>
-    <button>Module 15</button>
-  </div>
-</div>
- 
-<!-- Handshake Script to connect frontend with server.js -->
-<script>
-  // Minimal handshake
-  const handshake = async () => {
-    try {
-      const response = await fetch('/handshake', { method: 'POST' });
-      const data = await response.json();
-      console.log('Handshake success:', data);
-    } catch (error) {
-      console.error('Handshake failed:', error);
-    }
-  };
-
-  handshake(); // Initiate handshake on page load
-
-  // Module click events
-  document.querySelectorAll('.module').forEach(module => {
-    module.addEventListener('click', async () => {
-      const moduleId = module.getAttribute('data-module');
-      try {
-        const response = await fetch(`/activate-module/${moduleId}`, { method: 'POST' });
-        const data = await response.json();
-        console.log(`Module ${moduleId} activated:`, data);
-        alert(`Module ${moduleId} activated.`);
-      } catch (error) {
-        console.error(`Module ${moduleId} activation failed:`, error);
-      }
-    });
-  });
-</script>
-
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: "Inter", sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    html,body{height:100%;}
+    body{
+      margin:0;
+      padding:0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-align:center;
+      line-height:1.45;
     }
 
-    img {
-      display: block;
-      margin: 0 auto;
-      height: auto;
-    }
+    /* Container */
+    .wrap{max-width:var(--max-width);margin:0 auto;padding:28px 20px;}
 
-    /* Symbolic Globe */
-    .qtai-globe img {
-      width: 240px;
-      margin: 40px auto 10px;
-    }
+    /* Header */
+    header{display:flex;align-items:center;justify-content:center;gap:18px;padding-top:6px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:72px;width:auto;display:block}
+    h1{font-size:20px;margin:0;color:#fff;letter-spacing:0.6px}
+
+    /* Symbolic globe */
+    .globe{margin:22px auto 6px;display:block;width:200px;height:200px;object-fit:contain}
 
     /* Activation Card */
-    .activation-card {
-      width: 85%;
-      margin: 0 auto 25px;
-      background: #1e1e1e;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0, 214, 214, 0.25);
-      padding: 20px;
-    }
+    .activation-card{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:0 6px 22px rgba(0,0,0,0.6);margin:16px auto;width:92%;max-width:720px}
+    .activation-card h2{margin:0 0 8px;font-size:18px;color:var(--muted)}
+    .activation-card p{margin:6px 0;color:#ddd}
+    .activation-btn{display:inline-block;margin-top:12px;padding:10px 22px;border-radius:10px;border:0;background:var(--accent);color:#000;font-weight:700;cursor:pointer}
+    .activation-btn:focus{outline:2px solid rgba(0,214,214,0.25)}
+    .activation-note{font-size:12px;color:#aaa;margin-top:8px}
 
-    .activation-card h2 {
-      font-size: 16px;
-      margin-bottom: 10px;
-      color: #bdbdbd;
-    }
-
-    .activation-card p {
-      font-size: 14px;
-      color: #ccc;
-    }
-
-    .activate-btn {
-      margin-top: 15px;
-      padding: 10px 25px;
-      font-weight: bold;
-      background: #00d6d6;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .activate-btn:hover {
-      background: #00ffff;
-    }
-
-    small {
-      display: block;
-      margin-top: 10px;
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    /* Pyramid structure */
-    .pyramid {
-      margin-top: 20px;
-      margin-bottom: 30px;
-    }
-
-    .pyramid img {
-      width: 100px;
-      border-radius: 12px;
-      margin-bottom: 6px;
-    }
-
-    .pyramid-label {
-      font-size: 13px;
-      color: #ccc;
-    }
-
-    .pyramid-apex {
-      margin-bottom: 15px;
-    }
-
-    .pyramid-middle {
-      margin-bottom: 15px;
-    }
-
-    .pyramid-base {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
+    /* Pyramid / Trading floor area (screenshot layout): apex -> map -> base */
+    .pyramid{margin:28px auto;display:flex;flex-direction:column;align-items:center;gap:18px;width:92%;max-width:780px}
+    .pyramid .apex img{width:220px;border-radius:10px}
+    .pyramid .map img{width:320px;max-width:100%;border-radius:10px}
+    .pyramid .base{display:flex;gap:26px;justify-content:center;flex-wrap:wrap}
+    .pyramid .base .tile{width:140px}
+    .pyramid .base img{width:100%;border-radius:10px}
+    .pyramid-label{color:var(--muted);margin-top:6px;font-size:13px}
 
     /* Ori Olokun */
-    .ori-olokun {
-      margin-bottom: 20px;
-    }
+    .ori{margin-top:10px;margin-bottom:18px}
+    .ori img{width:110px;border-radius:10px}
+    .ori .label{color:var(--muted);margin-top:6px}
 
-    .ori-olokun img {
-      width: 90px;
-      border-radius: 10px;
-    }
+    /* Hidden modules (kept in DOM but not visible) */
+    #modules{display:none}
+    .module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:8px auto;max-width:560px}
+    .module-grid button{background:#222;color:#fff;border:0;padding:12px;border-radius:8px;font-size:15px;cursor:pointer}
+    .module-grid button:active{transform:translateY(1px)}
 
     /* Footer */
-    footer {
-      font-size: 10px;
-      color: #777;
-      margin-bottom: 20px;
+    footer{margin-top:34px;padding:26px 10px;background:transparent;color:#9a9a9a}
+    .footer-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0}
+    .footer-links a{color:var(--accent);text-decoration:none;font-size:14px}
+    .footer-credit{font-size:13px;color:#777;margin-top:10px}
+
+    /* Responsive adjustments */
+    @media(min-width:768px){
+      .globe{width:320px;height:320px}
+      .brand img{height:86px}
+      h1{font-size:22px}
+      .pyramid .apex img{width:320px}
+      .pyramid .map img{width:520px}
+      .pyramid .base .tile{width:160px}
     }
 
-    /* Responsive for wider screens */
-    @media (min-width: 768px) {
-      .activation-card {
-        width: 60%;
-      }
-      .pyramid img {
-        width: 130px;
-      }
-      .ori-olokun img {
-        width: 110px;
-      }
-    }
   </style>
-
-  <!-- Top Symbolic Globe -->
-  <div class="qtai-globe">
-    <img src="assets/images/qtai_globe.png" alt="QuantumTrader-AI Symbolic Globe" />
-  </div>
-
-  <!-- Activation Section -->
-  <div class="activation-card">
-    <h2>QuantumTrader-AI™ Activation Portal</h2>
-    <p>Activate your account to begin trading.</p>
-    <p>Activation & Subscription: NGN 10,000/month</p>
-    <button class="activate-btn">Activate Now</button>
-    <small>Payment processed via Alat Pay, Nigeria & Paystack</small>
-  </div>
-
-  <!-- Pyramid Structure -->
-  <section class="pyramid">
-    <div class="pyramid-apex">
-      <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-      <div class="pyramid-label">Trading Floor™ Main</div>
-    </div>
-
-    <div class="pyramid-middle">
-      <img src="assets/images/macarthur.png" alt="MacArthur Map" />
-      <div class="pyramid-label"></div>
-    </div>
-
-    <div class="pyramid-base">
-      <div>
-        <img src="assets/images/traderlab_icon.png" alt="TraderLab™" />
-        <div class="pyramid-label"></div>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header / Brand -->
+    <header>
+      <div class="brand">
+        <img src="assets/images/qtai_logo.png" alt="QuantumTrader AI Logo" />
+        <div>
+          <h1>QuantumTrader AI™</h1>
+          <div style="font-size:12px;color:#9aa;">Activation Portal</div>
+        </div>
       </div>
-      <div>
-        <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
-        <div class="pyramid-label"></div>
-      </div>
+    </header>
+
+    <!-- Top Symbolic Globe -->
+    <img class="globe" src="assets/images/qtai_globe.png" alt="QuantumTrader-AI Symbolic Globe" />
+
+    <!-- Activation Card -->
+    
+
+    <!-- Pyramid structure (Follows your screenshot order) -->
+    
+
+    <!-- Ori Olokun -->
+    <div class="ori" aria-hidden="false">
+      <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
+      <div class="label">Ori Olokun</div>
     </div>
-  </section>
 
-  <!-- Ori Olokun -->
-  <div class="ori-olokun">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" />
-    <div class="pyramid-label">Ori Olokun</div>
+    <!-- Hidden Modules (kept for activation flow, hidden from users) -->
+    
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-links">
+        <a href="#">Trading Floor</a>
+        <a href="#">MacArthur Map</a>
+        <a href="#">TraderLab</a>
+        <a href="#">CPilot</a>
+      </div>
+      <div class="footer-credit">© 2025 QuantumTrader AI — Visionary, Architect and Builder: Olagoke Ajibulu</div>
+    </footer>
   </div>
 
-<!-- Clean Footer Start -->
-<style>
-  .footer-container {
-    margin-top: 60px;
-    padding: 30px 20px;
-    background-color: #111;
-    color: #ccc;
-    text-align: center;
-    font-family: 'Segoe UI', sans-serif;
-  }
+  <!-- Handshake + Module Activation Script (robust, non-blocking) -->
+  <script>
+    // Minimal handshake: posts to /handshake and logs response. Non-blocking.
+    (function(){
+      async function handshake(){
+        try{
+          const res = await fetch('/handshake', { method:'POST', headers:{'Content-Type':'application/json'} , body: JSON.stringify({client:'index.html', ts: Date.now()}) });
+          if(!res.ok) return console.warn('Handshake HTTP status', res.status);
+          const data = await res.json();
+          console.log('Handshake success:', data);
+        }catch(err){
+          console.warn('Handshake failed (network or server):', err);
+        }
+      }
+      // Don't block rendering — run after short delay
+      setTimeout(handshake, 350);
 
-  .footer-container h3 {
-    color: #fff;
-    margin-bottom: 15px;
-  }
+      // Module activation listeners
+      function bindModuleButtons(){
+        const buttons = document.querySelectorAll('.module');
+        buttons.forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const id = btn.getAttribute('data-module');
+            try{
+              const resp = await fetch(`/activate-module/${encodeURIComponent(id)}`, { method:'POST' });
+              if(!resp.ok) throw new Error('HTTP ' + resp.status);
+              const payload = await resp.json();
+              console.log('Module activated', id, payload);
+              alert(`Module ${id} activated.`);
+            }catch(err){
+              console.error('Module activation failed', id, err);
+              alert('Module activation failed — check console/server.');
+            }
+          });
+        });
+      }
 
-  .footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 10px;
-  }
+      // Bind on DOMContentLoaded
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', bindModuleButtons);
+      } else {
+        bindModuleButtons();
+      }
 
-  .footer-links a {
-    color: #00ffff;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s;
-  }
+      // Activate button click: (example) opens payment / activation flow
+      document.getElementById('activateNow').addEventListener('click', function(){
+        // developer: wire this to your payment gateway (Alat/Paystack)
+        window.location.href = '/pay/activate';
+      });
 
-  .footer-links a:hover {
-    color: #00cccc;
-  }
-
-  .footer-line {
-    width: 80%;
-    border: 0.5px solid #444;
-    margin: 0 auto 30px auto;
-  }
-
-  .footer-credit {
-    margin-top: 40px;
-    font-size: 13px;
-    color: #777;
-  }
-</style>
-
-<div class="footer-container">
-  <hr class="footer-line" />
-
-  <h3>Explore QuantumTrader-AI™ Features</h3>
-
-  <div class="footer-links">
-    <a href="#">Trading Floor</a>
-    <a href="#">MacArthur Map</a>
-    <a href="#">TraderLab</a>
-    <a href="#">CPilot</a>
-  </div>
-
-  <div class="footer-credit">
-© 2025 QuantumTrader AI — Visionary, Architect and Builder: Olagoke Ajibulu
-  </div>
-</div>
-<!-- Clean Footer End -->
+    })();
+  </script>
 </body>
 </html>
