@@ -16,6 +16,63 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const PORT = process.env.PORT || 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
+
+const app = express();
+
+// ✅ Secure HTTP headers
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: false
+}));
+
+// ✅ Enable compression
+app.use(compression());
+
+// ✅ Serve static files
+app.use(express.static(__dirname, {
+  extensions: ['html', 'htm'],
+  maxAge: '1y'
+}));
+
+// ✅ Cache headers
+app.use((req, res, next) => {
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json)$/)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+  }
+  next();
+});
+
+// ✅ Main route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// ✅ Subpage
+app.get("/public/index2.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index2.html"));
+});
+
+// ✅ Manifest & Service Worker
+app.get("/manifest.json", (req, res) => {
+  res.type("application/manifest+json");
+  res.sendFile(path.join(__dirname, "manifest.json"));
+});
+
+app.get("/service-worker.js", (req, res) => {
+  res.type("application/javascript");
+  res.sendFile(path.join(__dirname, "service-worker.js"));
+});
+
+// ✅ Start server
+app.listen(PORT, () => {
+console.log(`QuantumTrader AI Server running on port{PORT}`);
+});
+
 // ✅ Security middleware (recommended for PWA)
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
