@@ -81,16 +81,43 @@
       border-radius: 8px;
     }
   </style>
+
+  <style    
+  #hero-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; /* spacing between the images */
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.hero-image-container img {
+  max-width: 180px;
+  height: auto;
+}
+
+#qtai-main-globe {
+  animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.95; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
 </head>
 <body>
 
 <div id="hero-center">
   <div class="hero-image-container">
-    <img src="./assets/image/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
+    <img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
   </div>
   <div class="hero-image-container">
-    <img src="./assets/image/peace_index_logo.png" alt="peace="peace-index-logo" />
+    <img src="./assets/image/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" />
   </div>
+</div>
   
   <div class="description">
     <h2>Precision-Powered AI Trading</h2>
