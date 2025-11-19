@@ -148,16 +148,11 @@
   <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
 </div>
 
-<!-- Handshake Front-End -->
-<div style="padding:20px; text-align:center;"> <button id="run-handshake" style="padding:10px 16px; border-radius:8px; background:#4fd1c5; border:none; color:#072328; font-weight:bold;">
-    Run Handshake
-  </button>
+<!-- Handshake Front-End (hidden for deployment) -->
+<div style="display: none;">
+  <button id="run-handshake">Run Handshake</button>
   <div id="handshake-output">—</div>
 </div>
-
-<footer>
-  &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-</footer>
   
 <script>
   function activateApp() {
@@ -166,9 +161,13 @@
   }
 </script>
 
-<div class="cta">
-  <button onclick="activateApp()">Activate Trading Intelligence</button>
+<div class="cta" style="text-align:center; margin-top: 20px;">
+  <button onclick="activateApp()" style="padding:12px 20px; font-size:16px; border-radius:8px; background:#007bff; color:white; border:none;">Activate Trading Intelligence</button>
 </div>
+
+<footer style="margin-top: 30px; text-align:center; font-size: 14px;">
+  &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
+</footer>
  
 <script>
   function activateApp() {
