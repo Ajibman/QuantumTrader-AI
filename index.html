@@ -83,13 +83,18 @@
   </style>
 
   <style>    
-  #hero-center {
+.hero-image-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px; /* spacing between the images */
+  gap: 10px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
-  margin-top: 40px;
+}
+
+.hero-image-container img {
+  max-height: 100px;
+  object-fit: contain;
 }
 
 .hero-image-container img {
