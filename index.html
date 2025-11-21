@@ -68,46 +68,45 @@ header img {
 
 .description {
   padding: 10px 20px;
-  background-color: #ffffff;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader-AI™</title>
 
-.description h2 {
-  margin-bottom: 10px;
-  font-size: 1.4em;
-}
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b1020">
 
-.description p {
-  max-width: 600px;
-  margin: 0 auto;
-  font-size: 1em;
-  line-height: 1.5;
-}
+  <style>
+    body { margin:0; padding:0; font-family:Inter, Arial, sans-serif; background:#0b1020; color:#e6eef6; text-align:center; }
+    #hero-center { display:flex; flex-direction:column; align-items:center; padding:20px; gap:16px; position:relative; }
+    #qtai-main-globe { width:220px; max-width:90vw; height:auto; animation:globe-rotate 20s linear infinite; border-radius:12px; box-shadow:0 8px 20px rgba(79,209,197,0.3); }
+    #peace-index-logo { width:64px; height:auto; opacity:0.85; position:absolute; top:20px; right:20px; transition: transform 0.8s ease-in-out; }
+    #payment-gate-section { padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; animation:fadeIn 1.5s ease forwards; }
+    #macarthur-img { width:120px; height:auto; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+    #triangular-nodes { display:flex; flex-direction:column; align-items:center; gap:20px; padding:30px 0; }
+    .triangle-node { width:100px; animation:node-glow 3s ease-in-out infinite alternate; }
+    .node-img { width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.4); }
+    .node-title { margin-top:8px; font-weight:bold; font-size:14px; color:#a0dcd1; }
+    #ori-olokun-section { padding:30px 0 20px; }
+    #ori-olokun-img { width:80px; height:auto; opacity:0.9; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.35); }
 
-.cta {
-  margin: 20px 0;
-}
+    @media(min-width:600px){ #hero-center { flex-direction:row; justify-content:space-between; align-items:center; } #qtai-main-globe { width:280px; } #peace-index-logo { width:84px; } #triangular-nodes { flex-direction:row; gap:40px; } .triangle-node { width:120px; } #ori-olokun-img { width:100px; } }
+    @media(min-width:980px){ #qtai-main-globe { width:400px; } #triangular-nodes { gap:60px; } .triangle-node { width:140px; } #ori-olokun-img { width:120px; } }
 
-.cta button {
- background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 14px 28px;
-  font-size: 1em;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    @keyframes globe-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes node-glow { from { box-shadow: 0 0 6px #4fd1c5; } to { box-shadow: 0 0 18px #4fd1c5; } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-.cta button:hover {
-  background-color: #0056b3;
-}
+    #handshake-output { margin-top:12px; font-size:14px; color:#4fd1c5; font-weight:bold; }
 
-footer {
-  background-color: #222;
-  color: #ccc;
-  padding: 20px;
-  font-size: 0.9em;
-  margin-top: 30px;
-}
+    button { cursor:pointer; transition: transform 0.3s ease; }
+    button:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
 
   <div id="hero-center">
     <div class="hero-image-container">
