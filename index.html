@@ -1,184 +1,115 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuantumTrader AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader-AI™</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b1020">
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-      text-align: center;
-      color: #333;
-    }
+    body { margin:0; padding:0; font-family:Inter, Arial, sans-serif; background:#0b1020; color:#e6eef6; text-align:center; }
+    #hero-center { display:flex; flex-direction:column; align-items:center; padding:20px; gap:16px; position:relative; }
+    #qtai-main-globe { width:220px; max-width:90vw; height:auto; animation:globe-rotate 20s linear infinite; border-radius:12px; box-shadow:0 8px 20px rgba(79,209,197,0.3); }
+    #peace-index-logo { width:64px; height:auto; opacity:0.85; position:absolute; top:20px; right:20px; transition: transform 0.8s ease-in-out; }
+    #payment-gate-section { padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; animation:fadeIn 1.5s ease forwards; }
+    #macarthur-img { width:120px; height:auto; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+    #triangular-nodes { display:flex; flex-direction:column; align-items:center; gap:20px; padding:30px 0; }
+    .triangle-node { width:100px; animation:node-glow 3s ease-in-out infinite alternate; }
+    .node-img { width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.4); }
+    .node-title { margin-top:8px; font-weight:bold; font-size:14px; color:#a0dcd1; }
+    #ori-olokun-section { padding:30px 0 20px; }
+    #ori-olokun-img { width:80px; height:auto; opacity:0.9; animation:fadeIn 2s ease forwards; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.35); }
 
-    header {
-      background-color: #000428;
-      color: #fff;
-      padding: 20px;
-    }
+    @media(min-width:600px){ #hero-center { flex-direction:row; justify-content:space-between; align-items:center; } #qtai-main-globe { width:280px; } #peace-index-logo { width:84px; } #triangular-nodes { flex-direction:row; gap:40px; } .triangle-node { width:120px; } #ori-olokun-img { width:100px; } }
+    @media(min-width:980px){ #qtai-main-globe { width:400px; } #triangular-nodes { gap:60px; } .triangle-node { width:140px; } #ori-olokun-img { width:120px; } }
 
-    header img {
-      height: 60px;
-    }
+    @keyframes globe-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes node-glow { from { box-shadow: 0 0 6px #4fd1c5; } to { box-shadow: 0 0 18px #4fd1c5; } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-    .hero-image-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+    #handshake-output { margin-top:12px; font-size:14px; color:#4fd1c5; font-weight:bold; }
 
-    .hero-image-container img {
-      max-width: 180px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    #qtai-main-globe {
-      animation: pulse 3s infinite ease-in-out;
-      width: 100px;
-      display: block;
-      margin: 20px auto 10px;
-    }
-
-    .peace-index-logo {
-      width: 100px;
-      max-width: 90%;
-      display: block;
-      margin: 0 auto 10px;
-    }
-
-    .description {
-      padding: 20px 20px;
-<img src="./assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-    </div>
-
-    <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
-      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-    </a>
-
-    <div class="description">
-      <h2>Precision-Powered AI Trading</h2>
-      <p>Discover a fully autonomous AI-driven trading assistant,<br>
-        Built for speed, accuracy and high-impact decision-making.<br>
-        Activate your edge in today’s fast-moving markets.<br>
-        Targeting 99.9999% efficiency.
-      </p>
-    </div>
-
-    <div class="cta">
-      <button onclick="activateApp()">Activate Trading Intelligence</button>
-    </div>
-
-    <div class="images">
-      <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-      <img src="assets/images/macarthur.png" alt="MacArthur" />
-    </div>
-
-    <div>
-      <img src="assets/images/traderlab_icon.png" alt="TraderLab" id="traderlab-img" />
-      <img src="assets/images/cpilot_panel.png" alt="CPilot" />
-    </div>
-
-    <div id="ori-olokun-section">
-      <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
-    </div>
-
-    <!-- Handshake Section (Hidden) -->
-    <div style="display: none;">
- background-color: #ffffff;
-    }
-
-    .description h2 {
-      margin-bottom: 10px;
-    }
-
-    .description p {
-      max-width: 600px;
-      margin: 0 auto 20px;
-      font-size: 1.1em;
-    }
-
-    .cta {
-      margin: 30px;
-    }
-
-    .cta button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .cta button:hover {
-      background-color: #0056b3;
-    }
-
-    .images {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin: 30px 0;
-    }
-
-    .images img {
-      max-width: 300px;
-      border-radius: 8px;
-    }
-
-    #traderlab-img {
-      width: 220px;
-      max-width: 100%;
-      display: block;
-      margin: 20px auto 10px;
-    }
-
-    #ori-olokun-img {
-      width: 220px;
-      max-width: 100%;
-      display: block;
-      margin: 20px auto 10px;
-    }
-
-    footer {
-      background-color: #222;
-      color: #ccc;
-      padding: 20px;
-      font-size: 0.9em;
-      margin-top: 30px;
-    }
+    button { cursor:pointer; transition: transform 0.3s ease; }
+    button:hover { transform: scale(1.05); }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>QuantumTrader AI</h1>
-  </header>
 
   <div id="hero-center">
-    <div class="hero-image-container">
- <button id="run-handshake">Run Handshake</button>
-      <div id="handshake-output">—</div>
+    <div></div>
+    <div><img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" /></div>
+    <div><img src="./assets/image/peace_index_logo.png" id="peace-index-logo" alt="Peace Index API" /></div>
+  </div>
+
+  <div id="payment-gate-section">
+    <h2>Activation Payment Gateway</h2>
+    <img src="./assets/MacArthur.png" id="macarthur-img" alt="MacArthur" />
+  </div>
+
+  <div id="triangular-nodes">
+    <div class="triangle-node top-node">
+      <img src="./assets/tradingfloor_main.png" class="node-img" alt="Trading Floor" />
+      <div class="node-title">Trading Floor</div>
     </div>
 
-    <footer>
-      &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-    </footer>
+    <div class="triangle-node left-node">
+      <img src="./assets/traderlab_icon.png" class="node-img" alt="TraderLab" />
+      <div class="node-title">TraderLab</div>
+    </div>
+
+    <div class="triangle-node right-node">
+      <img src="./assets/cpilot_panel.png" class="node-img" alt="CPilot" />
+      <div class="node-title">CPilot</div>
+    </div>
+  </div>
+
+  <div id="ori-olokun-section">
+    <img src="./assets/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
   </div>
 
   <script>
-    function activateApp() {
-      alert("Activation triggered. Processing...");
+    async function performHandshake(payload = {}){
+      try{
+        const res = await fetch('/handshake',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('Handshake failed: '+res.status);
+        return await res.json();
+      }catch(e){ return {error:String(e)}; }
+    }
+ document.getElementById('run-handshake').addEventListener('click', async ()=>{
+      const output = document.getElementById('handshake-output');
+      output.textContent = 'Running handshake...';
+      try{
+        const result = await performHandshake({source:'index.html',timestamp:Date.now()});
+        output.textContent = result && result.status ? result.status : JSON.stringify(result);
+      }catch(e){
+        output.textContent = 'Error: '+String(e);
+      }
+    });
+
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('./service-worker.js')
+        .then(reg=>console.log('Service Worker registered.', reg))
+        .catch(err=>console.error('SW registration failed:', err));
+      });
     }
   </script>
+
 </body>
 </html>
+
+
+  <!-- Handshake Front-End -->
+  <div style="padding:20px; text-align:center;">
+    <button id="run-handshake" style="padding:10px 16px; border-radius:8px; background:#4fd1c5; border:none; color:#072328; font-weight:bold;">Run Handshake</button>
+    <div id="handshake-output">—</div>
+  </div>
+
+  
