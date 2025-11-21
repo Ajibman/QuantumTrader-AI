@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+ html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,6 +7,106 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+  color: #333;
+}
+
+header {
+  background-color: #000428;
+  color: #fff;
+  padding: 20px;
+}
+
+header img {
+  height: 60px;
+}
+
+/* General image layout */
+.hero-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.hero-image-container img {
+  max-width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+#qtai-main-globe {
+  width: 100px;
+  display: block;
+  margin: 0 auto;
+  animation: pulse 3s infinite ease-in-out;
+}
+
+.peace-index-logo {
+  width: 100px;
+  display: block;
+  margin: 10px auto 0;
+}
+
+#traderlab-img,
+#ori-olokun-img {
+  width: 120px;
+  max-width: 90%;
+  display: block;
+  margin: 10px auto;
+}
+
+.description {
+  padding: 10px 20px;
+  background-color: #ffffff;
+}
+
+.description h2 {
+  margin-bottom: 10px;
+  font-size: 1.4em;
+}
+
+.description p {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.cta {
+  margin: 20px 0;
+}
+
+.cta button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cta button:hover {
+  background-color: #0056b3;
+}
+
+footer {
+  background-color: #222;
+  color: #ccc;
+  padding: 20px;
+  font-size: 0.9em;
+  margin-top: 30px;
+}
 
   <div id="hero-center">
     <div class="hero-image-container">
@@ -22,7 +122,7 @@
       <p>
         Discover a fully autonomous AI-driven trading assistant,<br />
         Built for speed, accuracy and high-impact decision-making.<br />
-        Targeting absolute coherence and 99.9999% efficiency.
+        Targeting 99.9999% efficiency.
       </p>
     </div>
 
