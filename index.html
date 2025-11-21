@@ -5,104 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI™</title>
   <style>
-    
-  qtai-main-globe {
-  width: 100px;
+    =====
+
+#qtai-main-globe {
+  width: 120px;
   max-width: 90%;
   display: block;
-  margin: 20px auto 10;
-  
-  #qtai-main-globe {
+  margin: 10px auto 5px;
   animation: pulse 3s infinite ease-in-out;
-  display: block;
-  margin: 20px auto 10px;
 }
-    
-  peace-index-logo {
-  width: 100px;
+
+.peace-index-logo {
+  width: 120px;
   max-width: 90%;
   display: block;
-  margin: 20px auto 10; /* remove bottom margin */
+  margin: 10px auto 5px;
 }
 
-.description {
-  padding: 0px 0px; /* reduced top and bottom padding */
-  background-color: #ffffff;
+.hero-image-container, .images {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 15px 0;
 }
 
-#traderlab-img {
-  width: 220px;
+#traderlab-img,
+#cpilot-img,
+#ori-olokun-img {
+  width: 150px;
   max-width: 90%;
   display: block;
-  margin: 20px auto 10px;
-}
-  
-ori-olokun-img {
-  width: 100px;
-  max-width: 90%;
-  display: block;
-  margin: 20px auto 10px;
-}
-  
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  text-align: center;
-  color: #333;
+  margin: 10px auto 8px;
 }
 
-header {
-  background-color: #000428;
-  color: #fff;
-  padding: 20px;
-}
-
-header img {
-  height: 60px;
-}
-
-.description {
-  padding: 30px 20px;
-  background-color: #ffffff;
-}
-
-.description h2 {
-  margin-bottom: 10px;
-}
-
-.description p {
-  max-width: 600px;
-  margin: 0 auto 20px;
-  font-size: 1.1em;
-}
-
-.cta {
-  margin: 30px;
-}
-
-.cta button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.2em;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.cta button:hover {
-  background-color: #0056b3;
-}
-
-footer {
- background-color: #222;
-  color: #ccc;
-  padding: 20px;
-  font-size: 0.9em;
-}
-
+/* Image Styling */
 #qtai-main-globe {
   width: 100px;
   max-width: 90%;
@@ -111,100 +48,23 @@ footer {
   animation: pulse 3s infinite ease-in-out;
 }
 
-#peace-index-logo {
+.peace-index-logo {
   width: 100px;
   max-width: 90%;
   display: block;
-  margin: 10px auto 0;
-  padding: 0;
+  margin: 20px auto 10px;
 }
 
+#traderlab-img,
+#cpilot-img,
 #ori-olokun-img {
-  width: 100px;
+  width: 150px;
   max-width: 90%;
   display: block;
-  margin: 20px auto 10px;
+  margin: 10px auto 8px;
 }
 
-#traderlab-img {
-  width: 220px;
-  max-width: 90%;
-  display: block;
-  margin: 20px auto 10px;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  text-align: center;
-  color: #333;
-}
-
-header {
-  background-color: #000428;
-  color: #fff;
-  padding: 20px;
-}
-
-header img {
-  height: 60px;
-}
-
-.description {
-  padding: 10px 20px; /* reduced top/bottom spacing */
-  background-color: #ffffff;
-}
-
-.description h2 {
-  margin: 0 0 10px;
-}
-
-.description p {
-  max-width: 600px;
-  margin: 0 auto 20px;
-  font-size: 1.1em;
-}
-
-.cta {
-  margin: 30px;
-}
-
-.cta button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 15px 30px;
- font-size: 1.2em;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.cta button:hover {
-  background-color: #0056b3;
-}
-
-footer {
-  background-color: #222;
-  color: #ccc;
-  padding: 20px;
-  font-size: 0.9em;
-}
-
-.images {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin: 30px 0;
-}
-
-.images img {
-  max-width: 300px;
-  border-radius: 8px;
-}
-
+/* Container for images */
 .hero-image-container {
   display: flex;
   justify-content: center;
@@ -220,25 +80,144 @@ footer {
   object-fit: contain;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.95; }
-  100% { transform: scale(1); opacity: 1; }
+/* Images container for trading floor and macarthur */
+.images {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 30px 0;
 }
-</style>
+
+.images img {
+  max-width: 300px;
+  border-radius: 8px;
+}
+     
+/* Description Section */
+.description {
+  padding: 10px 15px;
+  background-color: #ffffff;
+}
+
+.description h2 {
+  margin: 10px 0 8px;
+  font-size: 1.4em;
+}
+
+.description p {
+  max-width: 90%;
+  margin: 0 auto 10px;
+  font-size: 1em;
+  line-height: 1.5em;
+}
+
+/* CTA Button */
+.cta {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.cta button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cta button:hover {
+  background-color: #0056b3;
+}
+
+/* Footer */
+footer {
+  background-color: #222;
+  color: #ccc;
+  padding: 20px 10px;
+  font-size: 0.9em;
+  text-align: center;
+}
+     
+/* Body and Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+  color: #333;
+}
+
+/* Header */
+header {
+  background-color: #000428;
+  color: #fff;
+  padding: 20px;
+}
+
+header img {
+  height: 50px;
+  max-width: 100%;
+}
+
+/* Hero Section (Logo Row) */
+.hero-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 20px auto 10px;
+  flex-wrap: wrap;
+}
+
+.hero-image-container img {
+  max-width: 100px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Image Grouping Below Description */
+.images {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px auto;
+}
+
+.images img {
+  max-width: 280px;
+  width: 90%;
+  border-radius: 8px;
+}
+
+/* Specific Logos */
+#qtai-main-globe,
+.peace-index-logo,
+#traderlab-img,
+#ori-olokun-img {
+  max-width: 100px;
+  width: 90%;
+  display: block;
+  margin: 10px auto;
+}
 
 <div id="hero-center">
   <div class="hero-image-container">
     <img src="./assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
+    <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
+      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
+    </a>
   </div>
-<a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
-  <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-</a>
+
   <div class="description">
     <h2>Precision-Powered AI Trading;</h2>
     <p>Discover a fully autonomous AI-driven trading assistant,<br>
       Built for speed, accuracy and high-impact decision-making.<br>
-      Activate your edge in today’s fast-moving markets. 
+      Activate your edge in today’s fast-moving markets.<br>
       Targeting 99.9999% efficiency.
     </p>
   </div>
@@ -246,41 +225,39 @@ footer {
   <div class="cta">
     <button onclick="activateApp()">Activate Trading Intelligence</button>
   </div>
-      
-<div class="images">
-  <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" /><Trading Floor/>
-  <img src="assets/images/macarthur.png" alt="MacArthur" />
- </div>
 
-<div>
- <img src="assets/images/traderlab_icon.png" alt="TraderLab" id="traderlab-img"/>
-  <img src="assets/images/cpilot_panel.png" alt="CPilot" />
-</div>
-  
-<div id="ori-olokun-section">
-  <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
+  <div class="images">
+    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
+    <img src="assets/images/macarthur.png" alt="MacArthur" />
+  </div>
+
+  <div class="images">
+    <img src="assets/images/traderlab_icon.png" alt="TraderLab" id="traderlab-img" />
+    <img src="assets/images/cpilot_panel.png" alt="CPilot" />
+  </div>
+
+  <div>
+ <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
+  </div>
+
+  <!-- Handshake Section (Hidden) -->
+  <div style="display: none;">
+    <button id="run-handshake">Run Handshake</button>
+    <div id="handshake-output">—</div>
+  </div>
+
+    <div>
+  <footer style="margin-top: 30px; text-align:center; font-size: 14px;">
+    &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
+  </footer>
 </div>
 
-<!-- Handshake Front-End (hidden for deployment) -->
-<div style="display: none;">
-  <button id="run-handshake">Run Handshake</button>
-  <div id="handshake-output">—</div>
-</div>
-  
 <script>
   function activateApp() {
-    // Placeholder for actual activation logic (e.g. Paystack or API auth)
     alert("Activation triggered. Processing...");
   }
 </script>
-
-<div class="cta" style="text-align:center; margin-top: 20px;">
-  <button onclick="activateApp()" style="padding:12px 20px; font-size:16px; border-radius:8px; background:#007bff; color:white; border:none;">Activate Trading Intelligence</button>
-</div>
-
-<footer style="margin-top: 30px; text-align:center; font-size: 14px;">
-  &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-</footer>
+  </footer>
  
 <script>
   function activateApp() {
