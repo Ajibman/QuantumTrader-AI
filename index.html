@@ -298,7 +298,13 @@ footer {
     <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
     <p style="text-align:center; color:#fff;">Ori Olokun</p>
   </div>
-
+ 
+<!-- CPilot Node -->
+<div id="cpilot-section">
+  <img id="cpilot-img" src="assets/images/cpilot_panel.png" alt="CPilot Panel">
+  <button onclick="activateNode('cpilot')">Activate CPilot Panel</button>
+</div>
+ 
   <!-- Handshake Section (Hidden) -->
   <div style="display: none;">
     <button id="run-handshake">Run Handshake</button>
@@ -314,6 +320,39 @@ footer {
       alert("Activation triggered. Processing...");
     }
   </script>
-   
+ 
+   <script>
+  function activateNode(node) {
+    switch(node) {
+      case 'traderlab':
+        alert("TraderLab AI activated.");
+        break;
+      case 'oriolokun':
+        alert("Ori Olokun node activated.");
+        break;
+      default:
+        alert("Unknown node.");
+    }
+  }
+   </script>
+ 
+ <script>
+  function activateNode(node) {
+    switch(node) {
+      case 'traderlab':
+        alert("TraderLab AI activated.");
+        break;
+      case 'oriolokun':
+        alert("Ori Olokun node activated.");
+        break;
+      case 'cpilot':
+        alert("CPilot Panel activated.");
+        break;
+      default:
+        alert("Unknown node.");
+    }
+  }
+</script>
+ 
 </body>
 </html>
