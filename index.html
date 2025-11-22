@@ -264,6 +264,19 @@ footer {
       </p>
     </div>
 
+<script>
+  window.addEventListener('load', function () {
+    const traderLab = document.getElementById('traderlab-img');
+    const tradingFloor = document.getElementById('tradingfloor-img');
+
+    if (traderLab && tradingFloor) {
+      console.log("✅ TraderLab and Tradingfloor are loaded and visible.");
+    } else {
+      console.warn("⚠️ One or both nodes are missing or not loaded.");
+    }
+  });
+</script>
+   
     <div class="cta">
       <button onclick="activateApp()">Activate Trading Intelligence</button>
     </div>
