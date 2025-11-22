@@ -263,19 +263,6 @@ footer {
         Targeting 99.9999% efficiency. The amazing power of imagination & discipline.
       </p>
     </div>
-
-<script>
-  window.addEventListener('load', function () {
-    const traderLab = document.getElementById('traderlab-img');
-    const tradingFloor = document.getElementById('tradingfloor-img');
-
-    if (traderLab && tradingFloor) {
-      console.log("✅ TraderLab and Tradingfloor are loaded and visible.");
-    } else {
-      console.warn("⚠️ One or both nodes are missing or not loaded.");
-    }
-  });
-</script>
    
     <div class="cta">
       <button onclick="activateApp()">Activate Trading Intelligence</button>
@@ -288,6 +275,19 @@ footer {
     <img src="assets/images/macarthur.png" alt="MacArthur" />
   </div>
 
+ <script>
+  window.addEventListener('load', function () {
+    const traderLab = document.getElementById('traderlab-img');
+    const tradingFloor = document.getElementById('tradingfloor-img');
+
+    if (traderLab && tradingFloor) {
+      console.log("✅ TraderLab and Tradingfloor are loaded and visible.");
+    } else {
+      console.warn("⚠️ One or both nodes are missing or not loaded.");
+    }
+  });
+ </script>
+ 
 <!-- TraderLab Node -->
 <div id="traderlab-section">
   <img id="traderlab-img" src="assets/images/traderlab_main.png" alt="TraderLab AI">
@@ -299,11 +299,6 @@ footer {
     <p style="text-align:center; color:#fff;">TraderLab</p>
     <img src="assets/images/cpilot_panel.png" alt="CPilot" />
     <p style="text-align:center; color:#fff;">CPilot</p>
-  </div>
-
-  <div id="ori-olokun-section">
-    <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
-    <p style="text-align:center; color:#fff;">Ori Olokun</p>
   </div>
  
 <!-- CPilot Node -->
