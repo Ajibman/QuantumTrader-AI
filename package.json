@@ -1,4 +1,4 @@
- 
+
 {
   "name": "quantumtrader-ai",
   "version": "1.0.0",
@@ -32,6 +32,18 @@
       "headers": {
 "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": "value"
       }
+    {
+  
+      {
+  "mcpServers": {
+    "local-server": {
+      "command": "python",
+      "args": ["${workspaceFolder}/tools/mcp_server.py"],
+      "env": {
+"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": "${env:API_KEY}"
+      }
     }
   }
 }
+    
+
