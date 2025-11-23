@@ -1,353 +1,74 @@
- <!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuantumTrader-AI™</title>  <!-- Manifest for PWA -->  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />  <!-- Favicon -->  <link rel="icon" type="image/png" href="assets/qtai_globe.png" />  <!-- Styles -->  <link rel="stylesheet" href="styles.css" />
   <style>
-   
-/* Batch 1: Core layout and main elements */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  text-align: center;
-  color: #333;
-}
-
-header {
-  background-color: #000428;
-  color: #fff;
-  padding: 20px;
-}
-
-header img {
-  height: 60px;
-  max-width: 100%;
-  height: auto;
-}
-
-.hero-image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin: 15px 0;
-}
-
-.hero-image-container img {
-  max-width: 120px;
-  height: auto;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-#qtai-main-globe {
-  width: 100px;
-  max-width: 90vw;
-  margin: 0 auto;
-  display: block;
-  animation: pulse 3s infinite ease-in-out;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(79, 209, 197, 0.3);
-}
-
-.peace-index-logo {
-  width: 100px;
-  max-width: 90vw;
-  display: block;
-  margin: 10px auto 0;
-  opacity: 0.85;
-  transition: transform 0.8s ease-in-out;
-}
-
-#traderlab-img,
-#ori-olokun-img {
-  width: 100px;
-  max-width: 90%;
-  display: block;
-  margin: 10px auto;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-}
-
-.description {
-  background-color: #fff;
-  padding: 15px 20px;
-  max-width: 600px;
-  margin: 0 auto 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.description h2 {
-  margin-bottom: 12px;
-  font-size: 1.5em;
-}
-
-.description p {
-  font-size: 1em;
-  line-height: 1.6;
-  color: #444;
-}
-
-.cta {
-  margin: 25px 0;
-}
-
-.cta button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 14px 28px;
-  font-size: 1em;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  max-width: 90vw;
-  width: 300px;
-}
-
-.cta button:hover {
-  background-color: #0056b3;
-}
-
-footer {
-  background-color: #222;
-  color: #ccc;
-  padding: 20px;
-  font-size: 0.9em;
-  margin-top: 30px;
-}
-    
-/* Batch 2: Animations, smaller images, and responsive fixes */
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.85;
-  }
-}
-
-@keyframes globe-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-image-container img:hover {
-  transform: scale(1.1);
-}
-
-/* Smaller images container tweaks */
-#payment-gate-section,
-#ori-olokun-section,
-#triangular-nodes {
-  padding: 20px 10px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.triangle-node {
-  width: 100px;
-  animation: node-glow 3s ease-in-out infinite alternate;
-}
-
-.node-img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-}
-
-.node-title {
-  margin-top: 8px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #a0dcd1;
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .hero-image-container {
-    gap: 8px;
-  }
-  
-  .hero-image-container img,
-  #qtai-main-globe,
-  .peace-index-logo,
-  #traderlab-img,
-  #ori-olokun-img {
-    max-width: 80px !important;
-    width: 80px !important;
-  }
-  
-  .cta button {
-    width: 90vw;
-    padding: 12px 0;
-  }
-  
-  .description {
-    padding: 10px 15px;
-    font-size: 0.9em;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .hero-image-container img,
-  #qtai-main-globe,
-  .peace-index-logo,
-  #traderlab-img,
-  #ori-olokun-img {
-    max-width: 100px !important;
-    width: 100px !important;
-  }
-  
-  .cta button {
-    width: 250px;
-  }
-}
-
-    @media(min-width:600px){ #hero-center { flex-direction:row; justify-content:space-between; align-items:center; } #qtai-main-globe { width:280px; } #peace-index-logo { width:84px; } #triangular-nodes { flex-direction:row; gap:40px; } .triangle-node { width:120px; } #ori-olokun-img { width:100px; } }
-    @media(min-width:980px){ #qtai-main-globe { width:400px; } #triangular-nodes { gap:60px; } .triangle-node { width:140px; } #ori-olokun-img { width:120px; } }
-
-    @keyframes globe-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes node-glow { from { box-shadow: 0 0 6px #4fd1c5; } to { box-shadow: 0 0 18px #4fd1c5; } }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-    #handshake-output { margin-top:12px; font-size:14px; color:#4fd1c5; font-weight:bold; }
-
-    button { cursor:pointer; transition: transform 0.3s ease; }
-    button:hover { transform: scale(1.05); }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    header img {
+      width: 160px;
+      height: auto;
+    }
+    #activation-gate {
+      margin: 20px auto;
+      text-align: center;
+      padding: 15px;
+    }
+    #map-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+    #ori-olokun {
+      text-align: center;
+      margin-top: 40px;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 14px;
+    }
   </style>
-
-  <div id="hero-center">
-    <div class="hero-image-container">
-      <img src="./assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-    </div>
-
-    <a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
-      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-    </a>
-
-    <div class="description">
-      <h2>Precision-Powered AI Trading</h2>
-      <p>
-        Discover a fully autonomous AI-driven trading assistant,<br />
-        Built for speed, accuracy and high-impact decision-making.<br />
-        The amazing power of imagination & discipline.
-      </p>
-    </div>
-   
-    <div class="cta">
-      <button onclick="activateApp()">Activate Trading Intelligence</button>
-    </div>
-  </div>
-
-  <div class="images">
-    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-    <p style="text-align:center; color:#fff;">MacArthur Map</p>
-    <img src="assets/images/macarthur.png" alt="MacArthur" />
-  </div>
-
- <script>
-  window.addEventListener('load', function () {
-    const traderLab = document.getElementById('traderlab-img');
-    const tradingFloor = document.getElementById('tradingfloor-img');
-
-    if (traderLab && tradingFloor) {
-      console.log("✅ TraderLab and Tradingfloor are loaded and visible.");
-    } else {
-      console.warn("⚠️ One or both nodes are missing or not loaded.");
+</head>
+<body>  <!-- QTAI Main Logo -->  <header>
+    <img src="assets/qtai_globe.png" alt="QuantumTrader-AI Logo" />
+  </header>  <!-- Activation Payment Gate -->  <section id="activation-gate">
+    <h2>Activation Gate</h2>
+    <button onclick="window.location.href='index2.html'" style="padding: 12px 25px; font-size: 16px; border-radius: 8px; border: none; background: #1a73e8; color: #fff; cursor: pointer;">Proceed</button>
+  </section>  <!-- Map Section (Centerpiece) -->  <section id="map-section">
+    <img src="assets/world_map.png" alt="World Map" style="width: 85%; max-width: 480px;" />
+  </section>  <!-- Trading Floor Apex Placeholder -->  <section id="trading-floor" style="text-align:center; margin-top: 40px;">
+    <h3>Trading Floor (Apex)</h3>
+  </section>  <!-- Hidden Modules Placeholder -->  <section id="modules" style="display: none;">
+    <!-- Future modules 01–15 load dynamically -->
+  </section>  <!-- Ori Olokun Symbol -->  <section id="ori-olokun">
+    <img src="assets/ori_olokun.png" alt="Ori Olokun" style="width: 140px; opacity: 0.85;" />
+  </section>  <!-- Footer -->  <footer>
+    QuantumTrader-AI™ — Visionary, Architect & Builder: Olagoke Ajibulu
+  </footer>  <!-- Handshake Script -->  <script>
+    // Frontend → Server handshake
+    fetch('/handshake')
+      .then(res => res.json())
+      .then(data => console.log('Handshake OK:', data))
+      .catch(err => console.error('Handshake Failure:', err));
+  </script>  <!-- Service Worker Registration -->  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(err => console.log('SW Registration Failed', err));
     }
-  });
- </script>
-
-<!-- TraderLab Node -->
-<div id="traderlab-section" style="text-align: center; margin: 40px 0;">
-  <img id="traderlab-img" src="assets/images/traderlab_main.png" alt="TraderLab AI" style="width: 200px; display: block; margin: 0 auto 10px;">
-  <button onclick="checkPaymentStatus()">Activate TraderLab</button>
-</div>
-
-<script>
-  async function checkPaymentStatus() {
-    alert("Checking payment status...");
-
-    // Simulate backend call to check if payment is confirmed
-    const response = await fakePaymentCheck();
-
-    if (response.confirmed) {
-      window.location.href = "traderlab.html"; // Replace with actual destination
-    } else {
-      alert("Access denied. Please complete your NGN10k activation payment.");
-    }
-  }
-
-  async function fakePaymentCheck() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ confirmed: false }); // Change to true for testing
-      }, 1000);
-    });
-  }
-</script>
-
-<!-- CPilot Node -->
-<div id="cpilot-section">
- <img src="assets/images/cpilot_panel.png" alt="CPilot" style="width: 200px; display: block; margin: 10px auto;">
-  <p style="text-align: center; color: #fff;">CPilot</p>
-  <button onclick="activateNode('cpilot')">Activate CPilot Panel</button>
-</div>
-
-<!-- Handshake Section (Hidden) -->
-<div style="display: none;">
-  <button id="run-handshake">Run Handshake</button>
-  <div id="handshake-output">—</div>
-</div>
-
-<footer style="margin-top: 30px; text-align:center; font-size: 14px; color: #ccc; background-color: #000428; padding: 20px;">
-  &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-</footer>
-
-<script>
-  function activateNode(node) {
-    switch(node) {
-      case 'traderlab':
-        alert("TraderLab AI activated.");
-        break;
-      case 'cpilot':
-        alert("CPilot Panel activated.");
-        break;
-      default:
-        alert("Unknown node.");
-    }
-  }
-</script>
- 
-</body>
+  </script></body>
 </html>
