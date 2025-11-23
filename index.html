@@ -42,8 +42,136 @@
       font-size: 14px;
     }
   </style>
-</head>
-<body>
+
+ <!-- QuantumTrader AI Logo Section -->
+<div class="logo-section">
+  <!-- Main QT-AI Logo -->
+  <img src="images/qtai_globe.png" alt="QuantumTrader AI™" class="qtai-logo" />
+
+  <!-- Peace Index Logo Placeholder -->
+  <img src="images/macarthur.png" alt="Peace Index" class="peace-index-logo" />
+</div>
+
+<style>
+  .logo-section {
+    text-align: center; /* Center all logos horizontally */
+    margin-top: 20px;   /* Optional spacing from top of page */
+  }
+
+  .qtai-logo {
+    width: 200px;       /* Adjust size of main logo */
+    max-width: 60vw;    /* Responsive cap */
+    height: auto;
+    display: block;
+    margin: 0 auto;     /* Center image */
+  }
+
+  .peace-index-logo {
+    width: 120px;       /* Smaller than main logo (60%) */
+    max-width: 50vw;    /* Responsive cap */
+    height: auto;
+    display: block;
+    margin: 20px auto 0 auto; /* 20px margin-top for breathing room */
+  }
+
+  /* Optional: mobile adjustments */
+  @media (max-width: 480px) {
+    .qtai-logo {
+      width: 150px;
+    }
+    .peace-index-logo {
+      width: 90px;
+      margin-top: 15px;
+    }
+  }
+</style>
+ <!-- Top-Center Stack -->
+<div class="top-stack">
+  <!-- QuantumTrader AI Logo -->
+  <img src="images/qtai_globe.png" alt="QuantumTrader AI™" class="qtai-logo" />
+
+  <!-- Peace Index Logo -->
+  <img src="images/macarthur.png" alt="Peace Index" class="peace-index-logo" />
+
+  <!-- Activation Gate Placeholder -->
+  <div class="activation-gate">
+    <button class="activate-btn">Activate QuantumTrader AI™</button>
+  </div>
+
+  <!-- World Map Placeholder -->
+  <div class="world-map">
+    <img src="images/world_map.png" alt="World Map" class="map-image" />
+  </div>
+</div>
+
+<style>
+  .top-stack {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .qtai-logo {
+    width: 200px;
+    max-width: 60vw;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .peace-index-logo {
+    width: 120px;
+    max-width: 50vw;
+    height: auto;
+    display: block;
+    margin: 20px auto 0 auto;
+  }
+
+  .activation-gate {
+    margin: 30px 0 20px 0;
+  }
+
+  .activate-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #0047AB;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .activate-btn:hover {
+    background-color: #002F6C;
+  }
+
+  .world-map {
+    margin: 0 auto;
+    max-width: 90vw;
+  }
+
+  .map-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .qtai-logo {
+      width: 150px;
+    }
+    .peace-index-logo {
+      width: 90px;
+      margin-top: 15px;
+    }
+    .activate-btn {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+  }
+</style>
  
  <!-- QTAI Main Logo -->  <header>
     <img src="assets/images/qtai_globe.png" alt="QuantumTrader-AI Logo" />
@@ -79,5 +207,7 @@
         .then(() => console.log('Service Worker Registered'))
         .catch(err => console.log('SW Registration Failed', err));
     }
-  </script></body>
+  </script>
+
+</body>
 </html>
