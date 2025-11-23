@@ -293,6 +293,32 @@ footer {
   <img id="traderlab-img" src="assets/images/traderlab_main.png" alt="TraderLab AI">
   <button onclick="activateNode('traderlab')">Activate TraderLab</button>
 </div>
+
+<script>
+  async function checkPaymentStatus() {
+    // Show loader (optional)
+    alert("Checking payment status...");
+
+    // Simulate backend call to check if payment is confirmed
+    const response = await fakePaymentCheck();
+
+    if (response.confirmed) {
+      window.location.href = "traderlab.html"; // Replace with actual destination
+    } else {
+      alert("Access denied. Please complete your NGN10k activation payment.");
+    }
+  }
+
+  // Placeholder for backend/API integration
+  async function fakePaymentCheck() {
+    // Simulate a short delay like a network call
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ confirmed: false }); // Change to true for testing access
+      }, 1000);
+    });
+  }
+</script>
  
   <div class="images">
     <img src="assets/images/traderlab_icon.png" alt="TraderLab" />
