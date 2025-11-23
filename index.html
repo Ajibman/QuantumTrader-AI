@@ -290,82 +290,50 @@ footer {
  
 <!-- TraderLab Node -->
 <div id="traderlab-section">
-  <img id="traderlab-img" src="assets/images/traderlab_main.png" alt="TraderLab AI">
-  <button onclick="activateNode('traderlab')">Activate TraderLab</button>
+  <img id="traderlab-img" src="assets/images/traderlab_main.png" alt="TraderLab AI" style="width: 200px; display: block; margin: 10px auto;">
+  <button onclick="checkPaymentStatus()">Activate TraderLab</button>
 </div>
 
 <script>
   async function checkPaymentStatus() {
-    // Show loader (optional)
     alert("Checking payment status...");
 
-    // Simulate backend call to check if payment is confirmed
     const response = await fakePaymentCheck();
 
     if (response.confirmed) {
-      window.location.href = "traderlab.html"; // Replace with actual destination
+      window.location.href = "traderlab.html"; // Replace with real URL
     } else {
       alert("Access denied. Please complete your NGN10k activation payment.");
     }
   }
 
-  // Placeholder for backend/API integration
   async function fakePaymentCheck() {
-    // Simulate a short delay like a network call
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve({ confirmed: false }); // Change to true for testing access
+        resolve({ confirmed: false }); // Set true for testing
       }, 1000);
     });
   }
 </script>
- 
-  <div class="images">
-    <img src="assets/images/traderlab_icon.png" alt="TraderLab" />
-    <p style="text-align:center; color:#fff;">TraderLab</p>
-    <img src="assets/images/cpilot_panel.png" alt="CPilot" />
-    <p style="text-align:center; color:#fff;">CPilot</p>
-  </div>
 
-<a href="payment-activation.html">
-  <button>Activate TraderLab</button>
-  <img src="images/traderlab_main.png" alt="TraderLab" style="width:200px; display:block; margin:10px auto;">
-</a>
- 
 <!-- CPilot Node -->
 <div id="cpilot-section">
+ <img src="assets/images/cpilot_panel.png" alt="CPilot" style="width: 200px; display: block; margin: 10px auto;">
+  <p style="text-align: center; color: #fff;">CPilot</p>
   <button onclick="activateNode('cpilot')">Activate CPilot Panel</button>
 </div>
- 
-  <!-- Handshake Section (Hidden) -->
-  <div style="display: none;">
-    <button id="run-handshake">Run Handshake</button>
-    <div id="handshake-output">—</div>
-  </div>
 
-  <footer style="margin-top: 30px; text-align:center; font-size: 14px; color: #ccc; background-color: #000428; padding: 20px;">
-    &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-  </footer>
+<!-- Handshake Section (Hidden) -->
+<div style="display: none;">
+  <button id="run-handshake">Run Handshake</button>
+  <div id="handshake-output">—</div>
+</div>
 
-  <script>
-    function activateApp() {
-      alert("Activation triggered. Processing...");
-    }
-  </script>
- 
-   <script>
-  function activateNode(node) {
-    switch(node) {
-      case 'traderlab':
-        alert("TraderLab AI activated.");
-        break;
-      default:
-        alert("Unknown node.");
-    }
-  }
-   </script>
- 
- <script>
+<footer style="margin-top: 30px; text-align:center; font-size: 14px; color: #ccc; background-color: #000428; padding: 20px;">
+  &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
+</footer>
+
+<script>
   function activateNode(node) {
     switch(node) {
       case 'traderlab':
@@ -379,6 +347,5 @@ footer {
     }
   }
 </script>
- 
 </body>
 </html>
