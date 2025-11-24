@@ -5,42 +5,94 @@
   <title>QuantumTrader-AI™</title>  <!-- Manifest for PWA -->  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />  <!-- Favicon -->  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />  <!-- Styles -->  <link rel="stylesheet" href="styles.css" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      overflow-x: hidden;
+
+   margin-top: 8px;
     }
-    header {
-      text-align: center;
-      margin-top: 20px;
+
+    button {
+      background-color: #1abc9c;
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
     }
-    header img {
-      width: 160px;
-      height: auto;
-    }
-    #activation-gate {
-      margin: 20px auto;
-      text-align: center;
-      padding: 15px;
-    }
-    #map-section {
-      text-align: center;
-      margin-top: 30px;
-    }
-    #ori-olokun {
-      text-align: center;
-      margin-top: 40px;
-    }
+
     footer {
-      margin-top: 50px;
-      padding: 20px;
+      margin-top: 30px;
       text-align: center;
-      opacity: 0.7;
       font-size: 14px;
+      color: #ccc;
+      background-color: #000428;
+      padding: 20px;
     }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>QuantumTrader AI</h1>
+  </header>
+
+  <div class="hero-image-container">
+    <img id="qtai-main-globe" src="assets/images/qtai_main_globe.png" alt="QTAI Globe" />
+    <img src="assets/images/peace_index_logo.png" alt="Peace Index" />
+    <img src="assets/images/macarthur.png" alt="MacArthur Foundation" />
+  </div>
+
+  <!-- TraderLab Section -->
+  <div class="node-section" id="traderlab-section">
+    <img src="assets/images/traderlab_main.png" alt="TraderLab™" />
+    <p class="node-title">TraderLab™</p>
+    <button onclick="checkPaymentStatus('traderlab')">Activate TraderLab</button>
+  </div>
+
+  <!-- CPilot Section -->
+  <div class="node-section" id="cpilot-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
+    <p class="node-title">CPilot™</p>
+    <button onclick="checkPaymentStatus('cpilot')">Activate CPilot</button>
+  </div>
+
+<!-- Hidden Handshake Section -->
+  <div style="display: none;">
+    <button id="run-handshake">Run Handshake</button>
+    <div id="handshake-output">—</div>
+  </div>
+
+  <!-- Payment QR Placeholder -->
+  <div class="node-section" id="payment-section">
+    <h3>Scan QR Code to Activate</h3>
+    <img src="assets/images/payment_qr_placeholder.png" alt="QR Payment" style="width: 180px;" />
+    <p>Pay NGN10,000 via ALAT WEMA, Paystack, Flutterwave or Card</p>
+  </div>
+
+  <footer>
+    &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
+  </footer>
+
+  <script>
+    async function checkPaymentStatus(node) {
+      alert("Checking payment status...");
+
+      const response = await fakePaymentCheck();
+
+      if (response.confirmed) {
+        window.location.href = node + ".html";
+      } else {
+        alert("Access denied. Please complete your NGN10k activation payment.");
+      }
+    }
+
+    async function fakePaymentCheck() {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve({ confirmed: false }); // set to true to simulate access
+        }, 1000);
+      });
+    }
+  </script>
   </style>
 
  <!-- QuantumTrader AI Logo Section -->
