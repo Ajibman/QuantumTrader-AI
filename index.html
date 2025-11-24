@@ -8,12 +8,38 @@
   <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    body { margin:0; padding:0; background:#000; color:#fff; font-family:Arial, sans-serif; text-align:center; }
-    header img { display:block; margin:10px auto; max-width:60vw; }
-    .peace-index-logo { width:120px; margin-top:15px; }
-    .node-section { margin:20px auto; padding:15px; background:#111; border-radius:12px; width:90%; }
-    button { padding:14px 28px; background:#1a73e8; color:#fff; border:none; border-radius:8px; cursor:pointer; }
-    footer { margin-top:30px; padding:20px; background:#000428; color:#ccc; font-size:14px; }
+
+   body 
+      { margin: 0; padding: 0; background: #000; color: white; font-family: Arial, sans-serif; }
+
+  header img { display: block; margin: 10px auto; max-width: 100px; }
+
+  .peace-index-logo { width: 120px; margin-top: 8px; }
+
+  .node-section {
+    margin: 20px auto;
+    padding: 15px;
+    text-align: center;
+  }
+
+  button {
+    padding: 14px 28px;
+    background: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  footer {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #000428;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+ 
   </style>
 </head>
 <body>
@@ -42,7 +68,7 @@
   </section>  <section id="ori-olokun">
     <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" style="width:140px; opacity:0.85;" />
   </section>  <footer>
-     © 2025 All Rights  Reserved| QuantumTrader-AI™
+     © 2025 All Rights  Reserved | QuantumTrader-AI™
   </footer>
  <script>
     async function checkPaymentStatus(node) {
@@ -61,5 +87,7 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
     }
-  </script></body>
+  </script>
+
+</body>
 </html>
