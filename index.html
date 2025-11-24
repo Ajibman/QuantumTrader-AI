@@ -1,265 +1,64 @@
  <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QuantumTrader-AI™</title>  <!-- Manifest for PWA -->  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />  <!-- Favicon -->  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />  <!-- Styles -->  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI™</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-
-   margin-top: 8px;
-    }
-
-    button {
-      background-color: #1abc9c;
-      color: white;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 14px;
-      color: #ccc;
-      background-color: #000428;
-      padding: 20px;
-    }
+    body { margin:0; padding:0; background:#000; color:#fff; font-family:Arial, sans-serif; text-align:center; }
+    header img { display:block; margin:10px auto; max-width:60vw; }
+    .peace-index-logo { width:120px; margin-top:15px; }
+    .node-section { margin:20px auto; padding:15px; background:#111; border-radius:12px; width:90%; }
+    button { padding:14px 28px; background:#1a73e8; color:#fff; border:none; border-radius:8px; cursor:pointer; }
+    footer { margin-top:30px; padding:20px; background:#000428; color:#ccc; font-size:14px; }
   </style>
 </head>
-
 <body>
   <header>
-    <h1>QuantumTrader AI</h1>
-  </header>
-
-  <div class="hero-image-container">
-    <img id="qtai-main-globe" src="assets/images/qtai_main_globe.png" alt="QTAI Globe" />
-    <img src="assets/images/peace_index_logo.png" alt="Peace Index" />
-    <img src="assets/images/macarthur.png" alt="MacArthur Foundation" />
-  </div>
-
-  <!-- TraderLab Section -->
-  <div class="node-section" id="traderlab-section">
+    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Logo" />
+    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
+  </header>  <section id="activation-gate" class="node-section">
+    <h2>Activation Gate</h2>
+    <button onclick="window.location.href='index2.html'">Proceed</button>
+  </section>  <section id="map-section">
+    <img src="assets/images/world_map.png" alt="World Map" style="width:85%; max-width:480px;" />
+  </section>  <div class="node-section" id="traderlab-section">
     <img src="assets/images/traderlab_main.png" alt="TraderLab™" />
-    <p class="node-title">TraderLab™</p>
+    <p>TraderLab™</p>
     <button onclick="checkPaymentStatus('traderlab')">Activate TraderLab</button>
-  </div>
-
-  <!-- CPilot Section -->
-  <div class="node-section" id="cpilot-section">
+  </div>  <div class="node-section" id="cpilot-section">
     <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
-    <p class="node-title">CPilot™</p>
+    <p>CPilot™</p>
     <button onclick="checkPaymentStatus('cpilot')">Activate CPilot</button>
-  </div>
-
-<!-- Hidden Handshake Section -->
-  <div style="display: none;">
-    <button id="run-handshake">Run Handshake</button>
-    <div id="handshake-output">—</div>
-  </div>
-
-  <!-- Payment QR Placeholder -->
-  <div class="node-section" id="payment-section">
+  </div>  <section id="payment-section" class="node-section">
     <h3>Scan QR Code to Activate</h3>
-    <img src="assets/images/payment_qr_placeholder.png" alt="QR Payment" style="width: 180px;" />
+    <img src="assets/images/payment_qr_placeholder.png" alt="QR Payment" style="width:180px;" />
     <p>Pay NGN10,000 via ALAT WEMA, Paystack, Flutterwave or Card</p>
-  </div>
-
-  <footer>
-    &copy; 2025 QuantumTrader AI™ | All Rights Reserved.
-  </footer>
-
-  <script>
+  </section>  <section id="trading-floor" class="node-section">
+    <h3>Trading Floor (Apex)</h3>
+  </section>  <section id="ori-olokun">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" style="width:140px; opacity:0.85;" />
+  </section>  <footer>
+    QuantumTrader-AI™ — © 2025 | Cosmic Good
+  </footer>  <script>
     async function checkPaymentStatus(node) {
-      alert("Checking payment status...");
-
       const response = await fakePaymentCheck();
-
       if (response.confirmed) {
-        window.location.href = node + ".html";
+        window.location.href = node + '.html';
       } else {
-        alert("Access denied. Please complete your NGN10k activation payment.");
+        alert('Access denied. Please complete your NGN10k activation payment.');
       }
     }
-
     async function fakePaymentCheck() {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve({ confirmed: false }); // set to true to simulate access
-        }, 1000);
-      });
-    }
-  </script>
-  </style>
+      return new Promise(resolve => setTimeout(() => resolve({ confirmed:false }), 1000)); }
 
- <!-- QuantumTrader AI Logo Section -->
-<div class="logo-section">
-  <!-- Main QT-AI Logo -->
-  <img src="images/qtai_globe.png" alt="QuantumTrader AI™" class="qtai-logo" />
+    fetch('/handshake').then(res => res.json()).then(data => console.log('Handshake OK:', data));
 
-  <!-- Peace Index Logo Placeholder -->
-  <img src="images/macarthur.png" alt="Peace Index" class="peace-index-logo" />
-</div>
-
-<style>
-  .logo-section {
-    text-align: center; /* Center all logos horizontally */
-    margin-top: 20px;   /* Optional spacing from top of page */
-  }
-
-  .qtai-logo {
-    width: 200px;       /* Adjust size of main logo */
-    max-width: 60vw;    /* Responsive cap */
-    height: auto;
-    display: block;
-    margin: 0 auto;     /* Center image */
-  }
-
-  .peace-index-logo {
-    width: 120px;       /* Smaller than main logo (60%) */
-    max-width: 50vw;    /* Responsive cap */
-    height: auto;
-    display: block;
-    margin: 20px auto 0 auto; /* 20px margin-top for breathing room */
-  }
-
-  /* Optional: mobile adjustments */
-  @media (max-width: 480px) {
-    .qtai-logo {
-      width: 150px;
-    }
-    .peace-index-logo {
-      width: 90px;
-      margin-top: 15px;
-    }
-  }
-</style>
- <!-- Top-Center Stack -->
-<div class="top-stack">
-  <!-- QuantumTrader AI Logo -->
-  <img src="images/qtai_globe.png" alt="QuantumTrader AI™" class="qtai-logo" />
-
-  <!-- Peace Index Logo -->
-  <img src="images/macarthur.png" alt="Peace Index" class="peace-index-logo" />
-
-  <!-- Activation Gate Placeholder -->
-  <div class="activation-gate">
-    <button class="activate-btn">Activate QuantumTrader AI™</button>
-  </div>
-
-  <!-- World Map Placeholder -->
-  <div class="world-map">
-    <img src="images/world_map.png" alt="World Map" class="map-image" />
-  </div>
-</div>
-
-<style>
-  .top-stack {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  .qtai-logo {
-    width: 200px;
-    max-width: 60vw;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-
-  .peace-index-logo {
-    width: 120px;
-    max-width: 50vw;
-    height: auto;
-    display: block;
-    margin: 20px auto 0 auto;
-  }
-
-  .activation-gate {
-    margin: 30px 0 20px 0;
-  }
-
-  .activate-btn {
-    padding: 12px 25px;
-    font-size: 16px;
-    border-radius: 8px;
-    background-color: #0047AB;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .activate-btn:hover {
-    background-color: #002F6C;
-  }
-
-  .world-map {
-    margin: 0 auto;
-    max-width: 90vw;
-  }
-
-  .map-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .qtai-logo {
-      width: 150px;
-    }
-    .peace-index-logo {
-      width: 90px;
-      margin-top: 15px;
-    }
-    .activate-btn {
-      font-size: 14px;
-      padding: 10px 20px;
-    }
-  }
-</style>
- 
- <!-- QTAI Main Logo -->  <header>
-    <img src="assets/images/qtai_globe.png" alt="QuantumTrader-AI Logo" />
- 
-    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" 
- 
- <a href="https://www.visionofhumanity.org/maps/#/" target="_blank"></a>
-  
-
-</header>  <!-- Activation Payment Gate -->  <section id="activation-gate">
-    <h2>Activation Gate</h2>
-    <button onclick="window.location.href='index2.html'" style="padding: 12px 25px; font-size: 16px; border-radius: 8px; border: none; background: #1a73e8; color: #fff; cursor: pointer;">Proceed</button>
- 
-</section>  <!-- Map Section (Centerpiece) -->  <section id="map-section">
-  <img src="assets/images/world_map.png" alt="World Map" style="width: 85%; max-width: 480px;" />
-  </section>  <!-- Trading Floor Apex Placeholder -->  <section id="trading-floor" style="text-align:center; margin-top: 40px;">
-   <h3>Trading Floor (Apex)</h3>
-  </section>  <!-- Hidden Modules Placeholder -->  <section id="modules" style="display: none;">
-    <!-- Future modules 01–15 load dynamically -->
-  </section>  <!-- Ori Olokun Symbol -->  <section id="ori-olokun">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun" style="width: 140px; opacity: 0.85;" />
-  </section>  <!-- Footer -->  <footer>
-    QuantumTrader-AI™ —  © 2025 | Cosmic Good 
-  </footer>  <!-- Handshake Script -->  <script>
-    // Frontend → Server handshake
-    fetch('/handshake')
-      .then(res => res.json())
-      .then(data => console.log('Handshake OK:', data))
-      .catch(err => console.error('Handshake Failure:', err));
-  </script>  <!-- Service Worker Registration -->  <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service Worker Registered'))
-        .catch(err => console.log('SW Registration Failed', err));
+      navigator.serviceWorker.register('/service-worker.js');
     }
-  </script>
-
-</body>
+  </script></body>
 </html>
