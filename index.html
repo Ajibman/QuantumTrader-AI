@@ -1,103 +1,151 @@
- <!DOCTYPE html><html lang="en">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI™</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
+
+  <!-- App Icon -->
   <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />
+
   <link rel="stylesheet" href="styles.css" />
+
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-   body 
-      { margin: 0; padding: 0; background: #000; color: white; font-family: Arial, sans-serif; }
+    header img {
+      display: block;
+      margin: 12px auto;
+      max-width: 120px;
+    }
 
-  header img { display: block; margin: 10px auto; max-width: 100px; }
+    .peace-index-logo {
+      width: 120px;
+      margin-top: 4px;
+    }
 
-  .peace-index-logo { width: 120px; margin-top: 8px; }
+    .node-section {
+      margin: 22px auto;
+      padding: 12px;
+    }
 
-  .node-section {
-    margin: 20px auto;
-    padding: 15px;
-    text-align: center;
-  }
+    button {
+      padding: 14px 28px;
+      background: #1abc9c;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 15px;
+    }
 
-  button {
-    padding: 14px 28px;
-    background: #1abc9c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+    button:active {
+      opacity: 0.7;
+    }
 
-  footer {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #000428;
-    text-align: center;
-    font-size: 14px;
-    color: #ccc;
- 
+    #map-section img {
+      width: 85%;
+      max-width: 480px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 35px;
+      padding: 20px;
+      background-color: #000428;
+      font-size: 13px;
+      color: #ccc;
+    }
   </style>
 </head>
+
 <body>
- <header>
-  <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Logo" />
-  <img src="assets/images/peace_index_logo.png" alt="https://share.google/LhvHdEEP6vKq178S6" class="peace-index-logo" />
-</header>
 
-<section id="activation-gate" class="node-section">
-  <h2>Activation Gate</h2>
-  <button onclick="window.location.href='index2.html'">Proceed</button>
-</section>
+  <!-- HEADER: QTAI Globe + Peace Index -->
+  <header>
+    <img src="assets/images/qtai_globe.png" alt="QuantumTrader AI Logo" />
+    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
+  </header>
 
-<section id="trading-floor" class="node-section">
-  <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-  <p>Trading Intelligence</p>
-  <button onclick="checkPaymentStatus('tradingfloor')">Access Trading Floor</button>
-</section>
+  <!-- ACTIVATION GATE -->
+  <section id="activation-gate" class="node-section">
+    <h2>Activation Gate</h2>
+    <button onclick="window.location.href='index2.html'">Proceed</button>
+  </section>
 
-<section id="map-section">
-  <img src="assets/images/macarthur_map.png" alt="MacArthur Map" style="width:85%; max-width:480px;" />
-</section>
+  <!-- TRADING FLOOR -->
+  <section id="trading-floor" class="node-section">
+    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" style="width: 85%; max-width: 420px;" />
+    <p>Trading Intelligence</p>
+    <button onclick="accessNode('tradingfloor')">Access Trading Floor</button>
+  </section>
 
-<div class="node-section" id="traderlab-section">
-  <img src="assets/images/traderlab_main.png" alt="TraderLab™" />
-  <p>TraderLab™</p>
-  <button onclick="checkPaymentStatus('traderlab')">Activate TraderLab</button>
-</div>
+  <!-- MACARTHUR MAP (properly deployed & centered) -->
+  <section id="map-section">
+    <img src="assets/images/macarthur.png" alt="MacArthur Map" />
+  </section>
 
-<div class="node-section" id="cpilot-section">
-  <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
-  <p>CPilot™</p>
-  <button onclick="checkPaymentStatus('cpilot')">Activate CPilot</button>
-</div>
+  <!-- TRADER LAB -->
+  <div class="node-section" id="traderlab-section">
+    <img src="assets/images/traderlab2_main.png" alt="TraderLab™" style="width: 85%; max-width: 420px;" />
+    <p>TraderLab™</p>
+    <button onclick="accessNode('traderlab')">Activate TraderLab</button>
+  </div>
 
-<section id="payment-section" class="node-section">
-  <h3>Scan QR Code to Activate</h3>
-  <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:180px;" />
-  <p>Pay NGN10,000 to:<br>
- ALAT WEMA - 0299134895 - Olagoke Ajibulu</p>
-</section>
-   
-   <footer>
-     © 2025 All Rights  Reserved | QuantumTrader-AI™
+  <!-- CPILOT -->
+  <div class="node-section" id="cpilot-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" style="width: 85%; max-width: 420px;" />
+    <p>CPilot™</p>
+    <button onclick="accessNode('cpilot')">Activate CPilot</button>
+  </div>
+
+  <!-- PAYMENT GATE -->
+  <section id="payment-section" class="node-section">
+    <h3>Scan QR Code to Activate</h3>
+    <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:180px; margin-top:10px;" />
+    <p>
+      Pay NGN10,000 to:<br>
+      <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong>
+    </p>
+  </section>
+
+  <footer>
+    © 2025 All Rights Reserved | QuantumTrader-AI™
   </footer>
- <script>
-    async function checkPaymentStatus(node) {
-      const response = await fakePaymentCheck();
-      if (response.confirmed) {
-        window.location.href = node + '.html';
+
+  <script>
+    /* 
+      PAYMENT LOCK SYSTEM — STAGE 1
+      (Simulated until backend activation)
+    */
+    let paymentStatus = localStorage.getItem('qtai_activated') === 'true';
+
+    async function accessNode(node) {
+      if (paymentStatus) {
+        window.location.href = node + ".html";
       } else {
-        alert('Access denied. Please complete your NGN10k activation payment.');
+        alert("Access denied. Complete your NGN10k activation payment.");
+        window.location.href = "#payment-section";
       }
     }
-    async function fakePaymentCheck() {
-      return new Promise(resolve => setTimeout(() => resolve({ confirmed:false }), 1000)); }
 
-    fetch('/handshake').then(res => res.json()).then(data => console.log('Handshake OK:', data));
+    // Simulated handshake
+    fetch('/handshake')
+      .then(res => res.json())
+      .then(data => console.log('Handshake OK:', data));
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
