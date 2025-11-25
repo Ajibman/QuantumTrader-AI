@@ -1,111 +1,76 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuantumTrader AI™</title>
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />
-
-  <!-- App Icon -->
-  <link rel="icon" type="image/png" href="assets/images/qtai_globe.png" />
-
-  <link rel="stylesheet" href="styles.css" />
 
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #000;
-      color: white;
+      background: #000428;
       font-family: Arial, sans-serif;
+      color: white;
       text-align: center;
     }
 
-    header img {
-      display: block;
-      margin: 12px auto;
-      max-width: 120px;
+    header {
+      margin-top: 20px;
     }
 
-    .peace-index-logo {
-      width: 120px;
-      margin-top: 4px;
+    #qtai-main-globe {
+      width: 160px;
+      max-width: 70%;
+    }
+
+    #peace-index-logo {
+      width: 110px;
+      margin-top: 25px; /* B2 spacing */
+    }
+
+    h2, h3, p {
+      margin: 10px 0;
     }
 
     .node-section {
-      margin: 22px auto;
-      padding: 12px;
+      margin-top: 45px;
+      padding: 10px;
+    }
+
+    .node-section img {
+      width: 85%;
+      max-width: 420px;
+      border-radius: 6px;
     }
 
     button {
-      padding: 14px 28px;
-      background: #1abc9c;
+      background-color: #1abc9c;
       color: white;
+      padding: 14px 28px;
       border: none;
-      border-radius: 7px;
+      border-radius: 6px;
       cursor: pointer;
       margin-top: 10px;
-      font-size: 15px;
-    }
-
-    button:active {
-      opacity: 0.7;
-    }
-
-    #map-section img {
-      width: 85%;
-      max-width: 480px;
-      border-radius: 8px;
-      margin-top: 15px;
+      font-size: 16px;
     }
 
     footer {
-      margin-top: 35px;
+      margin-top: 40px;
       padding: 20px;
-      background-color: #000428;
-      font-size: 13px;
-      color: #ccc;
+      background: #000215;
+      font-size: 14px;
+      color: #bbb;
     }
   </style>
 </head>
+
 <body>
- <!-- HEADER: QTAI Globe + Peace Index -->
-<header>
-  <div id="hero-center">
-      <div></div>
-      <div>
-        <img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-      </div>
-      <div>
-        <img src="./assets/image/peace_index_logo.png"
-             id="peace-index-logo"
-             class="peace-index-logo"
-             alt="Peace Index Logo" />
-      </div>
-  </div>
-</header>
+
+  <!-- HEADER -->
   <header>
-  
-       <!-- HEADER: QTAI Globe + Peace Index -->
-  
-  </header>
-  <div id="hero-center">
-      <div></div>
-      <div>
-        <img src="./assets/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-      </div>
-      <div>
-        <img src="./assets/image/peace_index_logo.png"
-             id="peace-index-logo"
-             class="peace-index-logo"
-             alt="Peace Index Logo" />
-      </div>
-  </div>
-</header>
- 
+    <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
+    <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" />
   </header>
 
   <!-- ACTIVATION GATE -->
@@ -116,29 +81,29 @@
 
   <!-- TRADING FLOOR -->
   <section id="trading-floor" class="node-section">
-    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" style="width: 85%; max-width: 420px;" />
+    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
     <p>Trading Intelligence</p>
     <button onclick="accessNode('tradingfloor')">Access Trading Floor</button>
   </section>
 
-  <!-- MACARTHUR MAP (properly deployed & centered) -->
-  <section id="map-section">
-    <img src="assets/images/macarthur.png" alt="MacArthur Map" />
+  <!-- MACARTHUR MAP -->
+  <section id="map-section" class="node-section">
+    <img src="assets/images/macarthur.png" alt="MacArthur Map" style="max-width:480px;" />
   </section>
 
   <!-- TRADER LAB -->
-  <div class="node-section" id="traderlab-section">
-    <img src="assets/images/traderlab2_main.png" alt="TraderLab™" style="width: 85%; max-width: 420px;" />
+  <section id="traderlab-section" class="node-section">
+    <img src="assets/images/traderlab2_main.png" alt="TraderLab™" />
     <p>TraderLab™</p>
     <button onclick="accessNode('traderlab')">Activate TraderLab</button>
-  </div>
+  </section>
 
   <!-- CPILOT -->
-  <div class="node-section" id="cpilot-section">
-    <img src="assets/images/cpilot_panel.png" alt="CPilot™" style="width: 85%; max-width: 420px;" />
+  <section id="cpilot-section" class="node-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
     <p>CPilot™</p>
     <button onclick="accessNode('cpilot')">Activate CPilot</button>
-  </div>
+  </section>
 
   <!-- PAYMENT GATE -->
   <section id="payment-section" class="node-section">
@@ -155,25 +120,23 @@
   </footer>
 
   <script>
-    /* 
-      PAYMENT LOCK SYSTEM — STAGE 1
-      (Simulated until backend activation)
-    */
+    /* PAYMENT STATUS (Front-end Simulation) */
     let paymentStatus = localStorage.getItem('qtai_activated') === 'true';
 
-    async function accessNode(node) {
+    function accessNode(node) {
       if (paymentStatus) {
         window.location.href = node + ".html";
       } else {
-        alert("Access denied. Complete your NGN10k activation payment.");
+        alert("Access denied. Please complete your NGN10k activation payment.");
         window.location.href = "#payment-section";
       }
     }
 
-    // Simulated handshake
+    // Simulated Handshake
     fetch('/handshake')
       .then(res => res.json())
-      .then(data => console.log('Handshake OK:', data));
+      .then(data => console.log('Handshake OK:', data))
+      .catch(err => console.log("Handshake failed:", err));
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
