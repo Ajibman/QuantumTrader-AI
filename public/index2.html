@@ -194,9 +194,7 @@
        5. Medusa™ — Silent Auto-Recovery
        --------------------------------------- */
     console.log("Medusa™ (Auto-Recovery Engine) initialized silently.");
-  </script>
-
-<script>
+  
 // public/js/handshake.bundle.js
 /* Hardened Handshake Bundle for QuantumTrader-AI
    - registerServiceWorker()
@@ -415,6 +413,16 @@
     console.log('Handshake bundle initialized.');
   })();
 })();
+
+<script src="js/handshake.bundle.js"></script>
+<script>
+  // simple bindings for button clicks
+  document.querySelectorAll('[data-node]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const node = e.currentTarget.getAttribute('data-node');
+      window.QTAI.accessNode(node);
+    });
+  });
 </script>
   
 </body>
