@@ -1,1 +1,201 @@
-Index2.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader AI™ — Coordinator</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000428;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      margin-top: 30px;
+      padding-bottom: 10px;
+    }
+
+    #qtai-main-globe {
+      width: 140px;
+    }
+
+    #peace-index-logo {
+      width: 95px;
+      margin-top: 18px;
+    }
+
+    .section-block {
+      margin-top: 50px;
+      padding: 20px;
+      border-top: 1px solid #222;
+    }
+
+    button {
+      background-color: #1abc9c;
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background: #000215;
+      color: #bbb;
+      font-size: 14px;
+    }
+
+    .module-list {
+      text-align: left;
+      max-width: 420px;
+      margin: 20px auto;
+      background: rgba(255,255,255,0.06);
+      padding: 20px;
+      border-radius: 8px;
+      line-height: 1.7em;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe">
+    <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo">
+    <h2>QuantumTrader AI™ Core Coordinator</h2>
+    <p style="opacity:0.8; font-size:14px;">
+      Backend Module Director • Activation Controller • Secure Node Gateway
+    </p>
+  </header>
+
+  <!-- ACTIVATION STATUS -->
+  <div class="section-block">
+    <h3>Activation Status</h3>
+    <p id="activation-state">Checking activation...</p>
+    <button onclick="returnToHome()">Return to Home</button>
+  </div>
+
+  <!-- MODULE COORDINATION OVERVIEW -->
+  <div class="section-block">
+    <h3>Backend Module Sync</h3>
+    <div class="module-list" id="module-list">
+      <!-- dynamically filled -->
+    </div>
+  </div>
+
+  <!-- NODE ACCESS TESTS -->
+  <div class="section-block">
+    <h3>Test Node Access</h3>
+    <button onclick="goToNode('tradingfloor')">Trading Floor</button>
+    <button onclick="goToNode('traderlab')">TraderLab™</button>
+    <button onclick="goToNode('cpilot')">CPilot™</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 QuantumTrader-AI™ • Coordination Layer v1.0
+  </footer>
+
+
+  <!-- ============================= -->
+  <!-- COORDINATOR SCRIPTING LAYER   -->
+  <!-- ============================= -->
+  <script>
+    console.log("Coordinator Index Loaded.");
+
+    /* ----------------------------
+       1. Activation State Retrieval
+       ---------------------------- */
+    let activation = localStorage.getItem('qtai_activated') === 'true';
+    const activationDisplay = document.getElementById('activation-state');
+
+    if (activation) {
+      activationDisplay.textContent = "✓ Activation Verified — Full Access Granted.";
+      activationDisplay.style.color = "#1abc9c";
+    } else {
+      activationDisplay.textContent = "✗ Not Activated — Restricted Mode.";
+      activationDisplay.style.color = "#e74c3c";
+    }
+
+
+    /* ---------------------------------------
+       2. Module Coordination (15 Modules)
+       --------------------------------------- */
+    const modules = [
+      "Module 01 — Market Signal Intake",
+      "Module 02 — Real-Time Feed Interpreter",
+      "Module 03 — Quantum Risk Engine",
+      "Module 04 — Volatility Analyzer",
+      "Module 05 — Peace Index Modulator",
+      "Module 06 — GeoSentiment Mapper",
+      "Module 07 — CPilot Cognitive Lift",
+      "Module 08 — TraderLab Simulation Core",
+      "Module 09 — Pattern Projection Engine",
+      "Module 10 — Shadow Volatility Lens",
+      "Module 11 — Supply/Demand Pulse",
+      "Module 12 — Liquidity Flow Tracker",
+      "Module 13 — Market Microstructure Eye",
+      "Module 14 — Error Recovery (Medusa™)",
+      "Module 15 — Global Synthesis Layer"
+    ];
+
+    const moduleList = document.getElementById('module-list');
+    moduleList.innerHTML = modules.map(m => `• ${m}`).join("<br>");
+
+    console.log("Modules synchronized:", modules);
+
+
+    /* ---------------------------------------
+       3. Node Routing (with Activation Check)
+       --------------------------------------- */
+    function goToNode(node) {
+      if (!activation) {
+        alert("Access denied. Activation required.");
+        return;
+      }
+      window.location.href = node + ".html";
+    }
+
+    function returnToHome() {
+      window.location.href = "index.html";
+    }
+
+
+    /* ---------------------------------------
+       4. Handshake Sequence (Coordinator)
+       --------------------------------------- */
+    async function coordinatorHandshake() {
+      console.log("Performing backend handshake...");
+
+      try {
+        const res = await fetch('/handshake');
+        const data = await res.json();
+        console.log("Handshake (Coordinator) OK:", data);
+      } catch (err) {
+        console.log("Coordinator handshake failed:", err);
+      }
+    }
+
+    coordinatorHandshake();
+
+
+    /* ---------------------------------------
+       5. Medusa™ — Silent Auto-Recovery
+       --------------------------------------- */
+    console.log("Medusa™ (Auto-Recovery Engine) initialized silently.");
+
+  </script>
+
+</body>
+</html>
