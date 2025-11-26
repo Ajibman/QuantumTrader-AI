@@ -363,6 +363,17 @@
   })();
 })();
  </script>
-       
+
+ <script src="js/handshake.bundle.js"></script>
+<script>
+  // simple bindings for button clicks
+  document.querySelectorAll('[data-node]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const node = e.currentTarget.getAttribute('data-node');
+      window.QTAI.accessNode(node);
+    });
+  });
+</script>
+ 
 </body>
 </html>
