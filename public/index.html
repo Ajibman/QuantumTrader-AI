@@ -1,186 +1,166 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuantumTrader AI™</title>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background: #000428;
+      font-family: Arial, sans-serif;
+      color: white;
       text-align: center;
-      color: #333;
     }
 
     header {
-      background-color: #000428;
-      color: #fff;
-      padding: 20px;
+      margin-top: 20px;
     }
 
-    header img {
-      height: 60px;
+    #qtai-main-globe {
+      width: 160px;
+      max-width: 70%;
     }
 
-    .description {
-      padding: 30px 20px;
-      background-color: #ffffff;
+    #peace-index-logo {
+      width: 110px;
+      margin-top: 25px; /* B2 spacing */
     }
 
-    .description h2 {
-      margin-bottom: 10px;
+    h2, h3, p {
+      margin: 10px 0;
     }
 
-    .description p {
-      max-width: 600px;
-      margin: 0 auto 20px;
-      font-size: 1.1em;
+    .node-section {
+      margin-top: 45px;
+      padding: 10px;
     }
 
-    .cta {
-      margin: 30px;
-    }
-
-    .cta button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2em;
+    .node-section img {
+      width: 85%;
+      max-width: 420px;
       border-radius: 6px;
- alert("Activation triggered. Processing...");
-    }
-   
-  </script>
-  
     }
 
-    .cta button:hover {
-      background-color: #0056b3;
+    button {
+      background-color: #1abc9c;
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
     }
 
     footer {
-      background-color: #222;
-      color: #ccc;
+      margin-top: 40px;
       padding: 20px;
-      font-size: 0.9em;
-    }
-
-    .images {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin: 30px 0;
-    }
-
-    .images img {
-      max-width: 300px;
-      border-radius: 8px;
+      background: #000215;
+      font-size: 14px;
+      color: #bbb;
     }
   </style>
-
-  <style>    
-.hero-image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.hero-image-container img {
-  max-height: 100px;
-  object-fit: contain;
-}
-
-.hero-image-container img {
-  max-width: 180px;
-  height: auto;
-}
-
-#qtai-main-globe {
-  animation: pulse 3s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.95; }
-  100% { transform: scale(1); opacity: 1; }
-}
-</style>
 </head>
+
 <body>
 
-<div id="hero-center">
-  <div class="hero-image-container">
-    <img src="./assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-  </div>
-</div>
-<a href="https://www.visionofhumanity.org/maps/#/" target="_blank">
-  <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="peace-index-logo" />
-</a>
+  <!-- HEADER -->
+  <header>
+    <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
+    <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" />
+  </header>
 
-  <div class="description">
-    <h2>Precision-Powered AI Trading</h2>
-    <p>Discover a fully autonomous AI-driven trading assistant.<br>
-      Built for accuracy, speed, and high-impact decision-making.<br>
-      Activate your edge in today’s fast-moving markets.
+  <!-- ACTIVATION GATE -->
+  <section id="activation-gate" class="node-section">
+    <h2>Activation Gate</h2>
+    <button onclick="window.location.href='index2.html'">Proceed</button>
+  </section>
+
+  <!-- TRADING FLOOR -->
+  <section id="trading-floor" class="node-section">
+    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
+    <p>Trading Intelligence</p>
+    <button onclick="accessNode('tradingfloor')">Access Trading Floor</button>
+  </section>
+
+  <!-- 0299134895 MAP -->
+  <section id="map-section" class="node-section">
+    <img src="assets/images/macarthur.png" alt="MacArthur Map" style="max-width:480px;" />
+  </section>
+
+  <!-- TRADER LAB -->
+  <section id="traderlab-section" class="node-section">
+    <img src="assets/images/traderlab_icon.png" alt="TraderLab™" />
+    <p>TraderLab™</p>
+    <button onclick="accessNode('traderlab')">Activate TraderLab</button>
+  </section>
+
+  <!-- CPILOT -->
+  <section id="cpilot-section" class="node-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
+    <p>CPilot™</p>
+    <button onclick="accessNode('cpilot')">Activate CPilot</button>
+  </section>
+
+   <!-- MACARTHUR MAP -->
+  <section id="map-section" class="node-section">
+    <img src="assets/images/macarthur.png" alt="MacArthur Map" />
+    <p>MacArthur Map</p>
+  </section>
+
+  <!-- TRADER LAB -->
+  <div class="node-section" id="traderlab-section">
+    <img src="assets/images/traderlab2_main.png" alt="TraderLab™" style="width: 85%; max-width: 420px;" />
+    <p>TraderLab™</p>
+    <button onclick="accessNode('traderlab')">Activate TraderLab</button>
+  </div>
+
+  <!-- CPILOT -->
+  <div class="node-section" id="cpilot-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" style="width: 85%; max-width: 420px;" />
+    <p>CPilot™</p>
+    <button onclick="accessNode('cpilot')">Activate CPilot</button>
+  </div>
+
+  <!-- PAYMENT GATE -->
+  <section id="payment-section" class="node-section">
+    <h3>Scan QR Code to Activate</h3>
+    <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:180px; margin-top:10px;" />
+    <p>
+      Pay NGN10,000 via ALAT WEMA, Paystack, Flutterwave or Card<br><br>
+      <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong>
     </p>
-  </div>
+  </section>
 
-  <div class="cta">
-    <button onclick="activateApp()">Activate Trading Intelligence</button>
-  </div>
+  <!-- FOOTER -->
+  <footer>
+    © 2025 All Rights Reserved | QuantumTrader-AI™
+ </footer>
 
-  <div class="images">
-    <img src="tradingfloor2_main.png" alt="Trading Floor" />
-    <img src="macarthur.png" alt="MacArthur" />
-  </div>
-
+  <!-- SCRIPT: Node Access & Payment Lock -->
   <script>
-    function activateApp() {
-      
-     // Placeholder for actual activation logic (e.g. Paystack or API auth)
-    <div class="cta">
-    <button onclick="activateApp()">Activate Trading Intelligence</button>
-  </div>
+    let paymentStatus = localStorage.getItem('qtai_activated') === 'true';
 
-  <div class="images">
-  <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-  <img src="assets/images/macarthur.png" alt="MacArthur" />
-</div>
-      
-<div class="images">
-  <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-  <img src="assets/images/macarthur.png" alt="MacArthur" />
-  <img src="assets/images/traderlab.png" alt="TraderLab" />
-  <img src="assets/images/cpilot.png" alt="C-Pilot" />
-</div>
-      
-<!-- Handshake Front-End -->
-<div style="padding:20px; text-align:center;"> <button id="run-handshake" style="padding:10px 16px; border-radius:8px; background:#4fd1c5; border:none; color:#072328; font-weight:bold;">
-    Run Handshake
-  </button>
-  <div id="handshake-output">—</div>
-</div>
+    async function accessNode(node) {
+      if (paymentStatus) {
+        window.location.href = node + ".html";
+      } else {
+        alert("Access denied. Complete your NGN10k activation payment.");
+        window.location.href = "#payment-section";
+      }
+    }
 
-<div id="ori-olokun-section">
-  <img src="assets/images/qtai_ori_olokun.png" id="ori-olokun-img" alt="Ori Olokun" />
-</div>
-       
-<footer>
-  &copy; © 2025 All Rights Reserved | QuantumTrader-AI™ 
-</footer>
+    fetch('/handshake')
+      .then(res => res.json())
+      .then(data => console.log('Handshake OK:', data));
 
-<script>
-  function activateApp() {
-    // Placeholder for actual activation logic
-    alert("Activation triggered. Processing...");
-  }
-</script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+  </script>
+
 </body>
 </html>
