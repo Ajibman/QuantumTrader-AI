@@ -6,6 +6,120 @@
   <title>QuantumTrader AI™</title>
 
   <style>
+    body { margin: 0; padding: 0; background: #000428; font-family: Arial, sans-serif; color: white; text-align: center; }
+    header { margin-top: 20px; }
+    #qtai-main-globe { width: 160px; max-width: 70%; }
+    #peace-index-logo { width: 110px; margin-top: 25px; cursor: pointer; }
+    h2,h3,p { margin: 10px 0; }
+    .node-section { margin-top: 45px; padding: 10px; }
+    .node-section img { width: 85%; max-width: 420px; border-radius: 6px; }
+    button { background-color: #1abc9c; color: white; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; font-size: 16px; }
+    footer { margin-top: 40px; padding: 20px; background: #000215; font-size: 14px; color: #bbb; }
+    #forex-tooltip { position: absolute; background: rgba(0,0,0,0.85); color: #fff; padding: 10px; border-radius: 6px; pointer-events: none; display: none; max-width: 350px; font-size: 14px; text-align:left; }
+    #forex-tooltip strong { color:#1abc9c; }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
+    <a href="https://www.peaceindex.org" target="_blank">
+      <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" />
+    </a>
+  </header>
+
+  <!-- ACTIVATION GATE -->
+  <section id="activation-gate" class="node-section">
+    <h2>Activation Gate</h2>
+    <button onclick="window.location.href='index2.html'">Proceed</button>
+  </section>
+
+  <!-- TRADING FLOOR -->
+  <section id="trading-floor" class="node-section">
+    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
+    <p>Trading Intelligence</p>
+    <button onclick="window.location.href='tradingfloor.html'">Access Trading Floor</button>
+  </section>
+
+  <!-- MACARTHUR MAP -->
+  <section id="map-section" class="node-section">
+    <a href="global_trade_dashboard.html" target="_blank">
+      <img src="assets/images/macarthur.png" alt="MacArthur Map" style="max-width:480px;" />
+    </a>
+    <div id="forex-tooltip"></div>
+  </section>
+
+  <!-- TRADER LAB -->
+  <section id="traderlab-section" class="node-section">
+    <img src="assets/images/traderlab_icon.png" alt="TraderLab™" />
+    <p>TraderLab™</p>
+    <button onclick="window.location.href='traderlab.html'">Activate TraderLab</button>
+  </section>
+
+  <!-- CPILOT -->
+  <section id="cpilot-section" class="node-section">
+    <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
+    <p>CPilot™</p>
+    <button onclick="window.location.href='cpilot.html'">Activate CPilot</button>
+  </section>
+
+  <!-- PAYMENT GATE -->
+  <section id="payment-section" class="node-section">
+    <h3>Scan QR Code to Activate</h3>
+    <a href="https://www.alat.com.ng/payment_gateway" target="_blank">
+      <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:180px; margin-top:10px;" />
+    </a>
+    <p>Pay NGN10,000 to:<br><strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong></p>
+  </section>
+
+  <script>
+    // --- PWA & Handshake ---
+    fetch('/handshake')
+      .then(r => r.json())
+      .then(d => console.log('Handshake OK', d))
+      .catch(err => console.log('Handshake failed', err));
+    if('serviceWorker' in navigator)
+      navigator.serviceWorker.register('/service-worker.js').catch(e=>console.log(e));
+
+    // --- WebSocket for live Forex + TA signals ---
+    const ws = new WebSocket('ws://localhost:8080');
+    let signalsData = [];
+
+    ws.onmessage = (message) => {
+      signalsData = JSON.parse(message.data);
+      updateMapHover();
+    };
+
+    // --- Map Hover Tooltip ---
+    function updateMapHover() {
+      const map = document.getElementById('map-section');
+      const tooltip = document.getElementById('forex-tooltip');
+
+      map.onmousemove = e => {
+        tooltip.style.left = e.pageX + 15 + 'px';
+        tooltip.style.top = e.pageY + 15 + 'px';
+      };
+
+      map.onmouseover = () => {
+        tooltip.style.display = 'block';
+        tooltip.innerHTML = signalsData.map(currencyObj => {
+          const ta = currencyObj.technicalSignals;
+          const ff = currencyObj.forexFactoryEvents;
+          return `<strong>${currencyObj.currency}</strong><br>
+            TA Signals: ${Object.entries(ta).map(([k,v])=>`${k}:${v}`).join(', ')}<br>
+            Forex Events: ${ff.map(f=>`${f.event} (${f.impact}) [${f.signal}]`).join('; ') || 'None'}<br><br>`;
+        }).join('');
+      };
+
+      map.onmouseout = () => {
+        tooltip.style.display = 'none';
+      };
+    }
+  </script>
+ 
+  <style>
     body {
       margin: 0;
       padding: 0;
@@ -63,7 +177,6 @@
       color: #bbb;
     }
   </style>
-</head>
 
 <body>
 
