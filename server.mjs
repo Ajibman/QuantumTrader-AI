@@ -1,4 +1,8 @@
-//server.js/
+ // server.mjs
+// QuantumTrader AI - Hardened server.mjs
+// Author: Generated for Olagoke Ajibulu
+// Notes: Serve static files from ./public and provide handshake/payment endpoints.
+
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -6,34 +10,55 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// ----- Configuration (use .env or Render env vars) -----
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'replace_this_with_a_strong_secret';
+const PAYMENT_SECRET = process.env.PAYMENT_SECRET || 'replace_payment_secret';
+
+// ----- Middleware -----
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(compression());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
-const PAYMENT_SECRET = process.env.PAYMENT_SECRET || 'changeme';
+// ----- Static files: Serve from ./public -----
+const PUBLIC_DIR = path.join(__dirname, 'public');
+if (!fs.existsSync(PUBLIC_DIR)) {
+  console.warn('Warning: public directory not found at', PUBLIC_DIR);
+}
+app.use(express.static(PUBLIC_DIR, { extensions: ['html'], maxAge: '1y' }));
 
-// serve frontend
-app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
+// ----- Cache-control for static assets -----
+app.use((req, res, next) => {
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json|webp)$/)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+  next();
+});
 
-// Health status
+// ----- Health & status -----
 app.get('/status', (req, res) => {
   res.json({ status: 'ok', app: 'QuantumTrader-AI', time: new Date().toISOString() });
 });
 
-// Basic handshake
+// ----- Handshake -----
 app.get('/handshake', (req, res) => {
-  res.json({ status: 'ok', message: 'Handshake acknowledged', ts: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    message: 'Handshake acknowledged',
+    ts: new Date().toISOString(),
+    env: process.env.NODE_ENV || 'development'
+  });
 });
 
-// Provide modules list
+// ----- Modules list (for UI to render module names) -----
 app.get('/modules', (req, res) => {
   const modules = [
     "Module 01 — Market Signal Intake",
@@ -55,162 +80,94 @@ app.get('/modules', (req, res) => {
   res.json({ modules });
 });
 
-// Payment verify endpoint (placeholder)
-// In production connect to Paystack/ALAT/Flutterwave APIs with server-side secret and verify webhook
-app.post('/verify-payment', (req, res) => {
-  // For now: if client posts {userRef:'test'} return confirmed false
-  // Implement your provider verification here
-  const { userRef } = req.body || {};
-  // Example: simulate confirmation if userRef === 'test-ok'
-  if (userRef === 'test-ok') {
-    // issue token for short-lived access
-    const token = jwt.sign({ sub: userRef, activated: true }, JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ confirmed: true, token });
-  }
-  return res.json({ confirmed: false });
-});
-
-// Optional quick endpoint to check activation from server (for front-end fallback)
+// ----- Payment status (simple server-side check placeholder) -----
 app.get('/payment-status', (req, res) => {
-  // Implement real lookup (DB or payment provider)
+  // TODO: Replace with DB lookup or real payment provider verification
   res.json({ activated: false });
 });
 
-// Medusa recover (silent auto-repair)
-app.post('/recover', (req, res) => {
-  // Here you can trigger scripts to restart services, clear caches, etc.
-  console.log('Medusa™ recover invoked by coordinator');
-  // Simulate success
-  res.json({ ok: true });
+// ----- Verify payment (placeholder) -----
+// Frontend posts { userRef } and server verifies with provider.
+// For now: if userRef === 'test-ok' return confirmed true + token.
+app.post('/verify-payment', (req, res) => {
+  const { userRef } = req.body || {};
+  if (userRef === 'test-ok') {
+    const token = jwt.sign({ sub: userRef, activated: true }, JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ confirmed: true, token });
+  }
+  // default: not confirmed
+  return res.json({ confirmed: false });
 });
 
-// Activate (front-end posts user info after payment)
+// ----- Activate endpoint -----
+// After a verified payment webhook, your backend should call this or you can implement DB persistence.
+// Here we return a short-lived JWT to the client.
 app.post('/activate', (req, res) => {
   const { userId } = req.body || {};
-  // Validate, store activation in DB, etc.
-  const token = jwt.sign({ sub: userId || 'anon', activated: true }, JWT_SECRET, { expiresIn: '30d' });
-  res.json({ success: true, token });
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  
-// ✅ Secure HTTP headers
-app.use(helmet({
-  crossOriginEmbedderPolicy: false,
-  contentSecurityPolicy: false
-}));
-
-// ✅ Enable compression
-app.use(compression());
-
-// ✅ Serve static files
-app.use(express.static(__dirname, {
-  extensions: ['html', 'htm'],
-  maxAge: '1y'
-}));
-
-// ✅ Cache headers
-app.use((req, res, next) => {
-  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json)$/)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
+  if (!userId) {
+    return res.status(400).json({ success: false, message: 'userId required' });
   }
-  next();
+  const token = jwt.sign({ sub: userId, activated: true }, JWT_SECRET, { expiresIn: '30d' });
+  // TODO: persist activation state to DB for robust server-side checks
+  return res.json({ success: true, token });
 });
 
-// ✅ Main route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+// ----- Medusa™ auto-recovery hook (silent) -----
+// This endpoint should be protected in production (e.g., by a shared secret)
+app.post('/recover', (req, res) => {
+  console.log('Medusa™ recovery invoked by coordinator');
+  // TODO: add recovery steps: restart jobs, refresh caches, run diagnostics
+  return res.json({ ok: true, invokedAt: new Date().toISOString() });
 });
 
-// ✅ Subpage
-app.get("/public/index2.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index2.html"));
+// ----- Fallback for manifest & service worker if they exist in public -----
+app.get('/manifest.json', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'manifest.json');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  return res.status(404).send('manifest.json not found');
 });
 
-// ✅ Manifest & Service Worker
-app.get("/manifest.json", (req, res) => {
-  res.type("application/manifest+json");
-  res.sendFile(path.join(__dirname, "manifest.json"));
-});
-
-app.get("/service-worker.js", (req, res) => {
-  res.type("application/javascript");
-  res.sendFile(path.join(__dirname, "service-worker.js"));
-});
-
-// ✅ Start server
-app.listen(PORT, () => {
-console.log(`QuantumTrader AI Server running on port{PORT}`);
-});
-
-// ✅ Security middleware (recommended for PWA)
-app.use(helmet({
-  crossOriginEmbedderPolicy: false,
-  contentSecurityPolicy: false
-}));
-
-// ✅ Compression for faster delivery
-app.use(compression());
-
-// ✅ Static assets (CSS, JS, images, etc.)
-app.use(express.static(__dirname, {
-  extensions: ['html', 'htm'],
-  maxAge: '1y'
-}));
-
-// ✅ Cache-control header for static resources
-app.use((req, res, next) => {
-  if (req.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|json)$/)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
+app.get('/service-worker.js', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'service-worker.js');
+  if (fs.existsSync(p)) {
+    res.type('application/javascript');
+    return res.sendFile(p);
   }
-  next();
+  return res.status(404).send('service-worker.js not found');
 });
 
-// ✅ Root route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+// ----- Fallback routes: main index & index2 -----
+app.get('/index2.html', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'index2.html');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  return res.status(404).send('index2.html not found');
 });
 
-// ✅ Public subpage route
-app.get("/public/index2.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index2.html"));
+// Serve index.html as root
+app.get('/', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'index.html');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  return res.status(404).send('index.html not found');
 });
 
-// ✅ Manifest file
-app.get("/manifest.json", (req, res) => {
-  res.type("application/manifest+json");
-  res.sendFile(path.join(__dirname, "manifest.json"));
+// ----- Robots & sitemap (if present) -----
+app.get('/robots.txt', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'robots.txt');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  res.type('text/plain').send('User-agent: *\nDisallow:');
+});
+app.get('/sitemap.xml', (req, res) => {
+  const p = path.join(PUBLIC_DIR, 'sitemap.xml');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  res.status(404).send('sitemap.xml not found');
 });
 
-// ✅ Service worker
-app.get("/service-worker.js", (req, res) => {
-  res.type("application/javascript");
-  res.sendFile(path.join(__dirname, "service-worker.js"));
-});
-
-// ✅ Sitemap
-app.get("/sitemap.xml", (req, res) => {
-  res.type("application/xml");
-  res.sendFile(path.join(__dirname, "sitemap.xml"));
-});
-
-// ✅ Robots.txt
-app.get("/robots.txt", (req, res) => {
-  res.type("text/plain");
-  res.sendFile(path.join(__dirname, "robots.txt"));
-});
-
-// ✅ Health-check endpoint
-app.get("/status", (req, res) => {
-  res.status(200).json({ status: "ok", app: "QuantumTrader AI™", time: new Date() });
-});
-
-// ✅ 404 fallback
+// ----- 404 fallback -----
 app.use((req, res) => {
-  res.status(404).send("404 - Page Not Found");
+  res.status(404).send('404 - Page Not Found');
 });
 
-// ✅ Start the server
+// ----- Start single server -----
 app.listen(PORT, () => {
-  console.log(`🚀 QuantumTrader AI™ server live on http://localhost:${PORT}`);
+  console.log(`✅ QuantumTrader-AI server listening on port ${PORT}`);
 });
