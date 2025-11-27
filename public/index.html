@@ -1,379 +1,415 @@
- <!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader AI™</title>
 
+  <!-- ====== STYLES ====== -->
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000428;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
+    :root{
+      --bg:#000428;
+      --card:#071226;
+      --muted:#bbb;
+      --accent:#1abc9c;
+      --danger:#e74c3c;
+      --warn:#f1c40f;
+      --buy:#2ecc71;
+      --sell:#e74c3c;
+      --hold:#f39c12;
+      --panel-gap:12px;
+      --header-gap:18px;
     }
 
-    header {
-      margin-top: 20px;
+    html,body{height:100%; margin:0; padding:0; background:var(--bg); font-family:Inter, Arial, sans-serif; color:#fff;}
+    .container{max-width:1120px; margin:0 auto; padding:18px;}
+    /* Header: side-by-side natural widths balanced */
+    header{display:flex; align-items:center; justify-content:center; gap:var(--header-gap); margin-top:8px; flex-wrap:wrap;}
+    .brand-left, .brand-right{display:flex; align-items:center; justify-content:center;}
+    .brand-left img, .brand-right img{height:auto; display:block; max-height:80px; width:auto;}
+    /* On small screens stack but preserve visual hierarchy */
+    @media (max-width:520px){
+      header{flex-direction:column; gap:8px;}
+      .brand-left img, .brand-right img{max-height:64px;}
     }
 
-    #qtai-main-globe {
-      width: 160px;
-      max-width: 70%;
+    h1{font-size:20px; margin:12px 0 6px;}
+    h2{font-size:18px; margin:8px 0;}
+    p{margin:6px 0; color:var(--muted); font-size:14px;}
+
+    .node-section{margin-top:22px; padding:10px;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border-radius:10px; padding:14px; box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+
+    .center {text-align:center;}
+
+    button.cta{
+      background:var(--accent); color:#061018; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700;
     }
 
-    #peace-index-logo {
-      width: 110px;
-      margin-top: 25px; /* B2 spacing */
-    }
+    /* Map area */
+    #map-area{display:flex; flex-direction:column; gap:12px; align-items:center;}
+    #macarthur-map{max-width:480px; width:100%; height:auto; border-radius:8px; cursor:pointer; box-shadow:0 8px 30px rgba(0,0,0,0.6); transition:transform .12s ease, box-shadow .12s ease;}
+    #macarthur-map:hover{transform:translateY(-4px); box-shadow:0 14px 40px rgba(0,0,0,0.7);}
 
-    h2, h3, p {
-      margin: 10px 0;
-    }
+    /* Tooltip */
+    #forex-tooltip{position:fixed; display:none; background:rgba(6,8,12,0.96); color:#fff; padding:10px; border-radius:8px; pointer-events:none; z-index:9999; max-width:380px; font-size:13px; box-shadow:0 8px 20px rgba(0,0,0,0.6);}
 
-    .node-section {
-      margin-top: 45px;
-      padding: 10px;
-    }
+    /* Panel Mode: Currency panels */
+    #currencies-panel{margin-top:18px; display:grid; grid-template-columns:repeat(2,1fr); gap:var(--panel-gap);}
+    @media (max-width:880px){ #currencies-panel{grid-template-columns:1fr;} .container{padding:12px;} }
 
-    .node-section img {
-      width: 85%;
-      max-width: 420px;
-      border-radius: 6px;
-    }
+    .currency-card{background:var(--card); border-radius:10px; padding:12px; min-height:64px; transition:transform .12s ease; overflow:hidden; cursor:default;}
+    .currency-card:hover{transform:translateY(-3px);}
+    .currency-card .row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+    .currency-title{font-weight:700; font-size:15px;}
+    .signal-pill{padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; color:#061018;}
+    .signal-buy{background:var(--buy);}
+    .signal-sell{background:var(--sell);}
+    .signal-hold{background:var(--hold); color:#061018;}
 
-    button {
-      background-color: #1abc9c;
-      color: white;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 16px;
-    }
+    .currency-body{margin-top:10px; color:var(--muted); font-size:13px; display:none;}
+    .currency-body.open{display:block;}
 
-    footer {
-      margin-top: 40px;
-      padding: 20px;
-      background: #000215;
-      font-size: 14px;
-      color: #bbb;
-    }
+    .small-kv{font-size:13px; color:var(--muted); margin-top:6px;}
+    .muted{color:var(--muted);}
+
+    footer{margin-top:28px; padding:14px; text-align:center; color:var(--muted); font-size:13px;}
+    .link{color:var(--accent); text-decoration:none;}
+
+    /* utilities */
+    .flex{display:flex; gap:8px; align-items:center;}
+    .grow{flex:1;}
   </style>
 </head>
 
 <body>
+  <div class="container">
 
-  <!-- HEADER -->
-  <header>
-    <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QT AI Globe" />
-    <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" />
-  </header>
+    <!-- ===== HEADER: side-by-side globe + peace index (natural widths, balanced) ===== -->
+    <header aria-label="QuantumTrader AI header">
+      <div class="brand-left" aria-hidden="false">
+        <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QuantumTrader AI Globe" />
+      </div>
 
-  <!-- ACTIVATION GATE -->
-  <section id="activation-gate" class="node-section">
-    <h2>Activation Gate</h2>
-    <button onclick="window.location.href='index2.html'">Proceed</button>
-  </section>
+      <div class="brand-right" aria-hidden="false">
+        <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" title="Peace Index" />
+      </div>
+    </header>
 
-  <!-- TRADING FLOOR -->
-  <section id="trading-floor" class="node-section">
-    <img src="assets/images/tradingfloor2_main.png" alt="Trading Floor" />
-    <p>Trading Intelligence</p>
-    <button onclick="accessNode('tradingfloor')">Access Trading Floor</button>
-  </section>
+    <!-- ===== ACTIVATION GATE ===== -->
+    <section id="activation-gate" class="node-section center" aria-labelledby="activation-heading">
+      <div class="card">
+        <h1 id="activation-heading">Activation Gate</h1>
+        <p class="muted">Proceed to the next stage of QuantumTrader AI</p>
+        <div style="margin-top:12px;">
+          <button class="cta" id="activation-proceed-btn">Proceed</button>
+        </div>
+      </div>
+    </section>
 
-  <!-- MACARTHUR MAP -->
-  <section id="map-section" class="node-section">
-    <img src="assets/images/macarthur.png" alt="MacArthur Map" style="max-width:480px;" />
-  </section>
+    <!-- ===== TRADING FLOOR ===== -->
+    <section id="trading-floor" class="node-section" aria-labelledby="trading-heading">
+      <div class="card">
+        <div class="flex">
+          <div class="grow">
+            <h2 id="trading-heading">Trading Floor</h2>
+            <p class="muted">Access Trading Intelligence</p>
+          </div>
+          <div>
+            <button class="cta" id="tradingfloor-btn">Access Trading Floor</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- TRADER LAB -->
-  <section id="traderlab-section" class="node-section">
-    <img src="assets/images/traderlab_icon.png" alt="TraderLab™" />
-    <p>TraderLab™</p>
-    <button onclick="accessNode('traderlab')">Activate TraderLab</button>
-  </section>
+    <!-- ===== MAP + MACARTHUR ===== -->
+    <section id="map-section" class="node-section" aria-labelledby="map-heading">
+      <div class="card center" id="map-area">
+        <img id="macarthur-map" src="assets/images/macarthur.png" alt="MacArthur Map — click to open Global Trade Dashboard" role="button" />
+        <div style="margin-top:10px; width:100%; display:flex; justify-content:center;">
+          <p class="muted">Click the map to open the Global Trade Dashboard or hover for quick signals</p>
+        </div>
+      </div>
+      <div id="forex-tooltip" aria-hidden="true"></div>
+    </section>
 
-  <!-- CPILOT -->
-  <section id="cpilot-section" class="node-section">
-    <img src="assets/images/cpilot_panel.png" alt="CPilot™" />
-    <p>CPilot™</p>
-    <button onclick="accessNode('cpilot')">Activate CPilot</button>
-  </section>
+    <!-- ===== CURRENCY PANELS (Panel Mode) ===== -->
+    <section id="panel-section" class="node-section" aria-labelledby="panel-heading">
+      <div class="card">
+        <h2 id="panel-heading">Top 10 Currencies — Market Engine</h2>
+        <p class="muted">Technical Analysis (TA) + Forex Events (FF) — live updates</p>
 
-  <!-- PAYMENT GATE -->
-  <section id="payment-section" class="node-section">
-    <h3>Scan QR Code to Activate</h3>
-    <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:180px; margin-top:10px;" />
-    <p>
-      Pay NGN10,000 to:<br>
-      <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong>
-    </p>
-  </section>
+        <div id="currencies-panel" style="margin-top:12px;">
+          <!-- JS injects 10 currency cards here -->
+        </div>
+      </div>
+    </section>
 
-  <footer>
-    © 2025 All Rights Reserved | QuantumTrader-AI™
-  </footer>
+    <!-- ===== TRADER LAB ===== -->
+    <section id="traderlab-section" class="node-section" aria-labelledby="lab-heading">
+      <div class="card flex">
+        <div class="grow">
+          <h2 id="lab-heading">TraderLab™</h2>
+          <p class="muted">Open the lab for advanced strategy testing</p>
+        </div>
+        <div>
+          <button class="cta" id="traderlab-btn">Activate TraderLab</button>
+        </div>
+      </div>
+    </section>
 
+    <!-- ===== CPILOT ===== -->
+    <section id="cpilot-section" class="node-section" aria-labelledby="cpilot-heading">
+      <div class="card flex">
+        <div class="grow">
+          <h2 id="cpilot-heading">CPilot™</h2>
+          <p class="muted">Automated guidance & suggestions</p>
+        </div>
+        <div>
+          <button class="cta" id="cpilot-btn">Activate CPilot</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAYMENT GATE (DIRECT ONLY) ===== -->
+    <section id="payment-section" class="node-section" aria-labelledby="payment-heading">
+      <div class="card center">
+        <h2 id="payment-heading">Payment Gate</h2>
+        <p class="muted">Opens payment gateway provider — no local activation here</p>
+        <div style="margin-top:10px;">
+          <a class="link" href="https://www.alat.com.ng/payment_gateway" target="_blank" rel="noopener noreferrer" title="Open ALAT payment gateway (new tab)">
+            <img src="assets/images/alat_qr.png" alt="ALAT QR Code" style="width:140px; border-radius:8px;" />
+          </a>
+        </div>
+        <p class="muted" style="margin-top:10px;">Pay NGN10,000 to: <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong></p>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 All Rights Reserved | QuantumTrader-AI™
+    </footer>
+  </div>
+
+  <!-- ====== SCRIPTS ====== -->
   <script>
-    /* PAYMENT STATUS (Front-end Simulation) */
-    let paymentStatus = localStorage.getItem('qtai_activated') === 'true';
+    /******************************
+     * Config
+     ******************************/
+    const WS_URL = 'ws://localhost:8080'; // server.mjs WebSocket endpoint
+    const TRACKED_CURRENCIES = ['USD','EUR','JPY','GBP','CNY','CAD','AUD','CHF','INR','KRW'];
 
-    function accessNode(node) {
-      if (paymentStatus) {
-        window.location.href = node + ".html";
-      } else {
-        alert("Access denied. Please complete your NGN10k activation payment.");
-        window.location.href = "#payment-section";
+    /******************************
+     * DOM anchors (avoid duplicates)
+     ******************************/
+    const activationBtn = document.getElementById('activation-proceed-btn');
+    const tradingFloorBtn = document.getElementById('tradingfloor-btn');
+    const traderLabBtn = document.getElementById('traderlab-btn');
+    const cpilotBtn = document.getElementById('cpilot-btn');
+    const macarthurMap = document.getElementById('macarthur-map');
+    const peaceLogo = document.getElementById('peace-index-logo');
+    const currenciesPanel = document.getElementById('currencies-panel');
+    const tooltip = document.getElementById('forex-tooltip');
+
+    /******************************
+     * Simple navigation bindings
+     * (Direct links only — no local activation logic here)
+     ******************************/
+    activationBtn.addEventListener('click', () => window.location.href = 'index2.html');
+    tradingFloorBtn.addEventListener('click', () => window.location.href = 'tradingfloor.html');
+    traderLabBtn.addEventListener('click', () => window.location.href = 'traderlab.html');
+    cpilotBtn.addEventListener('click', () => window.location.href = 'cpilot.html');
+
+    // Map click goes to full dashboard
+    macarthurMap.addEventListener('click', () => {
+      window.location.href = 'global_trade_dashboard.html';
+    });
+
+    // Peace Index opens external site in new tab (preserve original session)
+    peaceLogo.addEventListener('click', () => {
+      window.open('https://www.peaceindex.org', '_blank', 'noopener');
+    });
+
+    /******************************
+     * PWA + Handshake placeholders
+     ******************************/
+    (function initHandshakeAndPWA(){
+      fetch('/handshake')
+        .then(r => r.json())
+        .then(d => console.log('Handshake OK', d))
+        .catch(err => console.log('Handshake failed', err));
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(() => console.log('Service worker registered'))
+          .catch(err => console.log('Service worker registration failed', err));
       }
-    }
+    })();
 
-    // Simulated Handshake
-    fetch('/handshake')
-      .then(res => res.json())
-      .then(data => console.log('Handshake OK:', data))
-      .catch(err => console.log("Handshake failed:", err));
+    /******************************
+     * WebSocket: receive combined TA + FF signals
+     ******************************/
+    let signalsData = []; // array of { currency, technicalSignals, forexFactoryEvents }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js');
-    }
-  </script>
+    const ws = new WebSocket(WS_URL);
 
- <script>
-  // public/js/handshake.bundle.js
-/* Hardened Handshake Bundle for QuantumTrader-AI
-   - registerServiceWorker()
-   - safeFetch() with timeout + retries
-   - performHandshake()
-   - payment verification flow (verifyPayment)
-   - accessNode() with anti-double-click lock
-   - heartbeat() to /status
-   - medusaAutoRecover() placeholder (calls /recover)
-   - refreshPaymentStatus on visibilitychange
-*/
+    ws.addEventListener('open', () => {
+      console.log('WS connected to', WS_URL);
+    });
 
-(function () {
-  // CONFIG
-  const HANDSHAKE_ENDPOINT = "/handshake";
-  const VERIFY_PAYMENT_ENDPOINT = "/verify-payment"; // server should implement
-  const MODULES_ENDPOINT = "/modules";
-  const RECOVER_ENDPOINT = "/recover";
-  const STATUS_ENDPOINT = "/status";
-  const HEARTBEAT_INTERVAL = 30_000; // 30s
-  const HANDSHAKE_TIMEOUT = 5000; // ms
-  const FETCH_RETRIES = 2;
-  let accessLock = false;
-  let paymentStatus = false;
-
-  // small helper: timeout fetch
-  function timeout(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  async function safeFetch(url, opts = {}, retries = FETCH_RETRIES, timeoutMs = HANDSHAKE_TIMEOUT) {
-    for (let attempt = 0; attempt <= retries; attempt++) {
+    ws.addEventListener('message', (evt) => {
       try {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeoutMs);
-        const res = await fetch(url, { signal: controller.signal, ...opts });
-        clearTimeout(id);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-      } catch (err) {
-        if (attempt === retries) throw err;
-        await timeout(300); // small backoff
-      }
-    }
-  }
-
-  // Register service worker safely
-  async function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      try {
-        const reg = await navigator.serviceWorker.register('/service-worker.js');
-        console.log('ServiceWorker registered', reg);
-      } catch (err) {
-        console.warn('ServiceWorker registration failed', err);
-      }
-    }
-  }
-
-  // Backend handshake
-  async function performHandshake() {
-    try {
-      const data = await safeFetch(HANDSHAKE_ENDPOINT, {}, 1);
-      console.log('Handshake OK:', data);
-      return true;
-    } catch (err) {
-      console.warn('Handshake failed (frontend)', err);
-      return false;
-    }
-  }
-
-  // Payment verification (calls server /verify-payment)
-  async function verifyPayment(userRef) {
-    // userRef optional; server can accept POST {userRef}
-    try {
-      const data = await safeFetch(VERIFY_PAYMENT_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userRef: userRef || null })
-      }, 1);
-      // Expect { confirmed: boolean, token?: string }
-      if (data && data.confirmed) {
-        localStorage.setItem('qtai_activated', 'true');
-        paymentStatus = true;
-        if (data.token) localStorage.setItem('qtai_token', data.token);
-        return true;
-      }
-    } catch (err) {
-      console.warn('Payment verify failed', err);
-    }
-    return false;
-  }
-
-  // Access node with anti-double-click and payment check
-  async function accessNode(node) {
-    if (accessLock) return;
-    accessLock = true;
-    setTimeout(() => (accessLock = false), 800);
-
-    // Ensure payment status is current
-    await refreshPaymentStatus();
-    if (!paymentStatus) {
-      // if not paid, scroll to payment section
-      const el = document.getElementById('payment-section') || document.querySelector('#payment-section');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-      alert('Access denied. Please complete your NGN10k activation payment.');
-      return;
-    }
-    // If a token exists, include it in URL as short-lived param (optional)
-    const token = localStorage.getItem('qtai_token');
-    const url = token ? `${node}.html?tk=${encodeURIComponent(token)}` : `${node}.html`;
-    window.location.href = url;
-  }
-
-  // Recheck payment status from localStorage and (optionally) backend
-  async function refreshPaymentStatus() {
-    paymentStatus = localStorage.getItem('qtai_activated') === 'true';
-    // optionally re-verify with server when offline/uncertain
-    if (!paymentStatus) {
-      try {
-        // a quick HEAD/GET to verify endpoint
-        const status = await safeFetch('/payment-status', {}, 0).catch(() => null);
-        if (status && status.activated) {
-          localStorage.setItem('qtai_activated', 'true');
-          paymentStatus = true;
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-    // update UI if present
-    try {
-      const display = document.getElementById('activation-state');
-      if (display) {
-        if (paymentStatus) {
-          display.textContent = '✓ Activation Verified — Full Access Granted.';
-          display.style.color = '#1abc9c';
+        const payload = JSON.parse(evt.data);
+        // Accept either array-of-objects or object keyed payloads
+        if (Array.isArray(payload)) {
+          signalsData = payload;
+        } else if (payload && typeof payload === 'object') {
+          // If server sends map keyed by currency
+          signalsData = Object.keys(payload).map(k => ({ currency: k, ...payload[k] }));
         } else {
-          display.textContent = '✗ Not Activated — Restricted Mode.';
-          display.style.color = '#e74c3c';
+          console.warn('Unexpected WS payload:', payload);
         }
-      }
-    } catch (e) { /* noop */ }
-    return paymentStatus;
-  }
-
-  // Heartbeat to server
-  let hbTimer = null;
-  async function startHeartbeat() {
-    hbTimer = setInterval(async () => {
-      try {
-        const s = await safeFetch(STATUS_ENDPOINT, {}, 0);
-        if (s && s.status === 'ok') {
-          console.log('Heartbeat OK', new Date().toISOString());
-        }
+        renderCurrencyPanels(signalsData);
+        updateTooltipContent(signalsData);
       } catch (err) {
-        console.warn('Heartbeat failed; invoking Medusa recovery', err);
-        medusaAutoRecover();
-      }
-    }, HEARTBEAT_INTERVAL);
-  }
-
-  // Medusa: silent auto-repair hook (server-side /recover must accept)
-  async function medusaAutoRecover() {
-    console.log('Medusa™: attempting silent recovery...');
-    try {
-      await safeFetch(RECOVER_ENDPOINT, { method: 'POST' }, 1);
-      console.log('Medusa™: recover invoked.');
-    } catch (err) {
-      console.warn('Medusa™: recovery invocation failed', err);
-    }
-  }
-
-  // Initialize module registry from server
-  async function initModules() {
-    try {
-      const list = await safeFetch(MODULES_ENDPOINT, {}, 1);
-      // Optionally render module statuses
-      if (list && Array.isArray(list.modules)) {
-        const container = document.getElementById('module-list');
-        if (container) container.innerHTML = list.modules.map(m => `• ${m}`).join('<br>');
-      }
-    } catch (err) {
-      console.warn('initModules failed', err);
-    }
-  }
-
-  // Visibility handling: refresh payment token & status
-  function installVisibilityHandler() {
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        refreshPaymentStatus();
+        console.error('Error parsing WS message', err);
       }
     });
-  }
 
-  // Public / attach to window for use from HTML buttons
-  window.QTAI = {
-    performHandshake,
-    registerServiceWorker,
-    verifyPayment,
-    accessNode,
-    refreshPaymentStatus,
-    startHeartbeat,
-    initModules,
-    medusaAutoRecover
-  };
+    ws.addEventListener('close', () => console.log('WS disconnected'));
+    ws.addEventListener('error', (e) => console.error('WS error', e));
 
-  // Auto-run (best-effort)
-  (async function boot() {
-    registerServiceWorker().catch(() => {});
-    await performHandshake().catch(() => {});
-    await refreshPaymentStatus().catch(() => {});
-    initModules().catch(() => {});
-    startHeartbeat();
-    installVisibilityHandler();
-    console.log('Handshake bundle initialized.');
-  })();
-})();
- </script>
+    /******************************
+     * Render currency panels (Panel Mode)
+     ******************************/
+    function getSignalPill(signal){
+      const s = String(signal || '').toLowerCase();
+      if (s.includes('buy')) return `<span class="signal-pill signal-buy">BUY</span>`;
+      if (s.includes('sell')) return `<span class="signal-pill signal-sell">SELL</span>`;
+      return `<span class="signal-pill signal-hold">HOLD</span>`;
+    }
 
- <script src="js/handshake.bundle.js"></script>
-<script>
-  // simple bindings for button clicks
-  document.querySelectorAll('[data-node]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const node = e.currentTarget.getAttribute('data-node');
-      window.QTAI.accessNode(node);
+    function renderCurrencyPanels(data){
+      currenciesPanel.innerHTML = ''; // reset
+      for (const cur of TRACKED_CURRENCIES){
+        const existing = (data || []).find(d => (d && (d.currency || '').toUpperCase()) === cur);
+        const technical = existing ? existing.technicalSignals : null;
+        const ff = existing ? (existing.forexFactoryEvents || []) : [];
+
+        const card = document.createElement('div');
+        card.className = 'currency-card card';
+        card.setAttribute('data-currency', cur);
+
+        const headerRow = document.createElement('div');
+        headerRow.className = 'row';
+
+        const title = document.createElement('div');
+        title.className = 'currency-title';
+        title.innerText = cur;
+
+        const pill = document.createElement('div');
+        pill.innerHTML = technical ? getSignalPill(aggregateOverall(technical)) : getSignalPill('Hold');
+
+        headerRow.appendChild(title);
+        headerRow.appendChild(pill);
+        card.appendChild(headerRow);
+
+        const body = document.createElement('div');
+        body.className = 'currency-body';
+        body.id = `body-${cur}`;
+
+        const taHtml = technical ? Object.entries(technical).map(([k,v]) => `<div class="small-kv"><strong>${escapeHtml(k)}</strong>: ${escapeHtml(String(v))}</div>`).join('') : `<div class="small-kv muted">No TA data yet</div>`;
+        const ffHtml = ff.length ? ff.map(e => `<div class="small-kv"><strong>${escapeHtml(e.event)}</strong> (${escapeHtml(e.impact)}) → ${escapeHtml(e.signal)}</div>`).join('') : `<div class="small-kv muted">No FF events</div>`;
+
+        body.innerHTML = `<div>${taHtml}</div><div style="margin-top:10px;"><strong>Forex Events</strong>${ffHtml}</div>`;
+        card.appendChild(body);
+
+        // Toggle open/close on click
+        card.addEventListener('click', () => {
+          const wasOpen = body.classList.contains('open');
+          document.querySelectorAll('.currency-body').forEach(el => el.classList.remove('open'));
+          if (!wasOpen) body.classList.add('open');
+        });
+
+        currenciesPanel.appendChild(card);
+      }
+    }
+
+    // Simple aggregator: majority rule across TA signals
+    function aggregateOverall(technicalSignals){
+      const counts = { Buy:0, Sell:0, Hold:0 };
+      for (const v of Object.values(technicalSignals || {})){
+        const key = String(v).toLowerCase().includes('buy') ? 'Buy' : (String(v).toLowerCase().includes('sell') ? 'Sell' : 'Hold');
+        counts[key]++;
+      }
+      if (counts.Buy > counts.Sell && counts.Buy >= counts.Hold) return 'Buy';
+      if (counts.Sell > counts.Buy && counts.Sell >= counts.Hold) return 'Sell';
+      return 'Hold';
+    }
+
+    // Basic HTML escape for injected content
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+    }
+
+    /******************************
+     * Map Hover Tooltip: quick preview
+     ******************************/
+    function updateTooltipContent(data){
+      if (!data || !data.length){
+        tooltip.innerHTML = '<div class="muted">No live signals</div>';
+        return;
+      }
+      const lines = (data || []).slice(0,10).map(d => {
+        const overall = aggregateOverall(d.technicalSignals || {});
+        const ffCount = (d.forexFactoryEvents || []).length;
+        return `<div style="margin-bottom:6px;"><strong>${escapeHtml(d.currency || '')}</strong> — ${escapeHtml(overall)} — ${ffCount ? ffCount + ' event(s)' : 'no events'}</div>`;
+      });
+      tooltip.innerHTML = `<div>${lines.join('')}</div>`;
+    }
+
+    // Position tooltip near cursor on hover
+    macarthurMap.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.pageX + 14) + 'px';
+      tooltip.style.top = (e.pageY + 14) + 'px';
     });
-  });
-</script>
- 
+    macarthurMap.addEventListener('mouseover', () => {
+      tooltip.style.display = 'block';
+      tooltip.setAttribute('aria-hidden','false');
+      // ensure content reflects latest data
+      updateTooltipContent(signalsData);
+    });
+    macarthurMap.addEventListener('mouseout', () => {
+      tooltip.style.display = 'none';
+      tooltip.setAttribute('aria-hidden','true');
+    });
+
+    /******************************
+     * Initial render: stable placeholders
+     ******************************/
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCurrencyPanels([]); // show placeholder panels
+      updateTooltipContent([]);
+    });
+
+    /******************************
+     * WS reconnect strategy (graceful)
+     ******************************/
+    (function setupReconnect(){
+      let reconnectAttempts = 0;
+      const maxAttempts = 10;
+      ws.addEventListener('close', () => {
+        console.warn('WS closed — attempting reconnect...');
+        reconnectAttempts++;
+        if (reconnectAttempts > maxAttempts) {
+          console.error('Max WS reconnect attempts reached. Reload to retry.');
+          return;
+        }
+        setTimeout(() => {
+          // best practice: reload to re-initialize WS cleanly
+          window.location.reload();
+        }, 2000 * reconnectAttempts);
+      });
+    })();
+  </script>
 </body>
 </html>
