@@ -195,6 +195,24 @@ app.use((req, res) => {
   res.status(404).send("404 - Page Not Found");
 });
 
+// ✅ Simulate First Trade (for founder test only)
+app.post('/simulate-trade', (req, res) => {
+  const { asset, type, amount, user } = req.body || {};
+
+  if (!asset || !type || !amount || !user) {
+    return res.status(400).json({ success: false, message: "Missing trade parameters." });
+  }
+
+  console.log(`🚀 Simulated trade by user:{type} amount of{asset}`);
+
+  // In production: record to DB or forward to trade engine
+  res.json({
+    success: true,
+    message: `Trade simulated: type{amount} of ${asset}`,
+    timestamp: new Date().toISOString()
+  });
+});
+
 //---------------------------------------------------
 // START SERVER (Option B)
 //---------------------------------------------------
