@@ -46,6 +46,25 @@
       background:var(--accent); color:#061018; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700;
     }
 
+.header-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.header-logos img {
+  height: 80px;
+}
+
+.peace-index-wrapper {
+  background: #f0f0f0;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
     /* Map area */
     #map-area{display:flex; flex-direction:column; gap:12px; align-items:center;}
     #macarthur-map{max-width:480px; width:100%; height:auto; border-radius:8px; cursor:pointer; box-shadow:0 8px 30px rgba(0,0,0,0.6); transition:transform .12s ease, box-shadow .12s ease;}
@@ -86,15 +105,14 @@
   <div class="container">
 
     <!-- ===== HEADER: side-by-side globe + peace index (natural widths, balanced) ===== -->
-    <header aria-label="QuantumTrader AI header">
-      <div class="brand-left" aria-hidden="false">
-        <img src="assets/images/qtai_globe.png" id="qtai-main-globe" alt="QuantumTrader AI Globe" />
-      </div>
-
-      <div class="brand-right" aria-hidden="false">
-        <img src="assets/images/peace_index_logo.png" id="peace-index-logo" alt="Peace Index Logo" title="Peace Index" />
-      </div>
-    </header>
+<header>
+  <div class="header-logos">
+    <img src="assets/images/qtai_globe.png" alt="QT AI Globe" />
+    <div class="peace-index-wrapper">
+      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" />
+    </div>
+  </div>
+</header>
 
     <!-- ===== ACTIVATION GATE ===== -->
     <section id="activation-gate" class="node-section center" aria-labelledby="activation-heading">
