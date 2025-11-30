@@ -412,5 +412,26 @@
   });
 </script>
 
+<!-- Other page content -->
+
+  <!-- Protection script to block untrusted CSS -->
+  <script>
+  const allowedCSS = [
+      'css/core.css',
+      'css/layout.css',
+      'css/components.css'
+  ];
+
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!allowedCSS.includes(href)) {
+          link.remove();
+          console.warn('Removed untrusted CSS:', href);
+      }
+  });
+  </script>
+</body>
+</html>
+ 
 </body>
 </html>
