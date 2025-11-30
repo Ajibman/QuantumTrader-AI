@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader AI™</title>
 
+  <!-- Trusted core styles -->
+  <link rel="stylesheet" href="css/core.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Optional: other meta, favicon, manifest, etc. -->
+
+  <!-- Page content goes here -->
+
+  <!-- JS protection script to block untrusted CSS -->
+  <script>
+  const allowedCSS = [
+      'css/core.css',
+      'css/layout.css',
+      'css/components.css'
+  ];
+
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!allowedCSS.includes(href)) {
+          link.remove();
+          console.warn('Removed untrusted CSS:', href);
+      }
+  });
+  </script>
+
   <style>
     :root{
       --bg:#000428;
