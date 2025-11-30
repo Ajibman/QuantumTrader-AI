@@ -1,18 +1,19 @@
+/* Fix: Center globe + peace index logo side-by-side */
 header {
   display: flex;
-  justify-content: center;   /* Center the two logos as a unit */
-  align-items: center;       /* Vertical alignment */
-  gap: 14px;                 /* Space between the logos */
+  justify-content: center;   /* Center both logos as a unit */
+  align-items: center;       /* Vertically aligned */
+  gap: 14px;                 /* Space between them */
   padding: 10px 0;
 }
 
 header img {
-  height: 80px;              /* Uniform height */
-  width: auto;               /* Maintain aspect ratio */
+  height: 80px;
+  width: auto;
   object-fit: contain;
 }
 
-/* Mobile Optimization */
+/* Mobile */
 @media (max-width: 480px) {
   header img {
     height: 65px;
