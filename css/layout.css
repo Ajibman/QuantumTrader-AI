@@ -1,1 +1,23 @@
-LAYOUT 
+header {
+  display: flex;
+  justify-content: center;   /* Center the two logos as a unit */
+  align-items: center;       /* Vertical alignment */
+  gap: 14px;                 /* Space between the logos */
+  padding: 10px 0;
+}
+
+header img {
+  height: 80px;              /* Uniform height */
+  width: auto;               /* Maintain aspect ratio */
+  object-fit: contain;
+}
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+  header img {
+    height: 65px;
+  }
+  header {
+    gap: 10px;
+  }
+}
