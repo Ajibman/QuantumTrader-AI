@@ -1,3 +1,133 @@
+/* layout.css - header & drawer layout */
+
+/* Header layout: keep center logos centered */
+.qta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  position: relative;
+  z-index: 60;
+}
+
+/* Center logos (keeps them visually centered as a unit) */
+.header-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  pointer-events: none; /* prevents accidental clicks on center area */
+}
+.center-logo,
+.center-logo-link .center-logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  pointer-events: auto; /* allow click on peace index link specifically */
+}
+
+/* header icons */
+.header-right, #open-world-drawer {
+  z-index: 70;
+}
+
+/* World Drawer (left side, dark mode) */
+.world-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 320px;
+  max-width: 86vw;
+  background: linear-gradient(180deg, #0b0d0f 0%, #121416 100%); /* dark matte */
+  color: #e6eef5;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+  transform: translateX(-110%);
+  transition: transform 280ms cubic-bezier(.2,.9,.3,1);
+  overflow-y: auto;
+  z-index: 100;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: 18px 12px;
+}
+
+/* open state */
+.world-drawer.open {
+  transform: translateX(0);
+}
+
+/* header inside drawer */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* overlay */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 90;
+  transition: opacity 200ms ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.drawer-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* hide utility */
+.hidden { display: none !important; }
+
+/* drawer content sections */
+.drawer-sections { padding-bottom: 28px; }
+.drawer-section { margin-bottom: 18px; }
+.drawer-section h3 { margin: 6px 0 8px; font-size: 14px; color: #b8c6d6; }
+.drawer-section ul { list-style: none; margin: 0; padding: 0; }
+.drawer-section li { margin: 6px 0; }
+
+/* drawer links */
+.drawer-link {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 8px;
+  color: #e6eef5;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.drawer-link:hover, .drawer-link:focus {
+  background: rgba(255,255,255,0.03);
+  outline: none;
+}
+
+/* drawer footer */
+.drawer-footer { margin-top: 18px; color: #90a0b8; font-size: 12px; }
+
+/* close button */
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #cfe6ff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* responsive */
+@media (max-width: 640px) {
+  .center-logo { height: 46px; }
+  .world-drawer { width: 92vw; }
+}
+
 /* Fix: Center globe + peace index logo side-by-side */
 header {
   display: flex;
