@@ -4,7 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuantumTrader™</title>
-  
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000428;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      margin-top: 20px;
+    }
+
+    #qtai-main-globe {
+      width: 160px;
+      max-width: 70%;
+    }
+
+    #peace-index-logo {
+      width: 110px;
+      margin-top: 25px; /* B2 spacing */
+    }
+
+    h2, h3, p {
+      margin: 10px 0;
+    }
+
+    .node-section {
+      margin-top: 45px;
+      padding: 10px;
+    }
+
+    .node-section img {
+      width: 85%;
+      max-width: 420px;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #1abc9c;
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      background: #000215;
+      font-size: 14px;
+      color: #bbb;
+    }
+  </style>
+</head>
+
+<body>  
 <script>
 /* drawer & dropdown logic for QuantumTrader AI */
 (function () {
