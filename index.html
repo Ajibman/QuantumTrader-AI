@@ -9,6 +9,17 @@
   <link rel="stylesheet" href="css/core.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+  <div class="container">
+
+<header class="qta-header">
+  <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
+    <span class="sr-only">Open World Drawer</span>
+    <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
+  </button>
+</header>
 
   <!-- JS protection script to block untrusted CSS -->
   <script>
@@ -386,5 +397,23 @@
   });
 </script>
 
+<script>
+const allowedCSS = [
+  'css/core.css',
+  'css/layout.css',
+  'css/components.css'
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!allowedCSS.includes(href)) {
+      link.remove();
+      console.warn('Removed untrusted CSS:', href);
+    }
+  });
+});
+</script>
+  
 </body>
 </html>
