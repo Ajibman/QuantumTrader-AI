@@ -9,120 +9,98 @@
   <link rel="stylesheet" href="css/core.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
-</head>
 
-<body>
-  <div class="container">
-
-    <!-- SINGLE CLEAN HEADER -->
-    <header class="qta-header">
-      <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
-        <span class="sr-only">Open World Drawer</span>
-        <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon">
-      </button>
-
-      <!-- center logos -->
-      <div class="header-center">
-        <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo" class="center-logo">
-
-        <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer" class="center-logo-link">
-          <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="center-logo">
-        </a>
-      </div>
-    </header>
-    
-<body>
-  <div class="container">
-
-<header class="qta-header">
-  <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
-    <span class="sr-only">Open World Drawer</span>
-    <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
-  </button>
-</header>
-
-  <!-- JS protection script to block untrusted CSS -->
+  <!-- JS protection script -->
   <script>
-  const allowedCSS = [
-      'css/core.css',
-      'css/layout.css',
-      'css/components.css'
-  ];
-
-  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-      const href = link.getAttribute('href');
-      if (!allowedCSS.includes(href)) {
-          link.remove();
-          console.warn('Removed untrusted CSS:', href);
-      }
-  });
+    const allowedCSS = [
+        'css/core.css',
+        'css/layout.css',
+        'css/components.css'
+    ];
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!allowedCSS.includes(href)) {
+            link.remove();
+            console.warn('Removed untrusted CSS:', href);
+        }
+    });
   </script>
 </head>
 
 <body>
-  <div class="container">
-<header>
+<div class="container">
 
-  <!-- HEADER (replace existing header block with this) -->
-<header class="qta-header">
-  <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
-    <span class="sr-only">Open World Drawer</span>
-    <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
-  </button>
+  <!-- FINAL, SINGLE, CLEAN HEADER -->
+  <header class="qta-header">
 
-  <!-- center logos kept visually centered -->
-  <div class="header-center">
-    <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo" class="center-logo" />
-    <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer" class="center-logo-link">
-      <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="center-logo" />
-    </a>
-  </div>
-  =======
-
-  <!-- Right compass dropdown trigger -->
-  <div class="header-right">
-    <button id="compass-toggle" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Open system menu" title="System">
-      <span class="sr-only">Open System Menu</span>
-      <span class="compass-icon" aria-hidden="true">🧭</span>
+    <!-- Left: World Drawer btn -->
+    <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
+      <span class="sr-only">Open World Drawer</span>
+      <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
     </button>
 
-    <!-- Compass dropdown -->
-    <div id="compass-dropdown" class="dropdown hidden" role="menu" aria-labelledby="compass-toggle">
-      <ul>
-        <li><button class="dropdown-item" data-open="settings.html">Settings</button></li>
-        <li><button class="dropdown-item" data-open="developer.html">Developer Panel</button></li>
-        <li><button class="dropdown-item" data-open="logs.html">Activation Logs</button></li>
-        <li><button class="dropdown-item" data-open="docs.html">Documentation</button></li>
-        <li><button class="dropdown-item" data-open="pwa-tools.html">PWA Tools</button></li>
-        <li><button class="dropdown-item" data-open="about.html">About</button></li>
-      </ul>
+    <!-- Center Logos -->
+    <div class="header-center">
+      <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo" class="center-logo" />
+      <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer">
+        <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="center-logo" />
+      </a>
     </div>
-  </div>
-</header>
 
-<!-- LEFT WORLD DRAWER (off-canvas) -->
-<nav id="world-drawer" class="world-drawer closed" aria-hidden="true" aria-label="World Drawer">
-  <div class="drawer-header">
-    <button id="close-world-drawer" class="close-btn" aria-label="Close drawer">✕</button>
-    <h2>World Access</h2>
-  </div>
+    <!-- Right: Compass Menu -->
+    <div class="header-right">
+      <button id="compass-toggle" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Open system menu" title="System">
+        <span class="sr-only">Open System Menu</span>
+        <span class="compass-icon">🧭</span>
+      </button>
 
-  <div class="drawer-sections">
-    <!-- Global Markets -->
-    <section class="drawer-section">
-      <h3>Global Markets</h3>
-      <ul>
-        <li><button class="drawer-link" data-open="markets/forex.html">Forex</button></li>
-        <li><button class="drawer-link" data-open="markets/crypto.html">Cryptocurrency</button></li>
-        <li><button class="drawer-link" data-open="markets/metals.html">Metals</button></li>
-        <li><button class="drawer-link" data-open="markets/solid-minerals.html">Solid Minerals</button></li>
-        <li><button class="drawer-link" data-open="markets/oil.html">Oil / Energy</button></li>
-        <li><button class="drawer-link" data-open="markets/sp500.html">S&P 500</button></li>
-        <li><button class="drawer-link" data-open="markets/bonds.html">Bonds</button></li>
-        <li><button class="drawer-link" data-open="markets/foods.html">Foods / Agric Commodities</button></li>
-        <li><button class="drawer-link" data-open="markets/logistics.html">Global Logistics</button></li>
-      </ul>
-    </section>
+      <!-- Dropdown -->
+      <div id="compass-dropdown" class="dropdown hidden" role="menu">
+        <ul>
+          <li><button class="dropdown-item" data-open="settings.html">Settings</button></li>
+          <li><button class="dropdown-item" data-open="developer.html">Developer Panel</button></li>
+          <li><button class="dropdown-item" data-open="logs.html">Activation Logs</button></li>
+          <li><button class="dropdown-item" data-open="docs.html">Documentation</button></li>
+          <li><button class="dropdown-item" data-open="pwa-tools.html">PWA Tools</button></li>
+          <li><button class="dropdown-item" data-open="about.html">About</button></li>
+        </ul>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- WORLD DRAWER -->
+  <nav id="world-drawer" class="world-drawer closed" aria-hidden="true">
+    <div class="drawer-header">
+      <button id="close-world-drawer" class="close-btn">✕</button>
+      <h2>World Access</h2>
+    </div>
+
+    <div class="drawer-sections">
+      <!-- Global Markets -->
+      <section class="drawer-section">
+        <h3>Global Markets</h3>
+        <ul>
+          <li><button class="drawer-link" data-open="markets/forex.html">Forex</button></li>
+          <li><button class="drawer-link" data-open="markets/crypto.html">Cryptocurrency</button></li>
+          <li><button class="drawer-link" data-open="markets/metals.html">Metals</button></li>
+          <li><button class="drawer-link" data-open="markets/solid-minerals.html">Solid Minerals</button></li>
+          <li><button class="drawer-link" data-open="markets/oil.html">Oil / Energy</button></li>
+          <li><button class="drawer-link" data-open="markets/sp500.html">S&P 500</button></li>
+          <li><button class="drawer-link" data-open="markets/bonds.html">Bonds</button></li>
+          <li><button class="drawer-link" data-open="markets/foods.html">Foods / Agric Commodities</button></li>
+          <li><button class="drawer-link" data-open="markets/logistics.html">Global Logistics</button></li>
+        </ul>
+      </section>
+    </div>
+
+    <footer class="drawer-footer">
+      <small>QuantumTrader AI™ — World Access</small>
+    </footer>
+  </nav>
+
+  <!-- Drawer overlay -->
+  <div id="drawer-overlay" class="drawer-overlay hidden"></div>
 
     <!-- Agricultural Cooperatives -->
     <section class="drawer-section">
@@ -156,7 +134,6 @@
 
 <!-- overlay -->
 <div id="drawer-overlay" class="drawer-overlay hidden" tabindex="-1" aria-hidden="true"></div>
-======
   
   <div class="brand-left">
     <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo">
