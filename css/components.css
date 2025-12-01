@@ -1,1 +1,41 @@
-Components
+/* components.css - compass dropdown & small components */
+.compass-icon { font-size: 20px; display: inline-block; }
+
+.dropdown {
+  position: absolute;
+  right: 12px;
+  top: calc(100% + 8px);
+  min-width: 200px;
+  background: #ffffff;
+  color: #0b1220;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(6,10,13,0.18);
+  padding: 8px;
+  z-index: 80;
+}
+
+/* keep dropdown light to contrast with dark drawer */
+.dropdown ul { list-style: none; margin: 0; padding: 6px 0; }
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: inherit;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+  background: rgba(0,0,0,0.06);
+  outline: none;
+}
+
+/* hidden class used to hide dropdown initially */
+.dropdown.hidden { display: none; }
+
+/* Positioning adjustments for small screens */
+@media (max-width: 480px) {
+  .dropdown { right: 8px; min-width: 160px; }
+}
