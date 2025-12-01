@@ -3,8 +3,7 @@ const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./assets/icon_192.png",
-  "./assets/icon_512.png"
+  "./assets/icon_globe.png"
 ];
 
 // Install
