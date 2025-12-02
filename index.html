@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -10,408 +10,437 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
 
-  <!-- JS protection script -->
-  <script>
-    const allowedCSS = [
-        'css/core.css',
-        'css/layout.css',
-        'css/components.css'
-    ];
-    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        const href = link.getAttribute('href');
-        if (!allowedCSS.includes(href)) {
-            link.remove();
-            console.warn('Removed untrusted CSS:', href);
-        }
-    });
-  </script>
+  <!-- Minimal meta -->
+  <meta name="theme-color" content="#000000">
 </head>
 
 <body>
-<div class="container">
+  <div class="container">
 
-  <!-- FINAL, SINGLE, CLEAN HEADER -->
-  <header class="qta-header">
-
-    <!-- Left: World Drawer btn -->
-    <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
-      <span class="sr-only">Open World Drawer</span>
-      <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
-    </button>
-
-    <!-- Center Logos -->
-    <div class="header-center">
-      <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo" class="center-logo" />
-      <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer">
-        <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="center-logo" />
-      </a>
-    </div>
-
-    <!-- Right: Compass Menu -->
-    <div class="header-right">
-      <button id="compass-toggle" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Open system menu" title="System">
-        <span class="sr-only">Open System Menu</span>
-        <span class="compass-icon">🧭</span>
-      </button>
-
-      <!-- Dropdown -->
-      <div id="compass-dropdown" class="dropdown hidden" role="menu">
-        <ul>
-          <li><button class="dropdown-item" data-open="settings.html">Settings</button></li>
-          <li><button class="dropdown-item" data-open="developer.html">Developer Panel</button></li>
-          <li><button class="dropdown-item" data-open="logs.html">Activation Logs</button></li>
-          <li><button class="dropdown-item" data-open="docs.html">Documentation</button></li>
-          <li><button class="dropdown-item" data-open="pwa-tools.html">PWA Tools</button></li>
-          <li><button class="dropdown-item" data-open="about.html">About</button></li>
-        </ul>
+    <!-- SINGLE CLEAN HEADER -->
+    <header class="qta-header" role="banner">
+      <!-- Left: World Drawer btn (Globe) -->
+      <div class="header-left">
+        <button id="open-world-drawer" class="icon-btn" aria-label="Open world drawer" title="World">
+          <span class="sr-only">Open World Drawer</span>
+          <img src="images/qtai_globe.png" alt="QT-AI Globe" class="header-icon" />
+        </button>
       </div>
-    </div>
 
-  </header>
+      <!-- Center Logos -->
+      <div class="header-center" role="img" aria-label="QuantumTrader and Peace Index">
+        <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo" class="center-logo" />
+        <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer">
+          <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="center-logo" />
+        </a>
+      </div>
 
-  <!-- WORLD DRAWER -->
-  <nav id="world-drawer" class="world-drawer closed" aria-hidden="true">
-    <div class="drawer-header">
-      <button id="close-world-drawer" class="close-btn">✕</button>
-      <h2>World Access</h2>
-    </div>
+      <!-- Right: Agric + NGOs small icon buttons -->
+      <div class="header-right" role="navigation" aria-label="Quick access">
+        <button id="open-agric" class="icon-btn small" aria-haspopup="true" title="Agricultural Cooperatives" data-target="coops">
+          <span class="sr-only">Agricultural Cooperatives</span>
+          <img src="images/icon-agric.png" alt="Agric" style="width:28px;height:28px;" />
+        </button>
 
-    <div class="drawer-sections">
-      <!-- Global Markets -->
-      <section class="drawer-section">
-        <h3>Global Markets</h3>
-        <ul>
-          <li><button class="drawer-link" data-open="markets/forex.html">Forex</button></li>
-          <li><button class="drawer-link" data-open="markets/crypto.html">Cryptocurrency</button></li>
-          <li><button class="drawer-link" data-open="markets/metals.html">Metals</button></li>
-          <li><button class="drawer-link" data-open="markets/solid-minerals.html">Solid Minerals</button></li>
-          <li><button class="drawer-link" data-open="markets/oil.html">Oil / Energy</button></li>
-          <li><button class="drawer-link" data-open="markets/sp500.html">S&P 500</button></li>
-          <li><button class="drawer-link" data-open="markets/bonds.html">Bonds</button></li>
-          <li><button class="drawer-link" data-open="markets/foods.html">Foods / Agric Commodities</button></li>
-          <li><button class="drawer-link" data-open="markets/logistics.html">Global Logistics</button></li>
-        </ul>
+        <button id="open-ngos" class="icon-btn small" aria-haspopup="true" title="NGOs" data-target="ngos">
+          <span class="sr-only">NGOs</span>
+          <img src="images/icon-ngos.png" alt="NGOs" style="width:28px;height:28px;" />
+        </button>
+
+        <!-- Compass / System Menu -->
+        <button id="compass-toggle" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Open system menu" title="System">
+          <span class="sr-only">Open System Menu</span>
+          <span class="compass-icon">🧭</span>
+        </button>
+
+        <div id="compass-dropdown" class="dropdown hidden" role="menu" aria-hidden="true">
+          <ul>
+            <li><button class="dropdown-item" data-open="settings.html">Settings</button></li>
+            <li><button class="dropdown-item" data-open="developer.html">Developer Panel</button></li>
+            <li><button class="dropdown-item" data-open="logs.html">Activation Logs</button></li>
+            <li><button class="dropdown-item" data-open="docs.html">Documentation</button></li>
+            <li><button class="dropdown-item" data-open="pwa-tools.html">PWA Tools</button></li>
+            <li><button class="dropdown-item" data-open="about.html">About</button></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- WORLD DRAWER (single) -->
+    <nav id="world-drawer" class="world-drawer closed" aria-hidden="true" role="dialog" aria-label="World Access Drawer">
+      <div class="drawer-header">
+        <button id="close-world-drawer" class="close-btn" aria-label="Close drawer">✕</button>
+        <h2>World Access</h2>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Global Markets (kept first) -->
+        <section id="markets" class="drawer-section">
+          <h3>Global Markets</h3>
+          <ul>
+            <li><button class="drawer-link" data-open="markets/forex.html">Forex</button></li>
+            <li><button class="drawer-link" data-open="markets/crypto.html">Cryptocurrency</button></li>
+            <li><button class="drawer-link" data-open="markets/metals.html">Metals</button></li>
+            <li><button class="drawer-link" data-open="markets/solid-minerals.html">Solid Minerals</button></li>
+            <li><button class="drawer-link" data-open="markets/oil.html">Oil / Energy</button></li>
+            <li><button class="drawer-link" data-open="markets/sp500.html">S&P 500</button></li>
+            <li><button class="drawer-link" data-open="markets/bonds.html">Bonds</button></li>
+            <li><button class="drawer-link" data-open="markets/foods.html">Foods / Agric Commodities</button></li>
+            <li><button class="drawer-link" data-open="markets/logistics.html">Global Logistics</button></li>
+          </ul>
+        </section>
+
+        <!-- Agricultural Cooperatives (right-side content) -->
+        <section id="coops" class="drawer-section">
+          <h3>Agricultural Cooperatives</h3>
+          <ul>
+            <li><button class="drawer-link" data-open="coops/community-trade.html">Community Trade Networks</button></li>
+            <li><button class="drawer-link" data-open="coops/crop-systems.html">Crop Systems</button></li>
+            <li><button class="drawer-link" data-open="coops/exchange.html">Co-op Exchange</button></li>
+            <li><button class="drawer-link" data-open="coops/governance.html">Governance Tools</button></li>
+            <li><button class="drawer-link" data-open="coops/produce-index.html">Produce Index Tracker</button></li>
+          </ul>
+        </section>
+
+        <!-- NGOs (right-side content) -->
+        <section id="ngos" class="drawer-section">
+          <h3>NGOs</h3>
+          <ul>
+            <li><button class="drawer-link" data-open="ngos/stability-index.html">Regional Stability Index</button></li>
+            <li><button class="drawer-link" data-open="ngos/aid-maps.html">Aid Distribution Maps</button></li>
+            <li><button class="drawer-link" data-open="ngos/logistics.html">Humanitarian Logistics</button></li>
+            <li><button class="drawer-link" data-open="ngos/impact.html">Impact Metrics & Reports</button></li>
+            <li><button class="drawer-link" data-open="ngos/peace-analytics.html">Peace Analytics</button></li>
+          </ul>
+        </section>
+      </div>
+
+      <footer class="drawer-footer">
+        <small>QuantumTrader AI™ — World Access</small>
+      </footer>
+    </nav>
+
+    <!-- Drawer overlay (single) -->
+    <div id="drawer-overlay" class="drawer-overlay hidden" tabindex="-1" aria-hidden="true"></div>
+
+    <!-- Main content -->
+    <main id="main" role="main">
+      <section id="activation-gate" class="node-section center">
+        <div class="card">
+          <h1>Activation Gate</h1>
+          <p class="muted">Proceed to the next stage of QuantumTrader AI</p>
+          <div style="margin-top:12px;">
+            <button class="cta" id="activation-proceed-btn">Proceed</button>
+          </div>
+        </div>
       </section>
-    </div>
 
-    <footer class="drawer-footer">
-      <small>QuantumTrader AI™ — World Access</small>
+      <section id="trading-floor" class="node-section">
+        <div class="card flex">
+          <div class="grow">
+            <h2>Trading Floor</h2>
+            <p class="muted">Access Trading Intelligence</p>
+          </div>
+          <div>
+            <button class="cta" id="tradingfloor-btn">Access Trading Floor</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="map-section" class="node-section">
+        <div class="card center" id="map-area">
+          <img id="macarthur-map" src="assets/images/macarthur.png"
+               alt="MacArthur Map — click for Global Trade Dashboard" role="button" />
+          <p class="muted" style="margin-top:10px;">Click the map to open the Global Trade Dashboard or hover for quick signals</p>
+        </div>
+        <div id="forex-tooltip" class="tooltip" aria-hidden="true"></div>
+      </section>
+
+      <section id="panel-section" class="node-section">
+        <div class="card">
+          <h2>Top 10 Currencies — Market Engine</h2>
+          <p class="muted">Technical Analysis (TA) + Forex Events (FF) — live updates</p>
+          <div id="currencies-panel" style="margin-top:12px;"></div>
+        </div>
+      </section>
+
+      <section id="traderlab-section" class="node-section">
+        <div class="card flex">
+          <div class="grow">
+            <h2>TraderLab™</h2>
+            <p class="muted">Advanced strategy testing</p>
+          </div>
+          <button class="cta" id="traderlab-btn">Activate TraderLab</button>
+        </div>
+      </section>
+
+      <section id="cpilot-section" class="node-section">
+        <div class="card flex">
+          <div class="grow">
+            <h2>CPilot™</h2>
+            <p class="muted">Automated guidance & suggestions</p>
+          </div>
+          <button class="cta" id="cpilot-btn">Activate CPilot</button>
+        </div>
+      </section>
+
+      <section id="payment-section" class="node-section">
+        <div class="card center">
+          <h2>Payment Gate</h2>
+          <p class="muted">Opens the secure payment gateway</p>
+          <a class="link" href="https://www.alat.com.ng/payment_gateway" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/alat_qr.png" alt="ALAT Payment QR Code" style="width:140px; border-radius:8px;" />
+          </a>
+          <p class="muted" style="margin-top:10px;">
+            Pay NGN10,000 to: <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      © 2025 All Rights Reserved | QuantumTrader-AI™
     </footer>
-  </nav>
+  </div> <!-- /.container -->
 
-  <!-- Drawer overlay -->
-  <div id="drawer-overlay" class="drawer-overlay hidden"></div>
+  <!-- Inline application scripts -->
+  <script>
+    // Basic selectors
+    const openWorldBtn = document.getElementById('open-world-drawer');
+    const closeWorldBtn = document.getElementById('close-world-drawer');
+    const worldDrawer = document.getElementById('world-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const openAgric = document.getElementById('open-agric');
+    const openNgos = document.getElementById('open-ngos');
+    const compassToggle = document.getElementById('compass-toggle');
+    const compassDropdown = document.getElementById('compass-dropdown');
 
-    <!-- Agricultural Cooperatives -->
-    <section class="drawer-section">
-      <h3>Agricultural Cooperatives</h3>
-      <ul>
-        <li><button class="drawer-link" data-open="coops/community-trade.html">Community Trade Networks</button></li>
-        <li><button class="drawer-link" data-open="coops/crop-systems.html">Crop Systems</button></li>
-        <li><button class="drawer-link" data-open="coops/exchange.html">Co-op Exchange</button></li>
-        <li><button class="drawer-link" data-open="coops/governance.html">Governance Tools</button></li>
-        <li><button class="drawer-link" data-open="coops/produce-index.html">Produce Index Tracker</button></li>
-      </ul>
-    </section>
-
-    <!-- NGOs -->
-    <section class="drawer-section">
-      <h3>NGOs</h3>
-      <ul>
-        <li><button class="drawer-link" data-open="ngos/stability-index.html">Regional Stability Index</button></li>
-        <li><button class="drawer-link" data-open="ngos/aid-maps.html">Aid Distribution Maps</button></li>
-        <li><button class="drawer-link" data-open="ngos/logistics.html">Humanitarian Logistics</button></li>
-        <li><button class="drawer-link" data-open="ngos/impact.html">Impact Metrics & Reports</button></li>
-        <li><button class="drawer-link" data-open="ngos/peace-analytics.html">Peace Analytics</button></li>
-      </ul>
-    </section>
-  </div>
-
-  <footer class="drawer-footer">
-    <small>QuantumTrader AI™ — World Access</small>
-  </footer>
-</nav>
-
-<!-- overlay -->
-<div id="drawer-overlay" class="drawer-overlay hidden" tabindex="-1" aria-hidden="true"></div>
-  
-  <div class="brand-left">
-    <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo">
-  </div>
-  <div class="brand-right">
-    <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer">
-      <img src="images/peace_index_logo.png" alt="Peace Index Logo">
-    </a>
-  </div>
-</header>
-
-<section id="activation-gate" class="node-section center">
-  <div class="card">
-    <h1>Activation Gate</h1>
-    <p class="muted">Proceed to the next stage of QuantumTrader AI</p>
-    <div style="margin-top:12px;">
-      <button class="cta" id="activation-proceed-btn">Proceed</button>
-    </div>
-  </div>
-</section>
-
-<section id="trading-floor" class="node-section">
-  <div class="card flex">
-    <div class="grow">
-      <h2>Trading Floor</h2>
-      <p class="muted">Access Trading Intelligence</p>
-    </div>
-    <div>
-      <button class="cta" id="tradingfloor-btn">Access Trading Floor</button>
-    </div>
-  </div>
-</section>
-
-<section id="map-section" class="node-section">
-  <div class="card center" id="map-area">
-    <img id="macarthur-map" src="assets/images/macarthur.png" 
-         alt="MacArthur Map — click for Global Trade Dashboard" role="button" />
-    <p class="muted" style="margin-top:10px;">Click the map to open the Global Trade Dashboard or hover for quick signals</p>
-  </div>
-  <div id="forex-tooltip" aria-hidden="true"></div>
-</section>
-
-<section id="panel-section" class="node-section">
-  <div class="card">
-    <h2>Top 10 Currencies — Market Engine</h2>
-    <p class="muted">Technical Analysis (TA) + Forex Events (FF) — live updates</p>
-    <div id="currencies-panel" style="margin-top:12px;"></div>
-  </div>
-</section>
-
-<section id="traderlab-section" class="node-section">
-  <div class="card flex">
-    <div class="grow">
-      <h2>TraderLab™</h2>
-      <p class="muted">Advanced strategy testing</p>
-    </div>
-    <button class="cta" id="traderlab-btn">Activate TraderLab</button>
-  </div>
-</section>
-
-<section id="cpilot-section" class="node-section">
-  <div class="card flex">
-    <div class="grow">
-      <h2>CPilot™</h2>
-      <p class="muted">Automated guidance & suggestions</p>
-    </div>
-    <button class="cta" id="cpilot-btn">Activate CPilot</button>
-  </div>
-</section>
-
-<section id="payment-section" class="node-section">
-  <div class="card center">
-    <h2>Payment Gate</h2>
-    <p class="muted">Opens the secure payment gateway</p>
-    <a class="link" href="https://www.alat.com.ng/payment_gateway" target="_blank" rel="noopener noreferrer">
-      <img src="assets/images/alat_qr.png" alt="ALAT Payment QR Code" style="width:140px; border-radius:8px;" />
-    </a>
-    <p class="muted" style="margin-top:10px;">
-      Pay NGN10,000 to: <strong>ALAT WEMA - 0299134895 - Olagoke Ajibulu</strong>
-    </p>
-  </div>
-</section>
-
-<footer>
-  © 2025 All Rights Reserved | QuantumTrader-AI™
-</footer>
-</div>
-
-<script>
-  const WS_URL = 'ws://localhost:8080';
-  const TRACKED_CURRENCIES = ['USD','EUR','JPY','GBP','CNY','CAD','AUD','CHF','INR','KRW'];
-
-  const activationBtn = document.getElementById('activation-proceed-btn');
-  const tradingFloorBtn = document.getElementById('tradingfloor-btn');
-  const traderLabBtn = document.getElementById('traderlab-btn');
-  const cpilotBtn = document.getElementById('cpilot-btn');
-  const macarthurMap = document.getElementById('macarthur-map');
-  const currenciesPanel = document.getElementById('currencies-panel');
-  const tooltip = document.getElementById('forex-tooltip');
-
-  activationBtn.onclick = () => location.href = 'index2.html';
-  tradingFloorBtn.onclick = () => location.href = 'tradingfloor.html';
-  traderLabBtn.onclick = () => location.href = 'traderlab.html';
-  cpilotBtn.onclick = () => location.href = 'cpilot.html';
-
-  macarthurMap.onclick = () => location.href = 'global_trade_dashboard.html';
-
-  const peaceLogo = document.querySelector('.brand-right img');
-  if (peaceLogo) {
-    peaceLogo.addEventListener('click', () => {
-      window.open('https://www.peaceindex.org', '_blank', 'noopener noreferrer');
-    });
-  }
-
-  (function initHandshakeAndPWA(){
-    fetch('/handshake')
-      .then(r => r.json())
-      .then(d => console.log('Handshake OK', d))
-      .catch(err => console.log('Handshake failed', err));
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service worker registered'))
-        .catch(err => console.log('SW registration failed', err));
+    // Drawer helpers
+    function openDrawer() {
+      worldDrawer.classList.remove('closed');
+      worldDrawer.classList.add('open');
+      worldDrawer.setAttribute('aria-hidden', 'false');
+      drawerOverlay.classList.remove('hidden');
+      drawerOverlay.setAttribute('aria-hidden', 'false');
     }
-  })();
+    function closeDrawer() {
+      worldDrawer.classList.remove('open');
+      worldDrawer.classList.add('closed');
+      worldDrawer.setAttribute('aria-hidden', 'true');
+      drawerOverlay.classList.add('hidden');
+      drawerOverlay.setAttribute('aria-hidden', 'true');
+    }
 
-  let signalsData = [];
-  let ws;
-  startWS();
+    // Open world drawer and optionally jump to section
+    function openDrawerAt(targetId) {
+      openDrawer();
+      if (!targetId) return;
+      // small timeout to allow drawer to open then scroll
+      setTimeout(() => {
+        const target = document.getElementById(targetId);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 180);
+    }
 
-  function startWS(){
-    ws = new WebSocket(WS_URL);
+    // Events
+    openWorldBtn.addEventListener('click', () => openDrawer());
+    closeWorldBtn.addEventListener('click', () => closeDrawer());
+    drawerOverlay.addEventListener('click', () => closeDrawer());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
 
-    ws.onopen = () => console.log('WS connected');
+    openAgric.addEventListener('click', () => openDrawerAt('coops'));
+    openNgos.addEventListener('click', () => openDrawerAt('ngos'));
 
-    ws.onmessage = evt => {
-      try {
-        const payload = JSON.parse(evt.data);
-        signalsData = Array.isArray(payload)
-          ? payload
-          : Object.keys(payload).map(k => ({ currency:k, ...payload[k] }));
+    // Compass toggle
+    compassToggle.addEventListener('click', (e) => {
+      const expanded = compassToggle.getAttribute('aria-expanded') === 'true';
+      compassToggle.setAttribute('aria-expanded', (!expanded).toString());
+      compassDropdown.classList.toggle('hidden');
+      compassDropdown.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+    });
 
-        renderCurrencyPanels(signalsData);
-        updateTooltipContent(signalsData);
+    // Header quick navigation items
+    document.getElementById('activation-proceed-btn').addEventListener('click', () => {
+      window.location.href = 'index2.html';
+    });
+    document.getElementById('tradingfloor-btn').addEventListener('click', () => {
+      window.location.href = 'tradingfloor.html';
+    });
+    document.getElementById('traderlab-btn').addEventListener('click', () => {
+      window.location.href = 'traderlab.html';
+    });
+    document.getElementById('cpilot-btn').addEventListener('click', () => {
+      window.location.href = 'cpilot.html';
+    });
+    document.getElementById('macarthur-map')?.addEventListener('click', () => {
+      window.location.href = 'global_trade_dashboard.html';
+    });
 
-      } catch (e) {
-        console.error('Invalid WS data', e);
+    // Safe escape helper
+    function escapeHtml(str){
+      return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // WebSocket with reconnect (no reload)
+    (function setupWS(){
+      const WS_URL = 'ws://localhost:8080';
+      let ws = null;
+      let retry = 0;
+      const TRACKED_CURRENCIES = ['USD','EUR','JPY','GBP','CNY','CAD','AUD','CHF','INR','KRW'];
+
+      const currenciesPanel = document.getElementById('currencies-panel');
+      const tooltip = document.getElementById('forex-tooltip');
+      let signalsData = [];
+
+      function connect(){
+        ws = new WebSocket(WS_URL);
+        ws.onopen = () => {
+          console.log('WS connected');
+          retry = 0;
+        };
+        ws.onmessage = evt => {
+          try {
+            const payload = JSON.parse(evt.data);
+            signalsData = Array.isArray(payload)
+              ? payload
+              : Object.keys(payload).map(k => ({ currency:k, ...payload[k] }));
+            renderCurrencyPanels(signalsData);
+            updateTooltipContent(signalsData);
+          } catch (e) {
+            console.error('Invalid WS data', e);
+          }
+        };
+        ws.onerror = e => console.error('WS error', e);
+        ws.onclose = () => {
+          console.warn('WS closed — retrying');
+          retry = Math.min(6, retry + 1);
+          const wait = Math.pow(2, retry) * 500; // exponential backoff
+          setTimeout(connect, wait);
+        };
       }
-    };
 
-    ws.onerror = e => console.error('WS error', e);
+      function getSignalPill(sig){
+        const s = (sig||'').toLowerCase();
+        if (s.includes('buy')) return `<span class="signal-pill signal-buy">BUY</span>`;
+        if (s.includes('sell')) return `<span class="signal-pill signal-sell">SELL</span>`;
+        return `<span class="signal-pill signal-hold">HOLD</span>`;
+      }
 
-    ws.onclose = () => {
-      console.warn('WS closed — retrying in 3s');
-      setTimeout(() => location.reload(), 3000);
-    };
-  }
+      function aggregateOverall(tech){
+        const cnt = {Buy:0, Sell:0, Hold:0};
+        Object.values(tech || {}).forEach(v => {
+          const t = String(v || '').toLowerCase();
+          if (t.includes('buy')) cnt.Buy++;
+          else if (t.includes('sell')) cnt.Sell++;
+          else cnt.Hold++;
+        });
+        if (cnt.Buy >= cnt.Sell && cnt.Buy >= cnt.Hold) return 'Buy';
+        if (cnt.Sell >= cnt.Buy && cnt.Sell >= cnt.Hold) return 'Sell';
+        return 'Hold';
+      }
 
-  function getSignalPill(sig){
-    const s = (sig||'').toLowerCase();
-    if (s.includes('buy')) return `<span class="signal-pill signal-buy">BUY</span>`;
-    if (s.includes('sell')) return `<span class="signal-pill signal-sell">SELL</span>`;
-    return `<span class="signal-pill signal-hold">HOLD</span>`;
-  }
+      function renderCurrencyPanels(data){
+        if (!currenciesPanel) return;
+        currenciesPanel.innerHTML = '';
+        TRACKED_CURRENCIES.forEach(cur => {
+          const row = data.find(d => (d.currency || '').toUpperCase() === cur) || {};
+          const tech = row.technicalSignals || {};
+          const ff = row.forexFactoryEvents || [];
 
-  function renderCurrencyPanels(data){
-    currenciesPanel.innerHTML = '';
-    TRACKED_CURRENCIES.forEach(cur => {
-      const row = data.find(d => d.currency?.toUpperCase() === cur);
-      const tech = row?.technicalSignals || {};
-      const ff = row?.forexFactoryEvents || [];
+          const card = document.createElement('div');
+          card.className = 'currency-card card';
+          const header = document.createElement('div');
+          header.className = 'row';
+          header.innerHTML = `
+            <div class="currency-title">${escapeHtml(cur)}</div>
+            <div>${getSignalPill(aggregateOverall(tech))}</div>
+          `;
+          const body = document.createElement('div');
+          body.className = 'currency-body';
+          const taHtml = Object.entries(tech).length
+            ? Object.entries(tech).map(([k,v]) => `<div class="small-kv"><strong>${escapeHtml(k)}</strong>: ${escapeHtml(String(v))}</div>`).join('')
+            : `<div class="small-kv muted">No TA data yet</div>`;
+          const ffHtml = ff.length
+            ? ff.map(e => `<div class="small-kv"><strong>${escapeHtml(e.event)}</strong> (${escapeHtml(e.impact)}) → ${escapeHtml(e.signal)}</div>`).join('')
+            : `<div class="small-kv muted">No FF events</div>`;
+          body.innerHTML = `<div>${taHtml}</div><div style="margin-top:10px;"><strong>Forex Events</strong>${ffHtml}</div>`;
+          card.appendChild(header);
+          card.appendChild(body);
+          card.addEventListener('click', () => {
+            const isOpen = body.classList.contains('open');
+            document.querySelectorAll('.currency-body').forEach(b => b.classList.remove('open'));
+            if (!isOpen) body.classList.add('open');
+          });
+          currenciesPanel.appendChild(card);
+        });
+      }
 
-      const card = document.createElement('div');
-      card.className = 'currency-card card';
+      function updateTooltipContent(data){
+        if (!tooltip) return;
+        tooltip.innerHTML = data.length
+          ? data.slice(0,10).map(d => {
+              const ov = aggregateOverall(d.technicalSignals || {});
+              const events = (d.forexFactoryEvents || []).length;
+              return `<div style="margin-bottom:6px;"><strong>${escapeHtml(d.currency)}</strong> — ${ov} — ${events || 'no'} event(s)</div>`;
+            }).join('')
+          : '<div class="muted">No live signals</div>';
+      }
 
-      const header = document.createElement('div');
-      header.className = 'row';
-      header.innerHTML = `
-        <div class="currency-title">${cur}</div>
-        <div>${getSignalPill(aggregateOverall(tech))}</div>
-      `;
-      card.appendChild(header);
+      // basic map tooltip handlers (if map exists)
+      const macarthurMap = document.getElementById('macarthur-map');
+      if (macarthurMap) {
+        macarthurMap.onmousemove = e => {
+          tooltip.style.left = (e.pageX + 14) + 'px';
+          tooltip.style.top = (e.pageY + 14) + 'px';
+        };
+        macarthurMap.onmouseover = () => {
+          tooltip.style.display = 'block';
+          tooltip.setAttribute('aria-hidden','false');
+          updateTooltipContent(signalsData);
+        };
+        macarthurMap.onmouseout = () => {
+          tooltip.style.display = 'none';
+          tooltip.setAttribute('aria-hidden','true');
+        };
+      }
 
-      const body = document.createElement('div');
-      body.className = 'currency-body';
+      // start
+      connect();
+      // expose for debugging if needed
+      window.__QTA_WS = { connect, renderCurrencyPanels };
+    })();
+  </script>
 
-      const taHtml = Object.entries(tech).length
-        ? Object.entries(tech).map(([k,v]) =>
-            `<div class="small-kv"><strong>${escapeHtml(k)}</strong>: ${escapeHtml(String(v))}</div>`
-          ).join('')
-        : `<div class="small-kv muted">No TA data yet</div>`;
-
-      const ffHtml = ff.length
-        ? ff.map(e =>
-            `<div class="small-kv"><strong>${escapeHtml(e.event)}</strong> (${escapeHtml(e.impact)}) → ${escapeHtml(e.signal)}</div>`
-          ).join('')
-        : `<div class="small-kv muted">No FF events</div>`;
-
-      body.innerHTML = `<div>${taHtml}</div><div style="margin-top:10px;"><strong>Forex Events</strong>${ffHtml}</div>`;
-      card.appendChild(body);
-
-      card.addEventListener('click', () => {
-        const isOpen = body.classList.contains('open');
-        document.querySelectorAll('.currency-body').forEach(b => b.classList.remove('open'));
-        if (!isOpen) body.classList.add('open');
+  <!-- Safe CSS protection and PWA registration after DOM ready -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // CSS whitelist enforcement (safe: runs after DOM built)
+      const allowedCSS = [
+        'css/core.css',
+        'css/layout.css',
+        'css/components.css'
+      ];
+      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!allowedCSS.includes(href)) {
+          link.remove();
+          console.warn('Removed untrusted CSS:', href);
+        }
       });
 
-      currenciesPanel.appendChild(card);
+      // Handshake (non-blocking)
+      fetch('/handshake').then(r => {
+        if (r.ok) return r.json();
+        throw new Error('Handshake failed');
+      }).then(d => console.log('Handshake OK', d)).catch(err => console.warn('Handshake failed', err));
+
+      // Register service worker (if available)
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service worker registered', reg.scope))
+          .catch(err => console.warn('SW registration failed', err));
+      }
     });
-  }
-
-  function aggregateOverall(tech){
-    const cnt = {Buy:0, Sell:0, Hold:0};
-    Object.values(tech).forEach(v => {
-      const t = v.toLowerCase();
-      if (t.includes('buy')) cnt.Buy++;
-      else if (t.includes('sell')) cnt.Sell++;
-      else cnt.Hold++;
-    });
-    if (cnt.Buy >= cnt.Sell && cnt.Buy >= cnt.Hold) return 'Buy';
-    if (cnt.Sell >= cnt.Buy && cnt.Sell >= cnt.Hold) return 'Sell';
-    return 'Hold';
-  }
-
-  function escapeHtml(str){
-    return str.replace(/[&<>"']/g, m => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[m]));
-  }
-
-  function updateTooltipContent(data){
-    tooltip.innerHTML = data.length
-      ? data.slice(0,10).map(d => {
-          const ov = aggregateOverall(d.technicalSignals || {});
-          const events = (d.forexFactoryEvents || []).length;
-          return `<div style="margin-bottom:6px;"><strong>${escapeHtml(d.currency)}</strong> — ${ov} — ${events || 'no'} event(s)</div>`;
-        }).join('')
-      : '<div class="muted">No live signals</div>';
-  }
-
-  macarthurMap.onmousemove = e => {
-    tooltip.style.left = (e.pageX + 14) + 'px';
-    tooltip.style.top = (e.pageY + 14) + 'px';
-  };
-  macarthurMap.onmouseover = () => {
-    tooltip.style.display = 'block';
-    tooltip.setAttribute('aria-hidden','false');
-    updateTooltipContent(signalsData);
-  };
-  macarthurMap.onmouseout = () => {
-    tooltip.style.display = 'none';
-    tooltip.setAttribute('aria-hidden','true');
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    renderCurrencyPanels([]);
-    updateTooltipContent([]);
-  });
-</script>
-
-<script>
-const allowedCSS = [
-  'css/core.css',
-  'css/layout.css',
-  'css/components.css'
-];
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-    const href = link.getAttribute('href');
-    if (!allowedCSS.includes(href)) {
-      link.remove();
-      console.warn('Removed untrusted CSS:', href);
-    }
-  });
-});
-</script>
-  
+  </script>
 </body>
-</html>
+  </html>
