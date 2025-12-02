@@ -1,284 +1,177 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader AI™</title>
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="css/core.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
+  <!-- CSS -->
+  <link rel="stylesheet" href="dotcss/core.css">
+  <link rel="stylesheet" href="dotcss/layout.css">
+  <link rel="stylesheet" href="dotcss/components.css">
+  <link rel="stylesheet" href="dotcss/custom.css">
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />
-
-  <style>
-    /* ===== Header ===== */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .icon-group {
-      display: flex;
-      align-items: center;
-    }
-
-    .icon-button {
-      cursor: pointer;
-      font-size: 1.4rem;
-      margin-left: 20px;
-      color: #333;
-      transition: color 0.2s;
-    }
-
-    .icon-button:hover {
-      color: #0070f3;
-    }
-
-    /* ===== Unified Social Impact Tray ===== */
-    .social-impact-tray {
-      display: none;
-      position: fixed;
-      right: 20px;
-      top: 80px;
-      width: 260px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-      z-index: 1000;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .social-impact-tray.active {
-      display: block;
-    }
-
-    .social-impact-tray ul {
-      list-style: none;
-      margin: 0;
-      padding: 15px;
-    }
-
-    .social-impact-tray li {
-      padding: 10px 0;
-      border-bottom: 1px solid #e0e0e0;
-      cursor: pointer;
-      font-weight: 500;
-    }
-
-    .social-impact-tray li:last-child {
-      border-bottom: none;
-    }
-
-    /* ===== Sections ===== */
-    main {
-      padding: 40px;
-    }
-
-    section {
-      margin-bottom: 60px;
-      text-align: center;
-    }
-
-    .module-card {
-      display: inline-block;
-      background: #fff;
-      padding: 25px 20px;
-      margin: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-      width: 280px;
-      transition: transform 0.2s;
-      cursor: pointer;
-    }
-
-    .module-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .module-card img {
-      max-width: 80px;
-      margin-bottom: 15px;
-    }
-
-    .module-card h3 {
-      margin: 10px 0 5px 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .module-card p {
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    /* Payment Gate */
-    #paymentGate {
-      background: #f0f8ff;
-      padding: 30px 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      margin: 0 auto 40px auto;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    }
-
-    #paymentGate button {
-      background: #0070f3;
-      color: #fff;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
-
-    #paymentGate button:hover {
-      background: #005bb5;
-    }
-  </style>
+  <!-- Favicon -->
+  <link rel="icon" href="images/qtai_logo.png" type="image/png">
 </head>
+
 <body>
-  <!-- ===== Header ===== -->
-  <header>
-    <div class="logo">QuantumTrader AI™</div>
-    <div class="icon-group">
-      <i class="fas fa-seedling icon-button" id="agricIcon" title="Agricultural Cooperatives"></i>
-      <i class="fas fa-hands-helping icon-button" id="ngoIcon" title="NGOs"></i>
-      <i class="fas fa-hand-holding-heart icon-button" id="philanthropyIcon" title="Philanthropy"></i>
-    </div>
+
+  <!-- TOP HEADER -->
+  <header class="qtai-header">
+    <img src="images/qtai_logo.png" class="qtai-main-logo" alt="QuantumTrader AI Logo">
+    <h1 class="qtai-headline">QuantumTrader AI™</h1>
   </header>
 
-  <!-- ===== Social Impact Tray ===== -->
-  <div class="social-impact-tray" id="socialTray">
-    <ul>
-      <li>Agricultural Cooperatives</li>
-      <li>NGOs</li>
-      <li>Philanthropy</li>
-    </ul>
-  </div>
+  <!-- ROTATING GLOBE -->
+  <section class="globe-section">
+    <img src="images/globe.png" class="rotating-globe" alt="Rotating Globe">
+  </section>
 
-  <!-- ===== Main Content ===== -->
-  <main>
-    <!-- Welcome Section -->
-    <section>
-      <h1>Welcome to QuantumTrader AI™</h1>
-      <p>Your portal to social impact, trading intelligence, and market insights.</p>
-    </section>
+  <!-- ACTIVATION GATE -->
+  <section class="activation-gate">
+    <button class="activate-btn" id="activateQT">Activate QuantumTrader AI™</button>
+  </section>
 
-    <!-- Payment Gate with QR Code -->
-    <section id="paymentGate">
-      <h2>Activate Your Account</h2>
-      <p>Securely process your subscription and start trading instantly.</p>
-      <div style="margin: 20px 0;">
-        <img src="images/payment_qr.png" alt="Scan to Pay" width="180" height="180">
-        <p style="font-size:0.9rem; color:#555; margin-top:10px;">Scan QR code to proceed with payment</p>
-      </div>
-      <button id="paymentButton">Proceed to Payment</button>
-    </section>
+  <!-- TRADING FLOOR MODULES -->
+  <section class="trading-floor">
+    <h2 class="section-title">Trading Floor Modules</h2>
 
-    <!-- Modules Section -->
-    <section>
-      <h2>Core Modules</h2>
-      <div class="module-card" id="traderLab">
-        <img src="images/traderlab.png" alt="TraderLab">
-        <h3>TraderLab</h3>
-        <p>Analyze, test, and optimize your trading strategies with AI precision.</p>
+    <div class="floor-modules">
+
+      <div class="module" id="module01">
+        <h3>Module 01</h3>
       </div>
 
-      <div class="module-card" id="cPilot">
-        <img src="images/cpilot.png" alt="CPilot">
-        <h3>CPilot</h3>
-        <p>Automated market navigation and trade execution at your fingertips.</p>
+      <div class="module" id="module02">
+        <h3>Module 02</h3>
       </div>
 
-      <div class="module-card" id="currencyPairs">
-        <img src="images/currency.png" alt="Currency Pairs">
-        <h3>Currency Pairs</h3>
-        <p>Access and monitor live market currency pairs with instant insights.</p>
+      <div class="module" id="module03">
+        <h3>Module 03</h3>
       </div>
-    </section>
 
-    <!-- Social Impact Section -->
-    <section>
-      <h2>Social Impact</h2>
-      <p>Engage with communities and initiatives that matter.</p>
-      <div style="display:flex; justify-content:center; gap:20px;">
-        <img src="images/qtai_agric_coop.png" alt="Agricultural Cooperatives" width="80">
-        <img src="images/qtai_ngo.png" alt="NGOs" width="80">
-        <img src="images/qtai_philanthropy.png" alt="Philanthropy" width="80">
+      <div class="module" id="module04">
+        <h3>Module 04</h3>
       </div>
-    </section>
-  </main>
 
-  <!-- ===== Scripts ===== -->
+      <div class="module" id="module05">
+        <h3>Module 05</h3>
+      </div>
+
+      <div class="module" id="module06">
+        <h3>Module 06</h3>
+      </div>
+
+      <div class="module" id="module07">
+        <h3>Module 07</h3>
+      </div>
+
+      <div class="module" id="module08">
+        <h3>Module 08</h3>
+      </div>
+
+      <div class="module" id="module09">
+        <h3>Module 09</h3>
+      </div>
+
+      <div class="module" id="module10">
+        <h3>Module 10</h3>
+      </div>
+
+      <div class="module" id="module11">
+        <h3>Module 11</h3>
+      </div>
+
+      <div class="module" id="module12">
+        <h3>Module 12</h3>
+      </div>
+
+      <div class="module" id="module13">
+        <h3>Module 13</h3>
+      </div>
+
+      <div class="module" id="module14">
+        <h3>Module 14</h3>
+      </div>
+
+      <div class="module" id="module15">
+        <h3>Module 15</h3>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HORIZONTAL TRAYS -->
+  <section class="horizontal-trays">
+
+    <div class="tray" id="tray_ngo">
+      <img src="images/qtai_ngo.png" alt="NGOs">
+      <span>NGOs</span>
+    </div>
+
+    <div class="tray" id="tray_agric">
+      <img src="images/qtai_agric_coop.png" alt="Agric Cooperatives">
+      <span>Agricultural Cooperatives</span>
+    </div>
+
+    <div class="tray" id="tray_philanthropy">
+      <img src="images/qtai_philanthropy.png" alt="Philanthropy">
+      <span>Philanthropy</span>
+    </div>
+
+  </section>
+
+  <!-- FOOTER ORI OLOKUN -->
+  <footer class="qtai-footer">
+    <img src="images/ori_olokun.png" class="ori-olokun" alt="Ori Olokun">
+  </footer>
+
+  <!-- MAIN APPLICATION SCRIPT -->
+  <script type="module" src="app.js"></script>
+
+  <!-- QT-AI INLINE DIAGNOSTIC -->
   <script>
-    // Unified Social Impact Tray Toggle
-    const tray = document.getElementById('socialTray');
-    const icons = [
-      document.getElementById('agricIcon'),
-      document.getElementById('ngoIcon'),
-      document.getElementById('philanthropyIcon')
-    ];
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log("🔵 QT-AI Diagnostic: Initializing checks...");
 
-    icons.forEach(icon => {
-      icon.addEventListener('click', () => {
-        tray.classList.toggle('active');
+      // 1. Trading Floor Modules
+      const modules = document.querySelectorAll('.floor-modules .module');
+      console.log(`🟦 Modules detected: ${modules.length}`);
+      modules.forEach((mod, i) => {
+        console.log(`   • Module ${i + 1}: ID="${mod.id}" → OK`);
       });
-    });
 
-    document.addEventListener('click', (e) => {
-      if (!tray.contains(e.target) && !icons.some(icon => icon.contains(e.target))) {
-        tray.classList.remove('active');
-      }
-    });
+      // 2. Horizontal Trays
+      const trays = document.querySelectorAll('.horizontal-trays .tray');
+      console.log(`🟩 Trays detected: ${trays.length}`);
+      trays.forEach((tray) => {
+        console.log(`   • Tray ID="${tray.id}" → OK`);
+      });
 
-    // Handshake with server.mjs
-    const handshake = async () => {
-      try {
-        const response = await fetch('/server.mjs/handshake', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: 'USER_ID_HERE' })
-        });
-        const data = await response.json();
-        if (data.status === 'success') {
-          alert('Handshake successful! Account activated.');
+      // 3. Rotating Globe
+      const globe = document.querySelector('.rotating-globe');
+      console.log(`🌍 Globe element present: ${globe ? "YES" : "NO"}`);
+
+      // 4. Ori Olokun Footer Image
+      const olokun = document.querySelector('img.ori-olokun');
+      console.log(`🌀 Ori Olokun footer image: ${olokun ? "YES" : "NO"}`);
+
+      // 5. Handshake Script Check
+      console.log("🔗 Checking handshake module…");
+      import('./server.mjs').then(module => {
+        if (module.handshakeWithServer) {
+          console.log("✅ Handshake script loaded. handshakeWithServer() is READY.");
         } else {
-          alert('Handshake failed. Please try again.');
-         document.getElementById('paymentButton').addEventListener('click', handshake);
+          console.warn("⚠️ Handshake module loaded but function not found.");
+        }
+      }).catch(err => {
+        console.error("❌ Handshake module failed to load:", err);
+      });
 
-    // Modules click events
-    document.getElementById('traderLab').addEventListener('click', () => {
-      alert('TraderLab module activated.');
-    });
-
-    document.getElementById('cPilot').addEventListener('click', () => {
-      alert('CPilot module activated.');
-    });
-
-    document.getElementById('currencyPairs').addEventListener('click', () => {
-      alert('Currency Pairs module activated.');
+      console.log("🟣 QT-AI Diagnostic complete. Review console for details.");
     });
   </script>
+
 </body>
 </html>
