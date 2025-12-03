@@ -1,0 +1,55 @@
+/* QR PAYMENT SECTION */
+.qtai-qr-section {
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 30px;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.qr-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.qr-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.qtai-qr {
+  width: 220px;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.qr-bank-details h3 {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.qr-bank-details p {
+  margin: 3px 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.qr-card-support {
+  margin-top: 20px;
+}
+
+.qr-card-support ul {
+  list-style: none;
+  padding: 0;
+}
+
+.qr-card-support li {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #333;
+}
