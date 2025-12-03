@@ -5,173 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader AI™</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="dotcss/core.css">
-  <link rel="stylesheet" href="dotcss/layout.css">
-  <link rel="stylesheet" href="dotcss/components.css">
-  <link rel="stylesheet" href="dotcss/custom.css">
-
-  <!-- Favicon -->
-  <link rel="icon" href="images/qtai_logo.png" type="image/png">
+  <!-- Trusted core styles -->
+  <link rel="stylesheet" href="css/core.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
 </head>
 
 <body>
 
-  <!-- TOP HEADER -->
-  <header class="qtai-header">
-    <img src="images/qtai_logo.png" class="qtai-main-logo" alt="QuantumTrader AI Logo">
-    <h1 class="qtai-headline">QuantumTrader AI™</h1>
+  <!-- ========================================= -->
+  <!-- TOP HEADER + LOGO -->
+  <!-- ========================================= -->
+  <header class="qt-header">
+    <img src="images/qtai_logo.png" alt="QuantumTrader AI Logo" class="qt-logo">
+    <h1 class="qt-title">QuantumTrader AI™</h1>
   </header>
 
-  <!-- ROTATING GLOBE -->
-  <section class="globe-section">
-    <img src="images/globe.png" class="rotating-globe" alt="Rotating Globe">
-  </section>
+  <!-- ========================================= -->
+  <!-- MAIN MODULES AREA (Rotational Pane C2) -->
+  <!-- ========================================= -->
+  <main class="qt-main-content">
 
-  <!-- ACTIVATION GATE -->
-  <section class="activation-gate">
-    <button class="activate-btn" id="activateQT">Activate QuantumTrader AI™</button>
-  </section>
+    <section class="qt-modules-container">
+      <h2 class="section-title">Core System Modules (01–15)</h2>
 
-  <!-- TRADING FLOOR MODULES -->
-  <section class="trading-floor">
-    <h2 class="section-title">Trading Floor Modules</h2>
-
-    <div class="floor-modules">
-
-      <div class="module" id="module01">
-        <h3>Module 01</h3>
+      <div class="qt-module-grid">
+        <!-- Simplified placeholder modules -->
+        <div class="module-item">Module 01</div>
+        <div class="module-item">Module 02</div>
+        <div class="module-item">Module 03</div>
+        <div class="module-item">Module 04</div>
+        <div class="module-item">Module 05</div>
+        <div class="module-item">Module 06</div>
+        <div class="module-item">Module 07</div>
+        <div class="module-item">Module 08</div>
+        <div class="module-item">Module 09</div>
+        <div class="module-item">Module 10</div>
+        <div class="module-item">Module 11</div>
+        <div class="module-item">Module 12</div>
+        <div class="module-item">Module 13</div>
+        <div class="module-item">Module 14</div>
+        <div class="module-item">Module 15</div>
       </div>
+    </section>
 
-      <div class="module" id="module02">
-        <h3>Module 02</h3>
+    <!-- ======================================================= -->
+    <!-- 🔵 PAYMENT SECTION (Requested by you — NEW INSERTION) -->
+    <!-- Positioned ABOVE the Ori Olokun block.                  -->
+    <!-- ======================================================= -->
+    <section class="qt-payment-section">
+      <h2 class="section-title">Support QuantumTrader AI™</h2>
+
+      <p>Your support helps maintain server resources, continuous development and infrastructure expansion of QT-AI.</p>
+
+      <div class="qt-payment-grid">
+
+        <!-- WEMA QR CODE -->
+        <div class="qt-pay-item">
+          <h3>WEMA BANK QR Code</h3>
+          <img src="images/qtai_wema_qr.png" alt="WEMA QR Code" class="qt-qr">
+        </div>
+
+        <!-- WEMA BANK DETAILS -->
+        <div class="qt-pay-item">
+          <h3>WEMA BANK Details</h3>
+          <p><strong>Bank:</strong> WEMA BANK PLC</p>
+          <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+          <p><strong>Account Number:</strong>0299134895</p>
+          <p><em>0299134895</em></p>
+        </div>
+
+        <!-- SUPPORTED CARDS -->
+        <div class="qt-pay-item">
+          <h3>Supported Cards</h3>
+          <p>Payments can be made using:</p>
+          <ul>
+            <li>Mastercard</li>
+            <li>Visa</li>
+            <li>Verve</li>
+            <li>Other bank cards supported by WEMA QR</li>
+          </ul>
+        </div>
+
       </div>
+    </section>
+    <!-- END PAYMENT SECTION -->
 
-      <div class="module" id="module03">
-        <h3>Module 03</h3>
-      </div>
+    <!-- ======================================================= -->
+    <!-- ORI OLOKUN IMAGE BLOCK — ALWAYS ABOVE FOOTER            -->
+    <!-- (You corrected naming; this is now ori_olokun.png)      -->
+    <!-- ======================================================= -->
+    <section class="qt-olokun-section">
+      <img src="images/ori_olokun.png" alt="Ori Olokun Symbol" class="qt-olokun">
+    </section>
 
-      <div class="module" id="module04">
-        <h3>Module 04</h3>
-      </div>
+  </main>
 
-      <div class="module" id="module05">
-        <h3>Module 05</h3>
-      </div>
-
-      <div class="module" id="module06">
-        <h3>Module 06</h3>
-      </div>
-
-      <div class="module" id="module07">
-        <h3>Module 07</h3>
-      </div>
-
-      <div class="module" id="module08">
-        <h3>Module 08</h3>
-      </div>
-
-      <div class="module" id="module09">
-        <h3>Module 09</h3>
-      </div>
-
-      <div class="module" id="module10">
-        <h3>Module 10</h3>
-      </div>
-
-      <div class="module" id="module11">
-        <h3>Module 11</h3>
-      </div>
-
-      <div class="module" id="module12">
-        <h3>Module 12</h3>
-      </div>
-
-      <div class="module" id="module13">
-        <h3>Module 13</h3>
-      </div>
-
-      <div class="module" id="module14">
-        <h3>Module 14</h3>
-      </div>
-
-      <div class="module" id="module15">
-        <h3>Module 15</h3>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- HORIZONTAL TRAYS -->
-  <section class="horizontal-trays">
-
-    <div class="tray" id="tray_ngo">
-      <img src="images/qtai_ngo.png" alt="NGOs">
-      <span>NGOs</span>
-    </div>
-
-    <div class="tray" id="tray_agric">
-      <img src="images/qtai_agric_coop.png" alt="Agric Cooperatives">
-      <span>Agricultural Cooperatives</span>
-    </div>
-
-    <div class="tray" id="tray_philanthropy">
-      <img src="images/qtai_philanthropy.png" alt="Philanthropy">
-      <span>Philanthropy</span>
-    </div>
-
-  </section>
-
-  <!-- FOOTER ORI OLOKUN -->
-  <footer class="qtai-footer">
-    <img src="images/ori_olokun.png" class="ori-olokun" alt="Ori Olokun">
+  <!-- ========================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================= -->
+  <footer class="qt-footer">
+    <p>© 2025 QuantumTrader AI™ — Visionary, Architect & Builder: Olagoke Ajibulu</p>
   </footer>
 
-  <!-- MAIN APPLICATION SCRIPT -->
-  <script type="module" src="app.js"></script>
-
-  <!-- QT-AI INLINE DIAGNOSTIC -->
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      console.log("🔵 QT-AI Diagnostic: Initializing checks...");
-
-      // 1. Trading Floor Modules
-      const modules = document.querySelectorAll('.floor-modules .module');
-      console.log(`🟦 Modules detected: ${modules.length}`);
-      modules.forEach((mod, i) => {
-        console.log(`   • Module ${i + 1}: ID="${mod.id}" → OK`);
-      });
-
-      // 2. Horizontal Trays
-      const trays = document.querySelectorAll('.horizontal-trays .tray');
-      console.log(`🟩 Trays detected: ${trays.length}`);
-      trays.forEach((tray) => {
-        console.log(`   • Tray ID="${tray.id}" → OK`);
-      });
-
-      // 3. Rotating Globe
-      const globe = document.querySelector('.rotating-globe');
-      console.log(`🌍 Globe element present: ${globe ? "YES" : "NO"}`);
-
-      // 4. Ori Olokun Footer Image
-      const olokun = document.querySelector('img.ori-olokun');
-      console.log(`🌀 Ori Olokun footer image: ${olokun ? "YES" : "NO"}`);
-
-      // 5. Handshake Script Check
-      console.log("🔗 Checking handshake module…");
-      import('./server.mjs').then(module => {
-        if (module.handshakeWithServer) {
-          console.log("✅ Handshake script loaded. handshakeWithServer() is READY.");
-        } else {
-          console.warn("⚠️ Handshake module loaded but function not found.");
-        }
-      }).catch(err => {
-        console.error("❌ Handshake module failed to load:", err);
-      });
-
-      console.log("🟣 QT-AI Diagnostic complete. Review console for details.");
-    });
-  </script>
+  <!-- ========================================= -->
+  <!-- SCRIPT LOADING -->
+  <!-- ========================================= -->
+  <script src="js/app.js"></script>
 
 </body>
 </html>
