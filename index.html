@@ -1,290 +1,153 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QuantumTrader AI™</title>
 
+  <!-- Trusted Styles -->
+  <link rel="stylesheet" href="css/core.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0e1113;
-      color: #e6eef5;
-    }
+    /* --- INTERNAL MODULES HIDDEN --- */
+    .internal-modules { display: none !important; }
 
-    header {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .qtai-main-logo {
-      height: 80px;
-    }
-
-    .qtai-headline {
-      font-size: 2rem;
-      margin-top: 8px;
-    }
-
-    .rotating-globe {
-      display: block;
-      margin: 20px auto;
-      height: 120px;
-      animation: rotateGlobe 40s linear infinite;
-    }
-
-    @keyframes rotateGlobe {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .activation-gate {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .activate-btn {
-      background: #1e88e5;
-      color: white;
-      padding: 14px 28px;
-      border: none;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* PAYMENT SECTION */
+    /* Payment Section */
     .payment-section {
-      text-align: center;
-      margin: 30px auto;
+      width: 100%;
       padding: 20px;
-      background: #15181a;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 480px;
+      background: #0d0d0d;
+      border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      color: #fff;
+    }
+    .payment-section img {
+      width: 180px;
+      margin-bottom: 10px;
+    }
+    .payment-cards img {
+      width: 60px;
+      margin: 0 10px;
+      vertical-align: middle;
     }
 
-    .payment-section img.qr {
-      height: 150px;
-      margin-bottom: 12px;
-    }
-
-    .payment-details {
-      margin: 10px 0;
-      font-size: 1rem;
-      line-height: 1.4;
-    }
-
-    .card-row {
-      margin-top: 12px;
+    /* Triangle Nodes */
+    .triangle-section {
       display: flex;
       justify-content: center;
-      gap: 14px;
+      align-items: center;
+      gap: 50px;
+      padding: 40px 0;
     }
-
-    .card-row img {
-      height: 32px;
-    }
-
-    /* TRIANGULAR NODES */
-    .triangle-nodes {
-      margin: 40px auto;
-      text-align: center;
-    }
-
-    .triangle-wrapper {
-      width: 300px;
-      margin: auto;
-      position: relative;
-      height: 230px;
-    }
-
-    .node {
-      position: absolute;
-      background: #1c1f22;
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 1px solid #2a2f33;
-      transition: transform 0.2s ease;
-    }
-
-    .node:hover {
-      transform: scale(1.06);
-      background: #263238;
-    }
-
-    .node.apex {
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .node.left {
-      bottom: 0;
-      left: 0;
-    }
-
-    .node.right {
-      bottom: 0;
-      right: 0;
-    }
-
-    /* MODULES */
-    .trading-floor {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .floor-modules {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 14px;
-      margin-top: 10px;
-    }
-
-    .module {
-      background: #1c1f22;
-      padding: 12px;
-      border-radius: 6px;
-      transition: transform 0.2s ease;
-    }
-
-    .module:hover {
-      transform: scale(1.05);
-      background: #263238;
-    }
-
-    /* TRAYS */
-    .horizontal-trays {
+    .triangle-node {
+      width: 130px;
+      height: 130px;
+      background: #111;
+      border: 2px solid #444;
+      border-radius: 12px;
       display: flex;
-      overflow-x: auto;
-      padding: 16px;
-      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
     }
 
-    .tray {
-      min-width: 160px;
-      background: #1a1d1f;
-      border-radius: 6px;
+    /* Trays */
+    .tray-left, .tray-right {
+      position: fixed;
+      top: 120px;
+      width: 70px;
+      height: auto;
+      background: #111;
+      border: 1px solid #444;
       padding: 10px;
       text-align: center;
+      color: #fff;
+    }
+    .tray-left { left: 0; }
+    .tray-right { right: 0; }
+    .tray-right img, .tray-left img {
+      width: 60px;
+      margin-bottom: 15px;
     }
 
-    .tray img {
-      height: 60px;
-      margin-bottom: 8px;
-    }
-
-    /* FOOTER */
+    /* Footer */
     footer {
-      margin-top: 40px;
+      width: 100%;
+      padding: 30px 0;
       text-align: center;
+      background: #000;
+      border-top: 1px solid #333;
     }
-
-    .ori-olokun {
-      height: 80px;
-      animation: pulse 5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+    footer img {
+      width: 120px;
+      opacity: 0.8;
     }
   </style>
 </head>
-
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <img src="images/qtai_logo.png" class="qtai-main-logo" alt="QuantumTrader AI Logo" />
-    <h1 class="qtai-headline">QuantumTrader AI™</h1>
-  </header>
+  <!-- Rotating Globe -->
+  <section id="globe-container">
+    <img src="images/globe.png" alt="QuantumTrader AI Globe" width="300">
+  </section>
 
-  <!-- GLOBE -->
-  <img src="images/globe.png" class="rotating-globe" alt="Rotating Globe" />
-
-  <!-- ACTIVATION -->
-  <section class="activation-gate">
-    <button class="activate-btn" id="activateQT">Activate QuantumTrader AI™</button>
+  <!-- Activation Gateway -->
+  <section id="activation-gateway">
+    <h2>Activation Gateway</h2>
   </section>
 
   <!-- PAYMENT SECTION -->
   <section class="payment-section">
-    <img src="images/alat_qr.png" alt="Wema/ALAT QR Code" class="qr" />
-
-    <div class="payment-details">
-      <strong>Wema Bank (ALAT)</strong><br>
-      Account Number: <strong>0299134895</strong><br>
-      Account Name: <strong>Olagoke Ajibulu</strong>
+    <img src="images/alat_qr.png" alt="Wema Bank QR Code">
+    <div>
+      <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+      <p><strong>Bank:</strong> Wema Bank Plc</p>
+      <p><strong>Account Number:</strong> 0299134895</p>
     </div>
 
-    <div class="card-row">
-      <img src="images/card_visa.png" alt="Visa" />
-      <img src="images/card_mastercard.png" alt="Mastercard" />
-      <img src="images/card_verve.png" alt="Verve" />
-      <img src="images/card_amex.png" alt="AMEX" />
+    <div class="payment-cards">
+      <img src="images/visa.png" alt="Visa">
+      <img src="images/mastercard.png" alt="MasterCard">
+      <img src="images/verve.png" alt="Verve">
     </div>
   </section>
 
   <!-- TRIANGULAR NODES -->
-  <section class="triangle-nodes">
-    <div class="triangle-wrapper">
-      <div class="node apex">Trading Floor</div>
-      <div class="node left">TraderLab</div>
-      <div class="node right">CPilot</div>
-    </div>
+  <section class="triangle-section">
+    <div class="triangle-node">Trading Floor</div>
+    <div class="triangle-node">TraderLab</div>
+    <div class="triangle-node">CPilot</div>
   </section>
 
-  <!-- MODULES -->
-  <section class="trading-floor">
-    <h2>Trading Floor Modules</h2>
+  <!-- LEFT TRAY (Global Markets) -->
+  <div class="tray-left">
+    <img src="images/qtai_global_markets.png" alt="Global Markets">
+    <p>Markets</p>
+  </div>
 
-    <div class="floor-modules">
-      <!-- 15 modules -->
-      <div class="module"><h3>Module 01</h3></div>
-      <div class="module"><h3>Module 02</h3></div>
-      <div class="module"><h3>Module 03</h3></div>
-      <div class="module"><h3>Module 04</h3></div>
-      <div class="module"><h3>Module 05</h3></div>
-      <div class="module"><h3>Module 06</h3></div>
-      <div class="module"><h3>Module 07</h3></div>
-      <div class="module"><h3>Module 08</h3></div>
-      <div class="module"><h3>Module 09</h3></div>
-      <div class="module"><h3>Module 10</h3></div>
-      <div class="module"><h3>Module 11</h3></div>
-      <div class="module"><h3>Module 12</h3></div>
-      <div class="module"><h3>Module 13</h3></div>
-      <div class="module"><h3>Module 14</h3></div>
-      <div class="module"><h3>Module 15</h3></div>
-    </div>
-  </section>
+  <!-- RIGHT TRAY (NGO, Agric, Philanthropy) -->
+  <div class="tray-right">
+    <img src="images/qtai_ngo.png" alt="NGO">
+    <img src="images/qtai_agric_coop.png" alt="Agric Coop">
+    <img src="images/qtai_philanthropy.png" alt="Philanthropy">
+  </div>
 
-  <!-- TRAYS -->
-  <section class="horizontal-trays">
-    <div class="tray" id="tray_ngo">
-      <img src="images/qtai_ngo.png" alt="NGOs" />
-      <span>NGOs</span>
-    </div>
+  <!-- INTERNAL MODULES (Hidden) -->
+  <div class="internal-modules">
+    <!-- Modules 01–15 controlled by CCLM²™ (hidden) -->
+  </div>
 
-    <div class="tray" id="tray_agric">
-      <img src="images/qtai_agric_coop.png" alt="Agricultural Cooperatives" />
-      <span>Agricultural Cooperatives</span>
-    </div>
-
-    <div class="tray" id="tray_philanthropy">
-      <img src="images/qtai_philanthropy.png" alt="Philanthropy" />
-      <span>Philanthropy</span>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
+  <!-- FOOTER with Ori Olokun -->
   <footer>
-    <img src="images/ori_olokun.png" class="ori-olokun" alt="Ori Olokun" />
+    <img src="images/ori_olokun.png" alt="Ori Olokun">
   </footer>
-
-  <script type="module" src="app.js"></script>
 
 </body>
 </html>
