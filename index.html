@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI™</title>
 
-  <!-- Inline CSS: Core Layout & Components -->
   <style>
     body {
       margin: 0;
@@ -13,34 +12,38 @@
       background: #0e1113;
       color: #e6eef5;
     }
+
     header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
       padding: 20px;
     }
+
     .qtai-main-logo {
       height: 80px;
     }
+
     .qtai-headline {
       font-size: 2rem;
       margin-top: 8px;
     }
 
- .rotating-globe {
+    .rotating-globe {
       display: block;
       margin: 20px auto;
       height: 120px;
       animation: rotateGlobe 40s linear infinite;
     }
+
     @keyframes rotateGlobe {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
     .activation-gate {
       text-align: center;
       margin: 30px 0;
     }
+
     .activate-btn {
       background: #1e88e5;
       color: white;
@@ -50,35 +53,116 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    .activate-btn.qt-activated {
-      background: #43a047;
+
+    /* PAYMENT SECTION */
+    .payment-section {
+      text-align: center;
+      margin: 30px auto;
+      padding: 20px;
+      background: #15181a;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 480px;
     }
+
+    .payment-section img.qr {
+      height: 150px;
+      margin-bottom: 12px;
+    }
+
+    .payment-details {
+      margin: 10px 0;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .card-row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .card-row img {
+      height: 32px;
+    }
+
+    /* TRIANGULAR NODES */
+    .triangle-nodes {
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .triangle-wrapper {
+      width: 300px;
+      margin: auto;
+      position: relative;
+      height: 230px;
+    }
+
+    .node {
+      position: absolute;
+      background: #1c1f22;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid #2a2f33;
+      transition: transform 0.2s ease;
+    }
+
+    .node:hover {
+      transform: scale(1.06);
+      background: #263238;
+    }
+
+    .node.apex {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .node.left {
+      bottom: 0;
+      left: 0;
+    }
+
+    .node.right {
+      bottom: 0;
+      right: 0;
+    }
+
+    /* MODULES */
     .trading-floor {
       padding: 20px;
       text-align: center;
     }
+
     .floor-modules {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 14px;
       margin-top: 10px;
     }
+
     .module {
       background: #1c1f22;
       padding: 12px;
       border-radius: 6px;
       transition: transform 0.2s ease;
     }
-    .module-hovered {
+
+    .module:hover {
       transform: scale(1.05);
       background: #263238;
     }
+
+    /* TRAYS */
     .horizontal-trays {
       display: flex;
       overflow-x: auto;
       padding: 16px;
       gap: 12px;
     }
+
     .tray {
       min-width: 160px;
       background: #1a1d1f;
@@ -87,55 +171,22 @@
       text-align: center;
     }
 
-<div class="tray" id="tray_agric">
-      <img src="images/qtai_agric_coop.png" alt="Agricultural Cooperatives" />
-      <span>Agricultural Cooperatives</span>
-    </div>
-    <div class="tray" id="tray_philanthropy">
-      <img src="images/qtai_philanthropy.png" alt="Philanthropy" />
-      <span>Philanthropy</span>
-    </div>
-  </section>
-
-  <!– FOOTER –>
-  <footer>
-    <img src="images/ori_olokun.png" class="ori-olokun" alt="Ori Olokun" />
-  </footer>
-
-  <!– APP.JS –>
-  <script type="module" src="app.js"></script>
-
-  <!– DIAGNOSTIC + HANDSHAKE VALIDATION –>
-  <script type="module">
-    window.addEventListener('DOMContentLoaded', async () => 
-      console.log("🔵 QT-AI Diagnostic: Starting...");
-
-      const modules = document.querySelectorAll('.floor-modules .module');
-      const trays = document.querySelectorAll('.horizontal-trays .tray');
-      const globe = document.querySelector('.rotating-globe');
-      const olokun = document.querySelector('.ori-olokun');
-
-      console.log(`🟦 Modules:{modules.length}`);
-      console.log(`🟩 Trays: trays.length`);
-      console.log(`🌍 Globe Present:{!!globe}`);
-      console.log(`🌀 Ori Olokun Present: ${!!olokun}`);
-
-      try {
-        const handshake = await import('./server.mjs');
-        if (handshake.handshakeWithServer) {
-
-.tray img {
+    .tray img {
       height: 60px;
       margin-bottom: 8px;
     }
+
+    /* FOOTER */
     footer {
       margin-top: 40px;
       text-align: center;
     }
+
     .ori-olokun {
       height: 80px;
       animation: pulse 5s infinite;
     }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.08); }
@@ -152,21 +203,61 @@
   </header>
 
   <!-- GLOBE -->
-  <section>
-    <img src="images/globe.png" class="rotating-globe" alt="Rotating Globe" />
-  </section>
+  <img src="images/globe.png" class="rotating-globe" alt="Rotating Globe" />
 
   <!-- ACTIVATION -->
   <section class="activation-gate">
     <button class="activate-btn" id="activateQT">Activate QuantumTrader AI™</button>
   </section>
 
+  <!-- PAYMENT SECTION -->
+  <section class="payment-section">
+    <img src="images/alat_qr.png" alt="Wema/ALAT QR Code" class="qr" />
+
+    <div class="payment-details">
+      <strong>Wema Bank (ALAT)</strong><br>
+      Account Number: <strong>___________</strong><br>
+      Account Name: <strong>___________</strong>
+    </div>
+
+    <div class="card-row">
+      <img src="images/card_visa.png" alt="Visa" />
+      <img src="images/card_mastercard.png" alt="Mastercard" />
+      <img src="images/card_verve.png" alt="Verve" />
+      <img src="images/card_amex.png" alt="AMEX" />
+    </div>
+  </section>
+
+  <!-- TRIANGULAR NODES -->
+  <section class="triangle-nodes">
+    <div class="triangle-wrapper">
+      <div class="node apex">Trading Floor</div>
+      <div class="node left">TraderLab</div>
+      <div class="node right">CPilot</div>
+    </div>
+  </section>
+
   <!-- MODULES -->
   <section class="trading-floor">
     <h2>Trading Floor Modules</h2>
+
     <div class="floor-modules">
-      <!-- 15 Modules -->
-      [...Array(15)].map((_, i) => `<div class="module" id="module{i+1}"><h3>Module ${String(i+1).padStart(2, '0')}</h3></div>`).join('')}
+      <!-- 15 modules -->
+      <div class="module"><h3>Module 01</h3></div>
+      <div class="module"><h3>Module 02</h3></div>
+      <div class="module"><h3>Module 03</h3></div>
+      <div class="module"><h3>Module 04</h3></div>
+      <div class="module"><h3>Module 05</h3></div>
+      <div class="module"><h3>Module 06</h3></div>
+      <div class="module"><h3>Module 07</h3></div>
+      <div class="module"><h3>Module 08</h3></div>
+      <div class="module"><h3>Module 09</h3></div>
+      <div class="module"><h3>Module 10</h3></div>
+      <div class="module"><h3>Module 11</h3></div>
+      <div class="module"><h3>Module 12</h3></div>
+      <div class="module"><h3>Module 13</h3></div>
+      <div class="module"><h3>Module 14</h3></div>
+      <div class="module"><h3>Module 15</h3></div>
     </div>
   </section>
 
@@ -175,21 +266,25 @@
     <div class="tray" id="tray_ngo">
       <img src="images/qtai_ngo.png" alt="NGOs" />
       <span>NGOs</span>
-console.log("✅ Handshake script loaded and READY.");
-         else 
-          console.warn("⚠️ Function handshakeWithServer not found.");
-         catch (err) 
-        console.error("❌ Handshake import failed:", err);
-      
+    </div>
 
-      console.log("🟣 QT-AI Diagnostic complete.");
-    );
-  </script>
+    <div class="tray" id="tray_agric">
+      <img src="images/qtai_agric_coop.png" alt="Agricultural Cooperatives" />
+      <span>Agricultural Cooperatives</span>
+    </div>
+
+    <div class="tray" id="tray_philanthropy">
+      <img src="images/qtai_philanthropy.png" alt="Philanthropy" />
+      <span>Philanthropy</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="images/ori_olokun.png" class="ori-olokun" alt="Ori Olokun" />
+  </footer>
+
+  <script type="module" src="app.js"></script>
 
 </body>
 </html>
-“`
-
-—
-
- 
