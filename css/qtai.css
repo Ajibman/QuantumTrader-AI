@@ -283,3 +283,160 @@ footer {
   padding: 8px;
   line-height: 1;
 }
+
+/* ======================= */
+/* QuantumTrader AI™ Styles */
+/* ======================= */
+
+/* --- Global --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0e1113;
+  color: #e6eef5;
+}
+
+/* --- Rotating Globe --- */
+#globe-container img {
+  display: block;
+  margin: 20px auto;
+  height: 120px;
+  animation: rotateGlobe 40s linear infinite;
+}
+@keyframes rotateGlobe {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- Activation Gateway --- */
+#activation-gateway {
+  text-align: center;
+  margin: 30px 0;
+}
+
+/* --- Payment Section --- */
+.payment-section {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #15181a;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.payment-section img {
+  width: 180px;
+  margin-bottom: 12px;
+}
+
+.payment-section p {
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+.payment-cards {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.payment-cards img {
+  width: 60px;
+  vertical-align: middle;
+}
+
+/* --- Triangle Nodes --- */
+.triangle-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 40px 0;
+}
+
+.triangle-node {
+  width: 130px;
+  height: 130px;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+.triangle-node:hover {
+  transform: scale(1.06);
+  background: #263238;
+}
+
+/* --- Left & Right Trays --- */
+.tray-left, .tray-right {
+  position: fixed;
+  top: 120px;
+  width: 70px;
+  padding: 10px;
+  background: #111;
+  border: 1px solid #444;
+  text-align: center;
+  color: #fff;
+}
+
+.tray-left { left: 0; }
+.tray-right { right: 0; }
+
+.tray-left img, .tray-right img {
+  width: 60px;
+  margin-bottom: 15px;
+}
+
+/* --- Footer --- */
+footer {
+  width: 100%;
+  padding: 30px 0;
+  text-align: center;
+  background: #000;
+  border-top: 1px solid #333;
+}
+
+footer img {
+  width: 120px;
+  opacity: 0.8;
+  animation: pulse 5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* --- Hidden Modules --- */
+.internal-modules {
+  display: none !important;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .triangle-section {
+    flex-direction: column;
+    gap: 25px;
+    padding: 30px 0;
+  }
+
+  .tray-left, .tray-right {
+    display: none;
+  }
+
+  .payment-section {
+    width: 90%;
+    padding: 16px;
+  }
+}
