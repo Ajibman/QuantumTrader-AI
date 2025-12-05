@@ -440,3 +440,69 @@ footer img {
     padding: 16px;
   }
 }
+
+.qt-card {
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  margin: 20px auto;
+}
+
+.qt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qt-display-box {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+}
+
+.qt-toggle {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  display: inline-block;
+}
+
+.qt-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qt-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #666;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.qt-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.qt-toggle input:checked + .qt-slider {
+  background: #00c853;
+}
+
+.qt-toggle input:checked + .qt-slider:before {
+  transform: translateX(22px);
+}
