@@ -1,113 +1,162 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuantumTrader AI™</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
+      background: #0e0f11;
+      color: #e6eef5;
       margin: 0;
       padding: 0;
+      text-align: center;
     }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+
+    header img {
+      height: 70px;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 10px 0;
+    }
+
+    #activateQT {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 20px 0;
+      background: #5025d1;
       color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
-    .logo-container {
-      margin-top: 80px;
+    .floor-modules {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+   <div class="module hidden"><strong>Philanthropy</strong></div>
+    <div class="module hidden"><strong>Quantum Wallet</strong></div>
+    <div class="module hidden"><strong>Risk Manager</strong></div>
+    <div class="module hidden"><strong>Sentiment Tracker</strong></div>
+    <div class="module hidden"><strong>Compliance Node</strong></div>
+    <div class="module hidden"><strong>Policy Matrix</strong></div>
+    <div class="module hidden"><strong>MultiMarkets</strong></div>
+    <div class="module hidden"><strong>AI-Backtest</strong></div>
+    <div class="module hidden"><strong>Algo Designer</strong></div>
+    <div class="module hidden"><strong>EcoSignals</strong></div>
+  </div>
+
+  <!-- Donation / QR -->
+  <div class="donation">
+    <p><strong>Support QuantumTrader AI via Wema Bank Plc</strong><br/>
+    Account: 0299134895 — Olagoke Ajibulu</p>
+    <img src="alat_qr.png" alt="Wema Bank QR Code" />
+    <div class="cards">
+      <img src="visa.png" alt="Visa" />
+      <img src="mastercard.png" alt="MasterCard" />
+      <img src="verve.png" alt="Verve" />
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <img src="qtai_ori_olokun.png" alt="Ori Olokun Logo" class="footer-logo" />
+  </footer>
+
+  <!-- APP SCRIPT -->
+  <script>
+  margin: 30px auto;
+      max-width: 1000px;
     }
 
-    .logo-container img {
-      width: 250px;
-      height: auto;
+    .module {
+      background: #1a1c1f;
+      padding: 16px;
+      border-radius: 8px;
+      width: 200px;
+      min-height: 100px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
 
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
+    .hidden {
+      display: none;
     }
 
     footer {
-      margin-top: 50px;
+      margin-top: 60px;
       padding: 20px;
-      background-color: #ffffff;
     }
 
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
+    .footer-logo {
+      height: 80px;
     }
 
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
+    .donation {
+      margin-top: 40px;
     }
 
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
+    .donation img {
+      height: 160px;
+      margin-bottom: 12px;
     }
 
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .cards img {
+      height: 32px;
+      margin: 0 6px;
     }
   </style>
-</head>
-<body>
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+  <!-- Top Logos -->
+  <header>
+    <img src="peace_index_logo.png" alt="Peace Index Logo" />
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" />
+  </header>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
-  </div>
+  <h1>QuantumTrader AI™</h1>
+  <button id="activateQT">Activate QuantumTrader AI</button>
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
+  <!-- Modules Section -->
+  <div class="floor-modules">
+    <!-- Core Modules -->
+    <div class="module"><strong>Trading Floor</strong></div>
+    <div class="module"><strong>TraderLab</strong></div>
+    <div class="module"><strong>CPilot</strong></div>
+<!-- Hidden Modules -->
+<div class="module hidden"><strong>NGO Platform</strong></div>
+<div class="module hidden"><strong>Agric Coop</strong></div>
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
+<!-- Activation Button -->
+<button id="activateQT">Activate QuantumTrader AI</button>
 
-  <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+<!-- Reveal Script -->
+<script>
+  const activateBtn = document.getElementById('activateQT');
+  activateBtn?.addEventListener('click', () => {
+    activateBtn.disabled = true;
+    activateBtn.textContent = "QuantumTrader AI Activated ✓";
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
-    }
-  </script>
+    // Reveal hidden modules
+    document.querySelectorAll('.module.hidden').forEach(mod => {
+      mod.classList.remove('hidden');
+    });
+  });
+
+</script>
+    
 </body>
 </html>
+
