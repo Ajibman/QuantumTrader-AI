@@ -135,19 +135,28 @@
     <div class="module"><strong>Trading Floor</strong></div>
     <div class="module"><strong>TraderLab</strong></div>
     <div class="module"><strong>CPilot</strong></div>
+<!-- Hidden Modules -->
+<div class="module hidden"><strong>NGO Platform</strong></div>
+<div class="module hidden"><strong>Agric Coop</strong></div>
 
-    <!-- Hidden Modules -->
-    <div class="module hidden"><strong>NGO Platform</strong></div>
-    <div class="module hidden"><strong>Agric Coop</strong></div>
-    const activateBtn = document.getElementById('activateQT');
-    activateBtn.addEventListener('click', () => {
-      activateBtn.disabled = true;
-      activateBtn.textContent = "QuantumTrader AI Activated ✓";
-      document.querySelectorAll('.module.hidden').forEach(mod => {
-        mod.classList.remove('hidden');
-      });
+<!-- Activation Button -->
+<button id="activateQT">Activate QuantumTrader AI</button>
+
+<!-- Reveal Script -->
+<script>
+  const activateBtn = document.getElementById('activateQT');
+  activateBtn?.addEventListener('click', () => {
+    activateBtn.disabled = true;
+    activateBtn.textContent = "QuantumTrader AI Activated ✓";
+
+    // Reveal hidden modules
+    document.querySelectorAll('.module.hidden').forEach(mod => {
+      mod.classList.remove('hidden');
     });
-  </script>
+  });
+
+</script>
     
 </body>
 </html>
+
