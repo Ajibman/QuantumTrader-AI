@@ -1,218 +1,90 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QuantumTrader AI™</title>
-  <meta name="description" content="QuantumTrader AI — Trading Floor, TraderLab, CPilot, Payments and Social Tray" />
-  <link rel="stylesheet" href="css/qtai.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader AI</title>
+
+  <!-- QTAI Core Styles -->
+  <link rel="stylesheet" href="qtai.css">
 </head>
+
 <body>
 
-<!-- ========================================================= -->
-<!-- HEADER / BRAND -->
-<!-- ========================================================= -->
-<header id="site-header">
-  <div class="brand">
-    <img src="images/peace_index_logo.png" alt="Peace Index Logo" class="brand-logo">
-    <h1>QuantumTrader AI™</h1>
-  </div>
-</header>
+  <!-- Header / Logo -->
+  <header id="header">
+    <img id="qtai-logo" src="qtai_logo.png" alt="QuantumTrader AI Logo">
+  </header>
 
-<!-- ========================================================= -->
-<!-- CONTROL BAR (MANUAL & AUTO) -->
-<!-- ========================================================= -->
-<nav id="main-controls" aria-label="Interface selector">
-  <div class="controls-row">
-    <button class="ctrl-btn" data-target="tradingfloor" aria-pressed="true">Trading Floor</button>
-    <button class="ctrl-btn" data-target="traderlab">TraderLab</button>
-    <button class="ctrl-btn" data-target="cpilot">CPilot</button>
+  <!-- Rotating Globe -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
+  </section>
 
-    <label class="auto-toggle" title="Toggle auto-rotation">
-      <input type="checkbox" id="autoRotate" checked>
-      <span>Auto</span>
-    </label>
-  </div>
-</nav>
+  <!-- Activation Gateway -->
+  <section id="activation-gateway">
+    <h2>Activation Gateway</h2>
 
-<!-- ========================================================= -->
-<!-- ROTATING GLOBE TOP SECTION -->
-<!-- ========================================================= -->
-<section id="globe-container" aria-hidden="false">
-  <img src="images/qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
-</section>
+    <div class="gateway-buttons">
+      <button onclick="toggleTradingFloor()">Trading Floor</button>
+      <button onclick="toggleTraderLab()">TraderLab</button>
+      <button onclick="toggleCPilot()">CPilot</button>
+    </div>
+  </section>
 
-<!-- ========================================================= -->
-<!-- ACTIVATION GATEWAY -->
-<!-- ========================================================= -->
-<section id="activation-gateway">
-  <h2>Activation Gateway</h2>
-  <p class="muted">Tap a node or let Auto-Mode rotate the system.</p>
-</section>
+  <!-- Apex Trading Floor Node -->
+  <section id="tradingfloor-apex">
+    <img src="Tradingfloor2_main.png" alt="Trading Floor Apex Node">
+  </section>
 
-<!-- ========================================================= -->
-<!-- PRIMARY VIEW (TRADING FLOOR / TRADERLAB / CPILOT) -->
-<!-- ========================================================= -->
-<main id="primary-view">
+  <!-- Trading Floor Container -->
+  <section id="tradingfloor" class="module-container hidden">
+    <h3>Trading Floor</h3>
+    <img src="qtai_tradingfloor2_main.png" alt="Trading Floor">
+  </section>
 
-  <!-- TRADING FLOOR MAIN -->
-  <article id="tradingfloor" class="node active" role="region" aria-label="Trading Floor">
-    <img src="images/tradingfloor2_main.png" alt="Trading Floor Main" class="tradingfloor-main">
-  </article>
-
-  <!-- TRADERLAB -->
-  <article id="traderlab" class="node" role="region" aria-label="TraderLab">
-    <img src="images/traderlab_icon.png" alt="TraderLab Icon" class="node-graphic">
+  <!-- TraderLab -->
+  <section id="traderlab" class="module-container hidden">
     <h3>TraderLab</h3>
-    <p class="muted">Research, simulations, strategy refinement.</p>
-  </article>
+    <img src="qtai_traderlab.png" alt="TraderLab">
+  </section>
 
-  <!-- CPILOT -->
-  <article id="cpilot" class="node" role="region" aria-label="CPilot">
-    <img src="images/cpilot_panel.png" alt="CPilot Panel" class="node-graphic">
+  <!-- CPilot -->
+  <section id="cpilot" class="module-container hidden">
     <h3>CPilot</h3>
-    <p class="muted">Assists with predictive insights and controls.</p>
-  </article>
+    <img src="qtai_cpilot.png" alt="CPilot">
+  </section>
 
-</main>
+  <!-- Social / NGO / Cooperatives / Philanthropy Tray -->
+  <section id="social-tray">
+    <img src="qtai_agric_coop.png" alt="Agricultural Cooperatives">
+    <img src="qtai_ngo.png" alt="NGO">
+    <img src="qtai_philanthropy.png" alt="Philanthropy">
+  </section>
 
-<!-- ========================================================= -->
-<!-- SOCIAL / NGO / AGRIC / PHILANTHROPY TRAY -->
-<!-- ========================================================= -->
-<section id="social-tray" aria-label="Community Tray">
-  <div class="tray-item">
-    <img src="images/qtai_agric_coop.png" alt="Agricultural Cooperative">
-    <p>Agric Cooperative</p>
-  </div>
-  <div class="tray-item">
-    <img src="images/qtai_ngo.png" alt="NGO">
-    <p>NGO</p>
-  </div>
-  <div class="tray-item">
-    <img src="images/qtai_philanthropy.png" alt="Philanthropy">
-    <p>Philanthropy</p>
-  </div>
-  <div class="tray-item">
-    <img src="images/macarthur.png" alt="MacArthur Foundation">
-    <p>MacArthur</p>
-  </div>
-</section>
+  <!-- Payments Section -->
+  <section id="payments">
+    <h3>Support & Payments</h3>
 
-<!-- ========================================================= -->
-<!-- PAYMENT SECTION -->
-<!-- ========================================================= -->
-<section id="payment-section" aria-label="Payment options">
-  <h2>Payment Options</h2>
-  <div class="payment-grid">
-    <button id="showQR" class="qr-btn" aria-controls="qrModal" aria-haspopup="dialog">
-      <img src="images/alat_qr.png" alt="ALAT QR Code">
-      <span class="sr-only">Open ALAT QR</span>
-    </button>
-    <img src="images/mastercard.png" alt="Mastercard">
-    <img src="images/verve.png" alt="Verve">
-    <img src="images/visa.png" alt="Visa">
-  </div>
-
-  <div class="payment-details">
     <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
     <p><strong>Bank:</strong> Wema Bank Plc</p>
     <p><strong>Account Number:</strong> 0299134895</p>
-  </div>
-</section>
 
-<!-- ========================================================= -->
-<!-- FOOTER SECTION -->
-<!-- ========================================================= -->
-<footer id="footer">
-  <div class="footer-images">
-    <img src="images/qtai_ori_olokun.png" alt="Ori Ologo" class="ori-ologo">
-  </div>
-  <p class="muted">© QuantumTrader AI™ — All rights reserved.</p>
-</footer>
+    <img src="alat_qr.png" alt="WEMA Bank QR Code" width="220">
+  </section>
 
-<!-- ========================================================= -->
-<!-- QR MODAL -->
-<!-- ========================================================= -->
-<div id="qrModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" style="display:none;">
-  <div class="modal-content">
-    <button id="closeQR" class="modal-close" aria-label="Close">×</button>
-    <img src="images/alat_qr.png" alt="ALAT QR Code Large">
-    <p>Scan to pay — Olagoke Ajibulu — Wema Bank Plc — 0299134895</p>
-  </div>
-</div>
-
-<!-- ========================================================= -->
-<!-- JAVASCRIPT: NODE TOGGLER + AUTO ROTATION + QR MODAL -->
-<!-- ========================================================= -->
-<script>
-(function(){
-  const buttons = document.querySelectorAll('.ctrl-btn');
-  const nodes = document.querySelectorAll('.node');
-  const autoChk = document.getElementById('autoRotate');
-  const order = ['tradingfloor','traderlab','cpilot'];
-  let index = 0;
-  let intervalId = null;
-
-  function showNode(id){
-    nodes.forEach(n => n.classList.toggle('active', n.id === id));
-    buttons.forEach(b => b.setAttribute('aria-pressed', b.dataset.target === id));
-  }
-
-  buttons.forEach(btn => btn.addEventListener('click', () => {
-    const t = btn.dataset.target;
-    showNode(t);
-    index = order.indexOf(t);
-  }));
-
-  function startAuto(){
-    if(intervalId) return;
-    intervalId = setInterval(() => {
-      index = (index + 1) % order.length;
-      showNode(order[index]);
-    }, 6000);
-  }
-
-  function stopAuto(){
-    if(intervalId){ clearInterval(intervalId); intervalId = null; }
-  }
-
-  if (autoChk) {
-    autoChk.addEventListener('change', () => {
-      if(autoChk.checked) startAuto(); else stopAuto();
-    });
-  }
-
-  showNode(order[index]);
-  if (autoChk && autoChk.checked) startAuto();
-
-  const qrBtn = document.getElementById('showQR');
-  const qrModal = document.getElementById('qrModal');
-  const closeQR = document.getElementById('closeQR');
-
-  if (qrBtn && qrModal) {
-    qrBtn.addEventListener('click', () => {
-      qrModal.style.display = 'flex';
-      qrModal.setAttribute('aria-hidden', 'false');
-    });
-  }
-
-  if (closeQR && qrModal) {
-    closeQR.addEventListener('click', () => {
-      qrModal.style.display = 'none';
-      qrModal.setAttribute('aria-hidden', 'true');
-    });
-
-    // close on overlay click
-    qrModal.addEventListener('click', (e) => {
-      if (e.target === qrModal) {
-        qrModal.style.display = 'none';
-        qrModal.setAttribute('aria-hidden', 'true');
-      }
-    });
-  }
-
-})();
-</script>
+  <!-- Scripts -->
+  <script>
+    function toggleTradingFloor() {
+      document.getElementById('tradingfloor').classList.toggle('hidden');
+    }
+    function toggleTraderLab() {
+      document.getElementById('traderlab').classList.toggle('hidden');
+    }
+    function toggleCPilot() {
+      document.getElementById('cpilot').classList.toggle('hidden');
+    }
+  </script>
 
 </body>
 </html>
