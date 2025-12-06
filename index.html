@@ -7,7 +7,7 @@
 
   <!-- Trusted Styles -->
   <link rel="stylesheet" href="css/core.css">
-  
+
   <style>
     /* --- INTERNAL MODULES HIDDEN --- */
     .internal-modules { display: none !important; }
@@ -32,13 +32,13 @@
       vertical-align: middle;
     }
 
-    /* Triangle Nodes */
+    /* Triangle Layout */
     .triangle-section {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 50px;
+      width: 100%;
       padding: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .triangle-node {
       width: 130px;
@@ -54,6 +54,9 @@
       font-weight: bold;
       text-align: center;
       box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    }
+    .triangle-node img {
+      width: 120px;
     }
 
     /* Trays */
@@ -92,18 +95,18 @@
 <body>
 
   <!-- Rotating Globe -->
-  <section id="globe-container">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
+  <section id="globe-container" style="text-align:center; margin-top:20px;">
+    <img src="images/qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
   </section>
 
   <!-- Activation Gateway -->
-  <section id="activation-gateway">
+  <section id="activation-gateway" style="text-align:center; margin-top:20px;">
     <h2>Activation Gateway</h2>
   </section>
 
   <!-- PAYMENT SECTION -->
   <section class="payment-section">
-    <img src="alat_qr.png" alt="Wema Bank QR Code">
+    <img src="images/alat_qr.png" alt="Wema Bank QR Code">
     <div>
       <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
       <p><strong>Bank:</strong> Wema Bank Plc</p>
@@ -111,52 +114,49 @@
     </div>
 
     <div class="payment-cards">
-      <img src="visa.png" alt="Visa">
-      <img src="mastercard.png" alt="MasterCard">
-      <img src="verve.png" alt="Verve">
+      <img src="images/visa.png" alt="Visa">
+      <img src="images/mastercard.png" alt="MasterCard">
+      <img src="images/verve.png" alt="Verve">
     </div>
   </section>
 
-  <!-- TRIANGULAR NODES -->
+  <!-- TRIANGLE (Apex + Base Nodes) -->
   <section class="triangle-section">
-    <div class="triangle-node">Trading Floor</div>
-    <div id="trading-floor2_main" class="trading-floor apex-container">
 
-     <!-- Apex Node: Best Display Today -->
-  <section id="best-display-today" class="qt-card apex-node"></section>
+    <!-- Apex Node: Tradingfloor2_main.png -->
+    <div class="triangle-node" style="margin-bottom:40px;">
+      <img src="images/Tradingfloor2_main.png" alt="Trading Floor Apex">
+    </div>
 
-  <!-- TraderLab / CPilot / Other modules in 180°-360° rotational plane -->
-  <div id="traderlab-module"></div>
-  <div id="cpilot-module"></div>
-  <!-- other modules -->
-</div>
+    <!-- Base Nodes -->
+    <div style="display:flex; gap:50px;">
+      <div class="triangle-node">TraderLab</div>
+      <div class="triangle-node">CPilot</div>
+    </div>
 
-     <div class="triangle-node">TraderLab</div>
-    <div class="triangle-node">CPilot</div>
   </section>
 
   <!-- LEFT TRAY (Global Markets) -->
   <div class="tray-left">
-    <img src="qtai_global_markets.png" alt="Global Markets">
+    <img src="images/qtai_global_markets.png" alt="Global Markets">
     <p>Markets</p>
   </div>
 
   <!-- RIGHT TRAY (NGO, Agric, Philanthropy) -->
   <div class="tray-right">
-    <img src="qtai_ngo.png" alt="NGO">
-    <img src="qtai_agric_coop.png" alt="Agric Coop">
-    <img src="qtai_philanthropy.png" alt="Philanthropy">
-  </div>
-  
-  <!-- INTERNAL MODULES (Hidden) -->
-  <div class="internal-modules">
-    <!-- Modules 01–15 controlled by CCLM²™ (hidden) -->
+    <img src="images/qtai_ngo.png" alt="NGO">
+    <img src="images/qtai_agric_coop.png" alt="Agric Coop">
+    <img src="images/qtai_philanthropy.png" alt="Philanthropy">
   </div>
 
-  <!-- FOOTER with Ori Olokun-->
+  <!-- INTERNAL MODULES (Hidden) -->
+  <div class="internal-modules">
+    <!-- Modules 01–15 controlled by CCLM²™ -->
+  </div>
+
+  <!-- FOOTER with Ori Olokun -->
   <footer>
-<footer class="qtai-footer" style="display: flex; justify-content: center; gap: 18px; padding: 20px 0;">
-  <img src="images/qtai_ori_olokun.png" alt="Ori Olokun" style="height: 68px; width: auto;" />
+    <img src="images/ori_olokun.png" alt="Ori Olokun">
   </footer>
 
 </body>
