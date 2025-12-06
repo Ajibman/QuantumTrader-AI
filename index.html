@@ -1,89 +1,198 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader AI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuantumTrader AI™</title>
 
-  <!-- QTAI Core Styles -->
-  <link rel="stylesheet" href="qtai.css">
-</head>
+  <style>
+    /* === Global Styles === */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #111;
+      text-align: center;
+    }
 
-<body>
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      background-color: #ffffff;
+    }
 
-  <!-- Header / Logo -->
-  <header id="header">
-    <img id="qtai-logo" src="qtai_logo.png" alt="QuantumTrader AI Logo">
+    header img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .hero-section {
+      margin: 20px 0;
+    }
+
+    .rotating-globe {
+      display: block;
+      margin: 0 auto;
+      width: 160px;
+      height: auto;
+      animation: spin 25s linear infinite;
+    }
+
+    @keyframes spin {
+from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Activation / Payment Gate Styles */
+    .payment-gate {
+      background: #fff;
+      margin: 30px auto;
+      padding: 20px;
+      max-width: 420px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .payment-gate img.qr {
+      width: 140px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .payment-gate p {
+      margin: 8px 0;
+      font-size: 0.95em;
+      line-height: 1.4;
+    }
+
+    .payment-gate .card-icons img {
+      width: 45px;
+      height: auto;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+
+    /* Trading Floor & Modules hidden by default */
+    #trading-floor,
+    #traderlab-section,
+    #cpilot-section,
+    #modules-grid {
+      display: none;
+    }
+
+    /* Footer / Ori Olokun */
+    .footer-logo {
+      margin: 40px 0 20px;
+    }
+
+    .footer-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+  </style>
+
+  <!-- === HEADER: Peace Index + Globe === -->
+  <header>
+    <img src="peace_index_logo.png" alt="Peace Index Logo" />
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" class="rotating-globe" />
   </header>
 
-  <!-- Rotating Globe -->
-  <section id="globe-container">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
-  </section>
+  <div class="hero-section"></div>
 
-  <!-- Activation Gateway -->
-  <section id="activation-gateway">
-    <h2>Activation Gateway</h2>
-
-    <div class="gateway-buttons">
-      <button onclick="toggleTradingFloor()">Trading Floor</button>
-      <button onclick="toggleTraderLab()">TraderLab</button>
-      <button onclick="toggleCPilot()">CPilot</button>
+  <!-- === ACTIVATION + PAYMENT === -->
+  <section class="payment-gate">
+    <h2>Activate QuantumTrader AI™</h2>
+    <img src="alat_qr.png" alt="Wema Bank QR Code" class="qr" />
+    <p><strong>WEMA Bank</strong><br>
+    QuantumTrader AI<br>
+    Account No: 0299134895</p>
+    <p>Scan QR or pay using:</p>
+    <div class="card-icons">
+      <img src="visa.png" alt="Visa">
+      <img src="mastercard.png" alt="MasterCard">
+      <img src="verve.png" alt="Verve">
     </div>
   </section>
 
-  <!-- Apex Trading Floor Node -->
-  <section id="tradingfloor-apex">
-    <img src="Tradingfloor2_main.png" alt="Trading Floor Apex Node">
+  <!-- === MODULES PLACEHOLDER (HIDDEN BY DEFAULT) === -->
+  <section id="modules-grid">
+    <h2>QT Modules</h2>
+    <div class="grid">
+      <div class="module" id="mod-1">Module 1</div>
+      <div class="module" id="mod-2">Module 2</div>
+      <div class="module" id="mod-3">Module 3</div>
+      <div class="module" id="mod-4">Module 4</div>
+      <div class="module" id="mod-5">Module 5</div>
+      <div class="module" id="mod-6">Module 6</div>
+      <div class="module" id="mod-7">Module 7</div>
+      <div class="module" id="mod-8">Module 8</div>
+      <div class="module" id="mod-9">Module 9</div>
+      <div class="module" id="mod-10">Module 10</div>
+      <div class="module" id="mod-11">Module 11</div>
+
+  <!-- === ACTIVATION + PAYMENT === -->
+  <section class="payment-gate">
+    <h2>Activate QuantumTrader AI™</h2>
+    <img src="alat_qr.png" alt="Wema Bank QR Code" class="qr" />
+    <p><strong>WEMA Bank</strong><br>
+    QuantumTrader AI<br>
+    Account No: 0299134895</p>
+    <p>Scan QR or pay using:</p>
+    <div class="card-icons">
+      <img src="visa.png" alt="Visa">
+      <img src="mastercard.png" alt="MasterCard">
+      <img src="verve.png" alt="Verve">
+    </div>
   </section>
 
-  <!-- Trading Floor Container -->
-  <section id="tradingfloor" class="module-container hidden">
-    <h3>Trading Floor</h3>
-    <img src="qtai_tradingfloor2_main.png" alt="Trading Floor">
-  </section>
+  <!-- === MODULES PLACEHOLDER (HIDDEN BY DEFAULT) === -->
+  <section id="modules-grid">
+    <h2>QT Modules</h2>
+    <div class="grid">
+      <div class="module" id="mod-1">Module 1</div>
+      <div class="module" id="mod-2">Module 2</div>
+      <div class="module" id="mod-3">Module 3</div>
+      <div class="module" id="mod-4">Module 4</div>
+      <div class="module" id="mod-5">Module 5</div>
+      <div class="module" id="mod-6">Module 6</div>
+      <div class="module" id="mod-7">Module 7</div>
+      <div class="module" id="mod-8">Module 8</div>
+      <div class="module" id="mod-9">Module 9</div>
+      <div class="module" id="mod-10">Module 10</div>
+      <div class="module" id="mod-11">Module 11</div>
 
-  <!-- TraderLab -->
-  <section id="traderlab" class="module-container hidden">
-    <h3>TraderLab</h3>
-    <img src="qtai_traderlab.png" alt="TraderLab">
-  </section>
 
-  <!-- CPilot -->
-  <section id="cpilot" class="module-container hidden">
-    <h3>CPilot</h3>
-    <img src="qtai_cpilot.png" alt="CPilot">
-  </section>
-
-  <!-- Social / NGO / Cooperatives / Philanthropy Tray -->
-  <section id="social-tray">
-    <img src="qtai_agric_coop.png" alt="Agricultural Cooperatives">
-    <img src="qtai_ngo.png" alt="NGO">
-    <img src="qtai_philanthropy.png" alt="Philanthropy">
-  </section>
-
-  <!-- Payments Section -->
-  <section id="payments">
-    <h3>Support & Payments</h3>
-
-    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
-    <p><strong>Bank:</strong> Wema Bank Plc</p>
-    <p><strong>Account Number:</strong> 0299134895</p>
-
-    <img src="alat_qr.png" alt="WEMA Bank QR Code" width="220">
-  </section>
-
-  <!-- Scripts -->
+     
+  <!-- === APP SCRIPT === -->
   <script>
-    function toggleTradingFloor() {
-      document.getElementById('tradingfloor').classList.toggle('hidden');
-    }
-    function toggleTraderLab() {
-      document.getElementById('traderlab').classList.toggle('hidden');
-    }
-    function toggleCPilot() {
-      document.getElementById('cpilot').classList.toggle('hidden');
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("🟣 QT-AI Diagnostic complete. Review console for details.");
+
+      // Optional: Show modules on activation (placeholder logic)
+      const modules = document.querySelectorAll('.module');
+      modules.forEach(mod => {
+        mod.style.display = 'inline-block'; // Reveal all 15 modules
+      });
+    });
+  </script>
+
+<!-- === APP SCRIPT === -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("🟣 QT-AI Diagnostic complete. Review console for details.");
+
+      // Optional: Show modules on activation (placeholder logic)
+      const modules = document.querySelectorAll('.module');
+      modules.forEach(mod => {
+        mod.style.display = 'inline-block'; // Reveal all 15 modules
+      });
+    });
   </script>
 
 </body>
