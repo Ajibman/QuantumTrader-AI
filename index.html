@@ -1,121 +1,123 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuantumTrader AI™</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>QuantumTrader AI</title>
+
+  <!-- LINK TO CLEAN PROTECTED CSS -->
   <link rel="stylesheet" href="qtai.css">
 
 </head>
 <body>
 
-  <!-- Header Logos -->
-  <header class="top-header">
-    <img src="peace_index_logo.png" alt="Peace Index Logo">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe">
+  <!-- ========================= -->
+  <!--   QUANTUM TRADER LOGO     -->
+  <!-- ========================= -->
+  <header id="app-header">
+    <img src="qtai_logo.png" alt="QuantumTrader AI Logo" id="qtai-logo">
   </header>
 
-  <h1>QuantumTrader AI™</h1>
-
-  <!-- Apex Node -->
-  <section id="apex-container">
-    <img src="tradingfloor2_main.png" class="apex-icon" alt="Apex Node">
-    <img src="macarthur.png" class="apex-secondary" alt="MacArthur Node">
+  <!-- ========================= -->
+  <!--     ROTATING GLOBE        -->
+  <!-- ========================= -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="qtai-globe">
   </section>
 
-  <!-- Activation -->
-  <button id="activateQT" class="activate-btn">Activate QuantumTrader AI</button>
+  <!-- ========================= -->
+  <!--        TRADING FLOOR      -->
+  <!-- ========================= -->
+  <section id="trading-floor">
+    <img src="tradingfloor2_main.png" alt="Trading Floor" id="tradingfloor-main">
 
-  <!-- Modules Section -->
-  <div class="floor-modules">
-    <div class="module"><strong>Trading Floor</strong></div>
-    <div class="module"><strong>TraderLab</strong></div>
-    <div class="module"><strong>CPilot</strong></div>
+    <!-- MacArthur (Added as requested) -->
+    <img src="macarthur.png" alt="MacArthur Node" id="macarthur-node">
+  </section>
 
-    <!-- Hidden Modules (Reveal after activation) -->
-    <div class="module hidden"><strong>NGO Platform</strong></div>
-    <div class="module hidden"><strong>Agric Coop</strong></div>
-    <div class="module hidden"><strong>Philanthropy</strong></div>
-    <div class="module hidden"><strong>Quantum Wallet</strong></div>
-    <div class="module hidden"><strong>Risk Manager</strong></div>
-    <div class="module hidden"><strong>Sentiment Tracker</strong></div>
-    <div class="module hidden"><strong>Compliance Node</strong></div>
-    <div class="module hidden"><strong>Policy Matrix</strong></div>
-    <div class="module hidden"><strong>MultiMarkets</strong></div>
-    <div class="module hidden"><strong>AI-Backtest</strong></div>
-    <div class="module hidden"><strong>Algo Designer</strong></div>
-    <div class="module hidden"><strong>EcoSignals</strong></div>
-  </div>
+  <!-- ========================= -->
+  <!--       ACTIVATION GATE     -->
+  <!-- ========================= -->
+  <section id="activation-gateway">
+    <button id="activateQT">Activate QuantumTrader</button>
+  </section>
 
-  <!-- Donation -->
-  <div class="donation">
-    <p><strong>Support QuantumTrader AI via Wema Bank Plc</strong><br/>
-    Account: 0299134895 — Olagoke Ajibulu</p>
-
-    <img src="alat_qr.png" alt="Wema Bank QR Code" />
-
-    <!-- Cards -->
-    <div class="cards">
-      <img src="visa.png" alt="Visa" />
-      <img src="mastercard.png" alt="MasterCard" />
-      <img src="verve.png" alt="Verve" />
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <img src="qtai_ori_olokun.png" alt="Ori Olokun Logo" class="footer-logo" />
-  </footer>
-
-
-  <!-- ============================= -->
-  <!--  A: BROWSER PROTECTOR SCRIPT  -->
-  <!-- ============================= -->
+  <!-- =========================================================== -->
+  <!--     PROTECTIVE SCRIPT (SAFE — BROWSER-SIDE VALIDATION)      -->
+  <!-- =========================================================== -->
   <script>
     window.addEventListener("DOMContentLoaded", () => {
 
-      // 1. Detect duplicate IDs
-      const ids = {};
-      const duplicates = [];
+      console.log("🔒 QT-AI Protective Script Running...");
+
+      /* ------------------------------
+         CHECK 1: Duplicate IDs
+      ------------------------------ */
+      const idSet = new Set();
+      const duplicates = new Set();
 
       document.querySelectorAll("[id]").forEach(el => {
-        if (ids[el.id]) duplicates.push(el.id);
-        ids[el.id] = true;
+        if (idSet.has(el.id)) duplicates.add(el.id);
+        idSet.add(el.id);
       });
 
-      if (duplicates.length > 0) {
-        console.warn("Duplicate IDs found:", duplicates);
+      if (duplicates.size > 0) {
+        console.warn("⚠ Duplicate IDs detected:", Array.from(duplicates));
       }
 
-      // 2. Detect missing images
+      /* ------------------------------
+         CHECK 2: Image Integrity
+      ------------------------------ */
       document.querySelectorAll("img").forEach(img => {
-        if (!img.complete || img.naturalHeight === 0) {
-          console.warn("Image failed to load:", img.src);
-        }
+        img.addEventListener("error", () => {
+          console.warn("⚠ Image failed to load:", img.src);
+        });
       });
 
-      // 3. Detect missing stylesheet
-      const css = document.querySelector('link[href="qtai.css"]');
-      if (!css) {
-        console.warn("qtai.css is missing.");
+      /* ------------------------------
+         CHECK 3: Stylesheet Validation
+      ------------------------------ */
+      const sheets = document.styleSheets;
+      for (let sheet of sheets) {
+        try {
+          let rules = sheet.cssRules;
+          if (!rules || rules.length === 0) {
+            console.warn("⚠ Empty or corrupted CSS file detected:", sheet.href);
+          }
+        } catch (e) {
+          console.warn("⚠ CSS file blocked or unreadable:", sheet.href);
+        }
       }
-    });
-  </script>
 
+      /* ------------------------------
+         CHECK 4: Missing CSS Classes
+      ------------------------------ */
+      const definedClasses = new Set();
+      for (let sheet of document.styleSheets) {
+        try {
+          for (let rule of sheet.cssRules) {
+            if (rule.selectorText) {
+              rule.selectorText.split(",").forEach(sel => {
+                sel = sel.trim();
+                if (sel.startsWith(".")) {
+                  definedClasses.add(sel.replace(".", ""));
+                }
+              });
+            }
+          }
+        } catch (_) {}
+      }
 
-  <!-- ========================= -->
-  <!--  ACTIVATION / UI SCRIPT  -->
-  <!-- ========================= -->
-  <script>
-    const btn = document.getElementById('activateQT');
+      document.querySelectorAll("*").forEach(el => {
+        el.classList.forEach(cls => {
+          if (!definedClasses.has(cls)) {
+            console.warn("⚠ Class used in HTML but missing in qtai.css:", cls);
+          }
+        });
+      });
 
-    btn?.addEventListener('click', () => {
-      btn.disabled = true;
-      btn.textContent = "QuantumTrader AI Activated ✓";
-
-      document.querySelectorAll('.module.hidden')
-        .forEach(mod => mod.classList.remove('hidden'));
+      console.log("🔰 QT-AI Protection Layer Ready.");
     });
   </script>
 
