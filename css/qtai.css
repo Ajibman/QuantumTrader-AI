@@ -1,110 +1,120 @@
- /* ===============================
-   QuantumTrader AI – Core Styles
-   =============================== */
+ /* ==========================================================
+   QuantumTrader AI — Full CSS Suite (Level 3)
+   Protection-Ready + Structured + Clean
+   ========================================================== */
 
-body {
+/* -------------------------------
+   GLOBAL RESET
+-------------------------------- */
+* {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #ffffff;
-  color: #000;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
 }
 
-/* Logo */
+body {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* -------------------------------
+   HEADER + LOGO
+-------------------------------- */
+#app-header {
+  margin-top: 20px;
+}
+
 #qtai-logo {
   width: 180px;
-  margin-top: 20px;
+  height: auto;
+  animation: fadeIn 1.5s ease-out;
 }
 
-/* Rotating Globe Container */
-#globe-container img {
+/* -------------------------------
+   GLOBE
+-------------------------------- */
+#globe-container {
+  margin: 25px 0;
+}
+
+#qtai-globe {
   width: 300px;
+  height: auto;
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* -------------------------------
+   TRADING FLOOR / MACARTHUR
+-------------------------------- */
+#trading-floor {
   margin-top: 20px;
+  position: relative;
 }
 
-/* Activation Gateway */
-#activation-gateway {
-  margin: 30px 0;
+#tradingfloor-main {
+  width: 350px;
+  height: auto;
 }
 
-#activation-gateway button {
-  padding: 10px 20px;
-  margin: 8px;
+#macarthur-node {
+  position: absolute;
+  width: 110px;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* -------------------------------
+   ACTIVATION BUTTON
+-------------------------------- */
+#activateQT {
+  margin-top: 35px;
+  padding: 14px 24px;
+  background: #09f;
   border: none;
-  background: #003366;
-  color: #fff;
-  border-radius: 8px;
+  border-radius: 6px;
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.2s ease-in-out;
 }
 
-#activation-gateway button:hover {
-  background: #0055aa;
+#activateQT:hover {
+  background: #0ff;
+  transform: translateY(-2px);
 }
 
-/* Hidden Class */
-.hidden {
-  display: none;
-}
-
-/* Apex Trading Floor Node */
-#tradingfloor-apex img {
-  width: 250px;
-  margin: 25px auto;
-  display: block;
-  border-radius: 15px;
-}
-
-/* Module Containers */
-.module-container img {
-  width: 280px;
-  margin: 20px auto;
-  border-radius: 15px;
-  display: block;
-}
-
-/* =========================================
-   SOCIAL TRAY  (Agric • NGO • Philanthropy)
-   ========================================= */
-
-#social-tray {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin: 30px auto;
-}
-
-#social-tray img {
-  width: 140px;       /* Small thumbnails */
-  border-radius: 18px; /* Rounded edges */
-}
-
-/* =====================
-   PAYMENTS SECTION
-   ===================== */
-
-#payments {
-  margin: 50px auto;
-}
-
-#payments h3 {
-  margin-bottom: 15px;
-}
-
-#payments img {
-  width: 200px;         /* Small QR Code */
-  border-radius: 18px;  /* Rounded */
-  margin-top: 10px;
-}
-
-/* Responsive tweak (optional but stable) */
-@media (max-width: 600px) {
-  #social-tray {
-    flex-direction: column;
+/* -------------------------------
+   RESPONSIVE
+-------------------------------- */
+@media (max-width: 480px) {
+  #qtai-globe {
+    width: 220px;
   }
-
-  #social-tray img {
-    width: 160px;
+  #tradingfloor-main {
+    width: 280px;
+  }
+  #macarthur-node {
+    width: 85px;
+    right: -30px;
   }
 }
+
+/* ==========================================================
+   END OF qtai.css
+   ========================================================== */
