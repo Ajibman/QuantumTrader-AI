@@ -1,54 +1,42 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuantumTrader AI™</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0e0f11;
-      color: #e6eef5;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
 
-    header {
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-    }
+  <link rel="stylesheet" href="qtai.css">
 
-    header img {
-      height: 70px;
-      object-fit: contain;
-    }
+</head>
+<body>
 
-    h1 {
-      font-size: 2rem;
-      margin: 10px 0;
-    }
+  <!-- Header Logos -->
+  <header class="top-header">
+    <img src="peace_index_logo.png" alt="Peace Index Logo">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe">
+  </header>
 
-    #activateQT {
-      padding: 10px 20px;
-      font-size: 1rem;
-      margin: 20px 0;
-      background: #5025d1;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+  <h1>QuantumTrader AI™</h1>
 
-    .floor-modules {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 16px;
-   <div class="module hidden"><strong>Philanthropy</strong></div>
+  <!-- Apex Node -->
+  <section id="apex-container">
+    <img src="tradingfloor2_main.png" class="apex-icon" alt="Apex Node">
+    <img src="macarthur.png" class="apex-secondary" alt="MacArthur Node">
+  </section>
+
+  <!-- Activation -->
+  <button id="activateQT" class="activate-btn">Activate QuantumTrader AI</button>
+
+  <!-- Modules Section -->
+  <div class="floor-modules">
+    <div class="module"><strong>Trading Floor</strong></div>
+    <div class="module"><strong>TraderLab</strong></div>
+    <div class="module"><strong>CPilot</strong></div>
+
+    <!-- Hidden Modules (Reveal after activation) -->
+    <div class="module hidden"><strong>NGO Platform</strong></div>
+    <div class="module hidden"><strong>Agric Coop</strong></div>
+    <div class="module hidden"><strong>Philanthropy</strong></div>
     <div class="module hidden"><strong>Quantum Wallet</strong></div>
     <div class="module hidden"><strong>Risk Manager</strong></div>
     <div class="module hidden"><strong>Sentiment Tracker</strong></div>
@@ -60,11 +48,14 @@
     <div class="module hidden"><strong>EcoSignals</strong></div>
   </div>
 
-  <!-- Donation / QR -->
+  <!-- Donation -->
   <div class="donation">
     <p><strong>Support QuantumTrader AI via Wema Bank Plc</strong><br/>
     Account: 0299134895 — Olagoke Ajibulu</p>
+
     <img src="alat_qr.png" alt="Wema Bank QR Code" />
+
+    <!-- Cards -->
     <div class="cards">
       <img src="visa.png" alt="Visa" />
       <img src="mastercard.png" alt="MasterCard" />
@@ -77,86 +68,56 @@
     <img src="qtai_ori_olokun.png" alt="Ori Olokun Logo" class="footer-logo" />
   </footer>
 
-  <!-- APP SCRIPT -->
+
+  <!-- ============================= -->
+  <!--  A: BROWSER PROTECTOR SCRIPT  -->
+  <!-- ============================= -->
   <script>
-  margin: 30px auto;
-      max-width: 1000px;
-    }
+    window.addEventListener("DOMContentLoaded", () => {
 
-    .module {
-      background: #1a1c1f;
-      padding: 16px;
-      border-radius: 8px;
-      width: 200px;
-      min-height: 100px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-    }
+      // 1. Detect duplicate IDs
+      const ids = {};
+      const duplicates = [];
 
-    .hidden {
-      display: none;
-    }
+      document.querySelectorAll("[id]").forEach(el => {
+        if (ids[el.id]) duplicates.push(el.id);
+        ids[el.id] = true;
+      });
 
-    footer {
-      margin-top: 60px;
-      padding: 20px;
-    }
+      if (duplicates.length > 0) {
+        console.warn("Duplicate IDs found:", duplicates);
+      }
 
-    .footer-logo {
-      height: 80px;
-    }
+      // 2. Detect missing images
+      document.querySelectorAll("img").forEach(img => {
+        if (!img.complete || img.naturalHeight === 0) {
+          console.warn("Image failed to load:", img.src);
+        }
+      });
 
-    .donation {
-      margin-top: 40px;
-    }
-
-    .donation img {
-      height: 160px;
-      margin-bottom: 12px;
-    }
-
-    .cards img {
-      height: 32px;
-      margin: 0 6px;
-    }
-  </style>
-
-  <!-- Top Logos -->
-  <header>
-    <img src="peace_index_logo.png" alt="Peace Index Logo" />
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" />
-  </header>
-
-  <h1>QuantumTrader AI™</h1>
-  <button id="activateQT">Activate QuantumTrader AI</button>
-
-  <!-- Modules Section -->
-  <div class="floor-modules">
-    <!-- Core Modules -->
-    <div class="module"><strong>Trading Floor</strong></div>
-    <div class="module"><strong>TraderLab</strong></div>
-    <div class="module"><strong>CPilot</strong></div>
-<!-- Hidden Modules -->
-<div class="module hidden"><strong>NGO Platform</strong></div>
-<div class="module hidden"><strong>Agric Coop</strong></div>
-
-<!-- Activation Button -->
-<button id="activateQT">Activate QuantumTrader AI</button>
-
-<!-- Reveal Script -->
-<script>
-  const activateBtn = document.getElementById('activateQT');
-  activateBtn?.addEventListener('click', () => {
-    activateBtn.disabled = true;
-    activateBtn.textContent = "QuantumTrader AI Activated ✓";
-
-    // Reveal hidden modules
-    document.querySelectorAll('.module.hidden').forEach(mod => {
-      mod.classList.remove('hidden');
+      // 3. Detect missing stylesheet
+      const css = document.querySelector('link[href="qtai.css"]');
+      if (!css) {
+        console.warn("qtai.css is missing.");
+      }
     });
-  });
+  </script>
 
-</script>
-    
+
+  <!-- ========================= -->
+  <!--  ACTIVATION / UI SCRIPT  -->
+  <!-- ========================= -->
+  <script>
+    const btn = document.getElementById('activateQT');
+
+    btn?.addEventListener('click', () => {
+      btn.disabled = true;
+      btn.textContent = "QuantumTrader AI Activated ✓";
+
+      document.querySelectorAll('.module.hidden')
+        .forEach(mod => mod.classList.remove('hidden'));
+    });
+  </script>
+
 </body>
 </html>
-
