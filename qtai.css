@@ -1,0 +1,120 @@
+ /* ==========================================================
+   QuantumTrader AI — Full CSS Suite (Level 3)
+   Protection-Ready + Structured + Clean
+   ========================================================== */
+
+/* -------------------------------
+   GLOBAL RESET
+-------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* -------------------------------
+   HEADER + LOGO
+-------------------------------- */
+#app-header {
+  margin-top: 20px;
+}
+
+#qtai-logo {
+  width: 180px;
+  height: auto;
+  animation: fadeIn 1.5s ease-out;
+}
+
+/* -------------------------------
+   GLOBE
+-------------------------------- */
+#globe-container {
+  margin: 25px 0;
+}
+
+#qtai-globe {
+  width: 300px;
+  height: auto;
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* -------------------------------
+   TRADING FLOOR / MACARTHUR
+-------------------------------- */
+#trading-floor {
+  margin-top: 20px;
+  position: relative;
+}
+
+#tradingfloor-main {
+  width: 350px;
+  height: auto;
+}
+
+#macarthur-node {
+  position: absolute;
+  width: 110px;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* -------------------------------
+   ACTIVATION BUTTON
+-------------------------------- */
+#activateQT {
+  margin-top: 35px;
+  padding: 14px 24px;
+  background: #09f;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+#activateQT:hover {
+  background: #0ff;
+  transform: translateY(-2px);
+}
+
+/* -------------------------------
+   RESPONSIVE
+-------------------------------- */
+@media (max-width: 480px) {
+  #qtai-globe {
+    width: 220px;
+  }
+  #tradingfloor-main {
+    width: 280px;
+  }
+  #macarthur-node {
+    width: 85px;
+    right: -30px;
+  }
+}
+
+/* ==========================================================
+   END OF qtai.css
+   ========================================================== */
