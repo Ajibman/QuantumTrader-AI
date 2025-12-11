@@ -1,120 +1,16 @@
- /* ==========================================================
-   QuantumTrader AI — Full CSS Suite (Level 3)
-   Protection-Ready + Structured + Clean
-   ========================================================== */
+ /* Static QuantumTrader-AI Stylesheet (qtai.css) */
 
-/* -------------------------------
-   GLOBAL RESET
--------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
+/* Reset */
 
-body {
-  background: #000;
-  color: #fff;
-  text-align: center;
-  overflow-x: hidden;
-}
+{ margin: 0; padding: 0; box-sizing: border-box; } body { font-family: Arial, sans-serif; background: #f3f3f3; color: #111; text-align: center; padding-bottom: 40px; }
 
-/* -------------------------------
-   HEADER + LOGO
--------------------------------- */
-#app-header {
-  margin-top: 20px;
-}
 
-#qtai-logo {
-  width: 180px;
-  height: auto;
-  animation: fadeIn 1.5s ease-out;
-}
+/* Static Globe */ #globe-container { margin-top: 20px; } #static-globe { width: 300px; max-width: 80%; }
 
-/* -------------------------------
-   GLOBE
--------------------------------- */
-#globe-container {
-  margin: 25px 0;
-}
+/* Apex Node */ #tradingfloor-apex { margin-top: 25px; } #tradingfloor-apex-img { width: 340px; max-width: 90%; }
 
-#qtai-globe {
-  width: 300px;
-  height: auto;
-  animation: spin 12s linear infinite;
-}
+/* Navigation */ #main-nav { margin-top: 25px; display: flex; justify-content: center; gap: 15px; } .nav-btn { padding: 10px 18px; border: none; background: #000; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; transition: 0.3s; } .nav-btn:hover { background: #444; }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+/* Modules */ #modules { margin-top: 25px; } .module { display: none; } .module img { width: 350px; max-width: 95%; }
 
-/* -------------------------------
-   TRADING FLOOR / MACARTHUR
--------------------------------- */
-#trading-floor {
-  margin-top: 20px;
-  position: relative;
-}
-
-#tradingfloor-main {
-  width: 350px;
-  height: auto;
-}
-
-#macarthur-node {
-  position: absolute;
-  width: 110px;
-  right: -40px;
-  top: 50%;
-  transform: translateY(-50%);
-  animation: pulse 3s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
-/* -------------------------------
-   ACTIVATION BUTTON
--------------------------------- */
-#activateQT {
-  margin-top: 35px;
-  padding: 14px 24px;
-  background: #09f;
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-
-#activateQT:hover {
-  background: #0ff;
-  transform: translateY(-2px);
-}
-
-/* -------------------------------
-   RESPONSIVE
--------------------------------- */
-@media (max-width: 480px) {
-  #qtai-globe {
-    width: 220px;
-  }
-  #tradingfloor-main {
-    width: 280px;
-  }
-  #macarthur-node {
-    width: 85px;
-    right: -30px;
-  }
-}
-
-/* ==========================================================
-   END OF qtai.css
-   ========================================================== */
+/* Payment Section */ #payment-section { margin-top: 40px; background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 8px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 15px; }
