@@ -1,38 +1,43 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI</title>
   <link rel="stylesheet" href="qtai.css" />
+  <style>
+    /* Minimal CSS for module visibility and layout */
+    .module { display: none; margin-top: 10px; }
+    .module.active { display: block; }
+    #tradingfloor-apex { text-align: center; margin: 20px 0; }
+    #globe-container { text-align: center; margin: 20px 0; }
+    #practice-dashboard { border: 1px solid #ccc; padding: 10px; margin: 10px 0; text-align: center; }
+    #main-nav { text-align: center; margin: 20px 0; }
+    .nav-btn { margin: 0 5px; padding: 8px 16px; cursor: pointer; }
+    #payment-section { text-align: center; margin-top: 40px; }
+    #payment-section img { width: 150px; height: auto; margin-top: 10px; }
+  </style>
 </head>
 <body>
 
   <!-- Static Globe Section -->
   <section id="globe-container">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" />
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" width="300" />
   </section>
-
-  <!-- Practice Dashboard (will be injected by practice_dashboard.js) -->
-  <!-- No need to add manually; script will place it below globe -->
 
   <!-- Trading Floor Apex Node -->
   <section id="tradingfloor-apex">
-    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" />
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" width="300" />
   </section>
 
-  <!-- Main Navigation -->
-  <nav id="main-nav">
-    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
-    <button class="nav-btn" data-target="traderlab">TraderLab</button>
-    <button class="nav-btn" data-target="cpilot">CPilot</button>
-  </nav>
+  <!-- Practice Dashboard (will be injected here) -->
+  <div id="practice-dashboard"></div>
 
   <!-- Module Containers -->
   <section id="modules">
     <!-- Trading Floor -->
-    <div class="module" id="tradingfloor">
-      <div class="tf-feed"></div> <!-- TradingFloor feed content -->
+    <div class="module" id="tradingfloor" class="active">
+      <div class="tf-feed"></div>
     </div>
 
     <!-- TraderLab -->
@@ -49,10 +54,17 @@
 
     <!-- CPilot -->
     <div class="module" id="cpilot">
-      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" />
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300"/>
       <div class="cpilot-status">CPilot ready (practice mode).</div>
     </div>
   </section>
+
+  <!-- Main Navigation -->
+  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
+  </nav>
 
   <!-- Payment Section -->
   <section id="payment-section">
@@ -72,6 +84,30 @@
   <script src="practice_cpilot_engine.js"></script>
   <script src="practice_core_engine.js"></script>
   <script src="practice_dashboard.js"></script>
+
+  <!-- Module Toggle & Dashboard Injection -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show default module
+      document.getElementById('tradingfloor').classList.add('active');
+
+      // Module toggle
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.target;
+          document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+          document.getElementById(target).classList.add('active');
+        });
+      });
+
+      // Inject practice dashboard content
+      const dashboard = document.getElementById('practice-dashboard');
+      dashboard.innerHTML = `
+        <h2>Practice Dashboard</h2>
+        <p>Dashboard loaded successfully!</p>
+      `;
+    });
+  </script>
 
 </body>
 </html>
