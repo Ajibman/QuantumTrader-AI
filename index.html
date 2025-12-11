@@ -1,121 +1,36 @@
- <!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI™</title>
-  <link rel="stylesheet" href="qtai.css">
+  <link rel="stylesheet" href="qtai.css" />
 </head>
 <body>
- 
-  <!-- ========================= -->
-  <!--   ROTATING GLOBE         -->
-  <!-- ========================= -->
+  <!-- Static Globe Section -->
   <section id="globe-container">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="qtai-globe">
-  </section>
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" />
+  </section>  <!-- Trading Floor Apex Node -->  <section id="tradingfloor-apex">
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" />
+  </section>  <!-- Main Navigation / Modules (Public Modules Only) -->  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
+  </nav>  <!-- Module Containers -->  <section id="modules">
+    <div class="module" id="tradingfloor">
+      <img src="tradingfloor2_main.png" alt="Trading Floor" />
+    </div><div class="module" id="traderlab">
+  <img src="qtai_traderlab.png" alt="TraderLab Panel" />
+</div>
 
-  <!-- ========================= -->
-  <!--   TRADING FLOOR / MACARTHUR -->
-  <!-- ========================= -->
-  <section id="trading-floor">
-    <img src="tradingfloor2_main.png" alt="Trading Floor" id="tradingfloor-main">
-    <img src="macarthur.png" alt="MacArthur Node" id="macarthur-node">
-  </section>
+<div class="module" id="cpilot">
+  <img src="qtai_cpilot_panel.png" alt="CPilot Panel" />
+</div>
 
-  <!-- ========================= -->
-  <!--   ACTIVATION GATEWAY     -->
-  <!-- ========================= -->
-  <section id="activation-gateway">
-    <button id="activateQT">Activate QuantumTrader AI</button>
-  </section>
-
-  <!-- ========================= -->
-  <!--   FLOOR MODULES           -->
-  <!-- ========================= -->
-  <div class="floor-modules">
-    <!-- Core Modules -->
-    <div class="module"><strong>Trading Floor</strong></div>
-    <div class="module"><strong>TraderLab</strong></div>
-    <div class="module"><strong>CPilot</strong></div>
-    <!-- Hidden Modules -->
-    <div class="module hidden"><strong>NGO Platform</strong></div>
-    <div class="module hidden"><strong>Agric Coop</strong></div>
-    <div class="module hidden"><strong>Philanthropy</strong></div>
-    <div class="module hidden"><strong>Quantum Wallet</strong></div>
-    <div class="module hidden"><strong>Risk Manager</strong></div>
-    <div class="module hidden"><strong>Sentiment Tracker</strong></div>
-    <div class="module hidden"><strong>Compliance Node</strong></div>
-    <div class="module hidden"><strong>Policy Matrix</strong></div>
-    <div class="module hidden"><strong>MultiMarkets</strong></div>
-    <div class="module hidden"><strong>AI-Backtest</strong></div>
-    <div class="module hidden"><strong>Algo Designer</strong></div>
-    <div class="module hidden"><strong>EcoSignals</strong></div>
-  </div>
-
-  <!-- ========================= -->
-  <!--   DONATION / PAYMENT      -->
-  <!-- ========================= -->
-  <div class="donation">
-    <p><strong>Support QuantumTrader AI via Wema Bank Plc</strong><br/>
-    Account: 0299134895 — Olagoke Ajibulu</p>
-    <img src="alat_qr.png" alt="Wema Bank QR Code" />
-    <div class="cards">
-      <img src="visa.png" alt="Visa" />
-      <img src="mastercard.png" alt="MasterCard" />
-      <img src="verve.png" alt="Verve" />
-    </div>
-  </div>
-
-  <!-- ========================= -->
-  <!--   FOOTER                 -->
-  <!-- ========================= -->
-  <footer>
-    <img src="qtai_ori_olokun.png" alt="Ori Olokun Logo" class="footer-logo" />
-  </footer>
-
-  <!-- ========================= -->
-  <!--   SIMULATION SCRIPT       -->
-  <!-- ========================= -->
-  <script>
-    const activateBtn = document.getElementById('activateQT');
-
-    activateBtn?.addEventListener('click', () => {
-      activateBtn.disabled = true;
-      activateBtn.textContent = "QuantumTrader AI Activated ✓";
-
-      // Reveal hidden modules with glow animation
-      const hiddenModules = document.querySelectorAll('.module.hidden');
-      hiddenModules.forEach((mod, index) => {
-        setTimeout(() => {
-          mod.classList.remove('hidden');
-          mod.style.opacity = 0;
-          mod.style.transform = 'translateY(20px)';
-          mod.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-          requestAnimationFrame(() => {
-            mod.style.opacity = 1;
-            mod.style.transform = 'translateY(0)';
-          });
-        }, index * 150);
-      });
-    });
-
-    // Continuous apex node pulse already handled in qtai.css
-    // Donation and cards glow handled in qtai.css hover
-
-    // Optional: fade-in everything on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('body > *').forEach((el, index) => {
-        el.style.opacity = 0;
-        el.style.transform = 'translateY(15px)';
-        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        setTimeout(() => {
-          el.style.opacity = 1;
-          el.style.transform = 'translateY(0)';
-        }, index * 100);
-      });
-    });
-  </script>
-
-</body>
-</html>
+  </section>  <!-- Payment Section -->  <section id="payment-section">
+    <h2>Support QuantumTrader-AI</h2>
+    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+    <p><strong>Bank:</strong> Wema Bank Plc</p>
+    <p><strong>Account Number:</strong> 0299134895</p>
+    <img src="alat_qr.png" alt="Wema Bank QR Code" id="qr-img" />
+  </section>  <script src="app.js"></script></body>
+ </html>
