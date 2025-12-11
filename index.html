@@ -1,52 +1,77 @@
- <!DOCTYPE html><html lang="en">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI</title>
   <link rel="stylesheet" href="qtai.css" />
 </head>
-<body>  <!-- Static Globe Section -->  <section id="globe-container">
+<body>
+
+  <!-- Static Globe Section -->
+  <section id="globe-container">
     <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" />
-  </section>  <!-- Trading Floor Apex Node -->  <section id="tradingfloor-apex">
+  </section>
+
+  <!-- Practice Dashboard (will be injected by practice_dashboard.js) -->
+  <!-- No need to add manually; script will place it below globe -->
+
+  <!-- Trading Floor Apex Node -->
+  <section id="tradingfloor-apex">
     <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" />
-  </section>  <!-- Main Navigation -->  <nav id="main-nav">
+  </section>
+
+  <!-- Main Navigation -->
+  <nav id="main-nav">
     <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
     <button class="nav-btn" data-target="traderlab">TraderLab</button>
     <button class="nav-btn" data-target="cpilot">CPilot</button>
-  </nav>  <!-- Module Containers -->  <section id="modules">
+  </nav>
+
+  <!-- Module Containers -->
+  <section id="modules">
     <!-- Trading Floor -->
     <div class="module" id="tradingfloor">
-      <img src="tradingfloor2_main.png" alt="Trading Floor" />
-    </div><!-- TraderLab -->
-<div class="module" id="traderlab">
-  <h3>TraderLab Simulation</h3>
-  <p>Select an asset to simulate a trade:</p>
-  <div class="asset-buttons">
-    <button class="simulate-btn" data-asset="BTC">BTC</button>
-    <button class="simulate-btn" data-asset="ETH">ETH</button>
-    <button class="simulate-btn" data-asset="SOL">SOL</button>
-  </div>
-  <div class="trade-result"></div>
-</div>
+      <div class="tf-feed"></div> <!-- TradingFloor feed content -->
+    </div>
 
-<!-- CPilot Placeholder -->
-<div class="module" id="cpilot">
-  <img src="qtai_cpilot_panel.png" alt="CPilot Panel" />
-</div>
+    <!-- TraderLab -->
+    <div class="module" id="traderlab">
+      <h3>TraderLab Simulation</h3>
+      <p>Select an asset to simulate a trade:</p>
+      <div class="asset-buttons">
+        <button class="simulate-btn" data-asset="BTC">BTC</button>
+        <button class="simulate-btn" data-asset="ETH">ETH</button>
+        <button class="simulate-btn" data-asset="SOL">SOL</button>
+      </div>
+      <div class="trade-result"></div>
+    </div>
 
-  </section>  <!-- Payment Section -->  <section id="payment-section">
+    <!-- CPilot -->
+    <div class="module" id="cpilot">
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" />
+      <div class="cpilot-status">CPilot ready (practice mode).</div>
+    </div>
+  </section>
+
+  <!-- Payment Section -->
+  <section id="payment-section">
     <h2>Support QuantumTrader-AI</h2>
     <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
     <p><strong>Bank:</strong> Wema Bank Plc</p>
     <p><strong>Account Number:</strong> 0299134895</p>
     <img src="alat_qr.png" alt="Wema Bank QR Code" id="qr-img" />
-  </section>  <script src="app.js"></script></body>
-  <script src="app.js"></script>
-  <script src="practice_tradingfloor_engine.js"></script>
-<script src="practice_traderlab_engine.js"></script>
-  <script src="practice_cpilot_engine.js"></script>
-<script src="practice_core_engine.js"></script>
-<script src="practice_dashboard.js"></script>
+  </section>
 
- </body>
- </html>
+  <!-- Core App Script -->
+  <script src="app.js"></script>
+
+  <!-- Practice Engines -->
+  <script src="practice_traderlab_engine.js"></script>
+  <script src="practice_tradingfloor_engine.js"></script>
+  <script src="practice_cpilot_engine.js"></script>
+  <script src="practice_core_engine.js"></script>
+  <script src="practice_dashboard.js"></script>
+
+</body>
+</html>
