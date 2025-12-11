@@ -1,4 +1,4 @@
-// Complete static app.js for QuantumTrader-AI // Handles module toggling and TraderLab simulation
+ // Complete static app.js for QuantumTrader-AI // Handles module toggling and TraderLab simulation
 
 document.addEventListener("DOMContentLoaded", () => { const navButtons = document.querySelectorAll(".nav-btn"); const modules = document.querySelectorAll(".module");
 
