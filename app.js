@@ -1,18 +1,43 @@
- /* Static QuantumTrader-AI Stylesheet (qtai.css) */
+ <!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+  <link rel="stylesheet" href="qtai.css" />
+</head>
+<body>
+  <!-- Static Globe Section -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" />
+  </section>  <!-- Trading Floor Apex Node -->  <section id="tradingfloor-apex">
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" />
+  </section>  <!-- Main Navigation / Modules (Public Modules Only) -->  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
+  </nav>  <!-- Module Containers -->  <section id="modules">
+    <div class="module" id="tradingfloor">
+      <img src="tradingfloor2_main.png" alt="Trading Floor" />
+    </div><div class="module" id="traderlab">
+  <h3>TraderLab Simulation</h3>
+  <p>Select an asset to simulate a trade:</p>
+  <div class="asset-buttons">
+    <button class="simulate-btn" data-asset="BTC">BTC</button>
+    <button class="simulate-btn" data-asset="ETH">ETH</button>
+    <button class="simulate-btn" data-asset="SOL">SOL</button>
+  </div>
+  <div class="trade-result"></div>
+</div>
 
-/* Reset */
+<div class="module" id="cpilot">
+  <img src="qtai_cpilot_panel.png" alt="CPilot Panel" />
+</div>
 
-{ margin: 0; padding: 0; box-sizing: border-box; } body { font-family: Arial, sans-serif; background: #f3f3f3; color: #111; text-align: center; padding-bottom: 40px; }
-
-
-/* Static Globe */ #globe-container { margin-top: 20px; } #static-globe { width: 300px; max-width: 80%; }
-
-/* Apex Node */ #tradingfloor-apex { margin-top: 25px; } #tradingfloor-apex-img { width: 340px; max-width: 90%; }
-
-/* Navigation */ #main-nav { margin-top: 25px; display: flex; justify-content: center; gap: 15px; } .nav-btn { padding: 10px 18px; border: none; background: #000; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; transition: 0.3s; } .nav-btn:hover { background: #444; }
-
-/* Modules */ #modules { margin-top: 25px; } .module { display: none; } .module img { width: 350px; max-width: 95%; }
-
-/* TraderLab Simulation Buttons */ .asset-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 10px; } .simulate-btn { padding: 8px 16px; background-color: #007acc; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.3s; } .simulate-btn:hover { background-color: #005fa3; } .trade-result { margin-top: 15px; font-weight: bold; color: #222; }
-
-/* Payment Section */ #payment-section { margin-top: 40px; background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 8px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 15px; }
+  </section>  <!-- Payment Section -->  <section id="payment-section">
+    <h2>Support QuantumTrader-AI</h2>
+    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+    <p><strong>Bank:</strong> Wema Bank Plc</p>
+    <p><strong>Account Number:</strong> 0299134895</p>
+    <img src="alat_qr.png" alt="Wema Bank QR Code" id="qr-img" />
+  </section>  <script src="app.js"></script></body>
+</html>
