@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™</title>
+  <title>QuantumTrader AI</title>
   <link rel="stylesheet" href="qtai.css" />
 </head>
 <body>
@@ -19,7 +19,14 @@
     <div class="module" id="tradingfloor">
       <img src="tradingfloor2_main.png" alt="Trading Floor" />
     </div><div class="module" id="traderlab">
-  <img src="qtai_traderlab.png" alt="TraderLab Panel" />
+  <h3>TraderLab Simulation</h3>
+  <p>Select an asset to simulate a trade:</p>
+  <div class="asset-buttons">
+    <button class="simulate-btn" data-asset="BTC">BTC</button>
+    <button class="simulate-btn" data-asset="ETH">ETH</button>
+    <button class="simulate-btn" data-asset="SOL">SOL</button>
+  </div>
+  <div class="trade-result" style="margin-top:15px;font-weight:bold;"></div>
 </div>
 
 <div class="module" id="cpilot">
@@ -33,4 +40,4 @@
     <p><strong>Account Number:</strong> 0299134895</p>
     <img src="alat_qr.png" alt="Wema Bank QR Code" id="qr-img" />
   </section>  <script src="app.js"></script></body>
- </html>
+</html>
