@@ -1,29 +1,18 @@
- // Static app.js (No globe animation) // Handles module switching only
+ /* Static QuantumTrader-AI Stylesheet (qtai.css) */
 
-document.addEventListener("DOMContentLoaded", () => { const navButtons = document.querySelectorAll(".nav-btn"); const modules = document.querySelectorAll(".module");
+/* Reset */
 
-// Helper: Hide all modules function hideAllModules() { modules.forEach((mod) => (mod.style.display = "none")); }
+{ margin: 0; padding: 0; box-sizing: border-box; } body { font-family: Arial, sans-serif; background: #f3f3f3; color: #111; text-align: center; padding-bottom: 40px; }
 
-// Default: show Trading Floor hideAllModules(); document.getElementById("tradingfloor").style.display = "block";
 
-// Navigation Toggle Logic
+/* Static Globe */ #globe-container { margin-top: 20px; } #static-globe { width: 300px; max-width: 80%; }
 
-                          // Static app.js with TraderLab simulation // Handles module switching and TraderLab mock trades
+/* Apex Node */ #tradingfloor-apex { margin-top: 25px; } #tradingfloor-apex-img { width: 340px; max-width: 90%; }
 
-document.addEventListener("DOMContentLoaded", () => { const navButtons = document.querySelectorAll(".nav-btn"); const modules = document.querySelectorAll(".module");
+/* Navigation */ #main-nav { margin-top: 25px; display: flex; justify-content: center; gap: 15px; } .nav-btn { padding: 10px 18px; border: none; background: #000; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; transition: 0.3s; } .nav-btn:hover { background: #444; }
 
-// Helper: Hide all modules function hideAllModules() { modules.forEach((mod) => (mod.style.display = "none")); }
+/* Modules */ #modules { margin-top: 25px; } .module { display: none; } .module img { width: 350px; max-width: 95%; }
 
-// Default: show Trading Floor hideAllModules(); document.getElementById("tradingfloor").style.display = "block";
+/* TraderLab Simulation Buttons */ .asset-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 10px; } .simulate-btn { padding: 8px 16px; background-color: #007acc; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.3s; } .simulate-btn:hover { background-color: #005fa3; } .trade-result { margin-top: 15px; font-weight: bold; color: #222; }
 
-// Navigation Toggle Logic navButtons.forEach((btn) => { btn.addEventListener("click", () => { const target = btn.getAttribute("data-target"); hideAllModules(); document.getElementById(target).style.display = "block"; }); });
-
-// --- TraderLab Simulation Logic ---
-
-const traderLabPanel = document.querySelector("#traderlab");
-
-// Simulated data for TraderLab const traderLabData = { assets: ["BTC", "ETH", "SOL"], trends: ["Uptrend", "Downtrend", "Stable"] };
-
-// Function to simulate trade result function simulateTrade(asset) { const trend = traderLabData.trends[Math.floor(Math.random() * traderLabData.trends.length)]; return Asset: ${asset} | Market Trend: ${trend} | Suggested Action: ${trend === 'Uptrend' ? 'Buy' : 'Sell'}; }
-
-// Event listener for TraderLab buttons traderLabPanel.addEventListener("click", (e) => { if(e.target.classList.contains("simulate-btn")) { const selectedAsset = e.target.dataset.asset; const display = traderLabPanel.querySelector(".trade-result"); display.textContent = simulateTrade(selectedAsset); } }); });
+/* Payment Section */ #payment-section { margin-top: 40px; background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 8px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 15px; }
