@@ -6,14 +6,33 @@
   <title>QuantumTrader AI</title>
   <link rel="stylesheet" href="qtai.css" />
   <style>
-    /* Minimal CSS for module visibility and layout */
+    /* Module visibility */
     .module { display: none; margin-top: 10px; }
     .module.active { display: block; }
+
+    /* Layout & spacing */
     #tradingfloor-apex { text-align: center; margin: 20px 0; }
     #globe-container { text-align: center; margin: 20px 0; }
-    #practice-dashboard { border: 1px solid #ccc; padding: 10px; margin: 10px 0; text-align: center; }
+
+    /* Practice Dashboard styling */
+    #practice-dashboard {
+      border: 2px solid #444;
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin: 15px auto;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    #practice-dashboard h2 { margin-bottom: 10px; }
+    #practice-dashboard p { font-size: 1rem; color: #333; }
+
+    /* Navigation buttons */
     #main-nav { text-align: center; margin: 20px 0; }
     .nav-btn { margin: 0 5px; padding: 8px 16px; cursor: pointer; }
+
+    /* Payment section */
     #payment-section { text-align: center; margin-top: 40px; }
     #payment-section img { width: 150px; height: auto; margin-top: 10px; }
   </style>
@@ -30,13 +49,13 @@
     <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" width="300" />
   </section>
 
-  <!-- Practice Dashboard (will be injected here) -->
+  <!-- Practice Dashboard -->
   <div id="practice-dashboard"></div>
 
   <!-- Module Containers -->
   <section id="modules">
     <!-- Trading Floor -->
-    <div class="module" id="tradingfloor" class="active">
+    <div class="module active" id="tradingfloor">
       <div class="tf-feed"></div>
     </div>
 
