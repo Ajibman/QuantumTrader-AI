@@ -16,3 +16,15 @@
 /* TraderLab Simulation */ .asset-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 12px; } .simulate-btn { padding: 10px 18px; background-color: #007acc; color: #fff; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background 0.3s; } .simulate-btn:hover { background-color: #005fa3; } .trade-result { margin-top: 16px; font-weight: bold; color: #222; min-height: 24px; }
 
 /* Payment Section */ #payment-section { margin-top: 45px; background-color: #fff; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 18px; border-radius: 4px; }
+
+/* Cards * / .cards {  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cards img {
+  max-height: 30px;
+  width: auto;
+}
