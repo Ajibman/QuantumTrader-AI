@@ -22,9 +22,12 @@
   align-items: center;
   gap: 12px;
   margin-top: 10px;
+  max-width: 50%
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cards img {
-  max-height: 10px;
+  max-height: 20px;
   width: auto;
 }
