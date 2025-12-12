@@ -73,6 +73,7 @@
 
     <!-- CPilot -->
     <div class="module" id="cpilot">
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300"/>
       <div class="cpilot-status">CPilot ready (practice mode).</div>
     </div>
   </section>
@@ -82,6 +83,7 @@
     <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
     <button class="nav-btn" data-target="traderlab">TraderLab</button>
     <button class="nav-btn" data-target="cpilot">CPilot</button>
+    <button id="autopilot-btn">Start Autopilot</button>
   </nav>
 
   <!-- Payment Section -->
@@ -103,7 +105,7 @@
   <script src="practice_core_engine.js"></script>
   <script src="practice_dashboard.js"></script>
 
-  <!-- Module Toggle & Dashboard Injection -->
+  <!-- Module Toggle & Autopilot -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Show default module
@@ -124,6 +126,45 @@
         <h2>Practice Dashboard</h2>
         <p>Dashboard loaded successfully!</p>
       `;
+
+      // Autopilot logic
+      let autopilotActive = false;
+      let autopilotInterval;
+      const assets = ['BTC', 'ETH', 'SOL'];
+      let assetIndex = 0;
+
+      document.getElementById('autopilot-btn').addEventListener('click', () => {
+        autopilotActive = !autopilotActive;
+
+        if (autopilotActive) {
+          autopilotInterval = setInterval(() => {
+            simulateAutopilotTrade();
+          }, 3000); // every 3 seconds
+          document.getElementById('autopilot-btn').textContent = 'Stop Autopilot';
+        } else {
+          clearInterval(autopilotInterval);
+          document.getElementById('autopilot-btn').textContent = 'Start Autopilot';
+        }
+      });
+
+      function simulateAutopilotTrade() {
+        // Deterministic cycling for efficiency
+        const asset = assets[assetIndex];
+        assetIndex = (assetIndex + 1) % assets.length;
+        const result = Math.random() > 0.5 ? 'Profit' : 'Loss';
+        const timestamp = new Date().toLocaleTimeString();
+        const message = `[${timestamp}] Autopilot trade executed: ${asset} → ${result}`;
+
+        // Update Trading Floor feed
+        const tfFeed = document.querySelector('#tradingfloor .tf-feed');
+        const p = document.createElement('p');
+        p.textContent = message;
+        tfFeed.prepend(p);
+
+        // Update TraderLab trade result
+        const tradeResult = document.querySelector('#traderlab .trade-result');
+        tradeResult.textContent = message;
+      }
     });
   </script>
 
