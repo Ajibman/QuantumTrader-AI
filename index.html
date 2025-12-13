@@ -1,113 +1,178 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+  <link rel="stylesheet" href="qtai.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Module visibility */
+    .module { display: none; margin-top: 10px; }
+    .module.active { display: block; }
+
+    /* Layout & spacing */
+    #tradingfloor-apex { text-align: center; margin: 20px 0; }
+    #globe-container { text-align: center; margin: 20px 0; }
+
+    /* Practice Dashboard styling */
+    #practice-dashboard {
+      border: 2px solid #444;
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin: 15px auto;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
     }
+    #practice-dashboard h2 { margin-bottom: 10px; }
+    #practice-dashboard p { font-size: 1rem; color: #333; }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
-    }
+    /* Navigation buttons */
+    #main-nav { text-align: center; margin: 20px 0; }
+    .nav-btn { margin: 0 5px; padding: 8px 16px; cursor: pointer; }
 
-    .logo-container {
-      margin-top: 80px;
-    }
-
-    .logo-container img {
-      width: 250px;
-      height: auto;
-    }
-
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
-    }
-
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
-    }
-
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
-    }
-
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+    /* Payment section */
+    #payment-section { text-align: center; margin-top: 40px; }
+    #payment-section img { width: 150px; height: auto; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+  <!-- Static Globe Section -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" width="300" />
+  </section>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
+  <!-- Trading Floor Apex Node -->
+  <section id="tradingfloor-apex">
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" width="300" />
+  </section>
+
+  <!-- Practice Dashboard -->
+  <div id="practice-dashboard"></div>
+
+  <!-- Module Containers -->
+  <section id="modules">
+    <!-- Trading Floor -->
+    <div class="module active" id="tradingfloor">
+      <div class="tf-feed"></div>
+    </div>
+
+    <!-- TraderLab -->
+    <div class="module" id="traderlab">
+      <h3>TraderLab Simulation</h3>
+      <p>Select an asset to simulate a trade:</p>
+      <div class="asset-buttons">
+        <button class="simulate-btn" data-asset="BTC">BTC</button>
+        <button class="simulate-btn" data-asset="ETH">ETH</button>
+        <button class="simulate-btn" data-asset="SOL">SOL</button>
+      </div>
+      <div class="trade-result"></div>
+    </div>
+
+    <!-- CPilot -->
+    <div class="module" id="cpilot">
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300"/>
+      <div class="cpilot-status">CPilot ready (practice mode).</div>
+    </div>
+  </section>
+
+  <!-- Main Navigation -->
+  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
+    <button id="autopilot-btn">Start Autopilot</button>
+  </nav>
+ 
+<!-- Empower Innovation / QR -->
+<div class="innovation">
+  <h3 style="color: #007ACC;">Empower Innovation</h3>
+  <p>
+    <strong>Wema Bank Plc</strong><br/>
+    Account: 0299134895 — Olagoke Ajibulu
+  </p>
+  <img src="alat_qr.png" alt="Wema Bank QR Code" />
+  <div class="cards">
+    <img src="visa.png" alt="Visa" />
+    <img src="mastercard.png" alt="MasterCard" />
+    <img src="verve.png" alt="Verve" />
   </div>
+</div>
+ 
+  <!-- Core App Script -->
+  <script src="app.js"></script>
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
+  <!-- Practice Engines -->
+  <script src="practice_traderlab_engine.js"></script>
+  <script src="practice_tradingfloor_engine.js"></script>
+  <script src="practice_cpilot_engine.js"></script>
+  <script src="practice_core_engine.js"></script>
+  <script src="practice_dashboard.js"></script>
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
-
+  <!-- Module Toggle & Autopilot -->
   <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show default module
+      document.getElementById('tradingfloor').classList.add('active');
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
-    }
+      // Module toggle
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.target;
+          document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+          document.getElementById(target).classList.add('active');
+        });
+      });
+
+      // Inject practice dashboard content
+      const dashboard = document.getElementById('practice-dashboard');
+      dashboard.innerHTML = `
+        <h2>Practice Dashboard</h2>
+        <p>Dashboard loaded successfully!</p>
+      `;
+
+      // Autopilot logic
+      let autopilotActive = false;
+      let autopilotInterval;
+      const assets = ['BTC', 'ETH', 'SOL'];
+      let assetIndex = 0;
+
+      document.getElementById('autopilot-btn').addEventListener('click', () => {
+        autopilotActive = !autopilotActive;
+
+        if (autopilotActive) {
+          autopilotInterval = setInterval(() => {
+            simulateAutopilotTrade();
+          }, 3000); // every 3 seconds
+          document.getElementById('autopilot-btn').textContent = 'Stop Autopilot';
+        } else {
+          clearInterval(autopilotInterval);
+          document.getElementById('autopilot-btn').textContent = 'Start Autopilot';
+        }
+      });
+
+      function simulateAutopilotTrade() {
+        // Deterministic cycling for efficiency
+        const asset = assets[assetIndex];
+        assetIndex = (assetIndex + 1) % assets.length;
+        const result = Math.random() > 0.5 ? 'Profit' : 'Loss';
+        const timestamp = new Date().toLocaleTimeString();
+        const message = `[${timestamp}] Autopilot trade executed: ${asset} → ${result}`;
+
+        // Update Trading Floor feed
+        const tfFeed = document.querySelector('#tradingfloor .tf-feed');
+        const p = document.createElement('p');
+        p.textContent = message;
+        tfFeed.prepend(p);
+
+        // Update TraderLab trade result
+        const tradeResult = document.querySelector('#traderlab .trade-result');
+        tradeResult.textContent = message;
+      }
+    });
   </script>
+
 </body>
 </html>
