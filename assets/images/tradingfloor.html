@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI - TradingFloor</title>
+<link rel="stylesheet" href="qtai.css">
+<style>
+  /* ----- TradingFloor Container ----- */
+  #tradingfloor {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  /* Apex TradingFloor */
+  #tradingfloor-apex {
+    width: 90%;
+    height: 300px;
+    background: url('tradingfloor2_main.png') no-repeat center center;
+    background-size: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  /* Modules 01-15 rotational plane */
+  #modules-plane {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .module {
+    width: 100px;
+    height: 100px;
+    background: #222;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0f0;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  }
+
+  .module:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: #333;
+  }
+
+  /* TraderLab & Copilot panels */
+  #panels {
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  .panel {
+    width: 48%;
+    background: #111;
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+
+  .panel h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #0ff;
+  }
+
+  /* Top globe and bottom Ori Olokun image */
+  #top-globe {
+    width: 300px;
+    margin-bottom: 20px;
+  }
+
+  #bottom-ori-olokun {
+    width: 200px;
+    margin-top: 40px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- QuantumTrader AI Globe Top -->
+<img id="top-globe" src="qtai_globe.png" alt="QuantumTrader AI Globe">
+
+<!-- TradingFloor Container -->
+<div id="tradingfloor">
+
+  <!-- Apex TradingFloor -->
+  <div id="tradingfloor-apex">
+    TradingFloor Apex Node
+  </div>
+
+  <!-- Modules Plane -->
+  <div id="modules-plane">
+    <div class="module">M01</div>
+    <div class="module">M02</div>
+    <div class="module">M03</div>
+    <div class="module">M04</div>
+    <div class="module">M05</div>
+    <div class="module">M06</div>
+    <div class="module">M07</div>
+    <div class="module">M08</div>
+    <div class="module">M09</div>
+    <div class="module">M10</div>
+    <div class="module">M11</div>
+    <div class="module">M12</div>
+    <div class="module">M13</div>
+    <div class="module">M14</div>
+    <div class="module">M15</div>
+  </div>
+
+  <!-- TraderLab & Copilot Panels -->
+  <div id="panels">
+    <div class="panel" id="traderlab-panel">
+      <h3>TraderLab</h3>
+      <p>Simulated trade signals will appear here tick by tick.</p>
+    </div>
+    <div class="panel" id="copilot-panel">
+      <h3>Copilot Hints</h3>
+      <p>Trading insights, guidance, and system alerts will appear here.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Ori Olokun Image Bottom -->
+<img id="bottom-ori-olokun" src="qtai_ori_olokun.png" alt="Ori Olokun">
+
+</body>
+</html>
