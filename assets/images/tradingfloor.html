@@ -56,7 +56,7 @@
     color: #0f0;
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease;
   }
 
   .module:hover {
@@ -99,7 +99,6 @@
     width: 200px;
     margin-top: 40px;
   }
-
 </style>
 </head>
 <body>
@@ -151,5 +150,127 @@
 <!-- Ori Olokun Image Bottom -->
 <img id="bottom-ori-olokun" src="qtai_ori_olokun.png" alt="Ori Olokun">
 
+<!-- ----- JS for AutoTrader Simulation Signals ----- -->
+<script>
+  const modules = document.querySelectorAll('.module');
+
+  // Map signals to colors
+  const signalColors = {
+    BUY: '#0f0',   // green
+    SELL: '#f00',  // red
+    HOLD: '#ff0'   // yellow
+  };
+
+  // Update modules with signal data
+  function updateModules(signals) {
+    // Reset all modules
+    modules.forEach(mod => mod.style.background = '#222');
+
+    // Apply signals
+    signals.forEach(signal => {
+      if (modules[signal.module]) {
+        modules[signal.module].style.background = signalColors[signal.signal] || '#222';
+      }
+    });
+  }
+
+  // ----- Simulation Tick Generator -----
+  function simulateAutoTraderSignals() {
+    const tickSignals = [];
+    const count = Math.floor(Math.random() * 3) + 1; // 1-3 signals
+    const usedIndices = [];
+
+    for (let i = 0; i < count; i++) {
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * modules.length);
+      } while (usedIndices.includes(idx));
+      usedIndices.push(idx);
+
+      const types = ['BUY', 'SELL', 'HOLD'];
+      const signalType = types[Math.floor(Math.random() * types.length)];
+
+      tickSignals.push({ module: idx, signal: signalType });
+    }
+
+    updateModules(tickSignals);
+  }
+
+  // Run every 500ms for tick simulation
+  setInterval(simulateAutoTraderSignals, 500);
+
+  // ----- Real AutoTrader Integration Placeholder -----
+  // Replace simulateAutoTraderSignals() with:
+  // AutoTrader.onTick(signals => updateModules(signals));
+</script>
+
+<script type="module">
+  import { connect, subscribe } from 'https://cdn.jsdelivr.net/npm/@liftbridge/liftbridge-client/dist/liftbridge-client.min.js';
+
+  const modules = document.querySelectorAll('.module');
+
+  // Map signals to colors
+  const signalColors = {
+    BUY: '#0f0',   // green
+    SELL: '#f00',  // red
+    HOLD: '#ff0'   // yellow
+  };
+
+  // Update modules based on signals
+  function updateModules(signals) {
+    modules.forEach(mod => mod.style.background = '#222'); // Reset
+    signals.forEach(signal => {
+      if (modules[signal.module] !== undefined) {
+        modules[signal.module].style.background = signalColors[signal.signal] || '#222';
+      }
+    });
+  }
+
+  // ----- Simulation Fallback -----
+  function simulateSignals() {
+    const tickSignals = [];
+    const count = Math.floor(Math.random() * 3) + 1;
+    const used = [];
+    for (let i = 0; i < count; i++) {
+      let idx;
+      do { idx = Math.floor(Math.random() * modules.length); } while (used.includes(idx));
+      used.push(idx);
+      const types = ['BUY', 'SELL', 'HOLD'];
+      tickSignals.push({ module: idx, signal: types[Math.floor(Math.random() * types.length)] });
+    }
+    updateModules(tickSignals);
+  }
+
+  // ----- Liftbridge Subscription -----
+  async function startLiftbridgeFeed() {
+    try {
+      // Connect to Liftbridge server
+      const client = await connect('ws://localhost:9292'); // Replace with your Liftbridge URL
+
+      // Subscribe to AutoTrader topic
+      const subscription = await subscribe(client, {
+        subject: 'autotrader.signals',
+        startPosition: 'new_only', // only receive new messages
+        onMessage: (msg) => {
+          try {
+            const signals = JSON.parse(msg.value.toString());
+            // Expecting signals like [{ module: 0, signal: 'BUY' }, ...]
+            updateModules(signals);
+          } catch (err) {
+            console.error('Invalid Liftbridge message', err);
+          }
+        }
+      });
+
+      console.log('Subscribed to Liftbridge AutoTrader signals.');
+    } catch (e) {
+      console.warn('Liftbridge unavailable. Running simulation.');
+      setInterval(simulateSignals, 500);
+    }
+  }
+
+  startLiftbridgeFeed();
+</script>
+  
 </body>
 </html>
