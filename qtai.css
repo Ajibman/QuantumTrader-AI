@@ -33,17 +33,21 @@
 }
 
 /* Autopilot button emphasis */
+/* AutoTrader button styling */
 #autopilot-btn {
   margin-left: 20px;
   padding: 8px 18px;
   font-weight: bold;
   border: 2px solid #222;
-  background-color: #fff;
+  background-color: #28a745; /* green background */
+  color: #fff;               /* white text */
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 #autopilot-btn.active {
-  background-color: #222;
+  background-color: #19692c; /* darker green when running */
   color: #fff;
 }
 
