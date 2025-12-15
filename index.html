@@ -1,209 +1,178 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumTrader AI</title>
   <link rel="stylesheet" href="qtai.css" />
+
   <style>
-    /* Module visibility */
     .module { display: none; margin-top: 10px; }
     .module.active { display: block; }
 
-    /* Layout & spacing */
-    #tradingfloor-apex { text-align: center; margin: 20px 0; }
-    #globe-container { text-align: center; margin: 20px 0; }
+    #globe-container,
+    #tradingfloor-apex,
+    #main-nav,
+    #payment-section {
+      text-align: center;
+      margin: 20px 0;
+    }
 
-    /* Practice Dashboard styling */
     #practice-dashboard {
-      border: 2px solid #444;
-      background-color: #f9f9f9;
-      padding: 15px;
-      margin: 15px auto;
-      max-width: 600px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px auto;
+      max-width: 500px;
       text-align: center;
     }
-    #practice-dashboard h2 { margin-bottom: 10px; }
-    #practice-dashboard p { font-size: 1rem; color: #333; }
 
-    /* Navigation buttons */
-    #main-nav { text-align: center; margin: 20px 0; }
-    .nav-btn { margin: 0 5px; padding: 8px 16px; cursor: pointer; }
+    .nav-btn {
+      margin: 0 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
 
-    /* Payment section */
-    #payment-section { text-align: center; margin-top: 40px; }
-    #payment-section img { width: 150px; height: auto; margin-top: 10px; }
+    /* AutoTrader Button */
+    #start-autotrader {
+      background: green;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #start-autotrader:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .cpilot-status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- Static Globe Section -->
+  <!-- Static Globe -->
   <section id="globe-container">
-    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" id="static-globe" width="300" />
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
   </section>
 
-  <!-- Trading Floor Apex Node -->
+  <!-- TradingFloor Apex -->
   <section id="tradingfloor-apex">
-    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" id="tradingfloor-apex-img" width="300" />
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" width="300">
   </section>
 
-<!-- CPilot Trade Duration Selector -->
-<div id="cpilot-panel">
-  <label for="trade-duration">Select Trade Duration:</label>
-  <select id="trade-duration">
-    <option value="30">30 Seconds</option>
-    <option value="60">60 Seconds</option>
-    <option value="300">5 Minutes</option>
-    <option value="600">10 Minutes</option>
-    <option value="900">15 Minutes</option>
-    <option value="3600">1 Hour</option>
-    <option value="14400">4 Hours</option>
-    <option value="86400">24 Hours</option>
-    <option value="172800">48 Hours</option>
-    <option value="259200">72 Hours</option>
-  </select>
-</div>
+  <!-- Practice Dashboard -->
+  <div id="practice-dashboard">
+    <h3>Practice Dashboard</h3>
+    <p>Status: Simulation Mode</p>
+  </div>
 
-<!-- AutoTrader Trigger -->
-<button id="autotrade-btn">Start AutoTrader</button>
-
-<!-- Feedback -->
-<div id="trade-status"></div>
-
-   <!-- Practice Dashboard -->
-  <div id="practice-dashboard"></div>
-
-  <!-- Module Containers -->
+  <!-- Modules -->
   <section id="modules">
+
     <!-- Trading Floor -->
     <div class="module active" id="tradingfloor">
       <div class="tf-feed"></div>
     </div>
 
     <!-- TraderLab -->
-    <div class="module" id="traderlab"l>
+    <div class="module" id="traderlab">
       <h3>TraderLab Simulation</h3>
-      <p>Select an asset to simulate a trade:</p>
-      <div class="asset-buttons">
-        <button class="simulate-btn" data-asset="BTC">BTC</button>
-        <button class="simulate-btn" data-asset="ETH">ETH</button>
-        <button class="simulate-btn" data-asset="SOL">SOL</button>
-      </div>
+      <p>Select an asset:</p>
+      <button class="simulate-btn" data-asset="BTC">BTC</button>
+      <button class="simulate-btn" data-asset="ETH">ETH</button>
+      <button class="simulate-btn" data-asset="SOL">SOL</button>
       <div class="trade-result"></div>
     </div>
 
     <!-- CPilot -->
     <div class="module" id="cpilot">
-      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300"/>
-      <div class="cpilot-status">CPilot ready (practice mode).</div>
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300">
+
+      <!-- Trade Duration Selector -->
+      <div style="margin-top:10px;">
+        <label><strong>Trade Duration</strong></label><br>
+        <select id="cpilot-duration">
+          <option value="30">30 Seconds</option>
+          <option value="300">5 Minutes</option>
+          <option value="3600">1 Hour</option>
+          <option value="86400">1 Day</option>
+          <option value="259200">3 Days</option>
+          <option value="604800">7 Days</option>
+        </select>
+      </div>
+
+      <!-- AutoTrader -->
+      <button id="start-autotrader">Start AutoTrader</button>
+      <div class="cpilot-status" id="autotrader-status">
+        AutoTrader idle (simulation)
+      </div>
     </div>
+
   </section>
 
-  <!-- Main Navigation -->
+  <!-- Navigation -->
   <nav id="main-nav">
     <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
     <button class="nav-btn" data-target="traderlab">TraderLab</button>
     <button class="nav-btn" data-target="cpilot">CPilot</button>
-    <button id="autopilot-btn">Start Autopilot</button>
   </nav>
- 
-<!-- Empower Innovation / QR -->
-<div class="innovation">
-  <h3 style="color: #007ACC;">Empower Innovation</h3>
-  <p>
-    <strong>Wema Bank Plc</strong><br/>
-    Account: 0299134895 — Olagoke Ajibulu
-  </p>
-  <img src="alat_qr.png" alt="Wema Bank QR Code" />
-  <div class="cards">
-    <img src="visa.png" alt="Visa" />
-    <img src="mastercard.png" alt="MasterCard" />
-    <img src="verve.png" alt="Verve" />
-  </div>
-</div>
- 
-  <!-- Core App Script -->
-  <script src="app.js"></script>
 
-  <!-- Practice Engines -->
+  <!-- Support -->
+  <section id="payment-section">
+    <h2>Support QuantumTrader-AI</h2>
+    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+    <p><strong>Bank:</strong> Wema Bank Plc</p>
+    <p><strong>Account Number:</strong> 0299134895</p>
+    <img src="alat_qr.png" width="150">
+  </section>
+
+  <!-- Core Scripts -->
+  <script src="app.js"></script>
   <script src="practice_traderlab_engine.js"></script>
   <script src="practice_tradingfloor_engine.js"></script>
   <script src="practice_cpilot_engine.js"></script>
   <script src="practice_core_engine.js"></script>
   <script src="practice_dashboard.js"></script>
 
-  <!-- Module Toggle & Autopilot -->
+  <!-- 🔐 WALLET (RESTORED — DO NOT MOVE) -->
+  <script src="wallet.js"></script>
+
+  <!-- UI + AutoTrader Logic -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Show default module
-      document.getElementById('tradingfloor').classList.add('active');
-
-      // Module toggle
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const target = btn.dataset.target;
-          document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
-          document.getElementById(target).classList.add('active');
-        });
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+        document.getElementById(btn.dataset.target).classList.add('active');
       });
+    });
 
-      // Inject practice dashboard content
-      const dashboard = document.getElementById('practice-dashboard');
-      dashboard.innerHTML = `
-        <h2>Practice Dashboard</h2>
-        <p>Dashboard loaded successfully!</p>
-      `;
+    const autoBtn = document.getElementById('start-autotrader');
+    const statusEl = document.getElementById('autotrader-status');
 
-      // Autopilot logic
-      let autopilotActive = false;
-      let autopilotInterval;
-      const assets = ['BTC', 'ETH', 'SOL'];
-      let assetIndex = 0;
-
-      document.getElementById('autopilot-btn').addEventListener('click', () => {
-        autopilotActive = !autopilotActive;
-
-        if (autopilotActive) {
-          autopilotInterval = setInterval(() => {
-            simulateAutopilotTrade();
-          }, 3000); // every 3 seconds
-          document.getElementById('autopilot-btn').textContent = 'Stop Autopilot';
-        } else {
-          clearInterval(autopilotInterval);
-          document.getElementById('autopilot-btn').textContent = 'Start Autopilot';
-        }
-      });
-
-      function simulateAutopilotTrade() {
-        // Deterministic cycling for efficiency
-        const asset = assets[assetIndex];
-        assetIndex = (assetIndex + 1) % assets.length;
-        const result = Math.random() > 0.5 ? 'Profit' : 'Loss';
-        const timestamp = new Date().toLocaleTimeString();
-        const message = `[${timestamp}] Autopilot trade executed: ${asset} → ${result}`;
-
-        // Update Trading Floor feed
-        const tfFeed = document.querySelector('#tradingfloor .tf-feed');
-        const p = document.createElement('p');
-        p.textContent = message;
-        tfFeed.prepend(p);
-
-        // Update TraderLab trade result
-        const tradeResult = document.querySelector('#traderlab .trade-result');
-        tradeResult.textContent = message;
+    autoBtn.addEventListener('click', () => {
+      if (!window.walletReady) {
+        statusEl.textContent = 'Wallet not ready';
+        return;
       }
+
+      const duration = document.getElementById('cpilot-duration').value;
+      statusEl.textContent = `AutoTrader ACTIVE (simulation) — ${duration}s`;
+      autoBtn.disabled = true;
+
+      setTimeout(() => {
+        statusEl.textContent = 'AutoTrader completed (simulation)';
+        autoBtn.disabled = false;
+      }, duration * 1000);
     });
   </script>
-<script src="wallet.js"></script>
 
-<!-- Wallet Section -->
-<section id="wallet" class="module">
-  <h3>Trader Wallet</h3>
-  <p>Balance: <span id="wallet-balance">₦0.00</span></p>
-  <button onclick="checkWallet()">Check Balance</button>
-</section>
- 
 </body>
 </html>
