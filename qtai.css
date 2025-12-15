@@ -32,5 +32,18 @@
   width: auto;
 }
 
+/* Autopilot button emphasis */
+#autopilot-btn {
+  margin-left: 20px;
+  padding: 8px 18px;
+  font-weight: bold;
+  border: 2px solid #222;
+  background-color: #fff;
+  cursor: pointer;
+}
 
+#autopilot-btn.active {
+  background-color: #222;
+  color: #fff;
+}
 
