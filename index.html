@@ -71,14 +71,8 @@
 
 <!-- Feedback -->
 <div id="trade-status"></div>
-```
 
-
-
-
-
- 
-  <!-- Practice Dashboard -->
+   <!-- Practice Dashboard -->
   <div id="practice-dashboard"></div>
 
   <!-- Module Containers -->
@@ -202,6 +196,14 @@
       }
     });
   </script>
+<script src="wallet.js"></script>
 
+<!-- Wallet Section -->
+<section id="wallet" class="module">
+  <h3>Trader Wallet</h3>
+  <p>Balance: <span id="wallet-balance">₦0.00</span></p>
+  <button onclick="checkWallet()">Check Balance</button>
+</section>
+ 
 </body>
 </html>
