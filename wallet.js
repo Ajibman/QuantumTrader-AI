@@ -31,3 +31,8 @@ const Wallet = {
 
 export default Wallet;
 
+javascript
+function checkWallet() {
+  const balance = localStorage.getItem('qtai_wallet_balance') || 0;
+  document.getElementById('wallet-balance').textContent = `₦${parseFloat(balance).toFixed(2)}`;
+}
