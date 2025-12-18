@@ -174,5 +174,44 @@
     });
   </script>
 
+  // wallet.js
+const Wallet = {
+  balance: 0,
+
+  createWallet(userId) {
+    if (!userId) return console.warn("UserId required");
+    if (!localStorage.getItem(`wallet_${userId}`)) {
+      localStorage.setItem(`wallet_${userId}`, JSON.stringify({ balance: 0 }));
+    }
+    this.loadWallet(userId);
+  },
+
+  loadWallet(userId) {
+    const data = JSON.parse(localStorage.getItem(`wallet_${userId}`));
+    if (data) this.balance = data.balance;
+  },
+
+  credit(amount, userId) {
+    this.balance += amount;
+    this.persist(userId);
+  },
+
+  debit(amount, userId) {
+    if (amount > this.balance) return false;
+    this.balance -= amount;
+    this.persist(userId);
+    return true;
+  },
+
+  persist(userId) {
+    localStorage.setItem(
+      `wallet_${userId}`,
+      JSON.stringify({ balance: this.balance })
+    );
+  }
+};
+
+window.Wallet = Wallet; // explicit global exposure
+
 </body>
 </html>
