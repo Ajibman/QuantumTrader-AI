@@ -5,7 +5,7 @@ const ACTIVATION_THRESHOLD = 100_000_000; // $100 million
 const WEMA_ACCOUNT = "0299134895";
 
 // Path to QR code image
-const qrCodeImage = "assets/qtai_qr.png"; // adjust path as needed
+const qrCodeImage = "assets/alat_qr.png"; // adjust path as needed
 
 // Sound notification file (subtle alert)
 const alertSound = "assets/activation_sound.mp3"; // replace with actual sound file
