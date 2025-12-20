@@ -94,3 +94,4 @@ export const NODE_CONSEQUENCE_WEIGHTS = deepFreeze({
   Intelligence:     "LOG_ONLY",
   PublicTrust:      "PUBLIC_SURFACE"
 });
+"EnhancementNode"
