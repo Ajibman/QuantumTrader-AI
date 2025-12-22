@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XT Flow Test</title>
+  <script type="module">
+    import { emitXTEvent } from "./js/xt_logical_module.js";
+    import { SocialResponsibilityBus } from "./ecosystem_bus.js";
+
+    // Initialize 12 nodes
+    SocialResponsibilityBus.init([
+      "TradingFloor",
+      "TraderLab",
+      "AutoTrader",
+      "RiskEngine",
+      "PolicyMatrix",
+      "Compliance",
+      "Ethics",
+      "Audit",
+      "Settlement",
+      "Liquidity",
+      "Intelligence",
+      "PublicTrust"
+    ]);
+
+    function runXTTest() {
+      console.clear();
+      console.log("=== XT Event Test Triggered ===");
+      emitXTEvent();
+
+      console.log("=== SRL Logs ===");
+      console.table(SocialResponsibilityBus.logs);
+      console.log("=== PUBLIC_SURFACE output shown above in console.info ===");
+    }
+
+    window.runXTTest = runXTTest;
+  </script>
+</head>
+<body>
+  <h1>XT Event Flow Test</h1>
+  <button onclick="runXTTest()">Trigger XT Event</button>
+  <p>Open the console to see logs and PUBLIC_SURFACE output.</p>
+
+</body>
+</html>

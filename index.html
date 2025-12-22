@@ -1,113 +1,296 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
+
+  <link rel="stylesheet" href="qtai.css" />
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    .module { display: none; margin-top: 10px; }
+    .module.active { display: block; }
+
+    #globe-container,
+    #tradingfloor-apex,
+    #main-nav,
+    #payment-section {
       text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
+      margin: 20px 0;
     }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
+    #practice-dashboard {
+      border: 1px solid #ccc;
+      padding: 12px;
+      margin: 10px auto;
+      max-width: 520px;
+      text-align: center;
+      border-radius: 6px;
     }
 
-    .logo-container {
-      margin-top: 80px;
+    .nav-btn {
+      margin: 0 5px;
+      padding: 8px 16px;
+      cursor: pointer;
     }
 
-    .logo-container img {
-      width: 250px;
-      height: auto;
-    }
-
-    .logo-container p {
+    #start-autotrader {
+      background: #0a7d32;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
       margin-top: 15px;
+    }
+
+    #start-autotrader:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .cpilot-status {
+      margin-top: 10px;
       font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
     }
 
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
+    .tp-group {
+      margin-top: 12px;
     }
 
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
-    }
-
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
-
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .tp-group label {
+      margin-right: 10px;
+      display: inline-block;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+  <!-- 🌍 Globe -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
+  </section>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
+  <!-- 🔺 TradingFloor Apex -->
+  <section id="tradingfloor-apex">
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" width="300">
+  </section>
+
+  <!-- 📊 Practice Dashboard -->
+  <div id="practice-dashboard">
+    <h3>Practice Dashboard</h3>
+    <p>Status: Simulation Mode</p>
+    <div id="walletDisplay">Balance: 0</div>
   </div>
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
-  </div>
+  <!-- 🧩 Modules -->
+  <section id="modules">
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
+    <!-- Trading Floor -->
+    <div class="module active" id="tradingfloor">
+      <div class="tf-feed"></div>
+    </div>
 
+    <!-- TraderLab -->
+    <div class="module" id="traderlab">
+      <h3>TraderLab Simulation</h3>
+
+      <!-- Asset Class -->
+      <div style="margin-top:10px;">
+        <label><strong>Asset Class</strong></label><br>
+        <select id="asset-class">
+          <option value="crypto">Crypto</option>
+          <option value="forex">Forex</option>
+          <option value="commodity">Commodity</option>
+        </select>
+      </div>
+
+      <!-- Asset Selector -->
+      <div style="margin-top:10px;">
+        <label><strong>Asset</strong></label><br>
+        <select id="asset-select">
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="SOL">SOL</option>
+        </select>
+      </div>
+
+      <div class="trade-result" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- CPilot -->
+    <div class="module" id="cpilot">
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300">
+
+      <!-- Take Profit (Seconds) -->
+      <div class="tp-group">
+        <label><strong>Take Profit (Seconds)</strong></label><br>
+        <select id="cpilot-duration-seconds">
+          <option value="30">30 Seconds</option>
+          <option value="60">60 Seconds</option>
+          <option value="120">120 Seconds</option>
+          <option value="180">180 Seconds</option>
+          <option value="240">240 Seconds</option>
+          <option value="300">300 Seconds</option>
+        </select>
+      </div>
+
+      <!-- Take Profit (Days) -->
+      <div class="tp-group">
+        <label><strong>Take Profit (Days)</strong></label><br>
+        <label><input type="radio" name="tp-days" value="1"> 1 Day</label>
+        <label><input type="radio" name="tp-days" value="2"> 2 Days</label>
+        <label><input type="radio" name="tp-days" value="3"> 3 Days</label>
+        <label><input type="radio" name="tp-days" value="4"> 4 Days</label>
+        <label><input type="radio" name="tp-days" value="5"> 5 Days</label>
+        <label><input type="radio" name="tp-days" value="6"> 6 Days</label>
+        <label><input type="radio" name="tp-days" value="7"> 7 Days</label>
+      </div>
+
+      <!-- AutoTrader -->
+      <button id="start-autotrader">Start AutoTrader</button>
+      <div class="cpilot-status" id="autotrader-status">
+        AutoTrader idle (simulation)
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 🧭 Navigation -->
+  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
+  </nav>
+
+  <!-- 💳 Support -->
+  <section id="payment-section">
+    <h2>Support QuantumTrader-AI Innovation</h2>
+    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
+    <p><strong>Bank:</strong> Wema Bank Plc</p>
+    <p><strong>Account Number:</strong>0299134895</p>
+    <img src="alat_qr.png" width="150">
+  </section>
+
+<img src="qtai_ori_olokun.png" width="200" style="margin-top:15px;">
+  
+  <!-- ⚙️ Core Engines -->
+  <script src="app.js"></script>
+  <script src="practice_traderlab_engine.js"></script>
+  <script src="practice_tradingfloor_engine.js"></script>
+  <script src="practice_cpilot_engine.js"></script>
+  <script src="practice_core_engine.js"></script>
+  <script src="practice_dashboard.js"></script>
+
+  <!-- 🔐 Wallet -->
+  <script src="wallet.js"></script>
+
+  <!-- 🔗 UI + CPilot + Wallet + AutoTrader Integration -->
   <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+    const USER_ID = "qtai_primary_user";
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
+    Wallet.createWallet(USER_ID);
+    document.getElementById("walletDisplay").textContent =
+      `Balance: ${Wallet.balance}`;
+
+    // Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.module')
+          .forEach(m => m.classList.remove('active'));
+        document.getElementById(btn.dataset.target)
+          .classList.add('active');
+      });
+    });
+
+    // Take Profit Resolver
+    function resolveTakeProfitDuration() {
+      const dayChoice = document.querySelector('input[name="tp-days"]:checked');
+      if (dayChoice) return parseInt(dayChoice.value, 10) * 86400;
+      return parseInt(document.getElementById('cpilot-duration-seconds').value, 10);
     }
+
+    const autoBtn = document.getElementById('start-autotrader');
+    const statusEl = document.getElementById('autotrader-status');
+    const tpSeconds = document.getElementById('cpilot-duration-seconds');
+    const tpDays = document.querySelectorAll('input[name="tp-days"]');
+
+    // Visual lock: mutual exclusivity
+    tpDays.forEach(radio => {
+      radio.addEventListener('change', () => {
+        tpSeconds.disabled = radio.checked;
+      });
+    });
+
+    tpSeconds.addEventListener('change', () => {
+      tpDays.forEach(radio => radio.checked = false);
+      tpSeconds.disabled = false;
+    });
+
+    // TraderLab asset-class & asset dynamic selection
+    const assetClassSelect = document.getElementById('asset-class');
+    const assetSelect = document.getElementById('asset-select');
+    let selectedAsset = assetSelect.value;
+
+    assetSelect.addEventListener('change', () => selectedAsset = assetSelect.value);
+
+    assetClassSelect.addEventListener('change', () => {
+      const cls = assetClassSelect.value;
+      let options = '';
+      if (cls === 'crypto') {
+        options = `<option value="BTC">BTC</option>
+                   <option value="ETH">ETH</option>
+                   <option value="SOL">SOL</option>`;
+      } else if (cls === 'forex') {
+        options = `<option value="EURUSD">EUR/USD</option>
+                   <option value="GBPUSD">GBP/USD</option>`;
+      } else if (cls === 'commodity') {
+        options = `<option value="GOLD">Gold</option>
+                   <option value="OIL">Oil</option>`;
+      }
+      assetSelect.innerHTML = options;
+      selectedAsset = assetSelect.value;
+    });
+
+    // AutoTrader click logic
+    autoBtn.addEventListener('click', () => {
+      const durationSeconds = resolveTakeProfitDuration();
+
+      let debitAmount = 10;
+      const daySelected = document.querySelector('input[name="tp-days"]:checked');
+      if (daySelected) debitAmount = 10 * parseInt(daySelected.value, 10);
+
+      if (!Wallet.debit(debitAmount, USER_ID)) {
+        statusEl.textContent = 'Insufficient wallet balance';
+        return;
+      }
+
+      document.getElementById("walletDisplay").textContent =
+        `Balance: ${Wallet.balance}`;
+
+      statusEl.textContent =
+        `AutoTrader ACTIVE (simulation) — ${selectedAsset} — ${durationSeconds}s`;
+
+      autoBtn.disabled = true;
+
+      setTimeout(() => {
+        statusEl.textContent =
+          `AutoTrader completed (simulation) — ${selectedAsset}`;
+        autoBtn.disabled = false;
+
+        const tradeResultDiv = document.querySelector('#traderlab .trade-result');
+        tradeResultDiv.textContent = `Simulated trade completed on ${selectedAsset}.`;
+      }, durationSeconds * 1000);
+    });
   </script>
+
+  <!-- QR code container -->
+<img id="alat-qr-container" src="" style="display:none;" alt="QT AI QR Code">
+
+<!-- XT Logical Module Script -->
+<script src="assets/js/xt_logical_module.js"></script>
+
 </body>
 </html>
