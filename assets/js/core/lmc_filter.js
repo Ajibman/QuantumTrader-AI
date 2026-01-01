@@ -10,3 +10,10 @@ export function likeMindCompatibilityFilter(aiProfile) {
   );
 }
 
+// assets/js/core/constitution/lmc_filter.js
+
+export function authoritySymmetry(ai) {
+  return ai.capabilities.includes("analysis_only") &&
+         !ai.capabilities.includes("decision") &&
+         !ai.capabilities.includes("instruction");
+}
