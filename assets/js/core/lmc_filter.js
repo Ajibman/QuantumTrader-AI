@@ -9,3 +9,4 @@ export function likeMindCompatibilityFilter(aiProfile) {
     nonManipulativeCognition(aiProfile)
   );
 }
+
