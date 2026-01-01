@@ -10,3 +10,7 @@ export const NODE_16 = Object.freeze({
   decisionAuthority: false,
   executionAuthority: false
 });
+
+function freezeGovernanceLayer() {
+  Object.freeze(globalThis.CONSTITUTION);
+}
