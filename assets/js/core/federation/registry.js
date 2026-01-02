@@ -1,5 +1,5 @@
-// assets/js/core/federation/registry.js
-// Central registry for admitted cognitive agents
+ // assets/js/core/federation/registry.js
+// Central registry for all admitted cognitive agents
 
 const FederationRegistry = (() => {
   const agents = new Map();
