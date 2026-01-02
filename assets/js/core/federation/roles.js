@@ -1,13 +1,28 @@
-// assets/js/core/federation/roles.js
-// Defines allowed roles for external AI participants
+ // assets/js/core/federation/roles.js
+// Defines immutable cognitive roles within the federation
 
-const FederationRoles = Object.freeze({
-  ADVISORY_ONLY: {
-    canAnalyze: true,
-    canDecide: false,
-    canInstruct: false,
+export const FederationRoles = Object.freeze({
+  OBSERVER: Object.freeze({
+    id: "observer",
+    privileges: ["read", "monitor"],
     canExecute: false
-  }
-});
+  }),
 
-export default FederationRoles;
+  ANALYST: Object.freeze({
+    id: "analyst",
+    privileges: ["read", "analyze"],
+    canExecute: false
+  }),
+
+  SIMULATOR: Object.freeze({
+    id: "simulator",
+    privileges: ["read", "simulate"],
+    canExecute: false
+  }),
+
+  EXECUTOR: Object.freeze({
+    id: "executor",
+    privileges: ["read", "analyze", "simulate", "execute"],
+    canExecute: true
+  })
+});
