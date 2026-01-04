@@ -297,8 +297,26 @@
     if (!localStorage.getItem("qtai_user_role")) {
       localStorage.setItem("qtai_user_role", "exclusive_trader");
     }
+    
+<script>
+  (function () {
+    const PRIVATE_MODE = true; // 🔴 SET TO false OR REMOVE FOR PRODUCTION
+
+    if (!PRIVATE_MODE) return;
+
+    // Set Exclusive Trader role
+    if (!localStorage.getItem("qtai_user_role")) {
+      localStorage.setItem("qtai_user_role", "exclusive_trader");
+    }
 
     <!-- REMOVE BEFORE PUBLIC RELEASE -->
+    <!-- DEV ONLY: Exclusive Trader Setup (AUTO-DISABLED VIA PRIVATE_MODE) -->
+<script>
+  (function () {
+    const PRIVATE_MODE = true; // 🔴 set to false or remove for public release
+
+    if (!PRIVATE_MODE) return;
+
     // Start subscription clock if missing
     if (!localStorage.getItem("qtai_subscription_start")) {
       localStorage.setItem(
@@ -308,6 +326,6 @@
     }
   })();
 </script>
-
+  
 </body>
 </html>
