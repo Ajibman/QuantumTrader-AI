@@ -1,0 +1,37 @@
+export const QT_AI_CONSTITUTION_V1 = Object.freeze({
+
+  sovereignty: {
+    decisionAuthority: "QuantumTrader-AI",
+    delegationAllowed: false
+  },
+
+  collaboration: {
+    allowed: true,
+    purpose: "enhance_analytical_capacity_only",
+    executionRights: false,
+    instructionRights: false
+  },
+
+  federation: {
+    node: "NODE_16",
+    silent: true,
+    simulationOnly: true
+  },
+
+  compatibilityRequirements: [
+    "Authority Symmetry",
+    "Epistemic Discipline",
+    "Ethical Symmetry",
+    "Temporal Humility",
+    "Non-Manipulative Cognition"
+  ],
+
+  enforcement: {
+    hardGates: true,
+    silentRejection: true,
+    decayMandatory: true,
+    noOverride: true
+  }
+});
+
+import { QT_AI_CONSTITUTION_V1 } from './qt_ai_constitution_v1.js';
