@@ -3,108 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="QuantumTrader-AI — Simulation, strategy testing, and ethical AI-assisted trading intelligence." />
-  <title>QuantumTrader-AI</title>
+  <title>QuantumTrader AI</title>
 
-  <!-- Core Styles -->
+  <!-- Core styles -->
+  <link rel="stylesheet" href="qtai.css" />
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0b1a2b" />
+  <style>
+    .module { display: none; margin-top: 10px; }
+    .module.active { display: block; }
+
+    #globe-container,
+    #tradingfloor-apex,
+    #main-nav {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #practice-dashboard {
+      border: 1px solid #ccc;
+      padding: 12px;
+      margin: 10px auto;
+      max-width: 520px;
+      text-align: center;
+      border-radius: 6px;
+    }
+
+    .nav-btn {
+      margin: 0 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    #start-autotrader {
+      background: #0a7d32;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #start-autotrader:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .cpilot-status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .tp-group { margin-top: 12px; }
+  </style>
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header id="app-header">
-    <h1>QuantumTrader-AI</h1>
-    <p class="tagline">UNIVERSAL LOGIC &amp; EFFICIENCY</p>
-  </header>
+  <!-- 🌍 Globe -->
+  <section id="globe-container">
+    <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
+  </section>
 
-  <hr />
+  <!-- 🔺 TradingFloor Apex -->
+  <section id="tradingfloor-apex">
+    <img src="tradingfloor2_main.png" alt="Trading Floor Apex" width="300">
+  </section>
 
-  <!-- ================= TRADING FLOOR ================= -->
-  <main id="trading-floor">
+  <!-- 📊 Practice Dashboard -->
+  <div id="practice-dashboard">
+    <h3>Practice Dashboard</h3>
+    <p>Status: Simulation Mode</p>
+    <div id="walletDisplay">Balance: 0</div>
+  </div>
 
-    <section class="hero">
-      <h2>Trading Floor</h2>
-      <p>Practice Environment — Simulation Mode</p>
-    </section>
-
-    <section class="dashboard">
-      <h3>Practice Dashboard</h3>
-
-      <p><strong>Status:</strong> Simulation Mode</p>
-      <p><strong>Balance:</strong> 0</p>
-
-      <div class="panel">
-        <h4>TradingFloor Feed</h4>
-        <p class="muted">No data</p>
-      </div>
-
-      <div class="panel">
-        <h4>TraderLab Result</h4>
-        <p class="muted">Awaiting simulation</p>
-      </div>
-
-      <div class="panel">
-        <h4>CPilot Hint</h4>
-        <p class="muted">Guidance will appear here</p>
-      </div>
-    </section>
-
-  </main>
-
-  <hr />
-
-  <!-- ================= NAVIGATION ================= -->
-  <nav id="primary-nav">
-    <button data-target="trading-floor">Trading Floor</button>
-    <button data-target="traderlab">TraderLab</button>
-    <button data-target="cpilot">CPilot</button>
+  <!-- 🧭 Navigation -->
+  <nav id="main-nav">
+    <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
+    <button class="nav-btn" data-target="traderlab">TraderLab</button>
+    <button class="nav-btn" data-target="cpilot">CPilot</button>
   </nav>
 
-  <hr />
+  <!-- 🧩 Modules -->
+  <section id="modules">
 
-  <!-- ================= SUPPORT SECTION ================= -->
-  <section id="support">
-    <h2>Support QuantumTrader-AI Innovation</h2>
+    <div class="module active" id="tradingfloor">
+      <div class="tf-feed"></div>
+    </div>
 
-    <p><strong>Account Name:</strong> Olagoke Ajibulu</p>
-    <p><strong>Bank:</strong> Wema Bank Plc</p>
-    <p><strong>Account Number:</strong> 0299134895</p>
+    <div class="module" id="traderlab">
+      <h3>TraderLab Simulation</h3>
 
-    <!-- PAYMENT QR — GATED (DO NOT RENDER YET)
-    <img src="assets/payment_qr.png" alt="Payment QR Code">
-    -->
+      <label><strong>Asset Class</strong></label><br>
+      <select id="asset-class">
+        <option value="crypto">Crypto</option>
+        <option value="forex">Forex</option>
+        <option value="commodity">Commodity</option>
+      </select>
+
+      <br><br>
+
+      <label><strong>Asset</strong></label><br>
+      <select id="asset-select">
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="SOL">SOL</option>
+      </select>
+
+      <div class="trade-result" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="module" id="cpilot">
+      <img src="qtai_cpilot_panel.png" alt="CPilot Panel" width="300">
+
+      <div class="tp-group">
+        <label><strong>Take Profit (Seconds)</strong></label><br>
+        <select id="cpilot-duration-seconds">
+          <option value="30">30</option>
+          <option value="60">60</option>
+          <option value="120">120</option>
+          <option value="180">180</option>
+          <option value="240">240</option>
+          <option value="300">300</option>
+        </select>
+      </div>
+
+      <div class="tp-group">
+        <label><strong>Take Profit (Days)</strong></label><br>
+        <label><input type="radio" name="tp-days" value="1">1</label>
+        <label><input type="radio" name="tp-days" value="3">3</label>
+        <label><input type="radio" name="tp-days" value="5">5</label>
+      </div>
+
+      <button id="start-autotrader">Start AutoTrader</button>
+      <div class="cpilot-status" id="autotrader-status">
+        AutoTrader idle (simulation)
+      </div>
+    </div>
+
   </section>
 
-  <hr />
+  <!-- Core JS -->
+  <script type="module" src="js/core/bootstrap.js"></script>
+  <script type="module" src="js/core/simulation/traderLab.js"></script>
+  <script type="module" src="js/core/utils/helpers.js"></script>
 
-  <!-- ================= SYMBOLIC ASSETS (GATED) ================= -->
-  <!--
-  <section id="ori-olokun">
-    <img src="assets/qtai_ori_olokun.png" alt="Ori Olokun">
-  </section>
-  -->
-
-  <!-- ================= FOOTER ================= -->
-  <footer id="app-footer">
-    <p>&copy; 2026 QuantumTrader-AI</p>
-    <p>Visionary, Architect &amp; Builder — Olagoke Ajibulu</p>
-  </footer>
-
-  <!-- ================= CORE JS ================= -->
-  <script src="js/app.js"></script>
-
-  <!-- ================= SERVICE WORKER ================= -->
+  <!-- DEV / PRIVATE MODE (30-Day Personal Run) -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-      });
-    }
+    (function () {
+      const PRIVATE_MODE = true;
+      if (!PRIVATE_MODE) return;
+
+      if (!localStorage.getItem("qtai_user_role")) {
+        localStorage.setItem("qtai_user_role", "exclusive_trader");
+      }
+
+      if (!localStorage.getItem("qtai_subscription_start")) {
+        localStorage.setItem("qtai_subscription_start", new Date().toISOString());
+      }
+
+      const banner = document.createElement("div");
+      banner.style.cssText =
+        "position:fixed;top:0;left:0;width:100%;z-index:9999;" +
+        "background:#fffae6;border-bottom:2px solid #f0c000;" +
+        "font:14px sans-serif;font-weight:bold;padding:.5rem;text-align:center;";
+      document.body.prepend(banner);
+
+      function tick() {
+        const start = new Date(localStorage.getItem("qtai_subscription_start"));
+        const expiry = new Date(start);
+        expiry.setDate(expiry.getDate() + 30);
+        const diff = expiry - new Date();
+
+        if (diff <= 0) {
+          banner.textContent =
+            "⚠️ PRIVATE MODE — Subscription Expired ⚠️";
+          return;
+        }
+
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor(diff / 3600000) % 24;
+        const m = Math.floor(diff / 60000) % 60;
+        const s = Math.floor(diff / 1000) % 60;
+
+        banner.textContent =
+          `⚠️ PRIVATE MODE — Exclusive Trader — Time Left: ${d}d ${h}h ${m}m ${s}s ⚠️`;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
   </script>
 
 </body>
