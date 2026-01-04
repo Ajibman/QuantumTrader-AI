@@ -242,6 +242,46 @@
 
   <!-- Register Service Worker -->
   <script src="register-sw.js"></script>
+<script>
+  (function () {
+   
+    // Wait until DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".nav-btn");
+      const modules = document.querySelectorAll(".module");
 
+      // Set first module active if none
+      if (!document.querySelector(".module.active") && modules.length) {
+        modules[0].classList.add("active");
+      }
+
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.target;
+
+          // Hide all modules
+          modules.forEach(mod => mod.classList.remove("active"));
+
+          // Show target module
+          const targetModule = document.getElementById(targetId);
+          if (targetModule) targetModule.classList.add("active");
+
+          // Optional: highlight active button
+          buttons.forEach(b => b.classList.remove("active-btn"));
+          btn.classList.add("active-btn");
+        });
+      });
+    });
+  })();
+</script>
+
+<style>
+  /* Optional: style active button */
+  .active-btn {
+    background-color: #0a7d32;
+    color: white;
+  }
+</style>
+ 
 </body>
 </html>
