@@ -308,22 +308,77 @@
     if (!localStorage.getItem("qtai_user_role")) {
       localStorage.setItem("qtai_user_role", "exclusive_trader");
     }
-
-    <!-- REMOVE BEFORE PUBLIC RELEASE -->
-    <!-- DEV ONLY: Exclusive Trader Setup (AUTO-DISABLED VIA PRIVATE_MODE) -->
+      
+<!-- REMOVE BEFORE PUBLIC RELEASE -->
+<!-- DEV ONLY: Exclusive Trader Setup + Reminders + Countdown -->
 <script>
   (function () {
-    const PRIVATE_MODE = true; // 🔴 set to false or remove for public release
-
+    const PRIVATE_MODE = true; // 🔴 toggle false or remove for production
     if (!PRIVATE_MODE) return;
 
-    // Start subscription clock if missing
+    // 1️⃣ Set Exclusive Trader role if missing
+    if (!localStorage.getItem("qtai_user_role")) {
+      localStorage.setItem("qtai_user_role", "exclusive_trader");
+    }
+
+    // 2️⃣ Start subscription clock if missing
     if (!localStorage.getItem("qtai_subscription_start")) {
       localStorage.setItem(
         "qtai_subscription_start",
         new Date().toISOString()
       );
     }
+
+    // 3️⃣ Create banner
+    const reminderDiv = document.createElement("div");
+    reminderDiv.style.position = "fixed";
+    reminderDiv.style.top = "0";
+    reminderDiv.style.left = "0";
+    reminderDiv.style.width = "100%";
+    reminderDiv.style.backgroundColor = "#fffae6";
+    reminderDiv.style.color = "#222";
+    reminderDiv.style.fontFamily = "sans-serif";
+    reminderDiv.style.fontSize = "14px";
+    reminderDiv.style.fontWeight = "bold";
+    reminderDiv.style.padding = "0.5rem";
+    reminderDiv.style.textAlign = "center";
+    reminderDiv.style.zIndex = "9999";
+    reminderDiv.style.borderBottom = "2px solid #f0c000";
+    document.body.prepend(reminderDiv);
+
+    // 4️⃣ Countdown function
+    function updateCountdown() {
+      const start = localStorage.getItem("qtai_subscription_start");
+      if (!start) return;
+
+      const startDate = new Date(start);
+      const durationDays = 30;
+      const expiry = new Date(startDate);
+      expiry.setDate(expiry.getDate() + durationDays);
+
+      const now = new Date();
+      let diff = expiry - now;
+
+      if (diff <= 0) {
+        reminderDiv.innerText =
+          "⚠️ PRIVATE_MODE ACTIVE | Subscription Expired | Exclusive Trader Phase ⚠️";
+        reminderDiv.style.backgroundColor = "#ffe6e6";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      reminderDiv.innerText =
+        `⚠️ PRIVATE_MODE ACTIVE | Exclusive Trader Role | Subscription Time Left: ` +
+        `${days}d ${hours}h ${minutes}m ${seconds}s ⚠️`;
+    }
+
+    // 5️⃣ Initial update & interval
+    updateCountdown();
+    setInterval(updateCountdown, 1000); // refresh every second
   })();
 </script>
   
