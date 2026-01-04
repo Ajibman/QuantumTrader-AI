@@ -2,6 +2,21 @@
 // QuantumTrader-AI Core Bootstrap
 // Loads constitutional and core governance first, silently
 
+import { enforceAccessControl } from "./constitution/accessControl.js";
+import { enforceSubscription } from "./federation/subscriptionGuard.js";
+
+export function bootCore() {
+  // Enforce exclusive trader & subscription
+  enforceAccessControl();
+  enforceSubscription();
+
+  // App can proceed to dashboard / simulation
+  console.log("Bootstrap: Access granted, subscription valid.");
+}
+
+// Auto-run bootstrap when this file loads
+bootCore();
+
 // --- Constitution ---
 import './constitution/node16_cognitive_federation.js';
 import './constitution/lmc_filter.js';
