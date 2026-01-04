@@ -290,7 +290,24 @@
 <img id="alat-qr-container" src="" style="display:none;" alt="QT AI QR Code">
 
 <!-- XT Logical Module Script -->
-<script src="assets/js/xt_logical_module.js"></script>
+<script src="assets/js/xt_logical_module.js"></script><!-- DEV ONLY: Exclusive Trader Setup (REMOVE BEFORE PUBLIC RELEASE) -->
+<script>
+  (function () {
+    // Set Exclusive Trader role
+    if (!localStorage.getItem("qtai_user_role")) {
+      localStorage.setItem("qtai_user_role", "exclusive_trader");
+    }
+
+    <!-- REMOVE BEFORE PUBLIC RELEASE -->
+    // Start subscription clock if missing
+    if (!localStorage.getItem("qtai_subscription_start")) {
+      localStorage.setItem(
+        "qtai_subscription_start",
+        new Date().toISOString()
+      );
+    }
+  })();
+</script>
 
 </body>
 </html>
