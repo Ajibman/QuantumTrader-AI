@@ -65,9 +65,24 @@
     }
   </style>
 </head>
-
+  
+  <!-- Mobile-friendly CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
 <body>
 
+  <!-- Your app content / placeholders -->
+  <div id="app-root">
+    <!-- Dashboard, charts, controls will render here -->
+  </div>
+
+  <!-- 1️⃣ Bootstrap first -->
+  <script type="module" src="js/core/bootstrap.js"></script>
+
+  <!-- 2️⃣ Simulation engine & other core scripts -->
+  <script type="module" src="js/core/simulation/traderLab.js"></script>
+  <script type="module" src="js/core/utils/helpers.js"></script>
+  
   <!-- 🌍 Globe -->
   <section id="globe-container">
     <img src="qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
