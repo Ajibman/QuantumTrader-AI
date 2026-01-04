@@ -20,3 +20,13 @@ import './simulation/scenario_bus.js';
 import './utils/freeze.js';
 
 // Bootstrap completes silently
+
+// js/core/bootstrap.js
+
+import { enforceAccessControl } from "./constitution/accessControl.js";
+import { enforceSubscription } from "./federation/subscriptionGuard.js";
+
+export function bootCore() {
+  enforceAccessControl();
+  enforceSubscription();
+}
