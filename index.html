@@ -1,15 +1,76 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QonexAI™ | QuantumTrader AI</title>
 
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0b0f1a" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./css/qtai.css" />
+</head>
+
+<body>
+
+<header>
+  <img src="./assets/qtai_globe.png" class="responsive" alt="QuantumTrader AI Globe" />
+  <h1>QonexAI™</h1>
+  <p>Universal Logic & Efficiency</p>
+</header>
+
+<section id="tradingfloor">
+  <h2>Trading Floor</h2>
+  <img src="./assets/tradingfloor2_main.png" class="responsive" alt="Trading Floor" />
+</section>
+
+<section id="traderlab">
+  <h2>TraderLab™ Simulation</h2>
+  <img src="./assets/qtai_cpilot_panel.png" class="responsive" alt="Co-Pilot Panel" />
+</section>
+
+<section id="subscription">
+  <h2>Subscription</h2>
+  <p>Flat monthly subscription required to continue usage.</p>
+  <img src="./assets/alat_qr.png" class="responsive" alt="Payment QR" />
+</section>
+
+<footer>
+  <img src="./assets/qtai_ori_olokun.png" class="responsive footer-logo" alt="Ori Ologo" />
+</footer>
+
+<!-- Core Scripts -->
+<script src="./js/core/bootstrap.js"></script>
+<script src="./js/core/simulation/traderLab.js"></script>
+<script src="./js/core/utils/helpers.js"></script>
+
+<!-- Exclusive Trader | PRIVATE MODE -->
+<script>
+  (function () {
+    const PRIVATE_MODE = true; // SET false BEFORE PUBLIC RELEASE
+
+    if (PRIVATE_MODE) {
+      if (!localStorage.getItem("qtai_subscription_start")) {
+        localStorage.setItem(
+          "qtai_subscription_start",
+          new Date().toISOString()
+        );
+      }
+    }
+  })();
+</script>
+
+<!-- Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+ 
   <!-- Mobile-friendly CSS -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
 
   <!-- Theme color -->
   <meta name="theme-color" content="#0a7d32">
@@ -51,8 +112,6 @@
     .tp-group { margin-top: 12px; }
     .tp-group label { margin-right: 10px; display: inline-block; }
   </style>
-</head>
-<body>
 
   <!-- App Root -->
   <div id="app-root"></div>
