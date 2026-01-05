@@ -1,19 +1,69 @@
 /* ================================
    MARKET PRICE STUB (SIMULATION)
    ================================ */
-
 function getMarketPrice(asset) {
   const basePrices = {
-    BTC: 50000000,   // ₦50m
-    ETH: 3000000,    // ₦3m
+    BTC: 50000000,
+    ETH: 3000000,
     EURUSD: 1600
   };
 
   const base = basePrices[asset] || 1000;
-  const variance = (Math.random() - 0.5) * 0.05; // ±5%
+  const variance = (Math.random() - 0.5) * 0.05;
   return +(base * (1 + variance)).toFixed(2);
 }
 
+const SimulationEngine = {
+  balance: 0,
+  positions: [],
+
+  init(demoBalance) {
+    this.balance = demoBalance;
+    this.positions = [];
+    this.render();
+  },
+
+  buy(asset, amount) {
+    const price = getMarketPrice(asset);
+    const cost = price * amount;
+
+    if (cost > this.balance) {
+      alert("Insufficient demo balance");
+      return;
+    }
+
+    this.balance -= cost;
+    this.positions.push({ asset, amount, entryPrice: price });
+    this.render();
+  },
+
+  sell(index) {
+    const p = this.positions[index];
+    const exitPrice = getMarketPrice(p.asset);
+    const proceeds = p.amount * exitPrice;
+    const pnl = proceeds - (p.amount * p.entryPrice);
+
+    this.balance += proceeds;
+    this.positions.splice(index, 1);
+    this.render();
+    console.log("PnL:", pnl);
+  },
+
+  render() {
+    document.getElementById("balance").innerText = this.balance.toFixed(2);
+    const list = document.getElementById("positions");
+    list.innerHTML = "";
+
+    this.positions.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${p.asset} | ${p.amount} @ ₦${p.entryPrice}
+        <button onclick="SimulationEngine.sell(${i})">Close</button>
+      `;
+      list.appendChild(li);
+    });
+  }
+};
 /* ================================
    SIMULATION ENGINE
    ================================ */
