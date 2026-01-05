@@ -197,3 +197,13 @@ function unlockExecution() {
 setInterval(() => {
   simulationTick('BTC');
 }, 2000);
+
+<div id="liveTradeSection">
+  <button id="proceedLiveBtn" disabled onclick="requestLiveTrading()">
+    Proceed to Live Trading
+  </button>
+
+  <p id="liveTradeHint" style="font-size: 0.9em; opacity: 0.7;">
+    Available once confidence is sufficient. Training can continue anytime.
+  </p>
+</div>
