@@ -207,3 +207,20 @@ setInterval(() => {
     Available once confidence is sufficient. Training can continue anytime.
   </p>
 </div>
+
+function requestLiveTrading() {
+  const confirmed = confirm(
+    "You are about to proceed to live trading.\n\n" +
+    "• Monthly subscription: ₦10,000\n" +
+    "• Training remains available\n" +
+    "• No automatic trades will be placed\n\n" +
+    "Do you wish to continue?"
+  );
+
+  if (!confirmed) {
+    addReflection("You chose to continue training. No changes were made.");
+    return;
+  }
+
+  checkSubscriptionStatus();
+}
