@@ -91,3 +91,44 @@
   color: green;
   font-weight: 500;
 }
+
+#onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-overlay.hidden {
+  display: none;
+}
+
+.onboarding-container {
+  max-width: 92%;
+  max-height: 92%;
+  text-align: center;
+}
+
+.onboarding-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.onboarding-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.onboarding-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+ 
