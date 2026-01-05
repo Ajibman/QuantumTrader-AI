@@ -176,3 +176,14 @@
   cursor: pointer;
 }
  
+.simulation-charts {
+  margin-top: 16px;
+}
+
+.simulation-charts canvas {
+  width: 100%;
+  max-width: 360px;
+  background: #0e0e0e;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
