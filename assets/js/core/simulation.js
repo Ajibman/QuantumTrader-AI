@@ -1,3 +1,23 @@
+// 1️⃣ Market Price Stub
+function getMarketPrice(asset) {
+  const basePrices = {
+    BTC: 50000000,
+    ETH: 3000000,
+    EURUSD: 1600
+  };
+
+  const base = basePrices[asset] || 1000;
+  const variance = (Math.random() - 0.5) * 0.05; // ±5%
+  return +(base * (1 + variance)).toFixed(2);
+}
+
+// 2️⃣ Simulation Engine (uses getMarketPrice)
+const SimulationEngine = {
+  balance: 0,
+  positions: [],
+  ...
+}
+
 const SimulationEngine = {
   balance: 0,
   positions: [],
