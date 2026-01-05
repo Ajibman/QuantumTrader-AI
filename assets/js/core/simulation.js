@@ -321,4 +321,108 @@ function enterLiveTrading() {
   updateUIByState();
 }
 
+// ===============================
+// APP STATE DEFINITIONS
+// ===============================
+const APP_STATE = {
+  current: 'TRAINING',   // Initial state
+  TRAINING: 'TRAINING',
+  SIMULATION: 'SIMULATION',
+  CONFIDENCE: 'CONFIDENCE',
+  LIVE_READY: 'LIVE_READY',
+  LIVE_TRADING: 'LIVE_TRADING',
+};
 
+// ===============================
+// REFLECTION / USER FEEDBACK HELPER
+// ===============================
+function addReflection(message) {
+  console.log('[Reflection]', message);
+}
+
+// ===============================
+// STATE TRANSITIONS
+// ===============================
+
+// TRAINING → SIMULATION
+function startSimulation() {
+  APP_STATE.current = APP_STATE.SIMULATION;
+  addReflection("Simulation mode started.");
+  updateUIByState();
+}
+
+// SIMULATION → CONFIDENCE
+function gainConfidence() {
+  APP_STATE.current = APP_STATE.CONFIDENCE;
+  addReflection("Confidence meter filled.");
+  updateUIByState();
+}
+
+// CONFIDENCE → LIVE_READY
+function unlockLiveTradingOption() {
+  APP_STATE.current = APP_STATE.LIVE_READY;
+  addReflection("Optional live trading unlocked.");
+  updateUIByState();
+}
+
+// LIVE_READY → LIVE_TRADING
+function enterLiveTrading() {
+  APP_STATE.current = APP_STATE.LIVE_TRADING;
+  addReflection("Live trading active.");
+  updateUIByState();
+}
+
+// ===============================
+// STEP 4: LIVE TRADING INTENT & SUBSCRIPTION STUB
+// ===============================
+
+// Called by Enter Trading Floor button
+function requestLiveTrading() {
+  const confirmed = confirm(
+    "You are about to proceed to live trading.\n\n" +
+    "• Monthly subscription: ₦10,000\n" +
+    "• Training remains available\n" +
+    "• No automatic trades will be placed\n\n" +
+    "Do you wish to continue?"
+  );
+
+  if (!confirmed) {
+    addReflection("You chose to continue training. No changes were made.");
+    return;
+  }
+
+  checkSubscriptionStatus();
+}
+
+// Checks subscription status (stub for now)
+function checkSubscriptionStatus() {
+  const subscribed = localStorage.getItem('qt_subscription_active');
+
+  if (subscribed === 'true') {
+    enableLiveTrading();
+  } else {
+    promptSubscription();
+  }
+}
+
+// Alerts user to subscribe (non-invasive)
+function promptSubscription() {
+  alert(
+    "Live trading requires an active subscription.\n\n" +
+    "Amount: ₦10,000 / month\n\n" +
+    "You may continue training without subscribing."
+  );
+}
+
+// Enables live trading (future-safe)
+function enableLiveTrading() {
+  APP_STATE.current = APP_STATE.LIVE_TRADING;
+  addReflection("Live trading enabled. Training tools remain available.");
+  updateUIByState();
+}
+
+// ===============================
+// EXISTING SIMULATION ENGINE
+// ===============================
+// Keep your market price stubs, charts, indicators, etc.
+// Do not replace anything here
