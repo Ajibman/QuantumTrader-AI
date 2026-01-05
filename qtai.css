@@ -5,19 +5,26 @@
 * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #111; text-align: center; padding-bottom: 50px; }
 
 
-/* Globe Section */ #globe-container { margin-top: 20px; } #static-globe { width: 300px; max-width: 80%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+/* Globe Section */ 
+#globe-container { margin-top: 20px; } #static-globe { width: 300px; max-width: 80%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
-/* Apex Node */ #tradingfloor-apex { margin-top: 30px; } #tradingfloor-apex-img { width: 340px; max-width: 90%; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+/* Apex Node */ 
+#tradingfloor-apex { margin-top: 30px; } #tradingfloor-apex-img { width: 340px; max-width: 90%; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 
-/* Navigation */ #main-nav { margin-top: 30px; display: flex; justify-content: center; gap: 15px; } .nav-btn { padding: 12px 20px; border: none; border-radius: 6px; background-color: #222; color: #fff; font-size: 15px; cursor: pointer; transition: background 0.3s; } .nav-btn:hover { background-color: #444; }
+/* Navigation */ 
+#main-nav { margin-top: 30px; display: flex; justify-content: center; gap: 15px; } .nav-btn { padding: 12px 20px; border: none; border-radius: 6px; background-color: #222; color: #fff; font-size: 15px; cursor: pointer; transition: background 0.3s; } .nav-btn:hover { background-color: #444; }
 
-/* Modules */ #modules { margin-top: 25px; } .module { display: none; } .module img { width: 360px; max-width: 95%; border-radius: 6px; }
+/* Modules */ 
+#modules { margin-top: 25px; } .module { display: none; } .module img { width: 360px; max-width: 95%; border-radius: 6px; }
 
-/* TraderLab Simulation */ .asset-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 12px; } .simulate-btn { padding: 10px 18px; background-color: #007acc; color: #fff; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background 0.3s; } .simulate-btn:hover { background-color: #005fa3; } .trade-result { margin-top: 16px; font-weight: bold; color: #222; min-height: 24px; }
+/* TraderLab Simulation */ 
+#asset-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 12px; } .simulate-btn { padding: 10px 18px; background-color: #007acc; color: #fff; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background 0.3s; } .simulate-btn:hover { background-color: #005fa3; } .trade-result { margin-top: 16px; font-weight: bold; color: #222; min-height: 24px; }
 
-/* Payment Section */ #payment-section { margin-top: 45px; background-color: #fff; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 18px; border-radius: 4px; }
+/* Payment Section */ 
+#payment-section { margin-top: 45px; background-color: #fff; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); } #qr-img { width: 230px; margin-top: 18px; border-radius: 4px; }
 
-/* Payment Cards */ .cards {  display: flex;
+/* Payment Cards */ 
+#cards {  display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
@@ -27,7 +34,7 @@
   margin-right: auto;
 }
 
-.cards img {
+#cards img {
   max-height: 20px;
   width: auto;
 }
@@ -102,33 +109,70 @@
   justify-content: center;
 }
 
-.onboarding-overlay.hidden {
+#onboarding-overlay.hidden {
   display: none;
 }
 
-.onboarding-container {
+#onboarding-container {
   max-width: 92%;
   max-height: 92%;
   text-align: center;
 }
 
-.onboarding-image {
+#onboarding-image {
   width: 100%;
   height: auto;
   border-radius: 12px;
 }
 
-.onboarding-actions {
+#onboarding-actions {
   margin-top: 12px;
   display: flex;
   justify-content: center;
   gap: 12px;
 }
 
-.onboarding-actions button {
+#onboarding-actions button {
   padding: 10px 16px;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+}
+
+#training-gate {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#training-gate.hidden {
+  display: none;
+}
+
+#training-gate-box {
+  background: #111;
+  color: #fff;
+  padding: 20px;
+  max-width: 360px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+#training-gate-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+#training-gate-actions button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
 }
  
