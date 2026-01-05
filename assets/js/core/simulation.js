@@ -213,3 +213,8 @@ const SimulationEngine = {
     console.log(msg);
   }
 };
+
+const ChartState = {
+  prices: [],
+  equity: []
+};
