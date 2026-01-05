@@ -26,3 +26,5 @@
     overlay.classList.remove("hidden");
   };
 })();
+
+/js/core/onboarding.js
