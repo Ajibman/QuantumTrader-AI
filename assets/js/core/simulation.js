@@ -1,4 +1,11 @@
- // --- APP STATES ---
+// ===============================
+// REFLECTION / USER FEEDBACK
+// ===============================
+function addReflection(message) {
+  console.log('[Reflection]', message);
+}
+
+// --- APP STATES ---
 const APP_STATE = {
   TRAINING: 'training',
   SIMULATION: 'simulation',
@@ -223,4 +230,56 @@ function requestLiveTrading() {
   }
 
   checkSubscriptionStatus();
+
+
+}// ===============================
+// LIVE TRADING INTENT (STEP 4)
+// ===============================
+
+function requestLiveTrading() {
+  const confirmed = confirm(
+    "You are about to proceed to live trading.\n\n" +
+    "• Monthly subscription: ₦10,000\n" +
+    "• Training remains available\n" +
+    "• No automatic trades will be placed\n\n" +
+    "Do you wish to continue?"
+  );
+
+  if (!confirmed) {
+    addReflection("You chose to continue training. No changes were made.");
+    return;
+  }
+
+  checkSubscriptionStatus();
 }
+
+function checkSubscriptionStatus() {
+  const subscribed = localStorage.getItem('qt_subscription_active');
+
+  if (subscribed === 'true') {
+    enableLiveTrading();
+  } else {
+    promptSubscription();
+  }
+}
+
+function promptSubscription() {
+  alert(
+    "Live trading requires an active subscription.\n\n" +
+    "Amount: ₦10,000 / month\n\n" +
+    "You may continue training without subscribing."
+  );
+}
+
+function enableLiveTrading() {
+  APP_STATE.current = 'LIVE_TRADING';
+  console.log('Live trading enabled');
+
+  addReflection(
+    "Live trading enabled. Training tools remain available."
+  );
+}
+
+
+
+
