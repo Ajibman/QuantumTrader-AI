@@ -325,5 +325,28 @@
   </div>
 </div>
 
+   <script>
+  function updateUIByState() {
+    const state = APP_STATE.current;
+
+    document.getElementById('trainingSection').style.display =
+      state === 'TRAINING' ? 'block' : 'none';
+
+    document.getElementById('simulationSection').style.display =
+      state === 'SIMULATION' ? 'block' : 'none';
+
+    document.getElementById('confidenceSection').style.display =
+      state === 'CONFIDENCE' ? 'block' : 'none';
+
+    document.getElementById('activationSection').style.display =
+      state === 'LIVE_READY' || state === 'LIVE_TRADING'
+        ? 'block'
+        : 'none';
+  }
+
+  // Initial render
+  document.addEventListener('DOMContentLoaded', updateUIByState);
+   </script>
+   
 </body>
 </html>
