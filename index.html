@@ -352,6 +352,29 @@
   // Initial render
   document.addEventListener('DOMContentLoaded', updateUIByState);
    </script>
+
+<script>
+  function updateUIByState() {
+    const state = APP_STATE.current;
+
+    document.getElementById('trainingSection').style.display =
+      state === 'TRAINING' ? 'block' : 'none';
+
+    document.getElementById('simulationSection').style.display =
+      state === 'SIMULATION' ? 'block' : 'none';
+
+    document.getElementById('confidenceSection').style.display =
+      state === 'CONFIDENCE' ? 'block' : 'none';
+
+    // 🔺 Trading Floor Apex visibility
+    document.getElementById('tradingFloorApex').style.display =
+      state === 'LIVE_READY' || state === 'LIVE_TRADING'
+        ? 'block'
+        : 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', updateUIByState);
+</script>
    
-</body>
+</body> 
 </html>
