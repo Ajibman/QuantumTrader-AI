@@ -280,6 +280,45 @@ function enableLiveTrading() {
   );
 }
 
+// ===============================
+// STATE MACHINE / TRANSITIONS
+// ===============================
 
+const APP_STATE = {
+  current: 'TRAINING', // initial
+  TRAINING: 'TRAINING',
+  SIMULATION: 'SIMULATION',
+  CONFIDENCE: 'CONFIDENCE',
+  LIVE_READY: 'LIVE_READY',
+  LIVE_TRADING: 'LIVE_TRADING',
+};
+
+// Example: Transition from Training → Simulation
+function startSimulation() {
+  APP_STATE.current = APP_STATE.SIMULATION;
+  addReflection("Simulation mode started.");
+  updateUIByState(); // immediately update index.html
+}
+
+// Example: Transition from Simulation → Confidence
+function gainConfidence() {
+  APP_STATE.current = APP_STATE.CONFIDENCE;
+  addReflection("Confidence meter filled.");
+  updateUIByState();
+}
+
+// Example: Transition from Confidence → Optional Live Ready
+function unlockLiveTradingOption() {
+  APP_STATE.current = APP_STATE.LIVE_READY;
+  addReflection("Optional live trading unlocked.");
+  updateUIByState();
+}
+
+// Example: Transition to actual live trading
+function enterLiveTrading() {
+  APP_STATE.current = APP_STATE.LIVE_TRADING;
+  addReflection("Live trading active.");
+  updateUIByState();
+}
 
 
