@@ -218,3 +218,48 @@ const ChartState = {
   prices: [],
   equity: []
 };
+
+function simulationTick(asset = "BTC") {
+  const price = getMarketPrice(asset);
+  ChartState.prices.push(price);
+
+  if (ChartState.prices.length > 30) {
+    ChartState.prices.shift();
+  }
+
+  drawLineChart("priceChart", ChartState.prices);
+}
+
+ChartState.equity.push(this.balance);
+
+if (ChartState.equity.length > 30) {
+  ChartState.equity.shift();
+}
+
+drawLineChart("equityChart", ChartState.equity); p
+
+function drawLineChart(canvasId, data) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas || data.length < 2) return;
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#00e676";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = (i / (data.length - 1)) * canvas.width;
+    const y = canvas.height - ((val - min) / range) * canvas.height;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+}
+
+setInterval(() => simulationTick("BTC"), 2000);
