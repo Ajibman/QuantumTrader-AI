@@ -1,8 +1,11 @@
-// 1️⃣ Market Price Stub
+/* ================================
+   MARKET PRICE STUB (SIMULATION)
+   ================================ */
+
 function getMarketPrice(asset) {
   const basePrices = {
-    BTC: 50000000,
-    ETH: 3000000,
+    BTC: 50000000,   // ₦50m
+    ETH: 3000000,    // ₦3m
     EURUSD: 1600
   };
 
@@ -11,7 +14,82 @@ function getMarketPrice(asset) {
   return +(base * (1 + variance)).toFixed(2);
 }
 
-// 2️⃣ Simulation Engine (uses getMarketPrice)
+/* ================================
+   SIMULATION ENGINE
+   ================================ */
+
+const SimulationEngine = {
+  balance: 0,
+  positions: [],
+
+  init(demoBalance = 100000) {
+    this.balance = demoBalance;
+    this.positions = [];
+    this.render();
+  },
+
+  buy(asset, amount) {
+    const price = getMarketPrice(asset);
+    const cost = amount * price;
+
+    if (cost > this.balance) {
+      alert("Insufficient demo balance");
+      return;
+    }
+
+    this.balance -= cost;
+
+    this.positions.push({
+      asset,
+      amount,
+      entryPrice: price
+    });
+
+    this.render();
+  },
+
+  sell(index) {
+    const position = this.positions[index];
+    const exitPrice = getMarketPrice(position.asset);
+    const proceeds = position.amount * exitPrice;
+    const pnl = proceeds - (position.amount * position.entryPrice);
+
+    this.balance += proceeds;
+    this.positions.splice(index, 1);
+
+    this.render();
+    this.logPnL(pnl);
+  },
+
+  render() {
+    const bal = document.getElementById("balance");
+    const list = document.getElementById("positions");
+
+    if (bal) bal.innerText = this.balance.toFixed(2);
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    this.positions.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${p.asset} | ${p.amount} @ ₦${p.entryPrice}
+        <button onclick="SimulationEngine.sell(${i})">Close</button>
+      `;
+      list.appendChild(li);
+    });
+  },
+
+  logPnL(pnl) {
+    console.log(
+      pnl >= 0
+        ? `✅ Profit: ₦${pnl.toFixed(2)}`
+        : `❌ Loss: ₦${pnl.toFixed(2)}`
+    );
+  }
+};
+
+// Simulation Engine (uses getMarketPrice)
 const SimulationEngine = {
   balance: 0,
   positions: [],
