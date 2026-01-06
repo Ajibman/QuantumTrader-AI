@@ -1,6 +1,12 @@
 // ===============================
 // REFLECTION / USER FEEDBACK
 // ===============================
+
+const state = {};
+state.trainingCompleted = false;   // authoritative training gate
+state.mode = 'SIMULATION';         // 'SIMULATION' | 'LIVE'
+state.paymentLayer = 'NONE';       // resolved, never set manually
+
 function addReflection(message) {
   console.log('[Reflection]', message);
 }
