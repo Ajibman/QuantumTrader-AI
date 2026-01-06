@@ -421,8 +421,18 @@ function enableLiveTrading() {
   updateUIByState();
 }
 
-// ===============================
-// EXISTING SIMULATION ENGINE
-// ===============================
-// Keep your market price stubs, charts, indicators, etc.
-// Do not replace anything here
+function resolvePaymentLayer(state) {
+  if (!state.trainingCompleted) {
+    return 'NONE';
+  }
+
+  if (state.mode === 'SIMULATION') {
+    return 'SIMULATED';
+  }
+
+  if (state.mode === 'LIVE') {
+    return 'LIVE';
+  }
+
+  return 'NONE';
+}
