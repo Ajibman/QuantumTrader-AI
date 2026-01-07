@@ -1,38 +1,58 @@
-// utils/option3-trigger.js
-// ===============================
-// Trigger script for Option 3 payment flow
-// ===============================
+ <!-- dashboard.html snippet -->
+<label for="paymentOption">Choose Payment Option:</label>
+<select id="paymentOption">
+    <option value="OPTION_1">Option 1</option>
+    <option value="OPTION_2">Option 2</option>
+    <option value="OPTION_3">Option 3</option>
+</select>
 
-import { processPayment } from './payments.js'; // main payments module
+<button id="payBtn">Pay Now</button>
 
-// Option 3 configuration
-const option3Config = {
-    mode: 'OPTION_3',
-    enableMultiMethod: true,
-    logReflections: true,
-};
+<script type="module">
+import { runOption1Payment } from './utils/option1-trigger.js';
+import { runOption2Payment } from './utils/option2-trigger.js';
+import { runOption3Payment } from './utils/option3-trigger.js';
 
-// Function to execute Option 3
-export function runOption3Payment(userData, paymentDetails) {
-    console.log('[Option 3] Initiating payment flow for user:', userData.id);
+// Example user and payment data (replace with real dashboard values)
+const currentUser = { id: 'USER123' };
+const paymentData = { amount: 2000, method: 'CARD' };
+
+const paymentSelect = document.getElementById('paymentOption');
+const payBtn = document.getElementById('payBtn');
+
+payBtn.addEventListener('click', async () => {
+    payBtn.disabled = true;
+    payBtn.textContent = 'Processing...';
+
+    const selectedOption = paymentSelect.value;
+    let result;
 
     try {
-        const result = processPayment(paymentDetails, option3Config);
-        
-        if (option3Config.logReflections) {
-            console.log('[Option 3 Reflection] Payment processed:', result.status);
+        switch (selectedOption) {
+            case 'OPTION_1':
+                result = await runOption1Payment(currentUser, paymentData);
+                break;
+            case 'OPTION_2':
+                result = await runOption2Payment(currentUser, paymentData);
+                break;
+            case 'OPTION_3':
+                result = await runOption3Payment(currentUser, paymentData);
+                break;
+            default:
+                throw new Error('Invalid payment option selected');
         }
 
-        return result;
-    } catch (error) {
-        console.error('[Option 3] Payment flow error:', error);
-        return { status: 'FAILED', error };
+        if (result.status === 'SUCCESS') {
+            alert(`Payment successful via ${selectedOption}!`);
+        } else {
+            alert(`Payment failed via ${selectedOption}: ${result.error?.message || 'Unknown error'}`);
+        }
+    } catch (err) {
+        console.error('[Dashboard] Payment error:', err);
+        alert('Unexpected error occurred during payment.');
+    } finally {
+        payBtn.disabled = false;
+        payBtn.textContent = 'Pay Now';
     }
-}
-
-// Example usage (can be removed when integrated into dashboard)
-if (import.meta.main) {
-    const testUser = { id: 'USER123' };
-    const testPayment = { amount: 1000, method: 'CARD' };
-    runOption3Payment(testUser, testPayment);
-}
+});
+</script>
