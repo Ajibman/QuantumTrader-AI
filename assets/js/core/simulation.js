@@ -442,3 +442,23 @@ function resolvePaymentLayer(state) {
 
   return 'NONE';
 }
+
+// ===============================
+// AUTHORITATIVE APP STATE
+// ===============================
+export const state = {
+    trainingCompleted: false,
+    mode: 'SIMULATION', // 'SIMULATION' | 'LIVE'
+    paymentLayer: 'NONE' // derived, never set manually
+};
+
+export function isLiveMode() {
+    return state.mode === 'LIVE';
+}
+
+export function isSimulationMode() {
+    return state.mode === 'SIMULATION';
+}
+
+
+  
