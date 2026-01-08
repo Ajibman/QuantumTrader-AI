@@ -1,405 +1,130 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI</title>
-
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="css/qtai.css" />
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json" />
-  
-  <style>
-    body { font-family: sans-serif; margin:0; padding:0; background:#f9f9f9; }
-    .module { display: none; margin-top: 10px; }
-    .module.active { display: block; }
-    #globe-container, #tradingfloor-apex, #main-nav, #payment-section { text-align:center; margin:20px 0; }
-    #practice-dashboard { border:1px solid #ccc; padding:12px; margin:10px auto; max-width:520px; text-align:center; border-radius:6px; background:#fff; }
-    .nav-btn { margin:0 5px; padding:8px 16px; cursor:pointer; }
-    #start-autotrader { background:#0a7d32; color:#fff; padding:10px 20px; border:none; border-radius:4px; font-size:15px; cursor:pointer; margin-top:15px; }
-    #start-autotrader:disabled { background:#999; cursor:not-allowed; }
-    .cpilot-status { margin-top:10px; font-weight:bold; }
-    .tp-group { margin-top:12px; }
-    .tp-group label { margin-right:10px; display:inline-block; }
-    .payment-btn { margin:5px; padding:8px 16px; cursor:pointer; background:#0066cc; color:#fff; border:none; border-radius:4px; }
-    .payment-btn:hover { background:#004999; }
-    .banner { position:fixed; top:0; left:0; width:100%; background:#fffae6; color:#222; font-size:14px; font-weight:bold; padding:0.5rem; text-align:center; border-bottom:2px solid #f0c000; z-index:9999; display:none; }
-  </style>
-
-  <!-- PRIVATE_MODE banner -->
-  <div id="private-banner" class="banner"></div>
-
-  <!-- App Root -->
-  <div id="app-root">
-
-    <!-- 🌍 Globe -->
-    <section id="globe-container">
-      <img src="assets/qtai_globe.png" alt="QuantumTrader AI Globe" width="300">
-    </section>
-
- <!-- 🔺 Trading Floor Apex -->
-<section id="tradingFloorApex">
-
-  <!-- Entry Control -->
-  <div class="trading-floor-entry">
-    <button onclick="requestLiveTrading()">
-      Enter Trading Floor
-    </button>
-  </div>
-
-  <!-- Visual Representation -->
-  <div class="trading-floor-visual">
-    <img src="assets/tradingfloor.png" alt="Trading Floor Overview">
-    <img src="assets/tradingfloor2_main.png" alt="Trading Floor Apex" width="300">
-  </div>
-
-</section>
-
-    <!-- 📊 Practice Dashboard --><div class="simulation-charts">
-  <h4>Market Price</h4>
-  <canvas id="priceChart" width="320" height="160"></canvas>
-
-  <h4>Equity Curve</h4>
-  <canvas id="equityChart" width="320" height="160"></canvas>
-    </div>
-     <div id="practice-dashboard">
-      <h3>Practice Dashboard</h3>
-      <p>Status: Simulation Mode</p>
-      <div id="walletDisplay">Balance: 0</div>
-    </div>
-
-    <!-- 🧩 Modules -->
-    <section id="modules">
-
-      <!-- Trading Floor -->
-      <div class="module active" id="tradingfloor">
-        <div class="tf-feed"></div>
-      </div>
-
-      <!-- TraderLab -->
-      <div class="module" id="traderlab">
-        <h3>TraderLab Simulation</h3>
-        <div style="margin-top:10px;">
-          <label><strong>Asset Class</strong></label><br>
-          <select id="asset-class">
-            <option value="crypto">Crypto</option>
-            <option value="forex">Forex</option>
-            <option value="commodity">Commodity</option>
-          </select>
-        </div>
-        <div style="margin-top:10px;">
-          <label><strong>Asset</strong></label><br>
-          <select id="asset-select">
-            <option value="BTC">BTC</option>
-            <option value="ETH">ETH</option>
-            <option value="SOL">SOL</option>
-          </select>
-        </div>
-        <div class="trade-result" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- CPilot -->
-      <div class="module" id="cpilot">
-        <img src="assets/qtai_cpilot_panel.png" alt="CPilot Panel" width="300">
-        <div class="tp-group">
-          <label><strong>Take Profit (Seconds)</strong></label><br>
-          <select id="cpilot-duration-seconds">
-            <option value="30">30 Seconds</option>
-            <option value="60">60 Seconds</option>
-            <option value="120">120 Seconds</option>
-            <option value="180">180 Seconds</option>
-            <option value="240">240 Seconds</option>
-            <option value="300">300 Seconds</option>
-          </select>
-        </div>
-        <div class="tp-group">
-          <label><strong>Take Profit (Days)</strong></label><br>
-          <label><input type="radio" name="tp-days" value="1"> 1 Day</label>
-          <label><input type="radio" name="tp-days" value="2"> 2 Days</label>
-          <label><input type="radio" name="tp-days" value="3"> 3 Days</label>
-          <label><input type="radio" name="tp-days" value="4"> 4 Days</label>
-          <label><input type="radio" name="tp-days" value="5"> 5 Days</label>
-          <label><input type="radio" name="tp-days" value="6"> 6 Days</label>
-          <label><input type="radio" name="tp-days" value="7"> 7 Days</label>
-        </div>
-        <button id="start-autotrader">Start AutoTrader</button>
-        <div class="cpilot-status" id="autotrader-status">AutoTrader idle (simulation)</div>
-      </div>
-
-    </section>
-
-    <!-- 🧭 Navigation -->
-    <nav id="main-nav">
-      <button class="nav-btn" data-target="tradingfloor">Trading Floor</button>
-      <button class="nav-btn" data-target="traderlab">TraderLab</button>
-      <button class="nav-btn" data-target="cpilot">CPilot</button>
-    </nav>
-
-    <!-- 💰 Payments -->
-    <section id="payment-section">
-      <h3>Activate / Add Investment</h3>
-      <p>Activation Fee: NGN 10,000</p>
-      <div id="payment-buttons">
-        <button class="payment-btn" data-method="wema">WEMA ALAT</button>
-        <button class="payment-btn" data-method="bank">Bank Transfer</button>
-        <button class="payment-btn" data-method="ussd">USSD</button>
-        <button class="payment-btn" data-method="card">Card</button>
-      </div>
-      <div style="margin-top:10px;">
-        <label>Investment Amount:</label>
-        <input type="number" id="investment-amount" placeholder="Enter amount" min="1">
-        <button class="payment-btn" id="add-investment">Add Funds</button>
-      </div>
-    </section>
-
-  <!-- Bootstrap & core JS -->
-  <script type="module" src="js/core/bootstrap.js"></script>
-  <script type="module" src="js/core/simulation/traderLab.js"></script>
-  <script type="module" src="js/core/utils/helpers.js"></script>
-
-  <!-- Wallet & UI logic -->
-  <script>
-    let Wallet = { balance: 0 };
-    let USER_ID = "private_test_user";
-
-    // Navigation
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".module").forEach(m => m.classList.remove("active"));
-        document.getElementById(btn.dataset.target).classList.add("active");
-      });
-    });
-
-    // Asset class change
-    const assetClass = document.getElementById("asset-class");
-    const assetSelect = document.getElementById("asset-select");
-    assetClass.addEventListener("change", () => {
-      let cls = assetClass.value;
-      let options = "";
-      if (cls === 'crypto') options = `<option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option>`;
-      else if (cls === 'forex') options = `<option value="EURUSD">EUR/USD</option><option value="GBPUSD">GBP/USD</option>`;
-      else if (cls === 'commodity') options = `<option value="GOLD">Gold</option><option value="OIL">Oil</option>`;
-      assetSelect.innerHTML = options;
-    });
-
-    // AutoTrader
-    const autoBtn = document.getElementById("start-autotrader");
-    const statusEl = document.getElementById("autotrader-status");
-    autoBtn.addEventListener("click", () => {
-      const durationSeconds = parseInt(document.getElementById("cpilot-duration-seconds").value);
-      let debitAmount = 10;
-      const daySelected = document.querySelector('input[name="tp-days"]:checked');
-      if (daySelected) debitAmount = 10 * parseInt(daySelected.value,10);
-      if (Wallet.balance < debitAmount) { statusEl.textContent='Insufficient wallet balance'; return; }
-      Wallet.balance -= debitAmount;
-      document.getElementById("walletDisplay").textContent=`Balance: ${Wallet.balance}`;
-      statusEl.textContent=`AutoTrader ACTIVE (simulation) — ${assetSelect.value} — ${durationSeconds}s`;
-      autoBtn.disabled=true;
-      setTimeout(()=>{
-        statusEl.textContent=`AutoTrader completed (simulation) — ${assetSelect.value}`;
-        autoBtn.disabled=false;
-        document.querySelector('#traderlab .trade-result').textContent=`Simulated trade completed on ${assetSelect.value}.`;
-      }, durationSeconds*1000);
-    });
-
-    // Payment buttons
-    document.querySelectorAll(".payment-btn").forEach(btn=>{
-      btn.addEventListener("click",()=>{
-        alert(`Simulated payment via ${btn.dataset.method} (activation or investment).`);
-      });
-    });
-
-    // Add arbitrary investment
-    document.getElementById("add-investment").addEventListener("click", ()=>{
-      let amt = parseInt(document.getElementById("investment-amount").value,10);
-      if(isNaN(amt)||amt<=0){ alert("Enter a valid amount"); return; }
-      Wallet.balance += amt;
-      document.getElementById("walletDisplay").textContent=`Balance: ${Wallet.balance}`;
-    });
-  </script>
-
-  <!-- PRIVATE_MODE 30-day countdown -->
-  <script>
-    (function(){
-      const PRIVATE_MODE=true;
-      if(!PRIVATE_MODE) return;
-
-      if(!localStorage.getItem("qtai_user_role")) localStorage.setItem("qtai_user_role","exclusive_trader");
-      if(!localStorage.getItem("qtai_subscription_start")) localStorage.setItem("qtai_subscription_start", new Date().toISOString());
-
-      const banner = document.getElementById("private-banner");
-      banner.style.display="block";
-
-      function updateCountdown(){
-        const start = localStorage.getItem("qtai_subscription_start");
-        const startDate = new Date(start);
-        const expiry = new Date(startDate); expiry.setDate(expiry.getDate()+30);
-        const now = new Date();
-        let diff = expiry-now;
-        if(diff<=0){
-          banner.innerText="⚠️ PRIVATE_MODE ACTIVE | Subscription Expired | Exclusive Trader Phase ⚠️";
-          banner.style.backgroundColor="#ffe6e6";
-          return;
-        }
-        const days=Math.floor(diff/(1000*60*60*24));
-        const hours=Math.floor((diff/(1000*60*60))%24);
-        const minutes=Math.floor((diff/(1000*60))%60);
-        const seconds=Math.floor((diff/1000)%60);
-        banner.innerText=`⚠️ PRIVATE_MODE ACTIVE | Exclusive Trader Role | Subscription Time Left: ${days}d ${hours}h ${minutes}m ${seconds}s ⚠️`;
-      }
-      updateCountdown();
-      setInterval(updateCountdown,1000);
-    })();
-  </script>
-
-  <!-- Register Service Worker -->
-  <script src="register-sw.js"></script>
-<script>
-  (function () {
-   
-    // Wait until DOM is fully loaded
-    document.addEventListener("DOMContentLoaded", () => {
-      const buttons = document.querySelectorAll(".nav-btn");
-      const modules = document.querySelectorAll(".module");
-
-      // Set first module active if none
-      if (!document.querySelector(".module.active") && modules.length) {
-        modules[0].classList.add("active");
-      }
-
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const targetId = btn.dataset.target;
-
-          // Hide all modules
-          modules.forEach(mod => mod.classList.remove("active"));
-
-          // Show target module
-          const targetModule = document.getElementById(targetId);
-          if (targetModule) targetModule.classList.add("active");
-
-          // Optional: highlight active button
-          buttons.forEach(b => b.classList.remove("active-btn"));
-          btn.classList.add("active-btn");
-        });
-      });
-    });
-  })();
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Landing</title>
 
 <style>
-  /* Optional: style active button */
-  .active-btn {
-    background-color: #0a7d32;
-    color: white;
-  }
+:root {
+  --bg:#000428; --card:#071226; --muted:#bbb; --accent:#1abc9c;
+  --panel-gap:12px; --header-gap:18px;
+}
+
+body {
+  margin:0; padding:0; font-family:Inter, Arial,sans-serif; color:#fff;
+  background:var(--bg);
+}
+
+.container {max-width:1120px; margin:0 auto; padding:18px;}
+
+header {
+  display:flex; justify-content:center; align-items:center; gap:var(--header-gap); flex-wrap:wrap;
+  margin-bottom:18px;
+}
+header img {max-height:80px;}
+
+h1 {text-align:center; font-size:24px;}
+h2 {text-align:center; font-size:18px; color:var(--muted); margin-bottom:24px;}
+
+.modules {display:flex; flex-wrap:wrap; gap:16px; justify-content:center;}
+.module-btn {
+  background:var(--accent); color:#061018; padding:16px 24px; border:none; border-radius:8px;
+  cursor:pointer; font-weight:700; flex:0 1 220px; text-align:center; transition: transform .12s ease;
+}
+.module-btn:hover {transform:translateY(-3px);}
+footer {margin-top:28px; text-align:center; color:var(--muted);}
+.status {text-align:center; margin-bottom:16px; font-size:14px; color:var(--muted);}
 </style>
+</head>
+<body>
 
- <!-- Onboarding Overlay -->
-<div id="onboardingOverlay" class="onboarding-overlay hidden">
-  <div class="onboarding-container">
-    <img 
-      src="assets/onboarding/onboardingscript.png" 
-      alt="QuantumTrader AI Onboarding"
-      class="onboarding-image"
-    />
+<div class="container">
+  <header>
+    <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo">
+  </header>
 
-    <div class="onboarding-actions">
-      <button id="onboardingClose">Continue</button>
-      <button id="onboardingReplay">Replay Later</button>
-    </div>
+  <h1>Welcome to QuantumTrader AI™</h1>
+  <h2>Activate modules after training completion and payment</h2>
+
+  <div class="status" id="activationStatus">Checking activation & payment status...</div>
+
+  <div class="modules">
+    <button class="module-btn" id="tradingFloorBtn">Trading Floor</button>
+    <button class="module-btn" id="traderLabBtn">TraderLab™</button>
+    <button class="module-btn" id="cpilotBtn">CPilot™</button>
+    <button class="module-btn" id="paymentBtn">Payment Gate</button>
   </div>
+
+  <footer>
+    © 2025 All Rights Reserved | QuantumTrader AI™
+  </footer>
 </div>
 
- <!-- Training Reminder Overlay -->
-<div id="trainingGate" class="training-gate hidden">
-  <div class="training-gate-box">
-    <h3>Training Not Completed</h3>
-    <p>
-      QuantumTrader AI recommends completing Training Mode
-      before entering the Trading Floor.
-    </p>
+<script type="module">
+/* ===============================
+   IMPORT MODULE SCRIPTS
+=============================== */
+import { state } from './assets/js/core/state.js';
+import { handlePaymentRequest } from './assets/js/core/payment.js';
 
-    <div class="training-gate-actions">
-      <button id="goTraining">Go to Training</button>
-      <button id="proceedAnyway">Proceed Anyway</button>
-    </div>
-  </div>
-</div>
+/* ===============================
+   UI ELEMENTS
+=============================== */
+const activationStatus = document.getElementById('activationStatus');
+const tradingFloorBtn = document.getElementById('tradingFloorBtn');
+const traderLabBtn = document.getElementById('traderLabBtn');
+const cpilotBtn = document.getElementById('cpilotBtn');
+const paymentBtn = document.getElementById('paymentBtn');
 
-   <script>
-  function updateUIByState() {
-    const state = APP_STATE.current;
+/* ===============================
+   STATE CHECK / UI REFRESH
+=============================== */
+function updateActivationStatus() {
+  let msg = [];
+  msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
+  msg.push(state.paymentLayer === 'LIVE' ? 'Payment ✅' : 'Payment ❌');
+  activationStatus.textContent = msg.join(' | ');
+}
 
-    document.getElementById('trainingSection').style.display =
-      state === 'TRAINING' ? 'block' : 'none';
-
-    document.getElementById('simulationSection').style.display =
-      state === 'SIMULATION' ? 'block' : 'none';
-
-    document.getElementById('confidenceSection').style.display =
-      state === 'CONFIDENCE' ? 'block' : 'none';
-
-    document.getElementById('activationSection').style.display =
-      state === 'LIVE_READY' || state === 'LIVE_TRADING'
-        ? 'block'
-        : 'none';
+/* ===============================
+   MODULE NAVIGATION
+=============================== */
+tradingFloorBtn.addEventListener('click', () => {
+  if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
+    alert('Complete training and payment to access Trading Floor.');
+    return;
   }
+  window.location.href = 'dashboard.html';
+});
 
-  // Initial render
-  document.addEventListener('DOMContentLoaded', updateUIByState);
-   </script>
-
-<script>
-  function updateUIByState() {
-    const state = APP_STATE.current;
-
-    document.getElementById('trainingSection').style.display =
-      state === 'TRAINING' ? 'block' : 'none';
-
-    document.getElementById('simulationSection').style.display =
-      state === 'SIMULATION' ? 'block' : 'none';
-
-    document.getElementById('confidenceSection').style.display =
-      state === 'CONFIDENCE' ? 'block' : 'none';
-
-    // 🔺 Trading Floor Apex visibility
-    document.getElementById('tradingFloorApex').style.display =
-      state === 'LIVE_READY' || state === 'LIVE_TRADING'
-        ? 'block'
-        : 'none';
+traderLabBtn.addEventListener('click', () => {
+  if (!state.trainingCompleted) {
+    alert('Complete training to access TraderLab™.');
+    return;
   }
+  window.location.href = 'traderlab.html';
+});
 
-  document.addEventListener('DOMContentLoaded', updateUIByState);
+cpilotBtn.addEventListener('click', () => {
+  window.location.href = 'cpilot.html';
+});
+
+/* ===============================
+   PAYMENT BUTTON
+=============================== */
+paymentBtn.addEventListener('click', () => {
+  const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
+  const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
+  handlePaymentRequest(method, amount);
+  updateActivationStatus();
+});
+
+/* ===============================
+   INITIALIZE STATUS
+=============================== */
+updateActivationStatus();
 </script>
 
-  <!-- Main header / navbar here (optional) -->
-
-  <main id="dashboard">
-    <!-- Training Section -->
-    <section id="trainingSection">...</section>
-
-    <!-- Simulation Section -->
-    <section id="simulationSection">...</section>
-
-    <!-- Confidence Section -->
-    <section id="confidenceSection">...</section>
-
-    <!-- Trading Floor Apex -->
-    <section id="tradingFloorApex">...</section>
-  </main>
-
-  <!-- Scripts -->
-  <script src="js/core/simulation.js"></script>
-
-  <!-- UI wiring for showing/hiding sections -->
-  <script>
-    function updateUIByState() { ... }
-    document.addEventListener('DOMContentLoaded', updateUIByState);
-  </script>
-
 </body>
-  </html>
+</html>
