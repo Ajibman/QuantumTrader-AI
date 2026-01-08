@@ -1,0 +1,123 @@
+[OPTION 1 PAYMENT FLOW]
+
+Dashboard UI
+  |
+  |-- User selects Option 1 → clicks "Pay Now"
+  v
+runOption1Payment(user, payment)
+  |
+  |-- Calls gatePayment('OPTION_1')
+  v
+gatePayment(option)
+  |
+  |-- Checks mode: SIMULATION / LIVE
+  |-- Returns { allowed: true/false, environment, reason? }
+  v
+runOption1Payment
+  |
+  |-- If allowed → processPayment(payment, {mode: OPTION_1, environment})
+  |-- If blocked → returns { status: 'BLOCKED', reason }
+  |-- Catches any errors → returns { status: 'FAILED', error }
+  v
+Dashboard UI
+  |
+  |-- Receives result → shows alert/feedback to user
+
+====
+
+[OPTION 2 PAYMENT FLOW]
+
+Dashboard UI
+  |
+  |-- User selects Option 2 → clicks "Pay Now"
+  v
+runOption2Payment(user, payment)
+  |
+  |-- Calls gatePayment('OPTION_2')
+  v
+gatePayment(option)
+  |
+  |-- Checks mode: SIMULATION / LIVE
+  |-- Returns { allowed: true/false, environment, reason? }
+  v
+runOption2Payment
+  |
+  |-- If allowed → processPayment(payment, {mode: OPTION_2, environment})
+  |-- If blocked → returns { status: 'BLOCKED', reason }
+  |-- Catches any errors → returns { status: 'FAILED', error }
+  v
+Dashboard UI
+  |
+  |-- Receives result → shows alert/feedback to user
+
+=====
+
+[OPTION 3 PAYMENT FLOW]
+
+Dashboard UI
+  |
+  |-- User selects Option 3 → clicks "Pay Now"
+  v
+runOption3Payment(user, payment)
+  |
+  |-- Calls gatePayment('OPTION_3')
+  v
+gatePayment(option)
+  |
+  |-- Checks mode:
+  |       SIMULATION → allowed
+  |       LIVE → blocked (returns {allowed:false, reason})
+  v
+runOption3Payment
+  |
+  |-- If allowed → processPayment(payment, {mode: OPTION_3, environment})
+  |-- If blocked → returns { status: 'BLOCKED', reason }
+  |-- Catches any errors → returns { status: 'FAILED', error }
+  v
+Dashboard UI
+  |
+  |-- Receives result → shows alert/feedback to user
+
+=====
+
+[PAYMENT GATE LOGIC]
+
+gatePayment(option)
+  |
+  |-- Checks application mode
+       ├─ SIMULATION → allowed: true, environment: 'SIMULATION'
+       └─ LIVE
+            ├─ Option 3 → allowed: false, reason: 'Option 3 not enabled for LIVE'
+            └─ Option 1/2 → allowed: true, environment: 'LIVE'
+  |
+  |-- UNKNOWN mode → allowed: false, reason: 'Unknown application state'
+  v
+Option Trigger
+  |
+  |-- Receives gate decision → proceeds or returns BLOCKED
+
+=====
+
+[DEEP FREEZE / IMMUTABLE STATE]
+
+App State Object
+  |
+  |-- Any nested objects / arrays
+  v
+deepFreeze(obj)
+  |
+  |-- Iterates all own property names (+ optional symbols)
+  |-- For each property:
+  |      if object → recurse deepFreeze(property)
+  |
+  v
+Object.freeze(obj)
+  |
+  |-- Freezes top-level object
+  |-- All nested objects are also frozen
+  |
+  v
+Immutable App State
+  |
+  |-- Any attempt to modify properties throws in strict mode
+  |-- Prevents accidental mutation of signals, dashboards, and trading state
