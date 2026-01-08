@@ -1,6 +1,0 @@
-utils-diagrams/
-├─ option1-trigger-diagram.txt
-├─ option2-trigger-diagram.txt
-├─ option3-trigger-diagram.txt
-├─ payment-gate-diagram.txt
-├─ freeze-diagram.txt
