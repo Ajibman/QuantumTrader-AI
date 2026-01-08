@@ -1,0 +1,21 @@
+[APP STATE OBJECT]
+  |
+  |-- Any nested objects / arrays
+  v
+[deepFreeze(obj)]
+  |
+  |-- Iterates all own property names (and optionally symbols)
+  |-- For each property:
+  |      if object → recurse deepFreeze(property)
+  |
+  v
+[Object.freeze(obj)]
+  |
+  |-- Freezes top-level object
+  |-- All nested objects (recursively) are also frozen
+  |
+  v
+[IMMUTABLE STATE]
+  |
+  |-- Any attempt to modify properties throws in strict mode
+  |-- Prevents accidental mutations in app logic
