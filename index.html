@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -185,7 +185,7 @@
   </div>
 
   <!-- =========================
-       App JS
+       App JS + Proportionality Preview
   ========================== -->
   <script type="module">
     import { state } from './assets/js/core/state.js';
@@ -199,15 +199,11 @@
     const traderLabBtn = document.getElementById('traderLabBtn');
     const cpilotBtn = document.getElementById('cpilotBtn');
     const paymentBtn = document.getElementById('paymentBtn');
-
     const homeMode = document.getElementById('home-mode');
     const dashboardMode = document.getElementById('dashboard-mode');
     const payBtn = document.getElementById('payBtn');
     const paymentOption = document.getElementById('paymentOption');
 
-    /* ===============================
-       Helper: Toggle Dashboard
-    =============================== */
     function enterDashboard() {
       homeMode.classList.remove('active');
       dashboardMode.classList.add('active');
@@ -237,7 +233,7 @@
     });
 
     /* ===============================
-       Payment Gate (Home Mode)
+       Payment Gates
     =============================== */
     paymentBtn.addEventListener('click', () => {
       const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
@@ -246,42 +242,72 @@
       updateActivationStatus();
     });
 
-    /* ===============================
-       Payment Gate (Dashboard Mode)
-    =============================== */
     payBtn.addEventListener('click', async () => {
       payBtn.disabled = true;
       payBtn.textContent = 'Processing…';
-
       const currentUser = { id:'USER123' };
       const paymentData = { amount:2000, method:'CARD' };
       let result;
-
       switch(paymentOption.value){
         case 'OPTION_1': result = await runOption1Payment(currentUser,paymentData); break;
         case 'OPTION_2': result = await runOption2Payment(currentUser,paymentData); break;
         case 'OPTION_3': result = await runOption3Payment(currentUser,paymentData); break;
       }
-
-      if(result?.status === 'BLOCKED') alert(result.reason);
-      else if(result?.status === 'SUCCESS') alert('Payment processed.');
+      if(result?.status==='BLOCKED') alert(result.reason);
+      else if(result?.status==='SUCCESS') alert('Payment processed.');
       else alert('Payment failed.');
-
       payBtn.disabled = false;
       payBtn.textContent = 'Pay Now';
     });
 
-    /* ===============================
-       Update UI Status
-    =============================== */
     function updateActivationStatus() {
       const msg = [];
       msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
-      msg.push(state.paymentLayer === 'LIVE' ? 'Payment ✅' : 'Payment ❌');
+      msg.push(state.paymentLayer==='LIVE' ? 'Payment ✅' : 'Payment ❌');
       activationStatus.textContent = msg.join(' | ');
     }
-
     updateActivationStatus();
+
+    /* ===============================
+       FULL DASHBOARD PROPORTIONALITY PREVIEW
+    =============================== */
+    (function(){
+      const previewElements = [
+        { el: document.querySelector('.globe'), name: 'Globe' },
+        { el: document.querySelector('#ori-olokun .feature-image'), name: 'Ori Ologo' },
+        { el: document.querySelector('#macarthur-map'), name: 'MacArthur Map' },
+        { el: document.getElementById('tradingFloorBtn'), name: 'Trading Floor Btn' },
+        { el: document.getElementById('traderLabBtn'), name: 'TraderLab Btn' },
+        { el: document.getElementById('cpilotBtn'), name: 'CPilot Btn' },
+        { el: document.getElementById('paymentBtn'), name: 'Payment Btn' }
+      ];
+      previewElements.forEach(item=>{
+        if(!item.el) return;
+        const overlay=document.createElement('div');
+        overlay.style.position='absolute';
+        overlay.style.background='rgba(26,188,156,0.3)';
+        overlay.style.color='#000';
+        overlay.style.fontSize='12px';
+        overlay.style.fontWeight='700';
+        overlay.style.padding='2px 6px';
+        overlay.style.borderRadius='4px';
+        overlay.style.top='0'; overlay.style.left='0';
+        overlay.style.zIndex='9999';
+        overlay.style.pointerEvents='none';
+        overlay.textContent='';
+        const parent=item.el.parentElement;
+        if(getComputedStyle(parent).position==='static') parent.style.position='relative';
+        parent.appendChild(overlay);
+        function updateSize(){
+          const rect=item.el.getBoundingClientRect();
+          overlay.textContent=`${item.name}: ${Math.round(rect.width)}px × ${Math.round(rect.height)}px`;
+        }
+        updateSize();
+        window.addEventListener('resize',updateSize);
+      });
+      console.log('%cFull Dashboard Proportionality Preview Enabled','color:#1abc9c; font-weight:700;');
+    })();
+
   </script>
 </body>
 </html>
