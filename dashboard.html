@@ -3,8 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™ — User Dashboard</title>
+  <title>QuantumTrader AI™ — Dashboard</title>
+
+  <!-- Core Styles -->
   <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+
+  <!-- =========================
+       DASHBOARD HEADER
+  ========================== -->
+  <header id="dashboard-header">
+    <img
+      src="assets/peace_index_logo.png"
+      alt="Peace Index Logo"
+      class="logo"
+    />
+  </header>
+
+  <!-- =========================
+       DASHBOARD MAIN
+  ========================== -->
+  <main id="dashboard-main">
+
+    <!-- Globe Preview -->
+    <section id="dashboard-globe">
+      <img
+        src="assets/qtai_globe.png"
+        alt="QuantumTrader Globe"
+        class="globe"
+      />
+    </section>
+
+    <!-- =========================
+         MODULE GRID
+    ========================== -->
+    <section id="modules-grid">
+
+      <div class="module">
+        <img src="assets/qtai_ori_olokun.png" alt="Ori Olokun">
+      </div>
+
+      <div class="module">
+        <img src="assets/macarthur.png" alt="Macarthur">
+      </div>
+
+      <div class="module">
+        <img src="assets/tradingfloor_main.png" alt="Trading Floor">
+      </div>
+
+      <div class="module">
+        <img src="assets/traderlab_icon.png" alt="Trader Lab">
+      </div>
+
+      <div class="module">
+        <img src="assets/cpilot_panel.png" alt="Commercial Pilot Panel">
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- =========================
+       DASHBOARD JS
+  ========================== -->
+  <script src="js/dashboard.js"></script>
 
   <!-- Globe Preview -->
   <section id="globe-dashboard">
