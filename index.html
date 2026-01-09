@@ -16,7 +16,7 @@
       --panel-gap:12px; --header-gap:18px;
     }
 
-    body{
+    body {
       margin:0; padding:0;
       font-family:Inter, Arial, sans-serif;
       color:#fff;
@@ -26,7 +26,6 @@
     .container{max-width:1120px; margin:0 auto; padding:18px;}
     header{display:flex; justify-content:center; align-items:center; gap:var(--header-gap); flex-wrap:wrap;}
     header img{max-height:80px; height:auto; display:block;}
-
     h1{text-align:center; font-size:24px;}
     h2{text-align:center; font-size:18px; color:var(--muted); margin-bottom:24px;}
     .status{text-align:center; margin-bottom:16px; font-size:14px; color:var(--muted);}
@@ -34,335 +33,152 @@
     .module-btn{
       background:var(--accent); color:#061018; padding:16px 24px;
       border:none; border-radius:8px; cursor:pointer;
-      font-weight:700; flex:0 1 120px; text-align:center;
+      font-weight:700; flex:0 1 140px; text-align:center;
       transition:transform .12s ease;
     }
     .module-btn:hover{transform:translateY(-3px);}
-
-    /* =========================
-       IMAGE PROPORTIONALITY & GLOW
-    ========================== */
-    .globe { max-width: 35vw; min-width: 200px; height:auto; display:block; margin:24px auto; }
-
-    /* Ori Olokun Ring */
-    .ori-ring {
-      width: 260px; max-width:25vw; min-width:180px;
-      height:260px; max-height:25vw; min-height:180px;
-      margin: 24px auto; border: 4px solid #1abc9c;
-      border-radius:50%; display:flex; justify-content:center; align-items:center;
-      box-shadow:0 0 20px rgba(26,188,156,0.5);
-      animation: ringGlow 3s ease-in-out infinite;
-    }
-    .ori-ring .feature-image{
-      width:70%; height:auto; border-radius:50%; animation: pulse 1.8s infinite;
-    }
-    .ori-name{
-      text-align:center; font-size:1.2rem; color:#1abc9c;
-      font-weight:700; margin-top:8px;
-      text-shadow:0 0 6px rgba(26,188,156,0.7);
-    }
-
-    /* Map */
-    #macarthur-map { max-width: 60vw; min-width:300px; height:auto; display:block; margin:16px auto; border-radius:8px; }
-
-    /* Animations */
-    @keyframes pulse {
-      0%,100%{ transform: scale(1); opacity:1; }
-      50%{ transform: scale(1.03); opacity:0.85; }
-    }
-    @keyframes ringGlow {
-      0%,100%{ box-shadow:0 0 20px rgba(26,188,156,0.5); }
-      50%{ box-shadow:0 0 32px rgba(26,188,156,0.8); }
-    }
-
-    /* Responsive */
-    @media(max-width:880px){ .ori-ring{max-width:50vw; max-height:50vw;} .ori-name{font-size:1rem;} }
-    @media(max-width:520px){ .ori-ring{max-width:70vw; max-height:70vw;} .ori-name{font-size:0.9rem;} }
-
-    /* Dashboard dormant */
+    .radio-panel{display:none; flex-direction:column; gap:8px; margin-top:12px; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px;}
+    .radio-panel label{font-size:14px; cursor:pointer;}
     #dashboard-mode{display:none;}
     #dashboard-mode.active{display:block;}
     #home-mode.active{display:block;}
     #home-mode{display:block;}
-
-    /* Node sections & cards */
-    .node-section{margin-top:22px; padding:10px;}
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
-      border-radius:10px; padding:14px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.45);
-    }
-    .center{text-align:center;}
-    button.cta{
-      background:var(--accent); color:#061018; border:none;
-      padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700;
-    }
-    #currencies-panel{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--panel-gap);}
-    footer{margin-top:28px; padding:14px; text-align:center; color:var(--muted); font-size:13px;}
   </style>
-
 </head>
+
 <body>
-<div class="container">
-  <!-- Header -->
-  <header>
-    <img src="assets/images/peace_index_logo.png" class="logo" alt="Peace Index Logo">
-  </header>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <img src="assets/images/peace_index_logo.png" class="logo" alt="Peace Index Logo">
+    </header>
+
+    <!-- =========================
+         Home / Landing Mode
+    ========================== -->
+    <main id="home-mode" class="active">
+      <h1>Welcome to QuantumTrader AI™</h1>
+      <h2>Activate modules after training completion and payment</h2>
+      <div id="activationStatus" class="status">Checking activation & payment status...</div>
+
+      <!-- Module Buttons -->
+      <div class="modules">
+        <button id="tradingFloorBtn" class="module-btn">Trading Floor</button>
+        <button id="traderLabBtn" class="module-btn">TraderLab™</button>
+        <button id="cpilotBtn" class="module-btn">CPilot</button>
+        <button id="paymentBtn" class="module-btn">Payment Gate</button>
+      </div>
+
+      <!-- CPilot Radio Panel -->
+      <div id="cpilotPanel" class="radio-panel">
+        <strong>Market Selection:</strong>
+        <label><input type="radio" name="market" value="crypto"> Crypto</label>
+        <label><input type="radio" name="market" value="forex"> Forex</label>
+        <label><input type="radio" name="market" value="oil"> Oil</label>
+        <label><input type="radio" name="market" value="commodities"> Commodities</label>
+        <label><input type="radio" name="market" value="metals"> Metals</label>
+
+        <strong>Mode:</strong>
+        <label><input type="radio" name="mode" value="manual"> Manual</label>
+        <label><input type="radio" name="mode" value="semi"> Semi-Auto</label>
+        <label><input type="radio" name="mode" value="auto"> AutoTrade</label>
+
+        <strong>Duration:</strong>
+        <label><input type="radio" name="duration" value="30s"> 30 seconds</label>
+        <label><input type="radio" name="duration" value="1m"> 1 minute</label>
+        <label><input type="radio" name="duration" value="30m"> 30 minutes</label>
+        <label><input type="radio" name="duration" value="1h"> 1 hour</label>
+        <label><input type="radio" name="duration" value="24h"> 24 hours</label>
+        <label><input type="radio" name="duration" value="48h"> 48 hours</label>
+        <label><input type="radio" name="duration" value="72h"> 72 hours</label>
+        <label><input type="radio" name="duration" value="4d"> 4 days</label>
+        <label><input type="radio" name="duration" value="5d"> 5 days</label>
+        <label><input type="radio" name="duration" value="6d"> 6 days</label>
+        <label><input type="radio" name="duration" value="7d"> 7 days</label>
+      </div>
+    </main>
+
+    <!-- =========================
+         Dashboard Mode (Dormant)
+    ========================== -->
+    <main id="dashboard-mode">
+      <h2>Dashboard Mode (Activated After Training & Payment)</h2>
+    </main>
+
+    <footer>
+      © 2025 QuantumTrader AI™ | Olagoke Ajibulu — Architect, Concepts & Design
+    </footer>
+  </div>
 
   <!-- =========================
-       Home / Landing Mode
+       App JS
   ========================== -->
-  <main id="home-mode" class="active">
+  <script type="module">
+    import { state } from './assets/js/core/state.js';
+    import { handlePaymentRequest } from './assets/js/core/payment.js';
+    import { runOption1Payment } from './utils/option1-trigger.js';
+    import { runOption2Payment } from './utils/option2-trigger.js';
+    import { runOption3Payment } from './utils/option3-trigger.js';
 
-    <!-- Globe -->
-    <section id="globe-section">
-      <img src="assets/images/qtai_globe.png" class="globe" alt="QuantumTrader Globe">
-    </section>
+    const activationStatus = document.getElementById('activationStatus');
+    const homeMode = document.getElementById('home-mode');
+    const dashboardMode = document.getElementById('dashboard-mode');
+    const tradingFloorBtn = document.getElementById('tradingFloorBtn');
+    const traderLabBtn = document.getElementById('traderLabBtn');
+    const cpilotBtn = document.getElementById('cpilotBtn');
+    const paymentBtn = document.getElementById('paymentBtn');
+    const cpilotPanel = document.getElementById('cpilotPanel');
+    const payBtn = document.getElementById('payBtn');
+    const paymentOption = document.getElementById('paymentOption');
 
-    <!-- Ori Olokun Ring -->
-    <section id="ori-olokun">
-      <div class="ori-ring">
-        <img src="assets/images/qtai_ori_olokun.png" class="feature-image" alt="Ori Olokun — QuantumTrader AI">
-      </div>
-      <div class="ori-name">Ori Ologo</div>
-    </section>
-
-    <h1>Welcome to QuantumTrader AI™</h1>
-    <h2>Activate modules after training completion and payment</h2>
-    <div id="activationStatus" class="status">Checking activation & payment status...</div>
-
-    <!-- Module Buttons -->
-    <section id="qt-controls" class="modules">
-      <button id="tradingFloorBtn" class="module-btn">Trading Floor</button>
-      <button id="traderLabBtn" class="module-btn">TraderLab™</button>
-      <button id="cpilotBtn" class="module-btn">CPilot™ AutoTrader</button>
-      <button id="paymentBtn" class="module-btn">Payment Gate</button>
-    </section>
-
-  </main>
-
-  <!-- =========================
-       Dashboard Mode
-  ========================== -->
-  <main id="dashboard-mode">
-    <!-- MAP -->
-    <section class="node-section">
-      <div class="card center">
-        <img id="macarthur-map" src="assets/images/macarthur.png" alt="MacArthur Map">
-      </div>
-    </section>
-
-    <!-- Payments -->
-    <section class="node-section">
-      <div class="card">
-        <h2>Payments</h2>
-        <select id="paymentOption">
-          <option value="OPTION_1">Option 1</option>
-          <option value="OPTION_2">Option 2</option>
-          <option value="OPTION_3">Option 3</option>
-        </select>
-        <button id="payBtn" class="cta">Pay Now</button>
-      </div>
-    </section>
-
-    <!-- CPilot AutoTrader Panel -->
-    <section id="cpilot-panel" class="node-section" style="display:none;">
-      <div class="card">
-        <h2>CPilot AutoTrader Options</h2>
-
-        <!-- Strategy Selection -->
-        <div>
-          <label><input type="radio" name="cpilot-strategy" value="SCALP"> Scalping</label><br>
-          <label><input type="radio" name="cpilot-strategy" value="SWING"> Swing Trade</label><br>
-          <label><input type="radio" name="cpilot-strategy" value="LONG"> Long Term</label>
-        </div>
-
-        <!-- Duration Selection -->
-        <div style="margin-top:12px;">
-          <label><input type="radio" name="cpilot-duration" value="30s"> 30 Seconds</label><br>
-          <label><input type="radio" name="cpilot-duration" value="1h"> 1 Hour</label><br>
-          <label><input type="radio" name="cpilot-duration" value="24h"> 24 Hours</label><br>
-          <label><input type="radio" name="cpilot-duration" value="48h"> 48 Hours</label><br>
-          <label><input type="radio" name="cpilot-duration" value="72h"> 72 Hours</label><br>
-          <label><input type="radio" name="cpilot-duration" value="7d"> 7 Days</label>
-        </div>
-
-        <button id="start-autotrade-btn" class="cta" style="margin-top:12px;">Start AutoTrader</button>
-      </div>
-    </section>
-
-    <!-- Currencies -->
-    <section class="node-section">
-      <div class="card">
-        <h2>Top 10 Currencies — Market Engine</h2>
-        <div id="currencies-panel"></div>
-      </div>
-    </section>
-
-    <!-- Logs -->
-    <section class="node-section">
-      <div class="card">
-        <h2>Trade & System Logs</h2>
-        <div id="logs-panel"><p class="muted">No logs yet…</p></div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    © 2025 QuantumTrader AI™ | Olagoke Ajibulu — Architect, Concepts & Design
-  </footer>
-</div>
-
-<!-- =========================
-     App Scripts
-========================= -->
-<script type="module">
-import { state } from './assets/js/core/state.js';
-import { handlePaymentRequest } from './assets/js/core/payment.js';
-import { runOption1Payment } from './utils/option1-trigger.js';
-import { runOption2Payment } from './utils/option2-trigger.js';
-import { runOption3Payment } from './utils/option3-trigger.js';
-
-// Activation Status
-const activationStatus = document.getElementById('activationStatus');
-const homeMode = document.getElementById('home-mode');
-const dashboardMode = document.getElementById('dashboard-mode');
-const payBtn = document.getElementById('payBtn');
-const paymentOption = document.getElementById('paymentOption');
-
-function updateActivationStatus() {
-  const msg = [];
-  msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
-  msg.push(state.paymentLayer==='LIVE' ? 'Payment ✅' : 'Payment ❌');
-  activationStatus.textContent = msg.join(' | ');
-}
-updateActivationStatus();
-
-// Payment Logic
-payBtn.addEventListener('click', async () => {
-  payBtn.disabled = true;
-  payBtn.textContent = 'Processing…';
-  const currentUser = { id:'USER123' };
-  const paymentData = { amount:2000, method:'CARD' };
-  let result;
-  switch(paymentOption.value){
-    case 'OPTION_1': result = await runOption1Payment(currentUser,paymentData); break;
-    case 'OPTION_2': result = await runOption2Payment(currentUser,paymentData); break;
-    case 'OPTION_3': result = await runOption3Payment(currentUser,paymentData); break;
-  }
-  if(result?.status==='BLOCKED') alert(result.reason);
-  else if(result?.status==='SUCCESS') alert('Payment processed.');
-  else alert('Payment failed.');
-  payBtn.disabled = false;
-  payBtn.textContent = 'Pay Now';
-});
-
-// Enter Dashboard
-function enterDashboard() {
-  homeMode.classList.remove('active');
-  dashboardMode.classList.add('active');
-}
-
-// Module Buttons
-const tradingFloorBtn = document.getElementById('tradingFloorBtn');
-const traderLabBtn = document.getElementById('traderLabBtn');
-const cpilotBtn = document.getElementById('cpilotBtn');
-const paymentBtn = document.getElementById('paymentBtn');
-const cpilotPanel = document.getElementById('cpilot-panel');
-
-tradingFloorBtn.addEventListener('click', () => {
-  if(!state.trainingCompleted || state.paymentLayer!=='LIVE'){
-    alert('Complete training and payment to access Trading Floor.');
-    return;
-  }
-  enterDashboard();
-});
-
-traderLabBtn.addEventListener('click', () => {
-  if(!state.trainingCompleted){
-    alert('Complete training to access TraderLab™.');
-    return;
-  }
-  window.location.href = 'traderlab.html';
-});
-
-cpilotBtn.addEventListener('click', () => {
-  // Show/hide CPilot panel
-  cpilotPanel.style.display = cpilotPanel.style.display === 'none' ? 'block' : 'none';
-  cpilotPanel.scrollIntoView({ behavior:'smooth', block:'start' });
-});
-
-paymentBtn.addEventListener('click', () => {
-  const method = prompt('Enter payment method (CARD/TRANSFER):','CARD');
-  const amount = parseFloat(prompt('Enter amount in NGN:','10000'));
-  handlePaymentRequest(method, amount);
-  updateActivationStatus();
-});
-
-// AutoTrader Start Button
-document.getElementById('start-autotrade-btn').addEventListener('click', () => {
-  const strategy = document.querySelector('input[name="cpilot-strategy"]:checked');
-  const duration = document.querySelector('input[name="cpilot-duration"]:checked');
-
-  if(!strategy || !duration){
-    alert('Please select both a strategy and duration to start AutoTrader.');
-    return;
-  }
-
-  alert(`AutoTrader starting with strategy: ${strategy.value}, duration: ${duration.value}`);
-  // TODO: Connect to CPilot AutoTrader logic
-});
-
-// Safe click observer
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.module-btn');
-  if(!btn) return;
-  console.log('[Observer]', btn.id, {
-    trainingCompleted: state.trainingCompleted,
-    paymentLayer: state.paymentLayer
-  });
-  btn.style.outline = '2px solid #1abc9c';
-  setTimeout(()=>btn.style.outline='',300);
-});
-
-// Full Dashboard Proportionality Preview
-(function(){
-  const previewElements = [
-    { el: document.querySelector('.globe'), name: 'Globe' },
-    { el: document.querySelector('#ori-olokun .feature-image'), name: 'Ori Ologo' },
-    { el: document.querySelector('#macarthur-map'), name: 'MacArthur Map' },
-    { el: tradingFloorBtn, name: 'Trading Floor Btn' },
-    { el: traderLabBtn, name: 'TraderLab Btn' },
-    { el: cpilotBtn, name: 'CPilot Btn' },
-    { el: paymentBtn, name: 'Payment Btn' }
-  ];
-  previewElements.forEach(item=>{
-    if(!item.el) return;
-    const overlay=document.createElement('div');
-    overlay.style.position='absolute';
-    overlay.style.background='rgba(26,188,156,0.3)';
-    overlay.style.color='#000';
-    overlay.style.fontSize='12px';
-    overlay.style.fontWeight='700';
-    overlay.style.padding='2px 6px';
-    overlay.style.borderRadius='4px';
-    overlay.style.top='0'; overlay.style.left='0';
-    overlay.style.zIndex='9999';
-    overlay.style.pointerEvents='none';
-    overlay.textContent='';
-    const parent=item.el.parentElement;
-    if(getComputedStyle(parent).position==='static') parent.style.position='relative';
-    parent.appendChild(overlay);
-    function updateSize(){
-      const rect=item.el.getBoundingClientRect();
-      overlay.textContent=`${item.name}: ${Math.round(rect.width)}px × ${Math.round(rect.height)}px`;
+    function updateActivationStatus() {
+      const msg = [];
+      msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
+      msg.push(state.paymentLayer==='LIVE' ? 'Payment ✅' : 'Payment ❌');
+      activationStatus.textContent = msg.join(' | ');
     }
-    updateSize();
-    window.addEventListener('resize',updateSize);
-  });
-  console.log('%cFull Dashboard Proportionality Preview Enabled','color:#1abc9c; font-weight:700;');
-})();
-</script>
+    updateActivationStatus();
 
+    function enterDashboard() {
+      homeMode.classList.remove('active');
+      dashboardMode.classList.add('active');
+    }
+
+    // ---------- Module Buttons ----------
+    tradingFloorBtn.addEventListener('click', () => {
+      if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
+        alert('Complete training and payment to access Trading Floor.');
+        return;
+      }
+      enterDashboard();
+    });
+
+    traderLabBtn.addEventListener('click', () => {
+      if (!state.trainingCompleted) {
+        alert('Complete training to access TraderLab™.');
+        return;
+      }
+      window.location.href = 'traderlab.html';
+    });
+
+    cpilotBtn.addEventListener('click', () => {
+      cpilotPanel.style.display = cpilotPanel.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    paymentBtn.addEventListener('click', () => {
+      const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
+      const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
+      handlePaymentRequest(method, amount);
+      updateActivationStatus();
+    });
+
+    // Optional: Safe click observer (visual confirmation)
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.module-btn');
+      if (!btn) return;
+      btn.style.outline = '2px solid #1abc9c';
+      setTimeout(() => btn.style.outline = '', 300);
+    });
+  </script>
 </body>
- </html>
+</html>
