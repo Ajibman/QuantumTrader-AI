@@ -395,6 +395,79 @@ document.addEventListener('click', (e) => {
   setTimeout(() => btn.style.outline = '', 300);
 });
 </script>
+
+<!-- =========================
+     MODULE BUTTON DISPATCHER + SAFE OBSERVER
+========================= -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const tradingFloorBtn = document.getElementById('tradingFloorBtn');
+  const traderLabBtn = document.getElementById('traderLabBtn');
+  const cpilotBtn = document.getElementById('cpilotBtn');
+  const paymentBtn = document.getElementById('paymentBtn');
+
+  const actionMap = {
+    tradingFloorBtn: 'TRADING_FLOOR',
+    traderLabBtn: 'TRADER_LAB',
+    cpilotBtn: 'CPILOT',
+    paymentBtn: 'PAYMENT_GATE'
+  };
+
+  // ---------- SINGLE DISPATCHER ----------
+  document.getElementById('home-mode').addEventListener('click', (e) => {
+    const btn = e.target.closest('.module-btn');
+    if (!btn) return;
+
+    const action = actionMap[btn.id];
+    if (!action) return;
+
+    switch(action) {
+      case 'TRADING_FLOOR':
+        if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
+          alert('Complete training and payment to access Trading Floor.');
+          return;
+        }
+        enterDashboard();
+        break;
+
+      case 'TRADER_LAB':
+        if (!state.trainingCompleted) {
+          alert('Complete training to access TraderLab™.');
+          return;
+        }
+        window.location.href = 'traderlab.html';
+        break;
+
+      case 'CPILOT':
+        window.location.href = 'cpilot.html';
+        break;
+
+      case 'PAYMENT_GATE':
+        const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
+        const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
+        handlePaymentRequest(method, amount);
+        updateActivationStatus();
+        break;
+    }
+  });
+
+  // ---------- SAFE TEST OBSERVER ----------
+  document.getElementById('home-mode').addEventListener('click', (e) => {
+    const btn = e.target.closest('.module-btn');
+    if (!btn) return;
+
+    // Console log + quick visual feedback
+    console.log('[Observer]', btn.id, {
+      trainingCompleted: state.trainingCompleted,
+      paymentLayer: state.paymentLayer
+    });
+    btn.style.outline = '2px solid #1abc9c';
+    setTimeout(() => btn.style.outline = '', 300);
+  });
+
+});
+</script>
  
 </body>
 </html>
