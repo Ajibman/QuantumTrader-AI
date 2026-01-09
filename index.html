@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™</title>
+  <title>QuantumTrader AI™ — Dashboard</title>
 
   <!-- Core Styles -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -11,43 +11,66 @@
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
 </head>
+
 <body>
+
+  <!-- =========================
+       DASHBOARD HEADER
+  ========================== -->
+  <header id="dashboard-header">
+    <img
+      src="assets/images/peace_index_logo.png"
+      alt="Peace Index Logo"
+      class="logo"
+    />
+  </header>
+
+  <!-- =========================
+       DASHBOARD MAIN
+  ========================== -->
+  <main id="dashboard-main">
+
+    <!-- Globe Preview -->
+    <section id="dashboard-globe">
+      <img
+        src="assets/images/qtai_globe.png"
+        alt="QuantumTrader Globe"
+        class="globe"
+      />
+    </section>
+
+    <!-- =========================
+         MODULE GRID
+    ========================== -->
+    <section id="modules-grid">
+
+      <div class="module">
+        <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun">
+      </div>
+
+      <div class="module">
+        <img src="assets/images/macarthur.png" alt="Macarthur">
+      </div>
+
+      <div class="module">
+        <img src="assets/images/tradingfloor_main.png" alt="Trading Floor">
+      </div>
+
+      <div class="module">
+        <img src="assets/images/traderlab_icon.png" alt="Trader Lab">
+      </div>
+
+      <div class="module">
+        <img src="assets/images/cpilot_panel.png" alt="Commercial Pilot Panel">
+      </div>
+
+    </section>
+
   </main>
 
   <!-- =========================
-       CORE JS
+       DASHBOARD JS
   ========================== -->
-  <script src="js/main.js"></script>
-
-  <!-- Quantum Trader Globe -->
-  <section id="globe-section">
-    <img src="assets/images/qtai_globe.png" alt="Quantum Trader Globe" class="globe">
-  </section>
-  
- <!-- Header / Logo -->
-  <header>
-    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="logo">
-  </header>
-
-  <!-- Macarthur -->
-  <section id="macarthur">
-    <img src="assets/images/macarthur.png" alt="Macarthur" class="module-image">
-  </section>
-
-  <!-- Trading Floor Main -->
-  <section id="trading-floor">
-    <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main" class="module-image">
-  </section>
-
-  <!-- Trader Lab Icon -->
-  <section id="trader-lab">
-    <img src="assets/images/traderlab_icon.png" alt="Trader Lab" class="module-image">
-  </section>
-
-  <!-- Commercial Pilot Panel -->
-  <section id="cpilot-panel">
-    <img src="assets/images/cpilot_panel.png" alt="Commercial Pilot Panel" class="module-image">
-  </section>
  <script src="js/main.js"></script>
  <style>
 :root {
