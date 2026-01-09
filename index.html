@@ -3,195 +3,285 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™ — Dashboard</title>
+  <title>QuantumTrader AI™</title>
 
   <!-- Core Styles -->
   <link rel="stylesheet" href="css/styles.css" />
-
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
+
+  <style>
+    :root {
+      --bg:#000428; --card:#071226; --muted:#bbb; --accent:#1abc9c;
+      --buy:#2ecc71; --sell:#e74c3c; --hold:#f39c12;
+      --panel-gap:12px; --header-gap:18px;
+    }
+
+    body{
+      margin:0; padding:0;
+      font-family:Inter, Arial, sans-serif;
+      color:#fff;
+      background:var(--bg);
+    }
+
+    .container{max-width:1120px; margin:0 auto; padding:18px;}
+    header{display:flex; justify-content:center; align-items:center; gap:var(--header-gap); flex-wrap:wrap;}
+    header img{max-height:80px; height:auto; display:block;}
+
+    h1{text-align:center; font-size:24px;}
+    h2{text-align:center; font-size:18px; color:var(--muted); margin-bottom:24px;}
+    .status{text-align:center; margin-bottom:16px; font-size:14px; color:var(--muted);}
+    .modules{display:flex; flex-wrap:wrap; gap:16px; justify-content:center;}
+    .module-btn{
+      background:var(--accent); color:#061018; padding:16px 24px;
+      border:none; border-radius:8px; cursor:pointer;
+      font-weight:700; flex:0 1 120px; text-align:center;
+      transition:transform .12s ease;
+    }
+    .module-btn:hover{transform:translateY(-3px);}
+
+    /* =========================
+       IMAGE PROPORTIONALITY & GLOW
+    ========================== */
+    .globe { max-width: 35vw; min-width: 200px; height:auto; display:block; margin:24px auto; }
+
+    /* Ori Olokun Ring */
+    .ori-ring {
+      width: 260px; max-width:25vw; min-width:180px;
+      height:260px; max-height:25vw; min-height:180px;
+      margin: 24px auto; border: 4px solid #1abc9c;
+      border-radius:50%; display:flex; justify-content:center; align-items:center;
+      box-shadow:0 0 20px rgba(26,188,156,0.5);
+      animation: ringGlow 3s ease-in-out infinite;
+    }
+    .ori-ring .feature-image{
+      width:70%; height:auto; border-radius:50%; animation: pulse 1.8s infinite;
+    }
+    .ori-name{
+      text-align:center; font-size:1.2rem; color:#1abc9c;
+      font-weight:700; margin-top:8px;
+      text-shadow:0 0 6px rgba(26,188,156,0.7);
+    }
+
+    /* Map */
+    #macarthur-map { max-width: 60vw; min-width:300px; height:auto; display:block; margin:16px auto; border-radius:8px; }
+
+    /* Animations */
+    @keyframes pulse {
+      0%,100%{ transform: scale(1); opacity:1; }
+      50%{ transform: scale(1.03); opacity:0.85; }
+    }
+    @keyframes ringGlow {
+      0%,100%{ box-shadow:0 0 20px rgba(26,188,156,0.5); }
+      50%{ box-shadow:0 0 32px rgba(26,188,156,0.8); }
+    }
+
+    /* Responsive */
+    @media(max-width:880px){ .ori-ring{max-width:50vw; max-height:50vw;} .ori-name{font-size:1rem;} }
+    @media(max-width:520px){ .ori-ring{max-width:70vw; max-height:70vw;} .ori-name{font-size:0.9rem;} }
+
+    /* Dashboard dormant */
+    #dashboard-mode{display:none;}
+    #dashboard-mode.active{display:block;}
+    #home-mode.active{display:block;}
+    #home-mode{display:block;}
+
+    /* Node sections & cards */
+    .node-section{margin-top:22px; padding:10px;}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border-radius:10px; padding:14px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.45);
+    }
+    .center{text-align:center;}
+    button.cta{
+      background:var(--accent); color:#061018; border:none;
+      padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700;
+    }
+    #currencies-panel{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--panel-gap);}
+    footer{margin-top:28px; padding:14px; text-align:center; color:var(--muted); font-size:13px;}
+  </style>
 </head>
 
 <body>
-
-  <!-- =========================
-       DASHBOARD HEADER
-  ========================== -->
-  <header id="dashboard-header">
-    <img
-      src="assets/images/peace_index_logo.png"
-      alt="Peace Index Logo"
-      class="logo"
-    />
-  </header>
-
-  <!-- =========================
-       DASHBOARD MAIN
-  ========================== -->
-  <main id="dashboard-main">
-
-    <!-- Globe Preview -->
-    <section id="dashboard-globe">
-      <img
-        src="assets/images/qtai_globe.png"
-        alt="QuantumTrader Globe"
-        class="globe"
-      />
-    </section>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <img src="assets/images/peace_index_logo.png" class="logo" alt="Peace Index Logo">
+    </header>
 
     <!-- =========================
-         MODULE GRID
+         Home / Landing Mode
     ========================== -->
-    <section id="modules-grid">
-      <div class="module">
-        <img src="assets/images/macarthur.png" alt="Macarthur">
+    <main id="home-mode" class="active">
+      <!-- Globe -->
+      <section id="globe-section">
+        <img src="assets/images/qtai_globe.png" class="globe" alt="QuantumTrader Globe">
+      </section>
+
+      <!-- Ori Olokun Ring -->
+      <section id="ori-olokun">
+        <div class="ori-ring">
+          <img src="assets/images/qtai_ori_olokun.png" class="feature-image" alt="Ori Olokun — QuantumTrader AI">
+        </div>
+        <div class="ori-name">Ori Ologo</div>
+      </section>
+
+      <h1>Welcome to QuantumTrader AI™</h1>
+      <h2>Activate modules after training completion and payment</h2>
+      <div id="activationStatus" class="status">Checking activation & payment status...</div>
+
+      <div class="modules">
+        <button id="tradingFloorBtn" class="module-btn">Trading Floor</button>
+        <button id="traderLabBtn" class="module-btn">TraderLab™</button>
+        <button id="cpilotBtn" class="module-btn">CPilot™</button>
+        <button id="paymentBtn" class="module-btn">Payment Gate</button>
       </div>
+    </main>
 
-      <div class="module">
-        <img src="assets/images/traderlab_icon.png" alt="Trader Lab">
-      </div>
+    <!-- =========================
+         Dashboard Mode (Dormant)
+    ========================== -->
+    <main id="dashboard-mode">
+      <!-- MAP -->
+      <section class="node-section">
+        <div class="card center">
+          <img id="macarthur-map" src="assets/images/macarthur.png" alt="MacArthur Map">
+        </div>
+      </section>
 
-      <div class="module">
-        <img src="assets/images/cpilot_panel.png" alt="Commercial Pilot Panel">
-      </div>
+      <!-- Payments -->
+      <section class="node-section">
+        <div class="card">
+          <h2>Payments</h2>
+          <select id="paymentOption">
+            <option value="OPTION_1">Option 1</option>
+            <option value="OPTION_2">Option 2</option>
+            <option value="OPTION_3">Option 3</option>
+          </select>
+          <button id="payBtn" class="cta">Pay Now</button>
+        </div>
+      </section>
 
-    </section>
+      <!-- Currencies -->
+      <section class="node-section">
+        <div class="card">
+          <h2>Top 10 Currencies — Market Engine</h2>
+          <div id="currencies-panel"></div>
+        </div>
+      </section>
 
-  </main>
+      <!-- Logs -->
+      <section class="node-section">
+        <div class="card">
+          <h2>Trade & System Logs</h2>
+          <div id="logs-panel"><p class="muted">No logs yet…</p></div>
+        </div>
+      </section>
+    </main>
 
-  <!-- =========================
-       DASHBOARD JS
-  ========================== -->
- <script src="js/main.js"></script>
- <style>
-:root {
-  --bg:#000428; --card:#071226; --muted:#bbb; --accent:#1abc9c;
-  --panel-gap:12px; --header-gap:18px;
-}
-
-body {
-  margin:0; padding:0; font-family:Inter, Arial,sans-serif; color:#fff;
-  background:var(--bg);
-}
-
-.container {max-width:1120px; margin:0 auto; padding:18px;}
-
-header {
-  display:flex; justify-content:center; align-items:center; gap:var(--header-gap); flex-wrap:wrap;
-  margin-bottom:18px;
-}
-header img {max-height:80px;}
-
-h1 {text-align:center; font-size:24px;}
-h2 {text-align:center; font-size:18px; color:var(--muted); margin-bottom:24px;}
-
-.modules {display:flex; flex-wrap:wrap; gap:16px; justify-content:center;}
-.module-btn {
-  background:var(--accent); color:#061018; padding:16px 24px; border:none; border-radius:8px;
-  cursor:pointer; font-weight:700; flex:0 1 220px; text-align:center; transition: transform .12s ease;
-}
-.module-btn:hover {transform:translateY(-3px);}
-footer {margin-top:28px; text-align:center; color:var(--muted);}
-.status {text-align:center; margin-bottom:16px; font-size:14px; color:var(--muted);}
-</style>
-</head>
-<body>
- 
-<div class="container">
-  <header>
-    <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo">
-  </header>
-<header>
-  <img src="assets/peace_index_logo.png" alt="Peace Index Logo" class="logo">
-</header>
-
-  <h1>Welcome to QuantumTrader AI™</h1>
-  <h2>Activate modules after training completion and payment</h2>
-
-  <div class="status" id="activationStatus">Checking activation & payment status...</div>
-
-  <div class="modules">
-    <button class="module-btn" id="tradingFloorBtn">Trading Floor</button>
-    <button class="module-btn" id="traderLabBtn">TraderLab™</button>
-    <button class="module-btn" id="cpilotBtn">CPilot™</button>
-    <button class="module-btn" id="paymentBtn">Payment Gate</button>
+    <footer>
+      © 2025 QuantumTrader AI™ | Olagoke Ajibulu — Architect, Concepts & Design
+    </footer>
   </div>
 
-<div class="container">
-<img src="assets/images/qtai_ori_olokun.png"
-     alt="Ori Olokun — QuantumTrader AI"
-     style="max-width:320px; display:block; margin:20px auto;">
- </div>
- 
-  <footer>
-    © 2025 All Rights Reserved | QuantumTrader AI™ | 
-  Olagoke Ajibulu - Architect, Concepts & Design</footer>
-</div>
+  <!-- =========================
+       App JS
+  ========================== -->
+  <script type="module">
+    import { state } from './assets/js/core/state.js';
+    import { handlePaymentRequest } from './assets/js/core/payment.js';
+    import { runOption1Payment } from './utils/option1-trigger.js';
+    import { runOption2Payment } from './utils/option2-trigger.js';
+    import { runOption3Payment } from './utils/option3-trigger.js';
 
-<script type="module">
-/* ===============================
-   IMPORT MODULE SCRIPTS
-=============================== */
-import { state } from './assets/js/core/state.js';
-import { handlePaymentRequest } from './assets/js/core/payment.js';
+    const activationStatus = document.getElementById('activationStatus');
+    const tradingFloorBtn = document.getElementById('tradingFloorBtn');
+    const traderLabBtn = document.getElementById('traderLabBtn');
+    const cpilotBtn = document.getElementById('cpilotBtn');
+    const paymentBtn = document.getElementById('paymentBtn');
 
-/* ===============================
-   UI ELEMENTS
-=============================== */
-const activationStatus = document.getElementById('activationStatus');
-const tradingFloorBtn = document.getElementById('tradingFloorBtn');
-const traderLabBtn = document.getElementById('traderLabBtn');
-const cpilotBtn = document.getElementById('cpilotBtn');
-const paymentBtn = document.getElementById('paymentBtn');
+    const homeMode = document.getElementById('home-mode');
+    const dashboardMode = document.getElementById('dashboard-mode');
+    const payBtn = document.getElementById('payBtn');
+    const paymentOption = document.getElementById('paymentOption');
 
-/* ===============================
-   STATE CHECK / UI REFRESH
-=============================== */
-function updateActivationStatus() {
-  let msg = [];
-  msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
-  msg.push(state.paymentLayer === 'LIVE' ? 'Payment ✅' : 'Payment ❌');
-  activationStatus.textContent = msg.join(' | ');
-}
+    /* ===============================
+       Helper: Toggle Dashboard
+    =============================== */
+    function enterDashboard() {
+      homeMode.classList.remove('active');
+      dashboardMode.classList.add('active');
+    }
 
-/* ===============================
-   MODULE NAVIGATION
-=============================== */
-tradingFloorBtn.addEventListener('click', () => {
-  if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
-    alert('Complete training and payment to access Trading Floor.');
-    return;
-  }
-  window.location.href = 'dashboard.html';
-});
+    /* ===============================
+       Module Navigation
+    =============================== */
+    tradingFloorBtn.addEventListener('click', () => {
+      if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
+        alert('Complete training and payment to access Trading Floor.');
+        return;
+      }
+      enterDashboard();
+    });
 
-traderLabBtn.addEventListener('click', () => {
-  if (!state.trainingCompleted) {
-    alert('Complete training to access TraderLab™.');
-    return;
-  }
-  window.location.href = 'traderlab.html';
-});
+    traderLabBtn.addEventListener('click', () => {
+      if (!state.trainingCompleted) {
+        alert('Complete training to access TraderLab™.');
+        return;
+      }
+      window.location.href = 'traderlab.html';
+    });
 
-cpilotBtn.addEventListener('click', () => {
-  window.location.href = 'cpilot.html';
-});
+    cpilotBtn.addEventListener('click', () => {
+      window.location.href = 'cpilot.html';
+    });
 
-/* ===============================
-   PAYMENT BUTTON
-=============================== */
-paymentBtn.addEventListener('click', () => {
-  const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
-  const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
-  handlePaymentRequest(method, amount);
-  updateActivationStatus();
-});
+    /* ===============================
+       Payment Gate (Home Mode)
+    =============================== */
+    paymentBtn.addEventListener('click', () => {
+      const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
+      const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
+      handlePaymentRequest(method, amount);
+      updateActivationStatus();
+    });
 
-/* ===============================
-   INITIALIZE STATUS
-=============================== */
-updateActivationStatus();
-</script>
+    /* ===============================
+       Payment Gate (Dashboard Mode)
+    =============================== */
+    payBtn.addEventListener('click', async () => {
+      payBtn.disabled = true;
+      payBtn.textContent = 'Processing…';
 
+      const currentUser = { id:'USER123' };
+      const paymentData = { amount:2000, method:'CARD' };
+      let result;
+
+      switch(paymentOption.value){
+        case 'OPTION_1': result = await runOption1Payment(currentUser,paymentData); break;
+        case 'OPTION_2': result = await runOption2Payment(currentUser,paymentData); break;
+        case 'OPTION_3': result = await runOption3Payment(currentUser,paymentData); break;
+      }
+
+      if(result?.status === 'BLOCKED') alert(result.reason);
+      else if(result?.status === 'SUCCESS') alert('Payment processed.');
+      else alert('Payment failed.');
+
+      payBtn.disabled = false;
+      payBtn.textContent = 'Pay Now';
+    });
+
+    /* ===============================
+       Update UI Status
+    =============================== */
+    function updateActivationStatus() {
+      const msg = [];
+      msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
+      msg.push(state.paymentLayer === 'LIVE' ? 'Payment ✅' : 'Payment ❌');
+      activationStatus.textContent = msg.join(' | ');
+    }
+
+    updateActivationStatus();
+  </script>
 </body>
 </html>
