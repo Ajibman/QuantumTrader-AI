@@ -1,20 +1,48 @@
-bindUI() {
-  console.log('bindUI called');
+ /* =========================================
+   QuantumTrader AI — Core State Authority
+========================================= */
 
-  const buttons = document.querySelectorAll('[data-action]');
-  console.log('Buttons found:', buttons.length);
+window.QTState = {
+  mode: 'IDLE',
+  trainingCompleted: false,
+  paymentLayer: 'NONE',
 
-  buttons.forEach(btn => {
-    console.log('Binding:', btn.dataset.action);
+  init() {
+    console.log('[QTState] initialized');
+  },
 
-    btn.addEventListener('click', () => {
-      console.log('CLICK:', btn.dataset.action);
+  bindUI() {
+    const buttons = document.querySelectorAll('[data-action]');
+    if (!buttons.length) {
+      console.warn('[QTState] No actionable buttons found');
+      return;
+    }
 
-      if (typeof this.handleAction === 'function') {
-        this.handleAction(btn.dataset.action);
-      } else {
-        console.error('handleAction not defined');
-      }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        this.handleAction(action);
+      });
     });
-  });
-}
+
+    console.log('[QTState] UI bound to actions');
+  },
+
+  handleAction(action) {
+    console.log('[QTState] Action received →', action);
+
+    switch (action) {
+      case 'ENTER_DASHBOARD':
+        window.location.href = 'index.html';
+        break;
+
+      case 'START_SIMULATION':
+        this.mode = 'SIMULATION';
+        console.log('[QTState] Simulation started');
+        break;
+
+      default:
+        console.warn('[QTState] Unknown action:', action);
+    }
+  }
+};
