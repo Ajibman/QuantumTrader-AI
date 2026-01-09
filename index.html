@@ -377,6 +377,24 @@ document.addEventListener('click', (e) => {
   setTimeout(() => btn.style.outline = '', 300);
 });
 </script>
+
+<!-- SAFE CLICK OBSERVER (Mentor-approved) -->
+<script>
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.module-btn');
+  if (!btn) return;
+
+  // Log click + state without changing behavior
+  console.log('[Observer]', btn.id, {
+    trainingCompleted: window.state?.trainingCompleted,
+    paymentLayer: window.state?.paymentLayer
+  });
+
+  // Optional visual feedback
+  btn.style.outline = '2px solid #1abc9c';
+  setTimeout(() => btn.style.outline = '', 300);
+});
+</script>
  
 </body>
 </html>
