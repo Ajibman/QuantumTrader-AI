@@ -360,6 +360,23 @@
     console.log('UI bound');
   });
 </script>
+
+<script>
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.module-btn');
+  if (!btn) return;
+
+  // OBSERVATION ONLY
+  console.log('[Observer]', btn.id, {
+    trainingCompleted: window.state?.trainingCompleted,
+    paymentLayer: window.state?.paymentLayer
+  });
+
+  // Optional visual confirmation (non-invasive)
+  btn.style.outline = '2px solid #1abc9c';
+  setTimeout(() => btn.style.outline = '', 300);
+});
+</script>
  
 </body>
 </html>
