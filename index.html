@@ -100,9 +100,41 @@
     #currencies-panel{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--panel-gap);}
     footer{margin-top:28px; padding:14px; text-align:center; color:var(--muted); font-size:13px;}
   </style>
-</head>
 
-<body>
+ <body>
+  
+ <!-- HEADER / STATUS -->
+  <header id="qt-header">
+    <!-- logo, clock, status lights -->
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main id="qt-dashboard">
+
+    <!-- 👇 BUTTONS GO HERE -->
+    <section id="qt-controls">
+      <button data-action="ENTER_DASHBOARD">Enter Dashboard</button>
+      <button data-action="START_SIMULATION">Start Simulation</button>
+    </section>
+
+    <!-- charts, panels, visuals -->
+  </main>
+
+  <!-- FOOTER / Ori Olokun -->
+  <footer id="qt-footer">
+    <!-- Ori Olokun image -->
+  </footer>
+
+  <!-- scripts load AFTER all UI -->
+  <script src="js/core/state.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      QTState.init();
+      QTState.bindUI();
+    });
+  </script>
+
+ </body>
   <div class="container">
     <!-- Header -->
     <header>
@@ -307,7 +339,27 @@
       });
       console.log('%cFull Dashboard Proportionality Preview Enabled','color:#1abc9c; font-weight:700;');
     })();
-
+   
   </script>
+ 
+<!-- CORE STATE (authoritative) -->
+<script src="js/core/state.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM ready');
+
+    if (!window.QTState) {
+      console.error('QTState not found');
+      return;
+    }
+
+    QTState.init();      // wake state machine ONCE
+    QTState.bindUI();    // bind buttons ONCE
+
+    console.log('UI bound');
+  });
+</script>
+ 
 </body>
 </html>
