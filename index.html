@@ -1,4 +1,4 @@
- 💡🕊️💓🌌🔌<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -141,53 +141,13 @@ button:hover { background: #00ffd0; }
   100% { transform: scale(1); opacity: 0.9; }
 }
 
-/* CSS */
-/* Button grid styling */
+/* 2x2 button matrix */
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(2, 150px); /* 2x2 matrix */
-  grid-gap: 20px; /* space between buttons */
-  justify-content: center;
-  margin: 30px 0; /* space above and below the grid */
-}
-
-.green-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 15px 0;
-  font-size: 16px;
-  border-radius: 10px;
-  width: 150px; /* uniform width */
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.green-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Ori Ologo styling */
-.ori-ologo {
-  display: block;
-  margin: 40px auto 20px auto; /* centered, with space above footer */
-  width: 200px; /* adjust as needed */
-  transition: all 0.3s ease-in-out;
-  animation: pulseGlow 2s infinite ease-in-out;
-}
-
-/* Pulsating glow animation */
-@keyframes pulseGlow {
-  0% {
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
-  }
-  100% {
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
-  }
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  justify-items: center;
+  margin-top: 12px;
 }
 
 /* Mobile adjustments */
@@ -254,21 +214,26 @@ button:hover { background: #00ffd0; }
       <label><input type="checkbox" id="autotrader-toggle" disabled> Enable Auto Trader</label>
     </div>
   </div>
+
 </main>
- 
+
  <!-- Button Grid -->
 <div class="button-grid">
-  <button>TraderLab</button>
-  <button>Signals</button>
-  <button>AutoTrader</button>
-  <button>Settings</button>
+  <button id="btnTradingFloor">Trading Floor™</button>
+  <button id="btnTraderLab">TraderLab™</button>
+  <button id="btnCPilot">CPilot™</button>
+  <button id="btnSystem">System</button>
 </div>
 
- <div>
-<img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo" class="ori-ologo">
- </div>
+<!-- Ori Ologo -->
+    <div class="ori-ologo-wrapper">
+      <img src="assets/images/qtai_ori_olokun.png" id="oriOlogo" alt="Ori Ologo"/>
+      <span class="ori-label">Ori Ologo</span>
+    </div>
 
- <footer>
+</div>
+
+<footer>
   © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu - Architech, Concepts and Design.
 </footer>
 
