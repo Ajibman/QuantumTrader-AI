@@ -71,18 +71,50 @@ button:hover { background: #00ffd0; }
   font-family: monospace;
 }
 
+ .trust-text {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  text-align: center;
+  letter-spacing: 0.3px;
+ }
+
 /* Ori Ologo */
-.ori-ologo-container {
+/* Shared vertical axis */
+.axis-container {
   display: flex;
-  justify-content: center;
-  margin: 2rem 0 1rem 0;
+  flex-direction: column;
+  align-items: center;   /* THIS is the axis lock */
+  gap: 24px;
 }
 
-#ori-ologo {
-  width: 80px;
-  height: auto;
-  opacity: 0.9;
-  animation: pulse 3s ease-in-out infinite;
+/* Ori Ologo container */
+.ori-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* 2x2 button matrix */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  justify-items: center; /* keeps symmetry tight */
+}
+
+ /* Refined vertical rhythm */
+.axis-container {
+  gap: 32px;            /* was 24px – calmer breathing */
+  padding-top: 24px;
+}
+
+/* Space below Ori Ologo before trust text */
+.ori-container {
+  margin-bottom: 8px;
+}
+
+/* Button grid spacing refinement */
+.button-grid {
+  margin-top: 12px;
 }
 
 @keyframes pulse {
@@ -114,12 +146,6 @@ footer {
 
 <header>
   <h1>QuantumTrader AI™</h1>
-  <nav>
-    <button id="btn-sim">Simulation</button>
-    <button id="btn-live">Live</button>
-    <button id="btn-reset">Reset</button>
-    <button id="btn-help">Help</button>
-  </nav>
 </header>
 
 <main id="dashboard">
@@ -141,6 +167,10 @@ footer {
   <div class="module-card" id="module-14">Module 14</div>
   <div class="module-card" id="module-15">Module 15</div>
 
+ <div class="trust-text">
+  System-governed access • Disciplined execution • Automatic protection
+ </div>
+ 
   <!-- Trading Floor -->
   <div id="trading-floor" class="panel">
     Trading Floor Apex (Locked — Payment Required)
@@ -161,13 +191,23 @@ footer {
 
 </main>
 
+ <div class="button-grid">
+  <button id="btnTradingFloor">Trading Floor</button>
+  <button id="btnTraderLab">TraderLab</button>
+  <button id="btnCPilot">CPilot</button>
+  <button id="btnSystem">System</button>
+</div>
+ 
 <!-- Ori Ologo -->
-<div class="ori-ologo-container">
-  <img id="ori-ologo" src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
+<div class="ori-ologo-container"><img
+  src="assets/images/ori_ologo.png"
+  id="oriOlogo"
+  alt="Ori Ologo"
+  <img id="ori-ologo" src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
 </div>
 
 <footer>
-  &copy; 2026 QuantumTrader AI™ — All Rights Reserved
+  &©; 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu - Architech, Concepts and Design.
 </footer>
 
 <script src="js/state.js"></script>
@@ -301,6 +341,54 @@ document.getElementById('btn-help').addEventListener('click', () => {
   console.log('Help requested');
 });
 </script>
+ 
+<!-- Onboarding Modal -->
+<div id="onboardingModal" class="modal hidden">
+  <div id="onboardingContent"></div>
+</div>
 
+ <script type="module" src="js/state.js"></script>
+<script type="module" src="js/onboarding.js"></script>
+<script type="module" src="js/gate.js"></script>
+
+<script type="module">
+  import { loadState } from "./js/state.js";
+  import { startOnboarding } from "./js/onboarding.js";
+
+  loadState();
+  startOnboarding();
+</script>
+
+ <script type="module">
+  import { AppState, saveState } from "./js/state.js";
+  import { canTrade } from "./js/gate.js";
+
+  document.getElementById("btnTraderLab").onclick = () => {
+    AppState.mode = "TraderLab";
+    saveState();
+  };
+
+  document.getElementById("btnTradingFloor").onclick = () => {
+    if (!canTrade()) {
+      alert("Trading Floor access inactive or expired.");
+      return;
+    }
+    AppState.mode = "TradingFloor";
+    saveState();
+  };
+ </script>
+
+ <script type="module">
+  document.getElementById("btnCPilot").onclick = () => {
+    alert(
+      "CPilot is an advisory module.\n\n" +
+      "It provides analysis and guidance only.\n" +
+      "No trades are executed from CPilot."
+    );
+  };
+ </script>
+
+ <script src="https://js.paystack.co/v1/inline.js"></script>
+ 
 </body>
 </html>
