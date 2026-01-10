@@ -27,3 +27,14 @@ export function payWithPaystack() {
 
   handler.openIframe();
 }
+
+<button onclick="QT.activate()">Confirm Payment</button>
+
+import { payWithPaystack } from "./payment.js";
+
+window.QT.pay = () => {
+  payWithPaystack();
+};
+
+<button onclick="QT.pay()">Confirm Payment</button>
+
