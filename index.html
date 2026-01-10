@@ -1,184 +1,306 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Dashboard</title>
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="manifest" href="manifest.json" />
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+}
 
-  <style>
-    :root {
-      --bg:#000428; --card:#071226; --muted:#bbb; --accent:#1abc9c;
-      --buy:#2ecc71; --sell:#e74c3c; --hold:#f39c12;
-      --panel-gap:12px; --header-gap:18px;
-    }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-    body {
-      margin:0; padding:0;
-      font-family:Inter, Arial, sans-serif;
-      color:#fff;
-      background:var(--bg);
-    }
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
 
-    .container{max-width:1120px; margin:0 auto; padding:18px;}
-    header{display:flex; justify-content:center; align-items:center; gap:var(--header-gap); flex-wrap:wrap;}
-    header img{max-height:80px; height:auto; display:block;}
-    h1{text-align:center; font-size:24px;}
-    h2{text-align:center; font-size:18px; color:var(--muted); margin-bottom:24px;}
-    .status{text-align:center; margin-bottom:16px; font-size:14px; color:var(--muted);}
-    .modules{display:flex; flex-wrap:wrap; gap:16px; justify-content:center;}
-    .module-btn{
-      background:var(--accent); color:#061018; padding:16px 24px;
-      border:none; border-radius:8px; cursor:pointer;
-      font-weight:700; flex:0 1 140px; text-align:center;
-      transition:transform .12s ease;
-    }
-    .module-btn:hover{transform:translateY(-3px);}
-    .radio-panel{display:none; flex-direction:column; gap:8px; margin-top:12px; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px;}
-    .radio-panel label{font-size:14px; cursor:pointer;}
-    #dashboard-mode{display:none;}
-    #dashboard-mode.active{display:block;}
-    #home-mode.active{display:block;}
-    #home-mode{display:block;}
-  </style>
+main {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Hidden modules */
+.module-card { display: none; }
+
+/* Buttons */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-left: 0.5rem;
+}
+
+button:hover { background: #00ffd0; }
+
+/* Panels */
+.panel {
+  width: 90%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #08192e;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-align: left;
+  color: #00ffe7;
+  font-family: monospace;
+}
+
+/* Ori Ologo */
+.ori-ologo-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 1rem 0;
+}
+
+#ori-ologo {
+  width: 80px;
+  height: auto;
+  opacity: 0.9;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+footer {
+  padding: 1rem 2rem;
+  background: var(--card);
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text);
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.5);
+}
+
+#autotrader-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <!-- Header -->
-    <header>
-      <img src="assets/images/peace_index_logo.png" class="logo" alt="Peace Index Logo">
-    </header>
 
-    <!-- =========================
-         Home / Landing Mode
-    ========================== -->
-    <main id="home-mode" class="active">
-      <h1>Welcome to QuantumTrader AI™</h1>
-      <h2>Activate modules after training completion and payment</h2>
-      <div id="activationStatus" class="status">Checking activation & payment status...</div>
+<header>
+  <h1>QuantumTrader AI™</h1>
+  <nav>
+    <button id="btn-sim">Simulation</button>
+    <button id="btn-live">Live</button>
+    <button id="btn-reset">Reset</button>
+    <button id="btn-help">Help</button>
+  </nav>
+</header>
 
-      <!-- Module Buttons -->
-      <div class="modules">
-        <button id="tradingFloorBtn" class="module-btn">Trading Floor</button>
-        <button id="traderLabBtn" class="module-btn">TraderLab™</button>
-        <button id="cpilotBtn" class="module-btn">CPilot</button>
-        <button id="paymentBtn" class="module-btn">Payment Gate</button>
-      </div>
+<main id="dashboard">
 
-      <!-- CPilot Radio Panel -->
-      <div id="cpilotPanel" class="radio-panel">
-        <strong>Market Selection:</strong>
-        <label><input type="radio" name="market" value="crypto"> Crypto</label>
-        <label><input type="radio" name="market" value="forex"> Forex</label>
-        <label><input type="radio" name="market" value="oil"> Oil</label>
-        <label><input type="radio" name="market" value="commodities"> Commodities</label>
-        <label><input type="radio" name="market" value="metals"> Metals</label>
+  <!-- Hidden modules -->
+  <div class="module-card" id="module-01">Module 01</div>
+  <div class="module-card" id="module-02">Module 02</div>
+  <div class="module-card" id="module-03">Module 03</div>
+  <div class="module-card" id="module-04">Module 04</div>
+  <div class="module-card" id="module-05">Module 05</div>
+  <div class="module-card" id="module-06">Module 06</div>
+  <div class="module-card" id="module-07">Module 07</div>
+  <div class="module-card" id="module-08">Module 08</div>
+  <div class="module-card" id="module-09">Module 09</div>
+  <div class="module-card" id="module-10">Module 10</div>
+  <div class="module-card" id="module-11">Module 11</div>
+  <div class="module-card" id="module-12">Module 12</div>
+  <div class="module-card" id="module-13">Module 13</div>
+  <div class="module-card" id="module-14">Module 14</div>
+  <div class="module-card" id="module-15">Module 15</div>
 
-        <strong>Mode:</strong>
-        <label><input type="radio" name="mode" value="manual"> Manual</label>
-        <label><input type="radio" name="mode" value="semi"> Semi-Auto</label>
-        <label><input type="radio" name="mode" value="auto"> AutoTrade</label>
-
-        <strong>Duration:</strong>
-        <label><input type="radio" name="duration" value="30s"> 30 seconds</label>
-        <label><input type="radio" name="duration" value="1m"> 1 minute</label>
-        <label><input type="radio" name="duration" value="30m"> 30 minutes</label>
-        <label><input type="radio" name="duration" value="1h"> 1 hour</label>
-        <label><input type="radio" name="duration" value="24h"> 24 hours</label>
-        <label><input type="radio" name="duration" value="48h"> 48 hours</label>
-        <label><input type="radio" name="duration" value="72h"> 72 hours</label>
-        <label><input type="radio" name="duration" value="4d"> 4 days</label>
-        <label><input type="radio" name="duration" value="5d"> 5 days</label>
-        <label><input type="radio" name="duration" value="6d"> 6 days</label>
-        <label><input type="radio" name="duration" value="7d"> 7 days</label>
-      </div>
-    </main>
-
-    <!-- =========================
-         Dashboard Mode (Dormant)
-    ========================== -->
-    <main id="dashboard-mode">
-      <h2>Dashboard Mode (Activated After Training & Payment)</h2>
-    </main>
-
-    <footer>
-      © 2025 QuantumTrader AI™ | Olagoke Ajibulu — Architect, Concepts & Design
-    </footer>
+  <!-- Trading Floor -->
+  <div id="trading-floor" class="panel">
+    Trading Floor Apex (Locked — Payment Required)
   </div>
 
-  <!-- =========================
-       App JS
-  ========================== -->
-  <script type="module">
-    import { state } from './assets/js/core/state.js';
-    import { handlePaymentRequest } from './assets/js/core/payment.js';
-    import { runOption1Payment } from './utils/option1-trigger.js';
-    import { runOption2Payment } from './utils/option2-trigger.js';
-    import { runOption3Payment } from './utils/option3-trigger.js';
+  <!-- TraderLab -->
+  <div id="traderlab-panel" class="panel">
+    TraderLab Simulation Output...
+  </div>
 
-    const activationStatus = document.getElementById('activationStatus');
-    const homeMode = document.getElementById('home-mode');
-    const dashboardMode = document.getElementById('dashboard-mode');
-    const tradingFloorBtn = document.getElementById('tradingFloorBtn');
-    const traderLabBtn = document.getElementById('traderLabBtn');
-    const cpilotBtn = document.getElementById('cpilotBtn');
-    const paymentBtn = document.getElementById('paymentBtn');
-    const cpilotPanel = document.getElementById('cpilotPanel');
-    const payBtn = document.getElementById('payBtn');
-    const paymentOption = document.getElementById('paymentOption');
+  <!-- CPilot Panel -->
+  <div id="cpilot-panel" class="panel">
+    CPilot Live Output...
+    <div id="autotrader-container">
+      <label><input type="checkbox" id="autotrader-toggle" disabled> Enable Auto Trader</label>
+    </div>
+  </div>
 
-    function updateActivationStatus() {
-      const msg = [];
-      msg.push(state.trainingCompleted ? 'Training ✅' : 'Training ❌');
-      msg.push(state.paymentLayer==='LIVE' ? 'Payment ✅' : 'Payment ❌');
-      activationStatus.textContent = msg.join(' | ');
-    }
-    updateActivationStatus();
+</main>
 
-    function enterDashboard() {
-      homeMode.classList.remove('active');
-      dashboardMode.classList.add('active');
-    }
+<!-- Ori Ologo -->
+<div class="ori-ologo-container">
+  <img id="ori-ologo" src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
+</div>
 
-    // ---------- Module Buttons ----------
-    tradingFloorBtn.addEventListener('click', () => {
-      if (!state.trainingCompleted || state.paymentLayer !== 'LIVE') {
-        alert('Complete training and payment to access Trading Floor.');
-        return;
-      }
-      enterDashboard();
-    });
+<footer>
+  &copy; 2026 QuantumTrader AI™ — All Rights Reserved
+</footer>
 
-    traderLabBtn.addEventListener('click', () => {
-      if (!state.trainingCompleted) {
-        alert('Complete training to access TraderLab™.');
-        return;
-      }
-      window.location.href = 'traderlab.html';
-    });
+<script src="js/state.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/ui.js"></script>
+<script>
+// Modules array
+const modules = [];
+for (let i = 1; i <= 15; i++) {
+  modules.push(document.getElementById(`module-${String(i).padStart(2,'0')}`));
+}
 
-    cpilotBtn.addEventListener('click', () => {
-      cpilotPanel.style.display = cpilotPanel.style.display === 'flex' ? 'none' : 'flex';
-    });
+// States
+let currentModuleIndex = 0;
+let autoTraderEnabled = false;
+let trainingCompleted = false;
+let paymentCompleted = false;
+let subscriptionActive = false;
+let subscriptionStart = null;
+const subscriptionDays = 30;
 
-    paymentBtn.addEventListener('click', () => {
-      const method = prompt('Enter payment method (CARD/TRANSFER):', 'CARD');
-      const amount = parseFloat(prompt('Enter amount in NGN:', '10000'));
-      handlePaymentRequest(method, amount);
-      updateActivationStatus();
-    });
+// AutoTrader toggle
+document.getElementById('autotrader-toggle').addEventListener('change', e => {
+  autoTraderEnabled = e.target.checked;
+  console.log('AutoTrader:', autoTraderEnabled ? 'Enabled' : 'Disabled');
+});
 
-    // Optional: Safe click observer (visual confirmation)
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.module-btn');
-      if (!btn) return;
-      btn.style.outline = '2px solid #1abc9c';
-      setTimeout(() => btn.style.outline = '', 300);
-    });
-  </script>
+// CPilot logic
+function cpilotUpdate(activeModule) {
+  if(!paymentCompleted || !subscriptionActive || !trainingCompleted) return;
+  if (autoTraderEnabled) {
+    document.getElementById('cpilot-panel').textContent =
+      `CPilot AutoTrader executed trade from ${activeModule.id}`;
+  } else {
+    document.getElementById('cpilot-panel').textContent =
+      `CPilot Suggestion: ${activeModule.id}`;
+  }
+}
+
+// Module rotation
+function rotateModules() {
+  modules.forEach(m => m.style.display = 'none'); // hidden
+  const activeModule = modules[currentModuleIndex];
+  activeModule.style.display = 'none';
+  document.getElementById('traderlab-panel').textContent =
+    `TraderLab Output from ${activeModule.id}`;
+  cpilotUpdate(activeModule);
+  currentModuleIndex = (currentModuleIndex + 1) % modules.length;
+}
+setInterval(rotateModules, 2000);
+rotateModules();
+
+// Access control
+function checkAccess() {
+  const tradingFloor = document.getElementById('trading-floor');
+  const cpilotToggle = document.getElementById('autotrader-toggle');
+  const btnLive = document.getElementById('btn-live');
+
+  if(paymentCompleted && subscriptionActive && trainingCompleted){
+    tradingFloor.style.opacity = 1;
+    cpilotToggle.disabled = false;
+    btnLive.disabled = false;
+    tradingFloor.textContent = 'Trading Floor Apex (Unlocked)';
+  } else {
+    tradingFloor.style.opacity = 0.5;
+    cpilotToggle.disabled = true;
+    btnLive.disabled = true;
+    tradingFloor.textContent = 'Trading Floor Apex (Locked — Payment Required)';
+  }
+}
+
+// Payment & subscription functions
+function initialPaymentReceived() {
+  paymentCompleted = true;
+  subscriptionActive = true;
+  subscriptionStart = new Date();
+  console.log('Initial payment received.');
+  checkAccess();
+}
+
+function renewSubscription() {
+  subscriptionActive = true;
+  subscriptionStart = new Date(); // reset 30-day cycle
+  console.log('Subscription renewed.');
+  checkAccess();
+}
+
+// TraderLab completion
+function completeTraderLab() {
+  trainingCompleted = true;
+  console.log('TraderLab completed.');
+  checkAccess();
+}
+
+// Subscription expiration check
+function checkSubscription() {
+  if(!subscriptionStart) return;
+  const now = new Date();
+  const expiryDate = new Date(subscriptionStart);
+  expiryDate.setDate(expiryDate.getDate() + subscriptionDays);
+  if(now >= expiryDate){
+    subscriptionActive = false;
+    console.log('Subscription expired: Trading Floor & AutoTrader locked.');
+    checkAccess();
+  }
+}
+setInterval(checkSubscription, 60*1000); // check every minute
+
+// Initial check
+checkAccess();
+
+// Button wiring
+document.getElementById('btn-sim').addEventListener('click', () => {
+  console.log('Simulation mode activated');
+  document.getElementById('traderlab-panel').style.display = 'block';
+  document.getElementById('cpilot-panel').style.display = 'none';
+});
+
+document.getElementById('btn-live').addEventListener('click', () => {
+  console.log('Live mode activated');
+  document.getElementById('traderlab-panel').style.display = 'none';
+  document.getElementById('cpilot-panel').style.display = 'block';
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  console.log('Reset triggered');
+  currentModuleIndex = 0;
+});
+
+document.getElementById('btn-help').addEventListener('click', () => {
+  console.log('Help requested');
+});
+</script>
+
 </body>
 </html>
