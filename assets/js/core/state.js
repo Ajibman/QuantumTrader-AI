@@ -46,3 +46,10 @@ window.QTState = {
     }
   }
 };
+
+// TEMPORARY — for testing only
+window.forceExpire = () => {
+  AppState.subscription.expiresAt = Date.now() - 1000;
+  saveState();
+  alert("Subscription forcibly expired for test.");
+};
