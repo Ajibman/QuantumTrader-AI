@@ -168,10 +168,15 @@ footer {
   #ori-vignette { width: 140px; height: 140px; }
 }
 </style>
+ 
+ /* Remove any ghost text on the System button */
+#system-button::before,
+#system-button::after {
+  content: none !important;
+} 
 </head>
 
 <body>
-
 <header>
   <h1>QuantumTrader AI™</h1>
 </header>
