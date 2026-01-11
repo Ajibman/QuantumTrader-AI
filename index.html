@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Dashboard</title>
+
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --marine: rgba(0, 255, 180, 0.55);
+}
+
+/* ===== Global ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* ===== Hidden Dynamic Modules 01–15 ===== */
+.module-card {
+  display: none;
+}
+
+/* ===== Panels ===== */
+.panel {
+  width: 90%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #08192e;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  color: #00ffe7;
+  font-family: monospace;
+}
+
+/* ===== Trust Line ===== */
+.trust-text {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Images ===== */
+#globe,
+#peaceIndex {
+  display: block;
+  margin: 12px auto;
+  max-width: 150px;
+  height: auto;
+}
+
+/* ===== Axis Container ===== */
+.axis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding-top: 20px;
+}
+
+/* ===== Buttons ===== */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #00ffd0;
+}
+
+/* ===== Ori Olokun — Circular Vignette ===== */
+#ori-ologo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 18px;
+}
+
+#ori-vignette {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center,
+    rgba(0,255,180,0.15),
+    rgba(0,0,0,0.9));
+  box-shadow:
+    0 0 18px var(--marine),
+    inset 0 0 20px rgba(0,255,180,0.35);
+  animation: oriPulse 1.4s ease-in-out infinite;
+}
+
+#ori-ologo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+}
+
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Pulse */
+@keyframes oriPulse {
+  0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+  50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
+  100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+}
+
+/* ===== Footer ===== */
+footer {
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: #050b1d;
+  opacity: 0.75;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  #globe { max-width: 100px; }
+  #peaceIndex { max-width: 120px; }
+  #ori-vignette { width: 140px; height: 140px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>QuantumTrader AI™</h1>
+</header>
+
+<main id="dashboard">
+
+  <!-- Hidden Modules 01–15 -->
+  <div class="module-card" id="module-01"></div>
+  <div class="module-card" id="module-02"></div>
+  <div class="module-card" id="module-03"></div>
+  <div class="module-card" id="module-04"></div>
+  <div class="module-card" id="module-05"></div>
+  <div class="module-card" id="module-06"></div>
+  <div class="module-card" id="module-07"></div>
+  <div class="module-card" id="module-08"></div>
+  <div class="module-card" id="module-09"></div>
+  <div class="module-card" id="module-10"></div>
+  <div class="module-card" id="module-11"></div>
+  <div class="module-card" id="module-12"></div>
+  <div class="module-card" id="module-13"></div>
+  <div class="module-card" id="module-14"></div>
+  <div class="module-card" id="module-15"></div>
+
+  <div class="trust-text">
+    System-governed access • Disciplined execution • Automatic protection
+  </div>
+
+  <!-- System Panel -->
+  <div class="panel" id="system-panel">
+    <p><strong>System Status:</strong> OPERATIONAL ✔</p>
+    <p><strong>Core Services:</strong> Online</p>
+    <p><strong>Data Feeds:</strong> Synchronized</p>
+    <p><strong>Execution Clock:</strong> Aligned (UTC)</p>
+
+    <p><strong>Access State:</strong></p>
+    <ul>
+      <li>Subscription: Active</li>
+      <li>Trading Floor: Locked (Payment Required)</li>
+      <li>AutoTrader: Disabled (Policy)</li>
+    </ul>
+
+    <p><strong>Governance:</strong></p>
+    <ul>
+      <li>TraderLab completion required</li>
+      <li>Capital protection enforced</li>
+      <li>Medusa™ auto-regeneration active</li>
+    </ul>
+
+    <p><strong>Identity:</strong></p>
+    <ul>
+      <li>QuantumTrader AI™ v1.0</li>
+      <li>Build: Stable</li>
+      <li>Architect: Olagoke Ajibulu</li>
+    </ul>
+
+    <p>System provides visibility, not control.</p>
+  </div>
+
+  <!-- Axis -->
+  <div class="axis-container">
+    <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
+    <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-grid">
+    <button id="btnTradingFloor">Trading Floor™</button>
+    <button id="btnTraderLab">TraderLab™</button>
+    <button id="btnCPilot">CPilot™</button>
+    <button id="btnSystem">System</button>
+  </div>
+
+</main>
+
+<!-- Ori Olokun -->
+<div id="ori-ologo-wrapper">
+  <div id="ori-vignette">
+    <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
+  </div>
+  <div id="ori-ologo-name">Ori Ologo</div>
+</div>
+
+<footer>
+© 2026 QuantumTrader AI™ — All Rights Reserved |
+Olagoke Ajibulu — Visionary, Architect and Builder
+</footer>
+
+<script src="js/state.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/ui.js"></script>
+
+</body>
+</html>
