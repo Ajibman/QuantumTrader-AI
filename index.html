@@ -264,7 +264,30 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
-<script src="js/ui.js"></script>
+<script src="js/ui.js"></script><script>
+  // Global App State
+  const AppState = {
+    active: null // 'system' | 'traderlab' | 'tradingfloor' | 'cpilot'
+  };
 
+  function setActive(module) {
+    AppState.active = module;
+    renderState();
+  }
+
+  function renderState() {
+    const status = document.getElementById('status-display');
+    if (!status) return;
+
+    if (AppState.active === 'system') {
+      status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+    } else if (AppState.active) {
+      status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
+    } else {
+      status.textContent = '';
+    }
+  }
+</script>
+  
 </body>
 </html>
