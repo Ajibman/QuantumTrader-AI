@@ -1,0 +1,23 @@
+'''json 
+{
+  "name": "QuantumTrader AI",
+  "short_name": "QT AI",
+  "description": "QuantumTrader AI — Simulation, strategy testing, and AI-assisted trading intelligence.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1a2b",
+  "theme_color": "#0b1a2b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "qtai_globe.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "qtai_globe.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
