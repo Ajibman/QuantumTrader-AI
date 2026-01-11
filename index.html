@@ -283,6 +283,51 @@ button:hover { background: #00ffd0; }
     });
   </script>
 
+ <script>
+  // Buttons — IDs for wiring, labels untouched
+  const btnSystem = document.getElementById("btnSystem");        // Systems
+  const btnTraderFloor = document.getElementById("btnTraderFloor"); // Trader Floor
+  const btnTraderLab = document.getElementById("btnTraderLab");     // TraderLab
+  const btnCPilot = document.getElementById("btnCPilot");           // CPilot
+
+  // All dynamic modules 1-15
+  const modules = Array.from(document.querySelectorAll(".module-card"));
+
+  // Helper function: hide all modules
+  function hideAllModules() {
+    modules.forEach(m => m.style.display = "none");
+  }
+
+  // Systems button (already wired)
+  btnSystem.addEventListener("click", () => {
+    console.log("Systems toggled");
+    // Add your toggle logic
+  });
+
+  // Trader Floor → show module-1
+  btnTraderFloor.addEventListener("click", () => {
+    hideAllModules();
+    document.getElementById("module-1").style.display = "block";
+    console.log("Trader Floor module displayed");
+  });
+
+  // TraderLab → show module-2
+  btnTraderLab.addEventListener("click", () => {
+    hideAllModules();
+    document.getElementById("module-2").style.display = "block";
+    console.log("TraderLab module displayed");
+  });
+
+  // CPilot → show module-3
+  btnCPilot.addEventListener("click", () => {
+    hideAllModules();
+    document.getElementById("module-3").style.display = "block";
+    console.log("CPilot module displayed");
+  });
+
+  // Initialize: hide all modules
+  hideAllModules();
+ </script>
  
 <!--
 ================================================================
