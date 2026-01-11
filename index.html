@@ -78,7 +78,7 @@ button:hover { background: #00ffd0; }
   letter-spacing: 0.3px;
 }
 
-/* Axis container for vertical alignment */
+/* Axis container */
 .axis-container {
   display: flex;
   flex-direction: column;
@@ -87,17 +87,12 @@ button:hover { background: #00ffd0; }
   padding-top: 24px;
 }
 
-#/* Globe (fixed, no rotation) */
+/* Globe (fixed, no rotation) */
 #globe {
   width: 120px;
   height: auto;
   display: block;
   margin-bottom: 12px;
-}
-
-@keyframes spin {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(360deg); }
 }
 
 /* Peace Index logo */
@@ -108,54 +103,61 @@ button:hover { background: #00ffd0; }
   display: block;
 }
 
-/* Ori Ologo wrapper */
-.ori-ologo-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Ori Ologo image */
-#oriOlogo {
-  max-width: 180px;
-  height: auto;
-  animation: pulse 2s infinite;
-  filter: drop-shadow(0 0 20px #00ffe7) brightness(1.1);
-  border-radius: 50%;
-  margin-bottom: 20px;
-}
-
-/* Ori Ologo caption */
-.ori-label {
-  color: #00ffe7;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: center;
-  text-shadow: 0 0 6px #00ffe7;
-}
-
-/* Pulsate animation */
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.9; }
-}
-
 /* 2x2 button matrix */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(140px, 1fr));
   gap: 16px;
   justify-items: center;
-  margin-top: 12px;
+  margin: 12px auto 0;
 }
+
+/* ===== Ori Ologo (FINAL – Approved) ===== */
+#ori-ologo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 28px 0 20px;
+}
+
+#ori-ologo-img {
+  width: 140px;
+  height: auto;
+  animation: oriPulse 1s ease-in-out infinite;
+}
+
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 0 6px rgba(0, 255, 120, 0.35);
+}
+
+@keyframes oriPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 4px rgba(0, 255, 120, 0.25));
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 120, 0.55));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 4px rgba(0, 255, 120, 0.25));
+  }
+}
+/* ===== End Ori Ologo ===== */
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
   #globe { max-width: 100px; }
   #peaceIndex { max-width: 120px; }
-  #oriOlogo { max-width: 150px; }
-  .ori-label { font-size: 0.85rem; }
+  #ori-ologo-img { max-width: 120px; }
   .button-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
 }
 </style>
@@ -190,51 +192,43 @@ button:hover { background: #00ffd0; }
     System-governed access • Disciplined execution • Automatic protection
   </div>
 
-  <!-- Axis Container -->
   <div class="axis-container">
-
-    <!-- Globe -->
     <img src="assets/images/qtai_globe.png" id="globe" alt="Globe"/>
-
-    <!-- Peace Index Logo -->
     <img src="assets/images/peace_index_logo.png" id="peaceIndex" alt="Peace Index Logo"/>
 
-  <!-- Panels -->
-  <div id="trading-floor" class="panel">
-    Trading Floor Apex Locked — (Payment Required)
-  </div>
-
-  <div id="traderlab-panel" class="panel">
-    TraderLab Simulation Output...
-  </div>
-
-  <div id="cpilot-panel" class="panel">
-    CPilot Live Output...
-    <div id="autotrader-container">
-      <label><input type="checkbox" id="autotrader-toggle" disabled> Enable Auto Trader</label>
+    <div id="trading-floor" class="panel">
+      Trading Floor Apex Locked — (Payment Required)
     </div>
+
+    <div id="traderlab-panel" class="panel">
+      TraderLab Simulation Output...
+    </div>
+
+    <div id="cpilot-panel" class="panel">
+      CPilot Live Output...
+      <div id="autotrader-container">
+        <label><input type="checkbox" id="autotrader-toggle" disabled> Enable Auto Trader</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-grid">
+    <button id="btnTradingFloor">Trading Floor™</button>
+    <button id="btnTraderLab">TraderLab™</button>
+    <button id="btnCPilot">CPilot™</button>
+    <button id="btnSystem">System</button>
   </div>
 
 </main>
 
- <!-- Button Grid -->
-<div class="button-grid">
-  <button id="btnTradingFloor">Trading Floor™</button>
-  <button id="btnTraderLab">TraderLab™</button>
-  <button id="btnCPilot">CPilot™</button>
-  <button id="btnSystem">System</button>
-</div>
-
-<!-- Ori Ologo -->
-    <div class="ori-ologo-wrapper">
-      <img src="assets/images/qtai_ori_olokun.png" id="oriOlogo" alt="Ori Ologo"/>
-      <span class="ori-label">Ori Ologo</span>
-    </div>
-
+<!-- Ori Ologo : Presence Layer -->
+<div id="ori-ologo-wrapper">
+  <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Ologo"/>
+  <div id="ori-ologo-name">Ori Ologo</div>
 </div>
 
 <footer>
-  © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu - Architech, Concepts and Design.
+  © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Architect, Concepts and Design.
 </footer>
 
 <script src="js/state.js"></script>
