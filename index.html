@@ -245,11 +245,78 @@ footer {
 
   <!-- Buttons -->
   <div id="button-container">
-  <button>Buy</button>
-  <button>Sell</button>
-  <button>Portfolio</button>
-  <button>Settings</button>
-  </div>
+  <!-- Module buttons -->
+  <button data-target="traderlab.html">TraderLab</button>
+  <button data-target="tradingfloor.html">TradingFloor</button>
+  <button data-target="portfolio.html">Portfolio</button>
+  <button data-target="settings.html">Settings</button>
+
+  <!-- System button -->
+  <button id="system-btn">System</button>
+
+  <script>
+    const container = document.getElementById('button-container');
+
+    // Select all buttons except the system button
+    const buttons = Array.from(container.querySelectorAll('button'))
+                          .filter(btn => btn.id !== 'system-btn');
+
+    buttons.forEach(btn => {
+      // ===== Functional wiring: navigate to module =====
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        if (target) {
+          window.location.href = target; // Navigate to the module page
+        }
+      });
+
+      // ===== Visual life =====
+      btn.style.transition = 'all 0.2s ease';
+      btn.style.cursor = 'pointer';
+      btn.style.boxShadow = '0 0 8px rgba(0,255,0,0.3)';
+      btn.style.border = '2px solid #0f0';
+      btn.style.background = '#111';
+      btn.style.color = '#0f0';
+      btn.style.padding = '12px 24px';
+      btn.style.margin = '6px';
+      btn.style.borderRadius = '8px';
+
+      // Hover effect
+      btn.addEventListener('mouseenter', () => {
+        btn.style.boxShadow = '0 0 16px rgba(0,255,0,0.7)';
+        btn.style.transform = 'scale(1.05)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.boxShadow = '0 0 8px rgba(0,255,0,0.3)';
+        btn.style.transform = '';
+      });
+
+      // Click effect: small press animation
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.95)';
+      });
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = 'scale(1.05)';
+      });
+
+      // Optional: subtle continuous pulse glow
+      let growing = true;
+      setInterval(() => {
+        const currentAlpha = parseFloat(getComputedStyle(btn).boxShadow.split(',')[3]) || 0.3;
+        const newAlpha = growing ? currentAlpha + 0.02 : currentAlpha - 0.02;
+        btn.style.boxShadow = `0 0 8px rgba(0,255,0,${newAlpha.toFixed(2)})`;
+        if (newAlpha >= 0.7) growing = false;
+        if (newAlpha <= 0.3) growing = true;
+      }, 100);
+    });
+
+    // ===== Optional: System button logic =====
+    document.getElementById('system-btn').addEventListener('click', () => {
+      console.log('System button clicked');
+      // Add system functionality here
+    });
+  </script>
+</div>
 
   <!-- Wiring snippet placed right before system button -->
   <script>
