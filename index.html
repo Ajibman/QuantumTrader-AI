@@ -1,10 +1,10 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumTrader AI™ — Dashboard</title>
-
 <style>
 :root {
   --bg: #000428;
@@ -78,39 +78,16 @@ button:hover { background: #00ffd0; }
   letter-spacing: 0.3px;
 }
 
-/* Ensure images stay centered or in original layout */
-#dashboard-content img {
-    display: block;      /* ensures proper block layout */
-    margin: 12px auto;   /* auto left/right margins centers the image */
-    max-width: 150px;    /* optional scaling */
-    height: auto;
-    float: none;         /* remove any left float applied earlier */
+/* === Images: Globe & Peace Index === */
+#globe,
+#peaceIndex {
+  display: block;        /* block layout */
+  margin: 12px auto;     /* centers image horizontally */
+  max-width: 150px;      /* optional scaling */
+  height: auto;
+  float: none;           /* remove any left float */
 }
- 
-System Status: OPERATIONAL ✔
-Core Services: Online
-Data Feeds: Synchronized
-Execution Clock: Aligned (UTC)
 
-Access State:
-• Subscription: Active
-• Trading Floor: Locked (Payment Required)
-• AutoTrader: Disabled (Policy)
-
-Governance:
-• TraderLab completion required before live trading
-• Capital protection rules enforced
-• Forced auto-regeneration active (Medusa™)
-
-Identity:
-• QuantumTrader AI™ v1.0
-• Build: Stable
-• Ethics & Compliance: Enforced
-• Architect: Olagoke Ajibulu
-
-System provides visibility, not control.
-}
- 
 /* Axis container */
 .axis-container {
   display: flex;
@@ -118,22 +95,6 @@ System provides visibility, not control.
   align-items: center;
   gap: 32px;
   padding-top: 24px;
-}
-
-/* Globe (fixed, no rotation) */
-#globe {
-  width: 120px;
-  height: auto;
-  display: block;
-  margin-bottom: 12px;
-}
-
-/* Peace Index logo */
-#peaceIndex {
-  width: 140px;
-  height: auto;
-  margin-bottom: 12px;
-  display: block;
 }
 
 /* 2x2 button matrix */
@@ -145,7 +106,7 @@ System provides visibility, not control.
   margin: 12px auto 0;
 }
 
-/* ===== Ori Ologo (FINAL – Approved) ===== */
+/* ===== Ori Ologo ===== */
 #ori-ologo-wrapper {
   display: flex;
   flex-direction: column;
@@ -168,23 +129,10 @@ System provides visibility, not control.
 }
 
 @keyframes oriPulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.9;
-    filter: drop-shadow(0 0 4px rgba(0, 255, 120, 0.25));
-  }
-  50% {
-    transform: scale(1.04);
-    opacity: 1;
-    filter: drop-shadow(0 0 10px rgba(0, 255, 120, 0.55));
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.9;
-    filter: drop-shadow(0 0 4px rgba(0, 255, 120, 0.25));
-  }
+  0%   { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 4px rgba(0,255,120,0.25)); }
+  50%  { transform: scale(1.04); opacity: 1; filter: drop-shadow(0 0 10px rgba(0,255,120,0.55)); }
+  100% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 4px rgba(0,255,120,0.25)); }
 }
-/* ===== End Ori Ologo ===== */
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
@@ -195,9 +143,8 @@ System provides visibility, not control.
 }
 </style>
 </head>
-
+ 
 <body>
-
 <header>
   <h1>QuantumTrader AI™</h1>
 </header>
