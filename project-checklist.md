@@ -7,7 +7,6 @@ Issues
 QuantumTrader-AI
 /PROJECT-CHECKLIST.md
 Ajibman
-Ajibman
 1 minute ago
 88 lines (66 loc) · 2.27 KB
 
@@ -52,7 +51,7 @@ All other assets with correct filenames & structure.
 ✅ 5. index.html UI Rules
 
 Must contain:
-A 4–5 line app description before activation. [11/19, 11:29 AM] ChatGPT 1-800-242-8478: - Clean structure (no module previews, no messy footers).
+A 4–5 line app description before activation.
 Footer must appear only at the bottom.
 Payment gate images can be shown; activation logic will be wired in later.
 ✅ 6. Environment Variables
