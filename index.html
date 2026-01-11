@@ -201,7 +201,11 @@ footer {
   <div class="trust-text">
     System-governed access • Disciplined execution • Automatic protection
   </div>
-
+  
+  <div id="status-display"
+     style="margin:12px 0; font-size:13px; opacity:0.85;">
+</div>
+  
   <!-- System Panel -->
   <div class="panel" id="system-panel">
     <p><strong>System Status:</strong> OPERATIONAL ✔</p>
@@ -240,13 +244,34 @@ footer {
   </div>
 
   <!-- Buttons -->
-  <div class="button-grid">
-    <button id="btnTradingFloor">Trading Floor™</button>
-    <button id="btnTraderLab">TraderLab™</button>
-    <button id="btnCPilot">CPilot™</button>
-    <button id="btnSystem">System</button>
-  </div>
+  <div id="button-container">
+  <!-- Your 4 buttons (can have any text, no IDs needed) -->
+  <button>Buy</button>
+  <button>Sell</button>
+  <button>Portfolio</button>
+  <button>Settings</button>
 
+  <!-- Wiring snippet placed right before system button -->
+  <script>
+    // Grab the container
+    const container = document.getElementById('button-container');
+
+    // Select all buttons inside container except the system button
+    const buttons = Array.from(container.querySelectorAll('button'))
+                          .filter(btn => btn.id !== 'system-btn');
+
+    // Add click listener to each button
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        console.log(`${btn.textContent} clicked`);
+        // Call your placeholder or actual function here
+      });
+    });
+  </script>
+
+  <!-- Your system button -->
+  <button id="system-btn">System</button>
+</div>
 </main>
 
 <!-- Ori Olokun -->
