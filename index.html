@@ -247,13 +247,43 @@ button:hover { background: #00ffd0; }
 </div>
 
 <footer>
-  © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Architect, Concepts and Design.
+  © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Architect, Visionary, Concepts and Design.
 </footer>
 
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
-<script src="js/ui.js"></script>
+<script src="js/ui.js"></script>  <!-- Button Wiring Script -->
+  <script>
+    const btn1 = document.getElementById("btn1"); // System On/Off
+    const btn2 = document.getElementById("btn2"); // Trader Floor
+    const btn3 = document.getElementById("btn3"); // TraderLab
+    const btn4 = document.getElementById("btn4"); // CPilot
 
+    btn1.addEventListener("click", () => {
+      console.log("System On/Off toggled");
+      // Add your toggle logic
+    });
+
+    btn2.addEventListener("click", () => {
+      console.log("Trader Floor invoked");
+      // Example: show module or call existing function
+      // document.getElementById("module-5").style.display = "block";
+    });
+
+    btn3.addEventListener("click", () => {
+      console.log("TraderLab invoked");
+      // Example: show module or call existing function
+      // document.getElementById("module-6").style.display = "block";
+    });
+
+    btn4.addEventListener("click", () => {
+      console.log("CPilot invoked");
+      // Example: show module or call existing function
+      // document.getElementById("module-7").style.display = "block";
+    });
+  </script>
+
+ 
 <!--
 ================================================================
  QuantumTrader AI™ — SYSTEM ARCHITECTURE SNAPSHOT
