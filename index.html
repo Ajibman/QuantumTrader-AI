@@ -1,19 +1,20 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumTrader AI™ — Dashboard</title>
 
- <style>
+<style>
 :root {
   --bg: #000428;
   --card: #071226;
   --accent: #00ffe7;
   --text: #ffffff;
+  --marine: rgba(0, 255, 180, 0.55);
 }
 
+/* ===== Global ===== */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -42,24 +43,12 @@ main {
   gap: 2rem;
 }
 
-/* Hidden modules */
-.module-card { display: none; }
-
-/* Buttons */
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  background: var(--accent);
-  color: var(--bg);
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin-left: 0.5rem;
+/* ===== Hidden Dynamic Modules 01–15 ===== */
+.module-card {
+  display: none;
 }
 
-button:hover { background: #00ffd0; }
-
-/* Panels */
+/* ===== Panels ===== */
 .panel {
   width: 90%;
   max-width: 800px;
@@ -67,11 +56,11 @@ button:hover { background: #00ffd0; }
   border-radius: 1rem;
   background: #08192e;
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  text-align: left;
   color: #00ffe7;
   font-family: monospace;
 }
 
+/* ===== Trust Line ===== */
 .trust-text {
   font-size: 0.85rem;
   opacity: 0.75;
@@ -79,103 +68,139 @@ button:hover { background: #00ffd0; }
   letter-spacing: 0.3px;
 }
 
-/* === Images: Globe & Peace Index === */
+/* ===== Images ===== */
 #globe,
 #peaceIndex {
-  display: block;        /* block layout */
-  margin: 12px auto;     /* centers image horizontally */
-  max-width: 150px;      /* optional scaling */
+  display: block;
+  margin: 12px auto;
+  max-width: 150px;
   height: auto;
-  float: none;           /* remove any left float */
 }
 
-/* Axis container */
+/* ===== Axis Container ===== */
 .axis-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
-  padding-top: 24px;
+  gap: 28px;
+  padding-top: 20px;
 }
 
-/* 2x2 button matrix */
+/* ===== Buttons ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(140px, 1fr));
   gap: 16px;
-  justify-items: center;
-  margin: 12px auto 0;
+  margin-top: 10px;
 }
 
-/* ===== Ori Ologo ===== */
+button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #00ffd0;
+}
+
+/* ===== Ori Olokun — Circular Vignette ===== */
 #ori-ologo-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 28px 0 20px;
+  margin: 24px 0 18px;
+}
+
+#ori-vignette {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center,
+    rgba(0,255,180,0.15),
+    rgba(0,0,0,0.9));
+  box-shadow:
+    0 0 18px var(--marine),
+    inset 0 0 20px rgba(0,255,180,0.35);
+  animation: oriPulse 1.4s ease-in-out infinite;
 }
 
 #ori-ologo-img {
-  width: 140px;
+  width: 120px;
   height: auto;
-  animation: oriPulse 1s ease-in-out infinite;
+  border-radius: 50%;
 }
 
 #ori-ologo-name {
   margin-top: 8px;
   font-size: 0.95rem;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.75);
-  text-shadow: 0 0 6px rgba(0, 255, 120, 0.35);
+  opacity: 0.8;
 }
 
+/* Pulse */
 @keyframes oriPulse {
-  0%   { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 4px rgba(0,255,120,0.25)); }
-  50%  { transform: scale(1.04); opacity: 1; filter: drop-shadow(0 0 10px rgba(0,255,120,0.55)); }
-  100% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 4px rgba(0,255,120,0.25)); }
+  0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+  50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
+  100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
 }
 
-/* Mobile adjustments */
+/* ===== Footer ===== */
+footer {
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: #050b1d;
+  opacity: 0.75;
+}
+
+/* ===== Mobile ===== */
 @media (max-width: 600px) {
   #globe { max-width: 100px; }
   #peaceIndex { max-width: 120px; }
-  #ori-ologo-img { max-width: 120px; }
-  .button-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  #ori-vignette { width: 140px; height: 140px; }
 }
 </style>
 </head>
- 
+
 <body>
+
 <header>
   <h1>QuantumTrader AI™</h1>
 </header>
 
 <main id="dashboard">
 
-  <!-- Hidden modules -->
-  <div class="module-card" id="module-01">Module 01</div>
-  <div class="module-card" id="module-02">Module 02</div>
-  <div class="module-card" id="module-03">Module 03</div>
-  <div class="module-card" id="module-04">Module 04</div>
-  <div class="module-card" id="module-05">Module 05</div>
-  <div class="module-card" id="module-06">Module 06</div>
-  <div class="module-card" id="module-07">Module 07</div>
-  <div class="module-card" id="module-08">Module 08</div>
-  <div class="module-card" id="module-09">Module 09</div>
-  <div class="module-card" id="module-10">Module 10</div>
-  <div class="module-card" id="module-11">Module 11</div>
-  <div class="module-card" id="module-12">Module 12</div>
-  <div class="module-card" id="module-13">Module 13</div>
-  <div class="module-card" id="module-14">Module 14</div>
-  <div class="module-card" id="module-15">Module 15</div>
+  <!-- Hidden Modules 01–15 -->
+  <div class="module-card" id="module-01"></div>
+  <div class="module-card" id="module-02"></div>
+  <div class="module-card" id="module-03"></div>
+  <div class="module-card" id="module-04"></div>
+  <div class="module-card" id="module-05"></div>
+  <div class="module-card" id="module-06"></div>
+  <div class="module-card" id="module-07"></div>
+  <div class="module-card" id="module-08"></div>
+  <div class="module-card" id="module-09"></div>
+  <div class="module-card" id="module-10"></div>
+  <div class="module-card" id="module-11"></div>
+  <div class="module-card" id="module-12"></div>
+  <div class="module-card" id="module-13"></div>
+  <div class="module-card" id="module-14"></div>
+  <div class="module-card" id="module-15"></div>
 
   <div class="trust-text">
     System-governed access • Disciplined execution • Automatic protection
   </div>
 
-<main>
-  <!-- System Info Panel -->
-  <div class="panel">
+  <!-- System Panel -->
+  <div class="panel" id="system-panel">
     <p><strong>System Status:</strong> OPERATIONAL ✔</p>
     <p><strong>Core Services:</strong> Online</p>
     <p><strong>Data Feeds:</strong> Synchronized</p>
@@ -190,47 +215,28 @@ button:hover { background: #00ffd0; }
 
     <p><strong>Governance:</strong></p>
     <ul>
-      <li>TraderLab completion required before live trading</li>
-      <li>Capital protection rules enforced</li>
-      <li>Forced auto-regeneration active (Medusa™)</li>
+      <li>TraderLab completion required</li>
+      <li>Capital protection enforced</li>
+      <li>Medusa™ auto-regeneration active</li>
     </ul>
 
     <p><strong>Identity:</strong></p>
     <ul>
       <li>QuantumTrader AI™ v1.0</li>
       <li>Build: Stable</li>
-      <li>Ethics & Compliance: Enforced</li>
       <li>Architect: Olagoke Ajibulu</li>
     </ul>
 
     <p>System provides visibility, not control.</p>
   </div>
 
-  <!-- Images can go here -->
-  <img id="peaceIndex" src="peace_index.png" alt="Peace Index">
-  <img id="globe" src="globe.png" alt="Globe">
-</main>
- 
+  <!-- Axis -->
   <div class="axis-container">
-    <img src="assets/images/qtai_globe.png" id="globe" alt="Globe"/>
-    <img src="assets/images/peace_index_logo.png" id="peaceIndex" alt="Peace Index Logo"/>
-
-    <div id="trading-floor" class="panel">
-      Trading Floor Apex Locked — (Payment Required)
-    </div>
-
-    <div id="traderlab-panel" class="panel">
-      TraderLab Simulation Output...
-    </div>
-
-    <div id="cpilot-panel" class="panel">
-      CPilot Live Output...
-      <div id="autotrader-container">
-        <label><input type="checkbox" id="autotrader-toggle" disabled> Enable Auto Trader</label>
-      </div>
-    </div>
+    <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
+    <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
   </div>
 
+  <!-- Buttons -->
   <div class="button-grid">
     <button id="btnTradingFloor">Trading Floor™</button>
     <button id="btnTraderLab">TraderLab™</button>
@@ -240,131 +246,22 @@ button:hover { background: #00ffd0; }
 
 </main>
 
-<!-- Ori Ologo : Presence Layer -->
+<!-- Ori Olokun -->
 <div id="ori-ologo-wrapper">
-  <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Ologo"/>
+  <div id="ori-vignette">
+    <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
+  </div>
   <div id="ori-ologo-name">Ori Ologo</div>
 </div>
 
 <footer>
-  © 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Architect, Visionary, Concepts and Design.
+© 2026 QuantumTrader AI™ — All Rights Reserved |
+Olagoke Ajibulu — Visionary, Architect and Builder
 </footer>
 
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
-<script src="js/ui.js"></script>  <!-- Button Wiring Script -->
-  <script>
-    const btn1 = document.getElementById("btn1"); // System On/Off
-    const btn2 = document.getElementById("btn2"); // Trader Floor
-    const btn3 = document.getElementById("btn3"); // TraderLab
-    const btn4 = document.getElementById("btn4"); // CPilot
+<script src="js/ui.js"></script>
 
-    btn1.addEventListener("click", () => {
-      console.log("System On/Off toggled");
-      // Add your toggle logic
-    });
-
-    btn2.addEventListener("click", () => {
-      console.log("Trader Floor invoked");
-      // Example: show module or call existing function
-      // document.getElementById("module-5").style.display = "block";
-    });
-
-    btn3.addEventListener("click", () => {
-      console.log("TraderLab invoked");
-      // Example: show module or call existing function
-      // document.getElementById("module-6").style.display = "block";
-    });
-
-    btn4.addEventListener("click", () => {
-      console.log("CPilot invoked");
-      // Example: show module or call existing function
-      // document.getElementById("module-7").style.display = "block";
-    });
-  </script>
-
- <script>
-  // Buttons — IDs for wiring, labels untouched
-  const btnSystem = document.getElementById("btnSystem");        // Systems
-  const btnTraderFloor = document.getElementById("btnTraderFloor"); // Trader Floor
-  const btnTraderLab = document.getElementById("btnTraderLab");     // TraderLab
-  const btnCPilot = document.getElementById("btnCPilot");           // CPilot
-
-  // All dynamic modules 1-15
-  const modules = Array.from(document.querySelectorAll(".module-card"));
-
-  // Helper function: hide all modules
-  function hideAllModules() {
-    modules.forEach(m => m.style.display = "none");
-  }
-
-  // Systems button (already wired)
-  btnSystem.addEventListener("click", () => {
-    console.log("Systems toggled");
-    // Add your toggle logic
-  });
-
-  // Trader Floor → show module-1
-  btnTraderFloor.addEventListener("click", () => {
-    hideAllModules();
-    document.getElementById("module-1").style.display = "block";
-    console.log("Trader Floor module displayed");
-  });
-
-  // TraderLab → show module-2
-  btnTraderLab.addEventListener("click", () => {
-    hideAllModules();
-    document.getElementById("module-2").style.display = "block";
-    console.log("TraderLab module displayed");
-  });
-
-  // CPilot → show module-3
-  btnCPilot.addEventListener("click", () => {
-    hideAllModules();
-    document.getElementById("module-3").style.display = "block";
-    console.log("CPilot module displayed");
-  });
-
-  // Initialize: hide all modules
-  hideAllModules();
- </script>
- 
-<!--
-================================================================
- QuantumTrader AI™ — SYSTEM ARCHITECTURE SNAPSHOT
- Status: APPROVED / LIVE-IN-BUILD
- Purpose: Canonical structural reference (non-UI, non-executable)
-----------------------------------------------------------------
-
-index.html
- └─ <main id="dashboard">
-     └─ .axis-container
-         ├─ #trading-floor       (panel)
-         ├─ #traderlab-panel     (panel)
-         ├─ #cpilot-panel        (panel)
-         └─ #system-panel        (panel)  ← Governance / Read-only
-
-js/
- ├─ state.js        → Application state & access rules (PURE)
- ├─ simulation.js  → TraderLab & CPilot simulations
- └─ ui.js          → Panel visibility & button wiring only
-
-UI PRINCIPLES
- - System provides visibility, not control
- - No trading actions outside Trading Floor
- - No logic bound to symbolic elements (Ori Ologo)
- - Governance is read-only
- - Medusa™ operates silently
-
-ARCHITECT
- Olagoke Ajibulu
- Visionary, Architect and Builder
-
-LOCK STATUS
- This snapshot reflects the approved baseline.
- Any deviation requires explicit architectural intent.
-================================================================
--->
- 
 </body>
 </html>
