@@ -258,5 +258,42 @@ System provides visibility, not control.
 <script src="js/simulation.js"></script>
 <script src="js/ui.js"></script>
 
+<!--
+================================================================
+ QuantumTrader AI™ — SYSTEM ARCHITECTURE SNAPSHOT
+ Status: APPROVED / LIVE-IN-BUILD
+ Purpose: Canonical structural reference (non-UI, non-executable)
+----------------------------------------------------------------
+
+index.html
+ └─ <main id="dashboard">
+     └─ .axis-container
+         ├─ #trading-floor       (panel)
+         ├─ #traderlab-panel     (panel)
+         ├─ #cpilot-panel        (panel)
+         └─ #system-panel        (panel)  ← Governance / Read-only
+
+js/
+ ├─ state.js        → Application state & access rules (PURE)
+ ├─ simulation.js  → TraderLab & CPilot simulations
+ └─ ui.js          → Panel visibility & button wiring only
+
+UI PRINCIPLES
+ - System provides visibility, not control
+ - No trading actions outside Trading Floor
+ - No logic bound to symbolic elements (Ori Ologo)
+ - Governance is read-only
+ - Medusa™ operates silently
+
+ARCHITECT
+ Olagoke Ajibulu
+ Visionary, Architect and Builder
+
+LOCK STATUS
+ This snapshot reflects the approved baseline.
+ Any deviation requires explicit architectural intent.
+================================================================
+-->
+ 
 </body>
 </html>
