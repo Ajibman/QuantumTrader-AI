@@ -78,6 +78,15 @@ button:hover { background: #00ffd0; }
   letter-spacing: 0.3px;
 }
 
+/* Ensure images stay centered or in original layout */
+#dashboard-content img {
+    display: block;      /* ensures proper block layout */
+    margin: 12px auto;   /* auto left/right margins centers the image */
+    max-width: 150px;    /* optional scaling */
+    height: auto;
+    float: none;         /* remove any left float applied earlier */
+}
+ 
 System Status: OPERATIONAL ✔
 Core Services: Online
 Data Feeds: Synchronized
@@ -100,6 +109,7 @@ Identity:
 • Architect: Olagoke Ajibulu
 
 System provides visibility, not control.
+}
  
 /* Axis container */
 .axis-container {
