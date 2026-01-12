@@ -1,307 +1,315 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™ — Phase 5 Dashboard</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.css">
+<title>QuantumTrader AI™ — Dashboard</title>
+
 <style>
 :root {
   --bg: #000428;
-  --card-bg: #111;
-  --green: #00ff7f;
-  --button-size: 120px;
-  --font-main: 'Segoe UI', sans-serif;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --marine: rgba(0, 255, 180, 0.55);
 }
 
+/* ===== Global ===== */
 body {
   margin: 0;
-  font-family: var(--font-main);
+  font-family: 'Segoe UI', sans-serif;
   background: var(--bg);
-  color: #fff;
+  color: var(--text);
   display: flex;
   flex-direction: column;
-  align-items: center;
   min-height: 100vh;
 }
 
-/* Ori Ologo */
-#ori-container {
-  position: relative;
-  margin: 40px 0 20px;
-  text-align: center;
-}
-#ori-olologo {
-  width: 150px;
-  border-radius: 10px;
-  animation: pulsate 2s infinite alternate;
-  display: block;
-  margin: 0 auto;
-}
-@keyframes pulsate {
-  from { box-shadow: 0 0 10px #00ff7f; }
-  to { box-shadow: 0 0 30px #00ff7f; }
-}
-#lips {
-  position: absolute;
-  bottom: 25%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 10px;
-  background: #ff4d4d;
-  border-radius: 5px;
-  transition: height 0.05s;
-}
-
-/* Button grid */
-#button-grid {
-  display: grid;
-  grid-template-columns: repeat(2, var(--button-size));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-.action-btn {
-  width: var(--button-size);
-  height: var(--button-size);
-  background: var(--green);
-  border: none;
-  border-radius: 10px;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 14px;
-  transition: transform 0.2s, background 0.2s;
-}
-.action-btn:hover {
-  transform: scale(1.1);
-  background: #00ff99;
-}
-
-/* Modules */
-.module {
-  display: none;
-  background: var(--card-bg);
-  margin: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  width: 90%;
-}
-.module-content {
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
   display: flex;
-  gap: 10px;
-}
-.module-panel {
-  flex: 1;
-  background: #222;
-  padding: 10px;
-  border-radius: 5px;
-  min-height: 100px;
-  position: relative;
-}
-
-/* Module switches */
-.switch-container {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 5px;
-}
-.switch-container label {
-  font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-/* Candlestick/color selector */
-.color-selector {
+main {
+  flex: 1;
+  padding: 2rem;
   display: flex;
-  gap: 5px;
-  margin-top: 5px;
-}
-.color-box {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  border-radius: 3px;
-  border: 1px solid #aaa;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
-/* Popout button */
-.popout-btn {
-  margin-top: 5px;
-  padding: 5px;
-  font-size: 12px;
-  background: #00ff7f;
+/* ===== Hidden Dynamic Modules 01–15 ===== */
+.module-card {
+  display: none;
+}
+
+/* ===== Panels ===== */
+.panel {
+  width: 90%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #08192e;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  color: #00ffe7;
+  font-family: monospace;
+}
+
+/* ===== Trust Line ===== */
+.trust-text {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Images ===== */
+#globe,
+#peaceIndex {
+  display: block;
+  margin: 12px auto;
+  max-width: 150px;
+  height: auto;
+}
+
+/* ===== Axis Container ===== */
+.axis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding-top: 20px;
+}
+
+/* ===== Buttons ===== */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 0.6rem 1rem;
   border: none;
-  border-radius: 3px;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: var(--bg);
   cursor: pointer;
+  font-weight: 600;
 }
 
-/* Footer */
+button:hover {
+  background: #00ffd0;
+}
+
+/* ===== Ori Olokun — Circular Vignette ===== */
+#ori-ologo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 18px;
+}
+
+#ori-vignette {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center,
+    rgba(0,255,180,0.15),
+    rgba(0,0,0,0.9));
+  box-shadow:
+    0 0 18px var(--marine),
+    inset 0 0 20px rgba(0,255,180,0.35);
+  animation: oriPulse 1.4s ease-in-out infinite;
+}
+
+#ori-ologo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+}
+
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Pulse */
+@keyframes oriPulse {
+  0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+  50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
+  100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+}
+
+/* ===== Footer ===== */
 footer {
-  margin-top: auto;
-  padding: 10px;
-  font-size: 12px;
-  color: #aaa;
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: #050b1d;
+  opacity: 0.75;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  #globe { max-width: 100px; }
+  #peaceIndex { max-width: 120px; }
+  #ori-vignette { width: 140px; height: 140px; }
 }
 </style>
+  
 </head>
+
 <body>
 
-<!-- Ori Ologo -->
-<div id="ori-container">
-  <img id="ori-olologo" src="ori_olokun.png" alt="Ori Ologo">
-  <div id="lips"></div>
-</div>
+<header>
+  <h1>QuantumTrader AI™</h1>
+</header>
 
-<!-- Button Grid -->
-<div id="button-grid">
-  <button class="action-btn" data-response="Welcome to the Trading Floor!" data-module="module-1">Trading Floor</button>
-  <button class="action-btn" data-response="Entering the Trader Lab now." data-module="module-2">TraderLab</button>
-  <button class="action-btn" data-response="CPilot is ready to assist." data-module="module-3">CPilot</button>
-  <button class="action-btn" data-response="Accessing Analytics Dashboard." data-module="module-4">Analytics</button>
-</div>
+<main id="dashboard">
 
-<!-- Modules 1–15 -->
-<div id="modules">
+  <!-- Hidden Modules 01–15 -->
+  <div class="module-card" id="module-01"></div>
+  <div class="module-card" id="module-02"></div>
+  <div class="module-card" id="module-03"></div>
+  <div class="module-card" id="module-04"></div>
+  <div class="module-card" id="module-05"></div>
+  <div class="module-card" id="module-06"></div>
+  <div class="module-card" id="module-07"></div>
+  <div class="module-card" id="module-08"></div>
+  <div class="module-card" id="module-09"></div>
+  <div class="module-card" id="module-10"></div>
+  <div class="module-card" id="module-11"></div>
+  <div class="module-card" id="module-12"></div>
+  <div class="module-card" id="module-13"></div>
+  <div class="module-card" id="module-14"></div>
+  <div class="module-card" id="module-15"></div>
 
-  <!-- Module Template Example -->
-  <div class="module" id="module-1">
-    <div class="switch-container">
-      <label><input type="checkbox" class="sim-switch" checked> Simulation</label>
-      <label><input type="checkbox" class="live-switch"> Live</label>
-      <button class="popout-btn" onclick="openModuleWindow('module-1')">Open in New Window</button>
-    </div>
-    <div class="module-content">
-      <div class="module-panel" id="module-1-sim">
-        <canvas id="chart-module-1-sim"></canvas>
-      </div>
-      <div class="module-panel" id="module-1-live">
-        <canvas id="chart-module-1-live"></canvas>
-      </div>
-    </div>
-    <div class="color-selector" id="color-selector-1">
-      <div class="color-box" style="background:red" data-type="bearish"></div>
-      <div class="color-box" style="background:green" data-type="bullish"></div>
-    </div>
+  <div class="trust-text">
+    System-governed access • Disciplined execution • Automatic protection
+  </div>
+  
+  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;">
   </div>
 
-  <!-- Repeat modules 2–15 with same structure, charts, simulation/live, color selector, popout button -->
-  <!-- For brevity only showing first 3 here; remaining modules follow same structure -->
+  <!-- ===== Button Container ===== -->
+  <div id="button-container">
+    <button data-target="traderlab.html">TraderLab</button>
+    <button data-target="tradingfloor.html">Trading Floor</button>
+    <button data-target="portfolio.html">Portfolio</button>
+    <button data-target="settings.html">Settings</button>
+    <button id="system-btn">System</button>
+  </div>
 
+ <!-- ===== System Panel ===== -->
+  <div class="panel" id="system-panel">
+    <p><strong>System Status:</strong> OPERATIONAL ✔</p>
+    <p><strong>Core Services:</strong> Online</p>
+    <p><strong>Data Feeds:</strong> Synchronized</p>
+    <p><strong>Execution Clock:</strong> Aligned (UTC)</p>
+
+    <p><strong>Access State:</strong></p>
+    <ul>
+      <li>Subscription: Active</li>
+      <li>Trading Floor: Locked (Payment Required)</li>
+      <li>AutoTrader: Disabled (Policy)</li>
+    </ul>
+
+    <p><strong>Governance:</strong></p>
+    <ul>
+      <li>TraderLab completion required</li>
+      <li>Capital protection enforced</li>
+      <li>Medusa™ auto-regeneration active</li>
+    </ul>
+
+    <p><strong>Identity:</strong></p>
+    <ul>
+      <li>QuantumTrader AI™ v1.0</li>
+      <li>Build: Stable</li>
+      <li>Architect: Olagoke Ajibulu</li>
+    </ul>
+
+    <p>System provides visibility, not control.</p>
+  </div>
+
+  <!-- ===== Axis Container ===== -->
+  <div class="axis-container">
+    <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
+    <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
+  </div>
+
+</main>
+
+<!-- ===== Ori Olokun ===== -->
+<div id="ori-ologo-wrapper">
+  <div id="ori-vignette">
+    <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
+  </div>
+  <div id="ori-ologo-name">Ori Ologo</div>
 </div>
 
-<footer>QuantumTrader AI™ — Dashboard Phase 5 Advanced</footer>
+<footer>
+© 2026 QuantumTrader AI™ — All Rights Reserved |
+Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
+</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- ===== Scripts ===== -->
+<script src="js/state.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/ui.js"></script>
+
 <script>
-const lips = document.getElementById('lips');
-let audioContext, analyser, source, lipsAnimation, dataArray;
-
-// Initialize Web Audio API
-function initAudioContext() {
-  if(audioContext) return;
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioContext.createAnalyser();
-  analyser.fftSize = 256;
-  dataArray = new Uint8Array(analyser.frequencyBinCount);
-}
-
-// Animate lips based on volume
-function animateLipsVolume() {
-  analyser.getByteFrequencyData(dataArray);
-  const avg = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
-  lips.style.height = Math.min(Math.max(avg/10,10),30)+'px';
-  lipsAnimation = requestAnimationFrame(animateLipsVolume);
-}
-
-// TTS speak function
-function speak(text) {
-  if(speechSynthesis.speaking) speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1;
-  utterance.pitch = 1;
-
-  utterance.onstart = () => {
-    initAudioContext();
-    lipsAnimation = requestAnimationFrame(animateLipsVolume);
+  // Global App State
+  const AppState = {
+    active: null // 'system' | 'traderlab' | 'tradingfloor' | 'portfolio' | 'settings'
   };
 
-  utterance.onend = () => {
-    cancelAnimationFrame(lipsAnimation);
-    lips.style.height='10px';
-  };
+  function setActive(module) {
+    AppState.active = module;
+    renderState();
+  }
 
-  speechSynthesis.speak(utterance);
-}
+  function renderState() {
+    const status = document.getElementById('status-display');
+    if (!status) return;
 
-// Button wiring + module toggling
-document.querySelectorAll('.action-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const response = btn.dataset.response;
-    const moduleId = btn.dataset.module;
-
-    speak(response);
-
-    if(moduleId){
-      const mod = document.getElementById(moduleId);
-      if(mod) mod.style.display = mod.style.display==='none'?'block':'none';
+    if (AppState.active === 'system') {
+      status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+    } else if (AppState.active) {
+      status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
+    } else {
+      status.textContent = '';
     }
-  });
-});
+  }
 
-// Module updates with dual-mode, charts
-function startModuleUpdates(){
-  document.querySelectorAll('.module').forEach(mod=>{
-    const simPanel = mod.querySelector('.module-panel[id$="-sim"]');
-    const livePanel = mod.querySelector('.module-panel[id$="-live"]');
-    const simSwitch = mod.querySelector('.sim-switch');
-    const liveSwitch = mod.querySelector('.live-switch');
-    const simCanvas = simPanel.querySelector('canvas');
-    const liveCanvas = livePanel.querySelector('canvas');
+  // ===== Phase 1 Button Wiring =====
+  const buttons = [...document.querySelectorAll('#button-container button')]
+                    .filter(b => b.id !== 'system-btn');
 
-    const simChart = new Chart(simCanvas.getContext('2d'), {
-      type:'line',
-      data:{labels:[], datasets:[{label:'Simulation', data:[], borderColor:'#0f0'}]},
-      options:{animation:{duration:300}, responsive:true, maintainAspectRatio:false}
+  buttons.forEach(btn => {
+    const target = btn.dataset.target;
+    btn.addEventListener('click', () => {
+      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+      setActive(moduleName); // Update AppState
+      if(target) window.location.href = target; // Navigate
     });
-    const liveChart = new Chart(liveCanvas.getContext('2d'), {
-      type:'line',
-      data:{labels:[], datasets:[{label:'Live', data:[], borderColor:'#f00'}]},
-      options:{animation:{duration:300}, responsive:true, maintainAspectRatio:false}
-    });
-
-    setInterval(()=>{
-      const time = new Date().toLocaleTimeString();
-
-      if(simSwitch.checked){
-        const val = (Math.random()*1000).toFixed(2);
-        if(simChart.data.labels.length>20){simChart.data.labels.shift(); simChart.data.datasets[0].data.shift();}
-        simChart.data.labels.push(time); simChart.data.datasets[0].data.push(val); simChart.update();
-        speak(`Simulation update: ${val}`);
-      }
-
-      if(liveSwitch.checked){
-        const val = (Math.random()*1000).toFixed(2);
-        if(liveChart.data.labels.length>20){liveChart.data.labels.shift(); liveChart.data.datasets[0].data.shift();}
-        liveChart.data.labels.push(time); liveChart.data.datasets[0].data.push(val); liveChart.update();
-        speak(`Live update: ${val}`);
-      }
-    },3000);
   });
-}
 
-// Open module in new window
-function openModuleWindow(moduleId){
-  const mod = document.getElementById(moduleId);
-  if(!mod) return;
-  const newWin = window.open('', '_blank', 'width=800,height=600');
-  newWin.document.write('<html><head><title>'+moduleId+'</title></head><body style="background:#000;color:#fff;">');
-  newWin.document.write(mod.outerHTML);
-  newWin.document.write('</body></html>');
-  newWin.document.close();
-}
-
-// Start updates
-startModuleUpdates();
+  // System button
+  document.getElementById('system-btn').addEventListener('click', () => {
+    setActive('system');
+  });
 </script>
 
 </body>
