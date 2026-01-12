@@ -205,6 +205,69 @@ footer {
   <div id="status-display"
      style="margin:12px 0; font-size:13px; opacity:0.85;">
 </div>
+
+<div id="button-container">
+  <button data-target="traderlab.html">TraderLab</button>
+  <button data-target="tradingfloor.html">Trading Floor</button>
+  <button data-target="portfolio.html">Portfolio</button>
+  <button data-target="settings.html">Settings</button>
+
+  <button id="system-btn">System</button>
+
+  <script>
+    const container = document.getElementById('button-container');
+    const currentPage = location.pathname.split('/').pop();
+
+    const buttons = [...container.querySelectorAll('button')]
+      .filter(btn => btn.id !== 'system-btn');
+
+    buttons.forEach(btn => {
+      const target = btn.dataset.target;
+
+      // ===== Navigation (life through action) =====
+      btn.addEventListener('click', () => {
+        if (target) window.location.href = target;
+      });
+
+      // ===== Base living style =====
+      Object.assign(btn.style, {
+        transition: 'all 0.25s ease',
+        cursor: 'pointer',
+        padding: '12px 24px',
+        margin: '6px',
+        borderRadius: '10px',
+        background: '#0b0f1a',
+        color: '#00ff9c',
+        border: '1px solid #00ff9c',
+        boxShadow: '0 0 8px rgba(0,255,156,0.35)'
+      });
+
+      // ===== Active page awareness =====
+      if (target === currentPage) {
+        btn.style.boxShadow = '0 0 18px rgba(0,255,156,0.9)';
+        btn.style.transform = 'scale(1.06)';
+      }
+
+      // ===== Hover response =====
+      btn.addEventListener('mouseenter', () => {
+        btn.style.boxShadow = '0 0 18px rgba(0,255,156,0.75)';
+        btn.style.transform = 'scale(1.05)';
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        if (target !== currentPage) {
+          btn.style.boxShadow = '0 0 8px rgba(0,255,156,0.35)';
+          btn.style.transform = 'scale(1)';
+        }
+      });
+    });
+
+    // ===== System button (separate authority) =====
+    document.getElementById('system-btn').addEventListener('click', () => {
+      console.log('System diagnostics triggered');
+    });
+  </script>
+</div>
   
   <!-- System Panel -->
   <div class="panel" id="system-panel">
