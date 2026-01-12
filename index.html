@@ -46,6 +46,8 @@ main {
 /* ===== Hidden Dynamic Modules 01–15 ===== */
 .module-card {
   display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
 }
 
 /* ===== Panels ===== */
@@ -58,6 +60,9 @@ main {
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   color: #00ffe7;
   font-family: monospace;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
 }
 
 /* ===== Trust Line ===== */
@@ -114,6 +119,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   margin: 24px 0 18px;
+  position: relative;
 }
 
 #ori-vignette {
@@ -130,12 +136,28 @@ button:hover {
     0 0 18px var(--marine),
     inset 0 0 20px rgba(0,255,180,0.35);
   animation: oriPulse 1.4s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
 }
 
 #ori-ologo-img {
   width: 120px;
   height: auto;
   border-radius: 50%;
+  z-index: 1;
+}
+
+/* Mouth element for speech animation */
+#ori-mouth {
+  position: absolute;
+  bottom: 32px;
+  width: 36px;
+  height: 8px;
+  background: rgba(0,255,180,0.8);
+  border-radius: 4px;
+  transform-origin: center;
+  transition: transform 0.1s ease-in-out;
+  z-index: 2;
 }
 
 #ori-ologo-name {
@@ -168,7 +190,6 @@ footer {
   #ori-vignette { width: 140px; height: 140px; }
 }
 </style>
-  
 </head>
 
 <body>
@@ -180,10 +201,10 @@ footer {
 <main id="dashboard">
 
   <!-- Hidden Modules 01–15 -->
-  <div class="module-card" id="module-01"></div>
-  <div class="module-card" id="module-02"></div>
-  <div class="module-card" id="module-03"></div>
-  <div class="module-card" id="module-04"></div>
+  <div class="module-card" id="module-01"><p>TraderLab Module</p></div>
+  <div class="module-card" id="module-02"><p>Trading Floor Module</p></div>
+  <div class="module-card" id="module-03"><p>Portfolio Module</p></div>
+  <div class="module-card" id="module-04"><p>Settings Module</p></div>
   <div class="module-card" id="module-05"></div>
   <div class="module-card" id="module-06"></div>
   <div class="module-card" id="module-07"></div>
@@ -200,10 +221,9 @@ footer {
     System-governed access • Disciplined execution • Automatic protection
   </div>
   
-  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;">
-  </div>
+  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;"></div>
 
-  <!-- ===== Button Container ===== -->
+  <!-- Buttons -->
   <div id="button-container">
     <button data-target="traderlab.html">TraderLab</button>
     <button data-target="tradingfloor.html">Trading Floor</button>
@@ -212,7 +232,7 @@ footer {
     <button id="system-btn">System</button>
   </div>
 
-  <!-- ===== System Panel ===== -->
+  <!-- System Panel -->
   <div class="panel" id="system-panel">
     <p><strong>System Status:</strong> OPERATIONAL ✔</p>
     <p><strong>Core Services:</strong> Online</p>
@@ -243,7 +263,7 @@ footer {
     <p>System provides visibility, not control.</p>
   </div>
 
-  <!-- ===== Axis Container ===== -->
+  <!-- Axis -->
   <div class="axis-container">
     <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
     <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
@@ -251,10 +271,11 @@ footer {
 
 </main>
 
-<!-- ===== Ori Olokun ===== -->
+<!-- Ori Ologo -->
 <div id="ori-ologo-wrapper">
   <div id="ori-vignette">
     <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
+    <div id="ori-mouth"></div>
   </div>
   <div id="ori-ologo-name">Ori Ologo</div>
 </div>
@@ -264,52 +285,107 @@ footer {
 Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 </footer>
 
-<!-- ===== Scripts ===== -->
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
 <script src="js/ui.js"></script>
 
 <script>
-  // Global App State
+  // ===== App State =====
   const AppState = {
-    active: null // 'system' | 'traderlab' | 'tradingfloor' | 'portfolio' | 'settings'
+    active: null
   };
+
+  const modules = {
+    traderlab: 'module-01',
+    tradingfloor: 'module-02',
+    portfolio: 'module-03',
+    settings: 'module-04'
+  };
+
+  const statusDisplay = document.getElementById('status-display');
+  const systemPanel = document.getElementById('system-panel');
+  const oriMouth = document.getElementById('ori-mouth');
 
   function setActive(module) {
     AppState.active = module;
     renderState();
+    renderModules();
+    triggerOriOlogoSpeech(module);
   }
 
   function renderState() {
-    const status = document.getElementById('status-display');
-    if (!status) return;
-
+    if (!statusDisplay) return;
     if (AppState.active === 'system') {
-      status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+      statusDisplay.textContent = 'SYSTEM ACTIVE — visibility only, no control';
     } else if (AppState.active) {
-      status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
+      statusDisplay.textContent = AppState.active.toUpperCase() + ' ACTIVE';
     } else {
-      status.textContent = '';
+      statusDisplay.textContent = '';
     }
   }
 
-  // ===== Phase 1 Button Wiring =====
+  function renderModules() {
+    // Hide all modules
+    Object.values(modules).forEach(id => {
+      const m = document.getElementById(id);
+      if (m) {
+        m.style.display = 'none';
+        m.style.opacity = 0;
+      }
+    });
+    // Hide system panel
+    systemPanel.style.display = 'none';
+    systemPanel.style.opacity = 0;
+
+    if (AppState.active === 'system') {
+      systemPanel.style.display = 'block';
+      setTimeout(() => systemPanel.style.opacity = 1, 50);
+    } else if (modules[AppState.active]) {
+      const moduleEl = document.getElementById(modules[AppState.active]);
+      if (moduleEl) {
+        moduleEl.style.display = 'block';
+        setTimeout(() => moduleEl.style.opacity = 1, 50);
+      }
+    }
+  }
+
+  function triggerOriOlogoSpeech(module) {
+    const messages = {
+      traderlab: "Welcome to TraderLab. Let's review your trading metrics.",
+      tradingfloor: "The Trading Floor is ready. Watch the market live.",
+      portfolio: "Your portfolio overview is displayed. Make informed choices.",
+      settings: "Settings module open. Configure your preferences.",
+      system: "System operational. All modules online."
+    };
+    const msg = messages[module] || "QuantumTrader AI at your service.";
+
+    // Speech synthesis
+    const utterance = new SpeechSynthesisUtterance(msg);
+    window.speechSynthesis.speak(utterance);
+
+    // Animate mouth while speaking
+    let speaking = true;
+    const interval = setInterval(() => {
+      oriMouth.style.transform = `scaleY(${Math.random() * 1.5 + 0.5})`;
+    }, 100);
+
+    utterance.onend = () => {
+      clearInterval(interval);
+      oriMouth.style.transform = 'scaleY(1)';
+    };
+  }
+
+  // ===== Button Wiring =====
   const buttons = [...document.querySelectorAll('#button-container button')]
                     .filter(b => b.id !== 'system-btn');
 
   buttons.forEach(btn => {
-    const target = btn.dataset.target;
-    btn.addEventListener('click', () => {
-      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
-      setActive(moduleName); // Update AppState
-      if(target) window.location.href = target; // Navigate
-    });
+    const targetModule = btn.textContent.toLowerCase().replace(/\s/g,'');
+    btn.addEventListener('click', () => setActive(targetModule));
   });
 
   // System button
-  document.getElementById('system-btn').addEventListener('click', () => {
-    setActive('system');
-  });
+  document.getElementById('system-btn').addEventListener('click', () => setActive('system'));
 </script>
 
 </body>
