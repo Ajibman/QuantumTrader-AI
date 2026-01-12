@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -168,8 +168,6 @@ footer {
   #ori-vignette { width: 140px; height: 140px; }
 }
 </style>
-
-}
   
 </head>
 
@@ -202,74 +200,19 @@ footer {
     System-governed access • Disciplined execution • Automatic protection
   </div>
   
-  <div id="status-display"
-     style="margin:12px 0; font-size:13px; opacity:0.85;">
-</div>
+  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;">
+  </div>
 
-<div id="button-container">
-  <button data-target="traderlab.html">TraderLab</button>
-  <button data-target="tradingfloor.html">Trading Floor</button>
-  <button data-target="portfolio.html">Portfolio</button>
-  <button data-target="settings.html">Settings</button>
+  <!-- ===== Button Container ===== -->
+  <div id="button-container">
+    <button data-target="traderlab.html">TraderLab</button>
+    <button data-target="tradingfloor.html">Trading Floor</button>
+    <button data-target="portfolio.html">Portfolio</button>
+    <button data-target="settings.html">Settings</button>
+    <button id="system-btn">System</button>
+  </div>
 
-  <button id="system-btn">System</button>
-
-  <script>
-    const container = document.getElementById('button-container');
-    const currentPage = location.pathname.split('/').pop();
-
-    const buttons = [...container.querySelectorAll('button')]
-      .filter(btn => btn.id !== 'system-btn');
-
-    buttons.forEach(btn => {
-      const target = btn.dataset.target;
-
-      // ===== Navigation (life through action) =====
-      btn.addEventListener('click', () => {
-        if (target) window.location.href = target;
-      });
-
-      // ===== Base living style =====
-      Object.assign(btn.style, {
-        transition: 'all 0.25s ease',
-        cursor: 'pointer',
-        padding: '12px 24px',
-        margin: '6px',
-        borderRadius: '10px',
-        background: '#0b0f1a',
-        color: '#00ff9c',
-        border: '1px solid #00ff9c',
-        boxShadow: '0 0 8px rgba(0,255,156,0.35)'
-      });
-
-      // ===== Active page awareness =====
-      if (target === currentPage) {
-        btn.style.boxShadow = '0 0 18px rgba(0,255,156,0.9)';
-        btn.style.transform = 'scale(1.06)';
-      }
-
-      // ===== Hover response =====
-      btn.addEventListener('mouseenter', () => {
-        btn.style.boxShadow = '0 0 18px rgba(0,255,156,0.75)';
-        btn.style.transform = 'scale(1.05)';
-      });
-
-      btn.addEventListener('mouseleave', () => {
-        if (target !== currentPage) {
-          btn.style.boxShadow = '0 0 8px rgba(0,255,156,0.35)';
-          btn.style.transform = 'scale(1)';
-        }
-      });
-    });
-
-    // ===== System button (separate authority) =====
-    document.getElementById('system-btn').addEventListener('click', () => {
-      console.log('System diagnostics triggered');
-    });
-  </script>
-</div>
-  
-  <!-- System Panel -->
+  <!-- ===== System Panel ===== -->
   <div class="panel" id="system-panel">
     <p><strong>System Status:</strong> OPERATIONAL ✔</p>
     <p><strong>Core Services:</strong> Online</p>
@@ -300,111 +243,15 @@ footer {
     <p>System provides visibility, not control.</p>
   </div>
 
-  <!-- Axis -->
+  <!-- ===== Axis Container ===== -->
   <div class="axis-container">
     <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
     <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
   </div>
 
-  <!-- Buttons -->
-  <div id="button-container">
-  <!-- Module buttons -->
-  <button data-target="traderlab.html">TraderLab</button>
-  <button data-target="tradingfloor.html">TradingFloor</button>
-  <button data-target="portfolio.html">Portfolio</button>
-  <button data-target="settings.html">Settings</button>
-
-  <!-- System button -->
-  <button id="system-btn">System</button>
-
-  <script>
-    const container = document.getElementById('button-container');
-
-    // Select all buttons except the system button
-    const buttons = Array.from(container.querySelectorAll('button'))
-                          .filter(btn => btn.id !== 'system-btn');
-
-    buttons.forEach(btn => {
-      // ===== Functional wiring: navigate to module =====
-      btn.addEventListener('click', () => {
-        const target = btn.dataset.target;
-        if (target) {
-          window.location.href = target; // Navigate to the module page
-        }
-      });
-
-      // ===== Visual life =====
-      btn.style.transition = 'all 0.2s ease';
-      btn.style.cursor = 'pointer';
-      btn.style.boxShadow = '0 0 8px rgba(0,255,0,0.3)';
-      btn.style.border = '2px solid #0f0';
-      btn.style.background = '#111';
-      btn.style.color = '#0f0';
-      btn.style.padding = '12px 24px';
-      btn.style.margin = '6px';
-      btn.style.borderRadius = '8px';
-
-      // Hover effect
-      btn.addEventListener('mouseenter', () => {
-        btn.style.boxShadow = '0 0 16px rgba(0,255,0,0.7)';
-        btn.style.transform = 'scale(1.05)';
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.boxShadow = '0 0 8px rgba(0,255,0,0.3)';
-        btn.style.transform = '';
-      });
-
-      // Click effect: small press animation
-      btn.addEventListener('mousedown', () => {
-        btn.style.transform = 'scale(0.95)';
-      });
-      btn.addEventListener('mouseup', () => {
-        btn.style.transform = 'scale(1.05)';
-      });
-
-      // Optional: subtle continuous pulse glow
-      let growing = true;
-      setInterval(() => {
-        const currentAlpha = parseFloat(getComputedStyle(btn).boxShadow.split(',')[3]) || 0.3;
-        const newAlpha = growing ? currentAlpha + 0.02 : currentAlpha - 0.02;
-        btn.style.boxShadow = `0 0 8px rgba(0,255,0,${newAlpha.toFixed(2)})`;
-        if (newAlpha >= 0.7) growing = false;
-        if (newAlpha <= 0.3) growing = true;
-      }, 100);
-    });
-
-    // ===== Optional: System button logic =====
-    document.getElementById('system-btn').addEventListener('click', () => {
-      console.log('System button clicked');
-      // Add system functionality here
-    });
-  </script>
-</div>
-
-  <!-- Wiring snippet placed right before system button -->
-  <script>
-    // Grab the container
-    const container = document.getElementById('button-container');
-
-    // Select all buttons inside container except the system button
-    const buttons = Array.from(container.querySelectorAll('button'))
-                          .filter(btn => btn.id !== 'system-btn');
-
-    // Add click listener to each button
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        console.log(`${btn.textContent} clicked`);
-        // Call your placeholder or actual function here
-      });
-    });
-  </script>
-
-  <!-- Your system button -->
-  <button id="system-btn">System</button>
-</div>
 </main>
 
-<!-- Ori Olokun -->
+<!-- ===== Ori Olokun ===== -->
 <div id="ori-ologo-wrapper">
   <div id="ori-vignette">
     <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
@@ -417,12 +264,15 @@ footer {
 Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 </footer>
 
+<!-- ===== Scripts ===== -->
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
-<script src="js/ui.js"></script><script>
+<script src="js/ui.js"></script>
+
+<script>
   // Global App State
   const AppState = {
-    active: null // 'system' | 'traderlab' | 'tradingfloor' | 'cpilot'
+    active: null // 'system' | 'traderlab' | 'tradingfloor' | 'portfolio' | 'settings'
   };
 
   function setActive(module) {
@@ -442,7 +292,25 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
       status.textContent = '';
     }
   }
+
+  // ===== Phase 1 Button Wiring =====
+  const buttons = [...document.querySelectorAll('#button-container button')]
+                    .filter(b => b.id !== 'system-btn');
+
+  buttons.forEach(btn => {
+    const target = btn.dataset.target;
+    btn.addEventListener('click', () => {
+      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+      setActive(moduleName); // Update AppState
+      if(target) window.location.href = target; // Navigate
+    });
+  });
+
+  // System button
+  document.getElementById('system-btn').addEventListener('click', () => {
+    setActive('system');
+  });
 </script>
-  
+
 </body>
 </html>
