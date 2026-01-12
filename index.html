@@ -1,164 +1,398 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>QuantumTrader AI™ — App Shell (Phase 4)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Dashboard</title>
 
 <style>
 :root {
-  --bg: #050b1f;
-  --card: rgba(255,255,255,0.06);
-  --accent: #00ff88;
-  --text: #eaeaea;
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --marine: rgba(0, 255, 180, 0.55);
 }
 
-* { box-sizing: border-box; }
-
+/* ===== Global ===== */
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: radial-gradient(circle at top, #081a3a, #050b1f);
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
   color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* ===== APP SHELL ===== */
-.app {
-  min-height: 100vh;
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2rem;
 }
 
-/* ===== ORI OLOGO ===== */
-.ori-container {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.ori {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00ff88, #006b44);
-  box-shadow: 0 0 25px rgba(0,255,136,0.7);
-  animation: pulse 3s infinite;
-  margin: auto;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 20px rgba(0,255,136,0.6); }
-  50% { box-shadow: 0 0 40px rgba(0,255,136,1); }
-  100% { box-shadow: 0 0 20px rgba(0,255,136,0.6); }
-}
-
-.ori-name {
-  margin-top: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-/* ===== BUTTON GRID ===== */
-.button-grid {
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(2, 180px);
-  gap: 18px;
-}
-
-button {
-  background: linear-gradient(145deg, #00ff88, #00cc6f);
-  border: none;
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #002b18;
-}
-
-button:hover {
-  transform: translateY(-2px);
-}
-
-/* ===== MODULE VIEW ===== */
-.module-view {
-  margin-top: 40px;
-  width: 90%;
-  max-width: 1100px;
-  background: var(--card);
-  border-radius: 16px;
-  padding: 20px;
+/* ===== Hidden Dynamic Modules 01–15 ===== */
+.module-card {
   display: none;
 }
 
-.module-title {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: var(--accent);
+/* ===== Panels ===== */
+.panel {
+  width: 90%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #08192e;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  color: #00ffe7;
+  font-family: monospace;
 }
 
-.module-desc {
-  font-size: 14px;
-  opacity: 0.9;
+/* ===== Trust Line ===== */
+.trust-text {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  text-align: center;
+  letter-spacing: 0.3px;
 }
 
-/* ===== FOOTER ===== */
+/* ===== Images ===== */
+#globe,
+#peaceIndex {
+  display: block;
+  margin: 12px auto;
+  max-width: 150px;
+  height: auto;
+}
+
+/* ===== Axis Container ===== */
+.axis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding-top: 20px;
+}
+
+/* ===== Buttons ===== */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #00ffd0;
+}
+
+/* ===== Ori Olokun — Circular Vignette ===== */
+#ori-ologo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 18px;
+}
+
+#ori-vignette {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center,
+    rgba(0,255,180,0.15),
+    rgba(0,0,0,0.9));
+  box-shadow:
+    0 0 18px var(--marine),
+    inset 0 0 20px rgba(0,255,180,0.35);
+  animation: oriPulse 1.4s ease-in-out infinite;
+}
+
+#ori-ologo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+}
+
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Pulse */
+@keyframes oriPulse {
+  0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+  50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
+  100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
+}
+
+/* ===== Footer ===== */
 footer {
-  margin-top: auto;
-  padding: 20px;
-  font-size: 12px;
-  opacity: 0.6;
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: #050b1d;
+  opacity: 0.75;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  #globe { max-width: 100px; }
+  #peaceIndex { max-width: 120px; }
+  #ori-vignette { width: 140px; height: 140px; }
+  #split-container { flex-direction: column; }
 }
 </style>
+  
 </head>
 
 <body>
-<div class="app">
 
-  <!-- ORI OLOGO -->
-  <div class="ori-container">
-    <div class="ori"></div>
-    <div class="ori-name">Ori Ologo</div>
+<header>
+  <h1>QuantumTrader AI™</h1>
+</header>
+
+<main id="dashboard">
+
+  <!-- Hidden Modules 01–15 -->
+  <div class="module-card" id="module-01"></div>
+  <div class="module-card" id="module-02"></div>
+  <div class="module-card" id="module-03"></div>
+  <div class="module-card" id="module-04"></div>
+  <div class="module-card" id="module-05"></div>
+  <div class="module-card" id="module-06"></div>
+  <div class="module-card" id="module-07"></div>
+  <div class="module-card" id="module-08"></div>
+  <div class="module-card" id="module-09"></div>
+  <div class="module-card" id="module-10"></div>
+  <div class="module-card" id="module-11"></div>
+  <div class="module-card" id="module-12"></div>
+  <div class="module-card" id="module-13"></div>
+  <div class="module-card" id="module-14"></div>
+  <div class="module-card" id="module-15"></div>
+
+  <div class="trust-text">
+    System-governed access • Disciplined execution • Automatic protection
+  </div>
+  
+  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;">
   </div>
 
-  <!-- MAIN BUTTONS (5) -->
-  <div class="button-grid">
-    <button onclick="openModule(1)">Trading Floor</button>
-    <button onclick="openModule(2)">TraderLab</button>
-    <button onclick="openModule(3)">CPilot</button>
-    <button onclick="openModule(4)">Analytics</button>
-    <button onclick="openModule(5)">Modules</button>
+  <!-- ===== Button Container ===== -->
+  <div id="button-container">
+    <button data-target="traderlab.html">TraderLab</button>
+    <button data-target="tradingfloor.html">Trading Floor</button>
+    <button data-target="portfolio.html">Portfolio</button>
+    <button data-target="settings.html">Settings</button>
+    <button id="system-btn">System</button>
   </div>
 
-  <!-- MODULE DISPLAY -->
-  <div id="moduleView" class="module-view">
-    <div id="moduleTitle" class="module-title"></div>
-    <div id="moduleDesc" class="module-desc"></div>
+  <!-- ===== System Panel ===== -->
+  <div class="panel" id="system-panel">
+    <p><strong>System Status:</strong> OPERATIONAL ✔</p>
+    <p><strong>Core Services:</strong> Online</p>
+    <p><strong>Data Feeds:</strong> Synchronized</p>
+    <p><strong>Execution Clock:</strong> Aligned (UTC)</p>
+
+    <p><strong>Access State:</strong></p>
+    <ul>
+      <li>Subscription: Active</li>
+      <li>Trading Floor: Locked (Payment Required)</li>
+      <li>AutoTrader: Disabled (Policy)</li>
+    </ul>
+
+    <p><strong>Governance:</strong></p>
+    <ul>
+      <li>TraderLab completion required</li>
+      <li>Capital protection enforced</li>
+      <li>Medusa™ auto-regeneration active</li>
+    </ul>
+
+    <p><strong>Identity:</strong></p>
+    <ul>
+      <li>QuantumTrader AI™ v1.0</li>
+      <li>Build: Stable</li>
+      <li>Architect: Olagoke Ajibulu</li>
+    </ul>
+
+    <p>System provides visibility, not control.</p>
   </div>
 
-  <footer>
-    QuantumTrader AI™ — Phase 4 App Shell
-  </footer>
+  <!-- ===== Axis Container ===== -->
+  <div class="axis-container">
+    <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
+    <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
+  </div>
 
+  <!-- ===== Phase 5C Split Container ===== -->
+  <div id="split-container" style="display:flex; gap:16px; width:100%; justify-content:center;">
+    <div id="simulation-panel-wrapper" style="flex:1;"></div>
+    <div id="live-panel-wrapper" style="flex:1;"></div>
+  </div>
+
+  <!-- ===== Phase 5B Trading Context Panels ===== -->
+  <div id="simulation-context" class="panel" style="display:none;">
+    <p><strong>Simulation Trading Context</strong></p>
+    <p>Status: Synthetic market • Risk-free execution</p>
+    <p>Purpose: Strategy validation and skill sharpening</p>
+  </div>
+
+  <div id="live-context" class="panel" style="display:none;">
+    <p><strong>Live Trading Context</strong></p>
+    <p>Status: Real market • Capital exposed</p>
+    <p>Purpose: Real execution under system governance</p>
+  </div>
+
+</main>
+
+<!-- ===== Ori Olokun ===== -->
+<div id="ori-ologo-wrapper">
+  <div id="ori-vignette">
+    <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
+  </div>
+  <div id="ori-ologo-name">Ori Ologo</div>
 </div>
 
-<script>
-/* ===== MODULE DEFINITIONS ===== */
-const modules = {
-  1: "Trading Floor — core trading interface (Phase 4: shell only).",
-  2: "TraderLab — strategy experimentation environment (Phase 4: shell only).",
-  3: "CPilot — AI-assisted trading control (Phase 4: shell only).",
-  4: "Analytics — performance & chart overview (Phase 4: shell only).",
-  5: "Modules Overview — access to modules 1–15."
-};
+<footer>
+© 2026 QuantumTrader AI™ — All Rights Reserved |
+Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
+</footer>
 
-/* ===== MODULE OPEN ===== */
-function openModule(id) {
-  document.getElementById("moduleView").style.display = "block";
-  document.getElementById("moduleTitle").innerText = "Module " + id;
-  document.getElementById("moduleDesc").innerText = modules[id] || "Support Module";
-}
+<!-- ===== Scripts ===== -->
+<script src="js/state.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/ui.js"></script>
+
+<script>
+  /* ===== Phase 5A — Trading Mode Authority ===== */
+  const TradingMode = Object.freeze({
+    SIMULATION: 'SIMULATION',
+    LIVE: 'LIVE'
+  });
+
+  const TradingContext = {
+    mode: TradingMode.SIMULATION,
+    authority: 'SYSTEM_ONLY',
+    splitEnabled: false
+  };
+
+  function getTradingMode() {
+    return TradingContext.mode;
+  }
+
+  function setTradingMode(newMode, source = 'UNKNOWN') {
+    if (source !== 'SYSTEM') return;
+    if (!Object.values(TradingMode).includes(newMode)) return;
+    TradingContext.mode = newMode;
+    onTradingModeChanged(newMode);
+  }
+
+  function toggleSplitMode() {
+    TradingContext.splitEnabled = !TradingContext.splitEnabled;
+    renderSplitMode();
+    if (window.OriOlogoSpeak) {
+      window.OriOlogoSpeak(
+        TradingContext.splitEnabled
+          ? 'Split mode engaged. Monitor both realities.'
+          : 'Split mode disengaged. Single context active.'
+      );
+    }
+  }
+
+  /* ===== Phase 5C — Context Panels Rendering ===== */
+  const simPanel = document.getElementById('simulation-context');
+  const livePanel = document.getElementById('live-context');
+  const simWrapper = document.getElementById('simulation-panel-wrapper');
+  const liveWrapper = document.getElementById('live-panel-wrapper');
+
+  simWrapper.appendChild(simPanel);
+  liveWrapper.appendChild(livePanel);
+
+  function renderTradingContext() {
+    if (TradingContext.splitEnabled) return renderSplitMode();
+    if (getTradingMode() === TradingMode.SIMULATION) {
+      simPanel.style.display = 'block';
+      livePanel.style.display = 'none';
+    } else {
+      simPanel.style.display = 'none';
+      livePanel.style.display = 'block';
+    }
+  }
+
+  function renderSplitMode() {
+    simPanel.style.display = 'block';
+    livePanel.style.display = 'block';
+  }
+
+  function onTradingModeChanged(mode) {
+    const status = document.getElementById('status-display');
+    if (status) status.textContent = `TRADING MODE — ${mode}`;
+    renderTradingContext();
+    if (window.OriOlogoSpeak) {
+      window.OriOlogoSpeak(
+        mode === TradingMode.LIVE
+          ? 'Live trading context acknowledged.'
+          : 'Simulation context active.'
+      );
+    }
+  }
+
+  /* ===== Phase 4 — Button Wiring ===== */
+  const buttons = [...document.querySelectorAll('#button-container button')]
+                    .filter(b => b.id !== 'system-btn');
+
+  buttons.forEach(btn => {
+    const target = btn.dataset.target;
+    btn.addEventListener('click', () => {
+      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+      AppState.active = moduleName;
+      const status = document.getElementById('status-display');
+      if(status) status.textContent = moduleName.toUpperCase() + ' ACTIVE';
+      if(target) window.location.href = target;
+    });
+  });
+
+  document.getElementById('system-btn').addEventListener('click', () => {
+    AppState.active = 'system';
+    const status = document.getElementById('status-display');
+    if(status) status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+    // Phase 5A/5C: toggle trading mode
+    const nextMode =
+      getTradingMode() === TradingMode.SIMULATION
+        ? TradingMode.LIVE
+        : TradingMode.SIMULATION;
+    setTradingMode(nextMode, 'SYSTEM');
+  });
+
+  /* ===== Global App State ===== */
+  const AppState = { active: null };
+
 </script>
 
 </body>
