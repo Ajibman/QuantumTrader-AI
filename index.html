@@ -321,5 +321,52 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
   });
 </script>
 
+<script>
+/* ===== Ori Ologo Live Commentary ===== */
+const oriOlogoName = document.getElementById('ori-ologo-name');
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return; // Browser doesn't support TTS
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.pitch = 1.1; // Slightly higher pitch for personality
+  utterance.rate = 1;    // Normal speaking rate
+  utterance.volume = 1;
+
+  speechSynthesis.cancel(); // Stop any current speech
+  speechSynthesis.speak(utterance);
+}
+
+// ===== Event: Peace Index Click =====
+const peaceIndexLogo = document.getElementById('peaceIndex');
+peaceIndexLogo.addEventListener('click', () => {
+  setActive('peaceindex');
+  speak("Ori Ologo says: Accessing global Peace Index. Analyzing current market peace signals...");
+});
+
+// ===== Event: Buttons Interaction =====
+const appButtons = [...document.querySelectorAll('#button-container button')];
+
+appButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.textContent.trim();
+    if (btn.id === 'system-btn') {
+      speak("Ori Ologo notes: System panel activated. Only visibility, no control.");
+    } else {
+      speak(`Ori Ologo announces: ${name} module is now active.`);
+    }
+  });
+});
+
+// ===== Example: AutoTrader Signal =====
+function autoTraderSignal(signalText) {
+  speak(`Ori Ologo advises: ${signalText}`);
+}
+
+// Example usage: simulate an AutoTrader recommendation
+// autoTraderSignal("Consider buying USD/EUR based on Peace Index and market trends.");
+</script>
+ 
 </body>
 </html>
