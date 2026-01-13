@@ -88,7 +88,7 @@ main {
 }
 
 /* ===== Buttons ===== */
-.button-grid {
+#button-container {
   display: grid;
   grid-template-columns: repeat(2, minmax(140px, 1fr));
   gap: 16px;
@@ -125,11 +125,11 @@ button:hover {
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at center,
-    rgba(0,255,180,0.15),
+    rgba(0,255,180,0.12),
     rgba(0,0,0,0.9));
   box-shadow:
     0 0 18px var(--marine),
-    inset 0 0 20px rgba(0,255,180,0.35);
+    inset 0 0 12px rgba(0,255,180,0.2);
   animation: oriPulse 1.4s ease-in-out infinite;
 }
 
@@ -199,15 +199,15 @@ footer {
   <div class="trust-text">
     System-governed access • Disciplined execution • Automatic protection
   </div>
-
+  
   <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;"></div>
 
   <!-- ===== Button Container ===== -->
-  <div id="button-container" class="button-grid">
-    <button>TraderLab</button>
-    <button>Trading Floor</button>
-    <button>CPilot</button>
-    <button>Portfolio</button>
+  <div id="button-container">
+    <button data-target="traderlab.html">TraderLab</button>
+    <button data-target="tradingfloor.html">Trading Floor</button>
+    <button data-target="portfolio.html">Portfolio</button>
+    <button data-target="settings.html">Settings</button>
     <button id="system-btn">System</button>
   </div>
 
@@ -269,146 +269,77 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 <script src="js/ui.js"></script>
 
 <script>
-  // ===== Global App State =====
-  const AppState = { active: null };
+/* ===== App State ===== */
+const AppState = { active: null };
 
-  function setActive(module) {
-    AppState.active = module;
-    renderState();
-  }
-
-  function renderState() {
-    const status = document.getElementById('status-display');
-    if (!status) return;
-
-    if (AppState.active === 'system') {
-      status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
-    } else if (AppState.active) {
-      status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
-    } else {
-      status.textContent = '';
-    }
-  }
-
-  // ===== Fixed Button Wiring =====
-  const buttons = [...document.querySelectorAll('#button-container button')];
-
-  const pageMap = {
-    'traderlab': 'traderlab.html',
-    'tradingfloor': 'tradingfloor.html',
-    'cpilot': 'cpilot.html',
-    'portfolio': 'portfolio.html',
-    'settings': 'settings.html'
-  };
-
-  buttons.forEach(btn => {
-    const btnName = btn.textContent.toLowerCase().replace(/\s/g,'');
-
-    btn.addEventListener('click', () => {
-      setActive(btnName);
-
-      // System button handled separately
-      if(btn.id === 'system-btn') return;
-
-      // Navigate to target page
-      if(pageMap[btnName]) window.location.href = pageMap[btnName];
-    });
-  });
-
-  // System button
-  document.getElementById('system-btn').addEventListener('click', () => {
-    setActive('system');
-  });
-</script>
-
-<script>
-/* ===== Ori Ologo Live Commentary ===== */
-const oriOlogoName = document.getElementById('ori-ologo-name');
-
-function speak(text) {
-  if (!('speechSynthesis' in window)) return; // Browser doesn't support TTS
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
-  utterance.pitch = 1.1; // Slightly higher pitch for personality
-  utterance.rate = 1;    // Normal speaking rate
-  utterance.volume = 1;
-
-  speechSynthesis.cancel(); // Stop any current speech
-  speechSynthesis.speak(utterance);
+function setActive(module) {
+  AppState.active = module;
+  renderState();
 }
 
-// ===== Event: Peace Index Click =====
-const peaceIndexLogo = document.getElementById('peaceIndex');
-peaceIndexLogo.addEventListener('click', () => {
-  setActive('peaceindex');
-  speak("Ori Ologo says: Accessing global Peace Index. Analyzing current market peace signals...");
-});
+function renderState() {
+  const status = document.getElementById('status-display');
+  if (!status) return;
+  if (AppState.active === 'system') status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+  else if (AppState.active) status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
+  else status.textContent = '';
+}
 
-// ===== Event: Buttons Interaction =====
-const appButtons = [...document.querySelectorAll('#button-container button')];
-
-appButtons.forEach(btn => {
+/* ===== Button Wiring ===== */
+const buttons = [...document.querySelectorAll('#button-container button')].filter(b => b.id !== 'system-btn');
+buttons.forEach(btn => {
+  const target = btn.dataset.target;
   btn.addEventListener('click', () => {
-    const name = btn.textContent.trim();
-    if (btn.id === 'system-btn') {
-      speak("Ori Ologo notes: System panel activated. Only visibility, no control.");
-    } else {
-      speak(`Ori Ologo announces: ${name} module is now active.`);
-    }
+    const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+    setActive(moduleName);
+    if(target) window.location.href = target;
   });
 });
+document.getElementById('system-btn').addEventListener('click', () => setActive('system'));
 
-// ===== Example: AutoTrader Signal =====
-function autoTraderSignal(signalText) {
-  speak(`Ori Ologo advises: ${signalText}`);
-}
-
-// Example usage: simulate an AutoTrader recommendation
-// autoTraderSignal("Consider buying USD/EUR based on Peace Index and market trends.");
-</script>
-
-<script>
-/* ===== Ori Ologo Live Commentary & Peace Index Interaction ===== */
-
+/* ===== Ori Ologo Live Commentary ===== */
 const peaceIndexLogo = document.getElementById('peaceIndex');
 const oriOlogoName = document.getElementById('ori-ologo-name');
 
-/* Speak function (TTS) */
 function speak(text) {
   if (!('speechSynthesis' in window)) return;
-
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-US';
   utterance.pitch = 1.1;
   utterance.rate = 1;
   utterance.volume = 1;
-
-  speechSynthesis.cancel(); // Stop any ongoing speech
+  speechSynthesis.cancel();
   speechSynthesis.speak(utterance);
 }
 
-/* ===== Peace Index Click Event ===== */
+// Peace Index click
 peaceIndexLogo.addEventListener('click', () => {
-  setActive('peaceindex'); // Update AppState
+  setActive('peaceindex');
   speak("Ori Ologo says: Fetching live Peace Index data. Evaluating global trading conditions for simulation and live modes.");
-
-  // Optional: Highlight logo briefly
   peaceIndexLogo.style.transform = 'scale(1.05)';
   setTimeout(() => peaceIndexLogo.style.transform = 'scale(1)', 300);
 });
 
-/* ===== Optional: Update Ori Ologo dynamically with data ===== */
-function updatePeaceIndexComment(dataSummary) {
-  // Example: dataSummary could be "USD strongest, GBP volatile"
-  speak(`Ori Ologo notes: ${dataSummary}. Adjust your trading strategies accordingly.`);
+// Buttons interaction
+const appButtons = [...document.querySelectorAll('#button-container button')];
+appButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.textContent.trim();
+    if (btn.id === 'system-btn') speak("Ori Ologo notes: System panel activated. Only visibility, no control.");
+    else speak(`Ori Ologo announces: ${name} module is now active.`);
+  });
+});
+
+// AutoTrader signal hook
+function autoTraderSignal(signalText) {
+  speak(`Ori Ologo advises: ${signalText}`);
 }
 
-/* ===== Split-screen Trading Mode Hint ===== */
+// Example: notify split-screen
 function notifySplitScreenMode(mode) {
   speak(`Ori Ologo reminds: ${mode} mode active. You can view simulation and live trading simultaneously.`);
 }
 </script>
- 
+
 </body>
-</html>
+ </html>
