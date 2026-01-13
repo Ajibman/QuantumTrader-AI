@@ -367,6 +367,48 @@ function autoTraderSignal(signalText) {
 // Example usage: simulate an AutoTrader recommendation
 // autoTraderSignal("Consider buying USD/EUR based on Peace Index and market trends.");
 </script>
+
+<script>
+/* ===== Ori Ologo Live Commentary & Peace Index Interaction ===== */
+
+const peaceIndexLogo = document.getElementById('peaceIndex');
+const oriOlogoName = document.getElementById('ori-ologo-name');
+
+/* Speak function (TTS) */
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.pitch = 1.1;
+  utterance.rate = 1;
+  utterance.volume = 1;
+
+  speechSynthesis.cancel(); // Stop any ongoing speech
+  speechSynthesis.speak(utterance);
+}
+
+/* ===== Peace Index Click Event ===== */
+peaceIndexLogo.addEventListener('click', () => {
+  setActive('peaceindex'); // Update AppState
+  speak("Ori Ologo says: Fetching live Peace Index data. Evaluating global trading conditions for simulation and live modes.");
+
+  // Optional: Highlight logo briefly
+  peaceIndexLogo.style.transform = 'scale(1.05)';
+  setTimeout(() => peaceIndexLogo.style.transform = 'scale(1)', 300);
+});
+
+/* ===== Optional: Update Ori Ologo dynamically with data ===== */
+function updatePeaceIndexComment(dataSummary) {
+  // Example: dataSummary could be "USD strongest, GBP volatile"
+  speak(`Ori Ologo notes: ${dataSummary}. Adjust your trading strategies accordingly.`);
+}
+
+/* ===== Split-screen Trading Mode Hint ===== */
+function notifySplitScreenMode(mode) {
+  speak(`Ori Ologo reminds: ${mode} mode active. You can view simulation and live trading simultaneously.`);
+}
+</script>
  
 </body>
 </html>
