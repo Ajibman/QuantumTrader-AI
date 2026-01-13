@@ -14,6 +14,7 @@
   --marine: rgba(0, 255, 180, 0.55);
 }
 
+/* ===== Global ===== */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -42,35 +43,24 @@ main {
   gap: 2rem;
 }
 
-.module-card { display: none; }
-
-.panel {
+/* ===== Hidden Dynamic Modules 01–15 ===== */
+.module-card {
   display: none;
+}
+
+/* ===== Panels ===== */
+.panel {
   width: 90%;
-  max-width: 900px;
+  max-width: 800px;
   padding: 1rem;
   border-radius: 1rem;
   background: #08192e;
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   color: #00ffe7;
   font-family: monospace;
-  overflow-y: auto;
-  margin-bottom: 12px;
 }
 
-.dual-trading-container {
-  display: flex;
-  gap: 16px;
-  width: 90%;
-  max-width: 1000px;
-}
-
-.dual-trading-container .panel {
-  flex: 1;
-  min-width: 0;
-  max-height: 300px;
-}
-
+/* ===== Trust Line ===== */
 .trust-text {
   font-size: 0.85rem;
   opacity: 0.75;
@@ -78,7 +68,9 @@ main {
   letter-spacing: 0.3px;
 }
 
-#globe, #peaceIndex {
+/* ===== Images ===== */
+#globe,
+#peaceIndex {
   display: block;
   margin: 12px auto;
   max-width: 150px;
@@ -86,6 +78,7 @@ main {
   cursor: pointer;
 }
 
+/* ===== Axis Container ===== */
 .axis-container {
   display: flex;
   flex-direction: column;
@@ -94,11 +87,12 @@ main {
   padding-top: 20px;
 }
 
-#three-buttons-container {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 16px;
+/* ===== Buttons ===== */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
 }
 
 button {
@@ -111,8 +105,11 @@ button {
   font-weight: 600;
 }
 
-button:hover { background: #00ffd0; }
+button:hover {
+  background: #00ffd0;
+}
 
+/* ===== Ori Olokun — Circular Vignette ===== */
 #ori-ologo-wrapper {
   display: flex;
   flex-direction: column;
@@ -136,15 +133,40 @@ button:hover { background: #00ffd0; }
   animation: oriPulse 1.4s ease-in-out infinite;
 }
 
-#ori-ologo-img { width: 120px; height: auto; border-radius: 50%; }
-#ori-ologo-name { margin-top: 8px; font-size: 0.95rem; letter-spacing: 1px; opacity: 0.8; }
+#ori-ologo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+}
 
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Pulse */
 @keyframes oriPulse {
   0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
   50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
   100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
 }
 
+/* ===== Phase 9 Diagram ===== */
+#phase9-diagram-wrapper {
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+  border-radius: 1rem;
+  background: #08192e;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  padding: 12px;
+  display: none; /* dormant */
+  cursor: pointer;
+}
+
+/* ===== Footer ===== */
 footer {
   padding: 1rem;
   font-size: 0.8rem;
@@ -153,12 +175,11 @@ footer {
   opacity: 0.75;
 }
 
+/* ===== Mobile ===== */
 @media (max-width: 600px) {
   #globe { max-width: 100px; }
   #peaceIndex { max-width: 120px; }
   #ori-vignette { width: 140px; height: 140px; }
-  .dual-trading-container { flex-direction: column; }
-  #three-buttons-container { flex-direction: column; gap: 8px; }
 }
 </style>
 </head>
@@ -191,21 +212,20 @@ footer {
   <div class="trust-text">
     System-governed access • Disciplined execution • Automatic protection
   </div>
-
+  
   <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;"></div>
 
-  <!-- ===== Three Buttons ===== -->
-  <div id="three-buttons-container">
-    <button id="btn-traderlab">TraderLab</button>
-    <button id="btn-tradingfloor">Trading Floor</button>
-    <button id="btn-cpilot">CPilot</button>
+  <!-- ===== Button Container ===== -->
+  <div id="button-container">
+    <button data-target="traderlab.html">TraderLab</button>
+    <button data-target="tradingfloor.html">Trading Floor</button>
+    <button data-target="cpilot.html">CPilot</button>
+    <button data-target="portfolio.html">Portfolio</button>
+    <button data-target="settings.html">Settings</button>
     <button id="system-btn">System</button>
   </div>
 
-  <!-- ===== Panels for Three Buttons ===== -->
-  <div class="panel" id="panel-traderlab">TraderLab content will appear here...</div>
-  <div class="panel" id="panel-tradingfloor">Trading Floor content will appear here...</div>
-  <div class="panel" id="panel-cpilot">CPilot AutoTrader content will appear here...</div>
+  <!-- ===== System Panel ===== -->
   <div class="panel" id="system-panel">
     <p><strong>System Status:</strong> OPERATIONAL ✔</p>
     <p><strong>Core Services:</strong> Online</p>
@@ -238,10 +258,13 @@ footer {
     <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
   </div>
 
-  <!-- ===== Dual Trading Panels ===== -->
-  <div class="dual-trading-container">
-    <div class="panel" id="simulation-advice">Simulation advice will appear here...</div>
-    <div class="panel" id="live-advice">Live advice will appear here...</div>
+  <!-- ===== Phase 9 Diagram (Dormant) ===== -->
+  <div id="phase9-diagram-wrapper">
+    <h3 style="text-align:center; margin-bottom:8px;">Phase 9 Intelligence Flow (Click to Expand)</h3>
+    <svg id="phase9-diagram" width="100%" height="400px"></svg>
+    <p style="font-size:12px; text-align:center; opacity:0.7; margin-top:6px;">
+      Click the panel to expand/collapse. Diagram shows Ori Ologo intelligence mediation and advisory flow.
+    </p>
   </div>
 
 </main>
@@ -255,107 +278,132 @@ footer {
 </div>
 
 <footer>
-© 2026 QuantumTrader AI™ — All Rights Reserved |
-Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
+© 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 </footer>
 
+<!-- ===== Scripts ===== -->
 <script src="js/state.js"></script>
 <script src="js/simulation.js"></script>
 <script src="js/ui.js"></script>
 
 <script>
-  // ===== Global App State =====
-  const AppState = { active: null };
+// ===== Global App State =====
+const AppState = { active: null };
 
-  function setActive(module) {
-    AppState.active = module;
-    renderState();
-  }
+// ===== Functions =====
+function setActive(module) { AppState.active = module; renderState(); }
+function renderState() {
+  const status = document.getElementById('status-display');
+  if (!status) return;
+  status.textContent = AppState.active === 'system'
+    ? 'SYSTEM ACTIVE — visibility only, no control'
+    : AppState.active ? AppState.active.toUpperCase() + ' ACTIVE' : '';
+}
 
-  function renderState() {
-    const status = document.getElementById('status-display');
-    if(!status) return;
-    status.textContent = AppState.active ? AppState.active.toUpperCase() + ' ACTIVE' : '';
-    if(AppState.active === 'system') status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
-  }
+// ===== Phase 1 Button Wiring =====
+const buttons = [...document.querySelectorAll('#button-container button')].filter(b => b.id !== 'system-btn');
+buttons.forEach(btn => {
+  const target = btn.dataset.target;
+  btn.addEventListener('click', () => {
+    const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+    setActive(moduleName);
+    if(target) window.location.href = target;
+  });
+});
 
-  // ===== Three Buttons Functionality =====
-  const panels = {
-    traderlab: document.getElementById('panel-traderlab'),
-    tradingfloor: document.getElementById('panel-tradingfloor'),
-    cpilot: document.getElementById('panel-cpilot'),
-    system: document.getElementById('system-panel')
+// System button
+document.getElementById('system-btn').addEventListener('click', () => { setActive('system'); });
+
+// ===== Peace Index Logo Click =====
+document.getElementById('peaceIndex').addEventListener('click', () => {
+  setActive('peaceindex');
+  alert('Peace Index clicked — source of truth for Ori Ologo.');
+});
+
+// ===== Phase 9 Diagram =====
+const diagramWrapper = document.getElementById('phase9-diagram-wrapper');
+const diagramSVG = document.getElementById('phase9-diagram');
+let expanded = false;
+
+diagramWrapper.addEventListener('click', () => {
+  expanded = !expanded;
+  diagramWrapper.style.height = expanded ? '600px' : '200px';
+  diagramWrapper.style.overflow = expanded ? 'auto' : 'hidden';
+});
+
+function renderPhase9Diagram() {
+  const nodes = [
+    {id: 'peace', label: 'Peace Index\n(Veto)'},
+    {id: 'ori', label: 'Ori Ologo\n(Mediator Hub)'},
+    {id: 'forex', label: 'Forex Market\nAdvisory'},
+    {id: 'commodities', label: 'Commodities & Metals\nAdvisory'},
+    {id: 'fortune', label: 'Fortune 500 / Indexes\nAdvisory'},
+    {id: 'dual', label: 'Dual Mode\nSimulation + Live'},
+    {id: 'advisory', label: 'Advisory / Commentary'},
+    {id: 'cpilot', label: 'CPilot\n(Advisory Only)'}
+  ];
+
+  const links = [
+    ['peace', 'ori'], ['forex', 'ori'], ['commodities', 'ori'], ['fortune', 'ori'],
+    ['ori', 'dual'], ['dual', 'advisory'], ['advisory', 'cpilot']
+  ];
+
+  diagramSVG.innerHTML = '';
+  const svgNS = "http://www.w3.org/2000/svg";
+  const width = diagramSVG.clientWidth;
+  const height = diagramSVG.clientHeight;
+
+  const positions = {
+    peace: {x: width/2, y: 40}, ori: {x: width/2, y: 120},
+    forex: {x: width/4, y: 220}, commodities: {x: 3*width/4, y: 220},
+    fortune: {x: width/2, y: 220}, dual: {x: width/2, y: 300},
+    advisory: {x: width/2, y: 380}, cpilot: {x: width/2, y: 460}
   };
 
-  function hideAllPanels() {
-    Object.values(panels).forEach(p => p.style.display = 'none');
-  }
+  const defs = document.createElementNS(svgNS, 'defs');
+  defs.innerHTML = `<marker id="arrowhead" markerWidth="10" markerHeight="7" 
+      refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00ffe7"/>
+    </marker>`;
+  diagramSVG.appendChild(defs);
 
-  document.getElementById('btn-traderlab').addEventListener('click', () => {
-    hideAllPanels();
-    panels.traderlab.style.display = 'block';
+  links.forEach(([from, to]) => {
+    const line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', positions[from].x);
+    line.setAttribute('y1', positions[from].y);
+    line.setAttribute('x2', positions[to].x);
+    line.setAttribute('y2', positions[to].y);
+    line.setAttribute('stroke', '#00ffe7');
+    line.setAttribute('stroke-width', '2');
+    line.setAttribute('marker-end', 'url(#arrowhead)');
+    diagramSVG.appendChild(line);
   });
 
-  document.getElementById('btn-tradingfloor').addEventListener('click', () => {
-    hideAllPanels();
-    panels.tradingfloor.style.display = 'block';
+  nodes.forEach(n => {
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('x', positions[n.id].x - 70);
+    rect.setAttribute('y', positions[n.id].y - 20);
+    rect.setAttribute('width', 140);
+    rect.setAttribute('height', 40);
+    rect.setAttribute('rx', 10);
+    rect.setAttribute('fill', 'rgba(0,255,180,0.2)');
+    rect.setAttribute('stroke', '#00ffe7');
+    diagramSVG.appendChild(rect);
+
+    const text = document.createElementNS(svgNS, 'text');
+    text.setAttribute('x', positions[n.id].x);
+    text.setAttribute('y', positions[n.id].y + 5);
+    text.setAttribute('fill', '#00ffe7');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-family', 'monospace');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.innerHTML = n.label.replace(/\n/g, ' ');
+    diagramSVG.appendChild(text);
   });
+}
 
-  document.getElementById('btn-cpilot').addEventListener('click', () => {
-    hideAllPanels();
-    panels.cpilot.style.display = 'block';
-  });
-
-  document.getElementById('system-btn').addEventListener('click', () => {
-    hideAllPanels();
-    panels.system.style.display = 'block';
-    setActive('system');
-  });
-
-  // ===== Peace Index Live Wiring =====
-  async function fetchPeaceIndex() { return (Math.random() * 100).toFixed(2); }
-  async function fetchForexFactory() { return 'Forex signals fetched'; }
-  async function fetchForexMarket() { return 'Live Forex market data'; }
-  async function fetchOilPrice() { return (Math.random() * 200).toFixed(2); }
-  async function fetchMetalsPrice() { return (Math.random() * 1000).toFixed(2); }
-  async function fetchCommoditiesPrice() { return (Math.random() * 500).toFixed(2); }
-  async function fetchFortune500() { return 'Top 10 Fortune 500 highlights'; }
-  async function fetchShares() { return 'Selected shares live prices'; }
-  async function fetchIndexes() { return 'Global indexes live'; }
-
-  function generateAdvice(data) {
-    return `Trade advice generated based on Peace Score ${data.peaceScore}`;
-  }
-
-  document.getElementById('peaceIndex').addEventListener('click', async () => {
-    try {
-      const peaceScore = await fetchPeaceIndex();
-      const forexSignal = await fetchForexFactory();
-      const forexMarket = await fetchForexMarket();
-      const oilPrice = await fetchOilPrice();
-      const metalsPrice = await fetchMetalsPrice();
-      const commoditiesPrice = await fetchCommoditiesPrice();
-      const fortune500 = await fetchFortune500();
-      const shares = await fetchShares();
-      const indexes = await fetchIndexes();
-
-      const newAdvice = generateAdvice({
-        peaceScore, forexSignal, forexMarket, oilPrice, metalsPrice,
-        commoditiesPrice, fortune500, shares, indexes
-      });
-
-      document.getElementById('simulation-advice').textContent =
-        `${newAdvice} [Simulation | Peace Score: ${peaceScore}]`;
-
-      document.getElementById('live-advice').textContent =
-        `${newAdvice} [Live | Peace Score: ${peaceScore}]`;
-
-      if(window.OriOlogoSpeak) {
-        OriOlogoSpeak(`Peace Index updated. Live market advice recalculated. Peace Score: ${peaceScore}`);
-      }
-
-    } catch(err) { console.error('Peace Index update failed:', err); }
-  });
+renderPhase9Diagram();
 
 </script>
 
