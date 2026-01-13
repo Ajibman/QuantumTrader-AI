@@ -44,7 +44,9 @@ main {
 }
 
 /* ===== Hidden Dynamic Modules 01–15 ===== */
-.module-card { display: none; }
+.module-card {
+  display: none;
+}
 
 /* ===== Panels ===== */
 .panel {
@@ -67,7 +69,8 @@ main {
 }
 
 /* ===== Images ===== */
-#globe, #peaceIndex {
+#globe,
+#peaceIndex {
   display: block;
   margin: 12px auto;
   max-width: 150px;
@@ -102,7 +105,9 @@ button {
   font-weight: 600;
 }
 
-button:hover { background: #00ffd0; }
+button:hover {
+  background: #00ffd0;
+}
 
 /* ===== Ori Olokun — Circular Vignette ===== */
 #ori-ologo-wrapper {
@@ -128,8 +133,18 @@ button:hover { background: #00ffd0; }
   animation: oriPulse 1.4s ease-in-out infinite;
 }
 
-#ori-ologo-img { width: 120px; height: auto; border-radius: 50%; }
-#ori-ologo-name { margin-top: 8px; font-size: 0.95rem; letter-spacing: 1px; opacity: 0.8; }
+#ori-ologo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+}
+
+#ori-ologo-name {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
 
 /* Pulse */
 @keyframes oriPulse {
@@ -184,16 +199,15 @@ footer {
   <div class="trust-text">
     System-governed access • Disciplined execution • Automatic protection
   </div>
-  
+
   <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;"></div>
 
   <!-- ===== Button Container ===== -->
-  <div id="button-container">
-    <button data-target="traderlab.html">TraderLab</button>
-    <button data-target="tradingfloor.html">Trading Floor</button>
-    <button data-target="cpilot.html">CPilot</button>
-    <button data-target="portfolio.html">Portfolio</button>
-    <button data-target="settings.html">Settings</button>
+  <div id="button-container" class="button-grid">
+    <button>TraderLab</button>
+    <button>Trading Floor</button>
+    <button>CPilot</button>
+    <button>Portfolio</button>
     <button id="system-btn">System</button>
   </div>
 
@@ -203,40 +217,29 @@ footer {
     <p><strong>Core Services:</strong> Online</p>
     <p><strong>Data Feeds:</strong> Synchronized</p>
     <p><strong>Execution Clock:</strong> Aligned (UTC)</p>
+
     <p><strong>Access State:</strong></p>
     <ul>
       <li>Subscription: Active</li>
       <li>Trading Floor: Locked (Payment Required)</li>
       <li>AutoTrader: Disabled (Policy)</li>
     </ul>
+
     <p><strong>Governance:</strong></p>
     <ul>
       <li>TraderLab completion required</li>
       <li>Capital protection enforced</li>
       <li>Medusa™ auto-regeneration active</li>
     </ul>
+
     <p><strong>Identity:</strong></p>
     <ul>
       <li>QuantumTrader AI™ v1.0</li>
       <li>Build: Stable</li>
       <li>Architect: Olagoke Ajibulu</li>
     </ul>
-    <p>System provides visibility, not control.</p>
-  </div>
 
-  <!-- ===== Phase 10: Execution Control Panel ===== -->
-  <div class="panel" id="execution-panel">
-    <h3>Execution Control</h3>
-    <label>
-      <input type="checkbox" id="sim-mode-toggle" checked> Simulation Mode
-    </label>
-    <br>
-    <label>
-      <input type="checkbox" id="live-mode-toggle"> Live Trading Mode
-    </label>
-    <p style="margin-top:8px; font-size:0.85rem; opacity:0.8;" id="exec-status">
-      Simulation Mode ACTIVE | Live Trading Mode INACTIVE
-    </p>
+    <p>System provides visibility, not control.</p>
   </div>
 
   <!-- ===== Axis Container ===== -->
@@ -266,10 +269,8 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 <script src="js/ui.js"></script>
 
 <script>
-  // --- Global App State ---
+  // ===== Global App State =====
   const AppState = { active: null };
-  const userExempt = true; // Designer exempt
-  const traderLabCompleted = true; // Full access for designer
 
   function setActive(module) {
     AppState.active = module;
@@ -289,57 +290,34 @@ Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
     }
   }
 
-  // --- Phase 1 Button Wiring ---
-  const buttons = [...document.querySelectorAll('#button-container button')]
-                    .filter(b => b.id !== 'system-btn');
+  // ===== Fixed Button Wiring =====
+  const buttons = [...document.querySelectorAll('#button-container button')];
+
+  const pageMap = {
+    'traderlab': 'traderlab.html',
+    'tradingfloor': 'tradingfloor.html',
+    'cpilot': 'cpilot.html',
+    'portfolio': 'portfolio.html',
+    'settings': 'settings.html'
+  };
 
   buttons.forEach(btn => {
-    const target = btn.dataset.target;
+    const btnName = btn.textContent.toLowerCase().replace(/\s/g,'');
+
     btn.addEventListener('click', () => {
-      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
-      setActive(moduleName);
-      if(target) window.location.href = target;
+      setActive(btnName);
+
+      // System button handled separately
+      if(btn.id === 'system-btn') return;
+
+      // Navigate to target page
+      if(pageMap[btnName]) window.location.href = pageMap[btnName];
     });
   });
 
+  // System button
   document.getElementById('system-btn').addEventListener('click', () => {
     setActive('system');
-  });
-
-  // --- Phase 10: Execution Control ---
-  const simToggle = document.getElementById('sim-mode-toggle');
-  const liveToggle = document.getElementById('live-mode-toggle');
-  const execStatus = document.getElementById('exec-status');
-
-  function updateExecutionStatus() {
-    const sim = simToggle.checked ? 'ACTIVE' : 'INACTIVE';
-    const live = liveToggle.checked ? 'ACTIVE' : 'INACTIVE';
-    execStatus.textContent = `Simulation Mode ${sim} | Live Trading Mode ${live}`;
-
-    // Ori Ologo comment
-    if (simToggle.checked) oriComment('Simulation mode running.');
-    if (liveToggle.checked) oriComment('Live trading enabled. Proceed with caution.');
-  }
-
-  simToggle.addEventListener('change', updateExecutionStatus);
-  liveToggle.addEventListener('change', () => {
-    if (!userExempt && !traderLabCompleted) {
-      alert('Live Trading locked: Complete TraderLab first.');
-      liveToggle.checked = false;
-    }
-    updateExecutionStatus();
-  });
-
-  function oriComment(msg) {
-    console.log('Ori Ologo says:', msg);
-  }
-
-  updateExecutionStatus(); // Initial render
-
-  // --- Peace Index Logo Click ---
-  document.getElementById('peaceIndex').addEventListener('click', () => {
-    oriComment('Peace Index clicked: Aggregating global peace data for trading intelligence...');
-    alert('Peace Index accessed. Ori Ologo updating insights.');
   });
 </script>
 
