@@ -1,1 +1,166 @@
-cpilot...
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — CPilot</title>
+
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --danger: #ff4d4d;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.panel {
+  background: #08192e;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 12px rgba(0,0,0,.5);
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+
+.switch-row label {
+  font-weight: 500;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.notice {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.warning {
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CPilot — AutoTrader Control</h1>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>CPilot Mode</h2>
+
+    <div class="switch-row">
+      <label>Advisory Mode (Read-only guidance)</label>
+      <input type="checkbox" id="advisoryMode" checked>
+    </div>
+
+    <div class="switch-row">
+      <label>AutoTrader Mode (Execution allowed)</label>
+      <input type="checkbox" id="autoTraderMode">
+    </div>
+
+    <p class="notice">
+      AutoTrader will not activate unless discipline and peace thresholds are met.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Peace & Risk Gate</h2>
+    <ul>
+      <li>Peace Index alignment required</li>
+      <li>High-volatility suppression enabled</li>
+      <li>Capital protection enforced</li>
+      <li>Emergency stop via Medusa™</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>CPilot Status</h2>
+    <p id="cpilot-status">
+      Advisory active. AutoTrader disabled.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Important Notice</h2>
+    <p class="warning">
+      CPilot is not a broker substitute and never acts against trader interest.
+      Execution remains subject to system governance.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — CPilot
+</footer>
+
+<script>
+  const advisory = document.getElementById("advisoryMode");
+  const autoTrader = document.getElementById("autoTraderMode");
+  const status = document.getElementById("cpilot-status");
+
+  advisory.addEventListener("change", () => {
+    if (!advisory.checked) {
+      advisory.checked = true;
+      alert("Advisory mode cannot be disabled.");
+    }
+  });
+
+  autoTrader.addEventListener("change", () => {
+    if (autoTrader.checked) {
+      status.textContent = "AutoTrader armed. Awaiting peace & discipline confirmation...";
+    } else {
+      status.textContent = "Advisory active. AutoTrader disabled.";
+    }
+  });
+</script>
+
+</body>
+</html>
