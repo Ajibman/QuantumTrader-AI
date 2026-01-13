@@ -1,1 +1,111 @@
-trading floor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Trading Floor</title>
+
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.panel {
+  background: #08192e;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 12px rgba(0,0,0,.5);
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Trading Floor</h1>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>Market State Overview</h2>
+    <p>
+      Aggregated intelligence from Peace Indexes, Forex markets,
+      commodities, metals, oil, shares and global indexes.
+    </p>
+    <p>
+      Ori Ologo continuously evaluates whether the current environment
+      is suitable for trading or demands restraint.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Ori Ologo Commentary</h2>
+    <p id="ori-commentary">
+      Awaiting market alignment…
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Execution Discipline</h2>
+    <ul>
+      <li>No forced trades</li>
+      <li>No emotional execution</li>
+      <li>Capital protection enforced</li>
+      <li>Peace-weighted market bias</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — Trading Floor
+</footer>
+
+<script>
+  // Placeholder for live commentary
+  document.getElementById("ori-commentary").textContent =
+    "Markets stable. Peace-weighted conditions acceptable. Await confirmation.";
+</script>
+
+</body>
+</html>
