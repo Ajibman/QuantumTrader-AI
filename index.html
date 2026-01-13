@@ -44,9 +44,7 @@ main {
 }
 
 /* ===== Hidden Dynamic Modules 01–15 ===== */
-.module-card {
-  display: none;
-}
+.module-card { display: none; }
 
 /* ===== Panels ===== */
 .panel {
@@ -69,8 +67,7 @@ main {
 }
 
 /* ===== Images ===== */
-#globe,
-#peaceIndex {
+#globe, #peaceIndex {
   display: block;
   margin: 12px auto;
   max-width: 150px;
@@ -105,9 +102,7 @@ button {
   font-weight: 600;
 }
 
-button:hover {
-  background: #00ffd0;
-}
+button:hover { background: #00ffd0; }
 
 /* ===== Ori Olokun — Circular Vignette ===== */
 #ori-ologo-wrapper {
@@ -133,37 +128,14 @@ button:hover {
   animation: oriPulse 1.4s ease-in-out infinite;
 }
 
-#ori-ologo-img {
-  width: 120px;
-  height: auto;
-  border-radius: 50%;
-}
-
-#ori-ologo-name {
-  margin-top: 8px;
-  font-size: 0.95rem;
-  letter-spacing: 1px;
-  opacity: 0.8;
-}
+#ori-ologo-img { width: 120px; height: auto; border-radius: 50%; }
+#ori-ologo-name { margin-top: 8px; font-size: 0.95rem; letter-spacing: 1px; opacity: 0.8; }
 
 /* Pulse */
 @keyframes oriPulse {
   0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
   50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
   100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
-}
-
-/* ===== Phase 9 Diagram ===== */
-#phase9-diagram-wrapper {
-  width: 90%;
-  max-width: 800px;
-  margin: 20px auto;
-  border-radius: 1rem;
-  background: #08192e;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  padding: 12px;
-  display: none; /* dormant */
-  cursor: pointer;
 }
 
 /* ===== Footer ===== */
@@ -252,19 +224,25 @@ footer {
     <p>System provides visibility, not control.</p>
   </div>
 
+  <!-- ===== Phase 10: Execution Control Panel ===== -->
+  <div class="panel" id="execution-panel">
+    <h3>Execution Control</h3>
+    <label>
+      <input type="checkbox" id="sim-mode-toggle" checked> Simulation Mode
+    </label>
+    <br>
+    <label>
+      <input type="checkbox" id="live-mode-toggle"> Live Trading Mode
+    </label>
+    <p style="margin-top:8px; font-size:0.85rem; opacity:0.8;" id="exec-status">
+      Simulation Mode ACTIVE | Live Trading Mode INACTIVE
+    </p>
+  </div>
+
   <!-- ===== Axis Container ===== -->
   <div class="axis-container">
     <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
     <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
-  </div>
-
-  <!-- ===== Phase 9 Diagram (Dormant) ===== -->
-  <div id="phase9-diagram-wrapper">
-    <h3 style="text-align:center; margin-bottom:8px;">Phase 9 Intelligence Flow (Click to Expand)</h3>
-    <svg id="phase9-diagram" width="100%" height="400px"></svg>
-    <p style="font-size:12px; text-align:center; opacity:0.7; margin-top:6px;">
-      Click the panel to expand/collapse. Diagram shows Ori Ologo intelligence mediation and advisory flow.
-    </p>
   </div>
 
 </main>
@@ -278,7 +256,8 @@ footer {
 </div>
 
 <footer>
-© 2026 QuantumTrader AI™ — All Rights Reserved | Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
+© 2026 QuantumTrader AI™ — All Rights Reserved |
+Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
 </footer>
 
 <!-- ===== Scripts ===== -->
@@ -287,124 +266,81 @@ footer {
 <script src="js/ui.js"></script>
 
 <script>
-// ===== Global App State =====
-const AppState = { active: null };
+  // --- Global App State ---
+  const AppState = { active: null };
+  const userExempt = true; // Designer exempt
+  const traderLabCompleted = true; // Full access for designer
 
-// ===== Functions =====
-function setActive(module) { AppState.active = module; renderState(); }
-function renderState() {
-  const status = document.getElementById('status-display');
-  if (!status) return;
-  status.textContent = AppState.active === 'system'
-    ? 'SYSTEM ACTIVE — visibility only, no control'
-    : AppState.active ? AppState.active.toUpperCase() + ' ACTIVE' : '';
-}
+  function setActive(module) {
+    AppState.active = module;
+    renderState();
+  }
 
-// ===== Phase 1 Button Wiring =====
-const buttons = [...document.querySelectorAll('#button-container button')].filter(b => b.id !== 'system-btn');
-buttons.forEach(btn => {
-  const target = btn.dataset.target;
-  btn.addEventListener('click', () => {
-    const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
-    setActive(moduleName);
-    if(target) window.location.href = target;
-  });
-});
+  function renderState() {
+    const status = document.getElementById('status-display');
+    if (!status) return;
 
-// System button
-document.getElementById('system-btn').addEventListener('click', () => { setActive('system'); });
+    if (AppState.active === 'system') {
+      status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
+    } else if (AppState.active) {
+      status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
+    } else {
+      status.textContent = '';
+    }
+  }
 
-// ===== Peace Index Logo Click =====
-document.getElementById('peaceIndex').addEventListener('click', () => {
-  setActive('peaceindex');
-  alert('Peace Index clicked — source of truth for Ori Ologo.');
-});
+  // --- Phase 1 Button Wiring ---
+  const buttons = [...document.querySelectorAll('#button-container button')]
+                    .filter(b => b.id !== 'system-btn');
 
-// ===== Phase 9 Diagram =====
-const diagramWrapper = document.getElementById('phase9-diagram-wrapper');
-const diagramSVG = document.getElementById('phase9-diagram');
-let expanded = false;
-
-diagramWrapper.addEventListener('click', () => {
-  expanded = !expanded;
-  diagramWrapper.style.height = expanded ? '600px' : '200px';
-  diagramWrapper.style.overflow = expanded ? 'auto' : 'hidden';
-});
-
-function renderPhase9Diagram() {
-  const nodes = [
-    {id: 'peace', label: 'Peace Index\n(Veto)'},
-    {id: 'ori', label: 'Ori Ologo\n(Mediator Hub)'},
-    {id: 'forex', label: 'Forex Market\nAdvisory'},
-    {id: 'commodities', label: 'Commodities & Metals\nAdvisory'},
-    {id: 'fortune', label: 'Fortune 500 / Indexes\nAdvisory'},
-    {id: 'dual', label: 'Dual Mode\nSimulation + Live'},
-    {id: 'advisory', label: 'Advisory / Commentary'},
-    {id: 'cpilot', label: 'CPilot\n(Advisory Only)'}
-  ];
-
-  const links = [
-    ['peace', 'ori'], ['forex', 'ori'], ['commodities', 'ori'], ['fortune', 'ori'],
-    ['ori', 'dual'], ['dual', 'advisory'], ['advisory', 'cpilot']
-  ];
-
-  diagramSVG.innerHTML = '';
-  const svgNS = "http://www.w3.org/2000/svg";
-  const width = diagramSVG.clientWidth;
-  const height = diagramSVG.clientHeight;
-
-  const positions = {
-    peace: {x: width/2, y: 40}, ori: {x: width/2, y: 120},
-    forex: {x: width/4, y: 220}, commodities: {x: 3*width/4, y: 220},
-    fortune: {x: width/2, y: 220}, dual: {x: width/2, y: 300},
-    advisory: {x: width/2, y: 380}, cpilot: {x: width/2, y: 460}
-  };
-
-  const defs = document.createElementNS(svgNS, 'defs');
-  defs.innerHTML = `<marker id="arrowhead" markerWidth="10" markerHeight="7" 
-      refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#00ffe7"/>
-    </marker>`;
-  diagramSVG.appendChild(defs);
-
-  links.forEach(([from, to]) => {
-    const line = document.createElementNS(svgNS, 'line');
-    line.setAttribute('x1', positions[from].x);
-    line.setAttribute('y1', positions[from].y);
-    line.setAttribute('x2', positions[to].x);
-    line.setAttribute('y2', positions[to].y);
-    line.setAttribute('stroke', '#00ffe7');
-    line.setAttribute('stroke-width', '2');
-    line.setAttribute('marker-end', 'url(#arrowhead)');
-    diagramSVG.appendChild(line);
+  buttons.forEach(btn => {
+    const target = btn.dataset.target;
+    btn.addEventListener('click', () => {
+      const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
+      setActive(moduleName);
+      if(target) window.location.href = target;
+    });
   });
 
-  nodes.forEach(n => {
-    const rect = document.createElementNS(svgNS, 'rect');
-    rect.setAttribute('x', positions[n.id].x - 70);
-    rect.setAttribute('y', positions[n.id].y - 20);
-    rect.setAttribute('width', 140);
-    rect.setAttribute('height', 40);
-    rect.setAttribute('rx', 10);
-    rect.setAttribute('fill', 'rgba(0,255,180,0.2)');
-    rect.setAttribute('stroke', '#00ffe7');
-    diagramSVG.appendChild(rect);
-
-    const text = document.createElementNS(svgNS, 'text');
-    text.setAttribute('x', positions[n.id].x);
-    text.setAttribute('y', positions[n.id].y + 5);
-    text.setAttribute('fill', '#00ffe7');
-    text.setAttribute('font-size', '12');
-    text.setAttribute('font-family', 'monospace');
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('dominant-baseline', 'middle');
-    text.innerHTML = n.label.replace(/\n/g, ' ');
-    diagramSVG.appendChild(text);
+  document.getElementById('system-btn').addEventListener('click', () => {
+    setActive('system');
   });
-}
 
-renderPhase9Diagram();
+  // --- Phase 10: Execution Control ---
+  const simToggle = document.getElementById('sim-mode-toggle');
+  const liveToggle = document.getElementById('live-mode-toggle');
+  const execStatus = document.getElementById('exec-status');
 
+  function updateExecutionStatus() {
+    const sim = simToggle.checked ? 'ACTIVE' : 'INACTIVE';
+    const live = liveToggle.checked ? 'ACTIVE' : 'INACTIVE';
+    execStatus.textContent = `Simulation Mode ${sim} | Live Trading Mode ${live}`;
+
+    // Ori Ologo comment
+    if (simToggle.checked) oriComment('Simulation mode running.');
+    if (liveToggle.checked) oriComment('Live trading enabled. Proceed with caution.');
+  }
+
+  simToggle.addEventListener('change', updateExecutionStatus);
+  liveToggle.addEventListener('change', () => {
+    if (!userExempt && !traderLabCompleted) {
+      alert('Live Trading locked: Complete TraderLab first.');
+      liveToggle.checked = false;
+    }
+    updateExecutionStatus();
+  });
+
+  function oriComment(msg) {
+    console.log('Ori Ologo says:', msg);
+  }
+
+  updateExecutionStatus(); // Initial render
+
+  // --- Peace Index Logo Click ---
+  document.getElementById('peaceIndex').addEventListener('click', () => {
+    oriComment('Peace Index clicked: Aggregating global peace data for trading intelligence...');
+    alert('Peace Index accessed. Ori Ologo updating insights.');
+  });
 </script>
 
 </body>
