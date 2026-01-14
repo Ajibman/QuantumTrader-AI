@@ -3,185 +3,209 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™ — Dashboard</title>
+<title>QuantumTrader AI</title>
+<link rel="stylesheet" href="assets/css/style.css">
 <style>
-:root {
-  --bg: #000428;
-  --card-bg: rgba(0,0,0,0.6);
-  --glow-color: #00FFFF; /* Aqua marine main */
-  --glow-accent: #000080; /* Navy blue subtle */
-  --btn-bg: #111;
-  --btn-hover: #222;
-  --text-color: #fff;
-  --accent: #0ff;
-  --font-main: 'Arial', sans-serif;
-}
+    /* Body and Layout */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #0a0a0a;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-main);
-  background: linear-gradient(to bottom, var(--bg), #000);
-  color: var(--text-color);
-  overflow-x: hidden;
-}
+    /* Globe */
+    .globe-container {
+        margin: 2vh 0;
+    }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
+    .globe-container img {
+        width: 25vw;
+        max-width: 150px;
+        height: auto;
+    }
 
-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
+    /* Ori Ologo */
+    .ori-ologo {
+        position: relative;
+        width: 20vw;
+        max-width: 120px;
+        height: auto;
+        margin: 2vh 0;
+    }
 
-header h1 {
-  font-size: 2rem;
-  color: var(--accent);
-  text-shadow: 0 0 8px var(--glow-color), 0 0 20px var(--glow-accent);
-}
+    .ori-ologo img {
+        width: 100%;
+        height: auto;
+    }
 
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  width: 100%;
-  max-width: 900px;
-}
+    .ori-name {
+        text-align: center;
+        margin-top: 0.5vh;
+        font-weight: bold;
+        color: #0af;
+        font-size: 2vh;
+        animation: pulse 2s infinite;
+    }
 
-.card {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-accent);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 25px var(--glow-color), 0 0 40px var(--glow-accent);
-}
+    /* Dashboard Buttons */
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5vh;
+        width: 90%;
+        max-width: 360px;
+        flex-grow: 1;
+        justify-content: flex-start;
+    }
 
-button {
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: none;
-  padding: 12px 18px;
-  margin-top: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s;
-}
+    .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #111;
+        border: 2px solid #0af;
+        border-radius: 10px;
+        padding: 1vh 1.5vw;
+        width: 100%;
+        font-size: 1.5vh;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
 
-button:hover {
-  background: var(--btn-hover);
-}
+    .button img {
+        height: 3vh;
+        width: auto;
+        margin-right: 1vw;
+    }
 
-#ori-ologo {
-  width: 150px;
-  margin: 20px auto;
-  animation: pulse 2s infinite;
-}
+    .button:hover {
+        background: #0af;
+        color: #000;
+    }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--glow-color)); }
-  50% { transform: scale(1.05); filter: drop-shadow(0 0 15px var(--glow-accent)); }
-}
+    .bottom-button {
+        margin-top: auto; /* Settings always at bottom */
+    }
 
-footer {
-  margin-top: 30px;
-  text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-
-/* Responsive voice notification overlay */
-#voice-notice {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background: var(--card-bg);
-  padding: 8px 12px;
-  border-radius: 8px;
-  box-shadow: 0 0 8px var(--glow-color);
-  display: none;
-}
-
+    /* Responsive tweaks for short screens */
+    @media (max-height: 600px) {
+        .dashboard {
+            gap: 1vh;
+        }
+        .button img {
+            height: 2.5vh;
+        }
+        .button {
+            font-size: 1.2vh;
+            padding: 0.8vh 1vw;
+        }
+        .ori-name {
+            font-size: 1.5vh;
+        }
+    }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <h1>QuantumTrader AI™ Dashboard</h1>
-    <img id="ori-ologo" src="assets/ori_ologo.png" alt="Ori Ologo speaking">
-  </header>
+    <!-- Static Globe -->
+    <div class="globe-container">
+        <img src="assets/images/qtai_globe.png" alt="Globe">
+    </div>
 
-  <div class="dashboard">
-    <div class="card">
-      <h3>Trading Floor</h3>
-      <button onclick="openModule('trading-floor')">Enter</button>
+    <!-- Ori Ologo -->
+    <div class="ori-ologo">
+        <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
+        <div class="ori-name">Ori Ologo</div>
     </div>
-    <div class="card">
-      <h3>TraderLab</h3>
-      <button onclick="openModule('trader-lab')">Enter</button>
-    </div>
-    <div class="card">
-      <h3>CPilot</h3>
-      <button onclick="openModule('cpilot')">Enter</button>
-    </div>
-    <div class="card">
-      <h3>Peace Index</h3>
-      <button onclick="openModule('peace-index')">View</button>
-    </div>
-    <div class="card">
-      <h3>Settings</h3>
-      <button onclick="openModule('settings')">Open</button>
-    </div>
-    <div class="card">
-      <h3>System Status</h3>
-      <button onclick="openModule('system-status')">Check</button>
-    </div>
-  </div>
-</div>
 
-<div id="voice-notice">Voice: ...</div>
+    <!-- Dashboard Buttons -->
+    <div class="dashboard">
+        <div class="button" id="trading-floor-btn">
+            <img src="assets/images/tradingfloor_main.png" alt="Trading Floor">
+            Trading Floor
+        </div>
 
-<footer>
-  QuantumTrader AI™ — © 2026 Olagoke Ajibulu
-</footer>
+        <div class="button" id="traderlab-btn">
+            <img src="assets/images/traderlab_icon.png" alt="TraderLab">
+            TraderLab
+        </div>
+
+        <div class="button" id="cpilot-btn">
+            <img src="assets/images/cpilot_panel.png" alt="CPilot">
+            CPilot
+        </div>
+
+        <div class="button" id="system-btn">
+            <img src="assets/images/macarthur.png" alt="System">
+            System
+        </div>
+
+        <div class="button" id="peace-index-btn">
+            <img src="assets/images/peace_index_logo.png" alt="Peace Index">
+            Peace Index
+        </div>
+
+        <div class="button bottom-button" id="settings-btn">
+            Settings
+        </div>
+    </div>
 
 <script>
-function openModule(moduleName) {
-  showVoiceNotice(`You selected ${moduleName.replace('-', ' ')}`);
-  // Logic to navigate or display module goes here
-  console.log(`Module requested: ${moduleName}`);
-}
+    // Button functionality (dynamic navigation)
+    document.getElementById('trading-floor-btn').addEventListener('click', () => {
+        alert("Opening Trading Floor...");
+        // Example: window.location.href = "tradingfloor.html";
+    });
 
-function showVoiceNotice(message) {
-  const notice = document.getElementById('voice-notice');
-  notice.innerText = `Voice: ${message}`;
-  notice.style.display = 'block';
-  setTimeout(() => notice.style.display = 'none', 2500);
-}
+    document.getElementById('traderlab-btn').addEventListener('click', () => {
+        alert("Opening TraderLab...");
+        // Example: window.location.href = "traderlab.html";
+    });
 
-// Ori Ologo speaking simulation
-const oriOlogo = document.getElementById('ori-ologo');
-function speakOriOlogo(text) {
-  showVoiceNotice(text);
-  oriOlogo.classList.add('speaking');
-  setTimeout(() => oriOlogo.classList.remove('speaking'), 2000);
-}
+    document.getElementById('cpilot-btn').addEventListener('click', () => {
+        alert("Opening CPilot Panel...");
+        // Example: window.location.href = "cpilot.html";
+    });
 
-// Example: speak when clicking Trading Floor
-document.querySelector("button[onclick*='trading-floor']").addEventListener('click', () => {
-  speakOriOlogo("Welcome to the Trading Floor!");
-});
+    document.getElementById('system-btn').addEventListener('click', () => {
+        alert("Opening System...");
+        // Example: window.location.href = "system.html";
+    });
+
+    document.getElementById('peace-index-btn').addEventListener('click', () => {
+        alert("Opening Peace Index...");
+        // Example: window.location.href = "peace_index.html";
+    });
+
+    document.getElementById('settings-btn').addEventListener('click', () => {
+        alert("Opening Settings...");
+        // Example: window.location.href = "settings.html";
+    });
+
+    // Ori Ologo speech function
+    function speakOriOlogo(text) {
+        if ('speechSynthesis' in window) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            window.speechSynthesis.speak(msg);
+        }
+    }
+
+    // Greeting on page load
+    window.onload = () => {
+        speakOriOlogo("Welcome to Quantum Trader AI. Select an option to proceed.");
+    };
 </script>
 
 </body>
