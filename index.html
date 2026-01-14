@@ -102,7 +102,7 @@
       transform: scale(0.97);
     }
 
-    /* Settings must always feel “last” */
+    /* Settings button */
     .settings-btn {
       background: #0066cc; /* marine blue */
     }
@@ -136,25 +136,25 @@
     <!-- Dashboard Buttons -->
     <div id="dashboard-buttons">
 
-      <button data-action="trading-floor">Trading Floor</button>
-      <button data-action="trader-lab">TraderLab</button>
-      <button data-action="cpilot">CPilot</button>
-      <button data-action="system">System</button>
-      <button data-action="peace-index">Peace Index</button>
-      <button data-action="settings" class="settings-btn">Settings</button>
+      <button data-href="tradingfloor.html">Trading Floor</button>
+      <button data-href="traderlab.html">TraderLab</button>
+      <button data-href="cpilot.html">CPilot</button>
+      <button data-href="system.html">System</button>
+      <button data-href="peace-index.html">Peace Index</button>
+      <button data-href="settings.html" class="settings-btn">Settings</button>
 
     </div>
 
   </main>
 
-  <!-- Phase 5 Script: Voice + Selection Isolation -->
+  <!-- Phase 6 Script: Voice + Navigation + Isolation -->
   <script>
     const buttons = document.querySelectorAll('#dashboard-buttons button');
     const voiceBlob = document.querySelector('.voice-blob');
     let lastSelection = null;
 
     function speakButton(name) {
-      // Animate blob subtly
+      // Animate voice blob
       voiceBlob.style.transform = 'translateX(-50%) translateY(-4px) scale(1.3)';
       voiceBlob.style.backgroundColor = 'rgba(0, 255, 180, 0.6)';
       setTimeout(() => {
@@ -166,7 +166,7 @@
       if (name === lastSelection) return;
       lastSelection = name;
 
-      // Natural voice
+      // Natural human-like voice
       if ('speechSynthesis' in window) {
         const msg = new SpeechSynthesisUtterance(`You selected ${name}`);
         msg.lang = 'en-US';
@@ -179,15 +179,22 @@
       }
     }
 
-    // Event delegation for buttons
-    document.getElementById('dashboard-buttons').addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      speakButton(btn.textContent.trim());
-      console.log("Clicked button:", btn.dataset.action);
+    // Button click handler
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.textContent.trim();
+        const href = btn.dataset.href;
+
+        speakButton(name);
+
+        // Navigate only if href exists
+        if (href) {
+          window.location.href = href;
+        }
+      });
     });
 
-    // Reset lastSelection when returning to dashboard
+    // Reset last selection when returning
     window.addEventListener('pageshow', () => { lastSelection = null; });
   </script>
 
