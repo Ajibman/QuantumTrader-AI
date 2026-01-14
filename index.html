@@ -4,208 +4,176 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumTrader AI</title>
-<link rel="stylesheet" href="assets/css/style.css">
+
 <style>
-    /* Body and Layout */
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #0a0a0a;
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-    }
+/* ===== BASE LAYOUT ===== */
+body {
+    margin: 0;
+    background: #0a0a0a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
 
-    /* Globe */
-    .globe-container {
-        margin: 2vh 0;
-    }
+/* ===== STATIC GLOBE ===== */
+.globe {
+    margin-top: 1.5vh;
+}
+.globe img {
+    width: 22vw;
+    max-width: 140px;
+    height: auto;
+}
 
-    .globe-container img {
-        width: 25vw;
-        max-width: 150px;
-        height: auto;
-    }
+/* ===== ORI OLOGO ===== */
+.ori {
+    margin-top: 1.5vh;
+    text-align: center;
+}
+.ori img {
+    width: 18vw;
+    max-width: 110px;
+    height: auto;
+}
+.ori-name {
+    margin-top: 0.5vh;
+    font-size: 1.8vh;
+    color: #00bfff;
+    animation: pulse 2s infinite;
+}
 
-    /* Ori Ologo */
-    .ori-ologo {
-        position: relative;
-        width: 20vw;
-        max-width: 120px;
-        height: auto;
-        margin: 2vh 0;
-    }
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
 
-    .ori-ologo img {
-        width: 100%;
-        height: auto;
-    }
+/* ===== BUTTON STACK ===== */
+.dashboard {
+    margin-top: 2vh;
+    width: 90%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
+    flex: 1;
+}
 
-    .ori-name {
-        text-align: center;
-        margin-top: 0.5vh;
-        font-weight: bold;
-        color: #0af;
-        font-size: 2vh;
-        animation: pulse 2s infinite;
-    }
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    padding: 0.9vh 1.2vw;
+    border-radius: 10px;
+    border: 2px solid #00bfff;
+    background: #111;
+    font-size: 1.4vh;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
 
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
+.btn img {
+    height: 2.8vh;
+    width: auto;
+}
 
-    /* Dashboard Buttons */
-    .dashboard {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5vh;
-        width: 90%;
-        max-width: 360px;
-        flex-grow: 1;
-        justify-content: flex-start;
-    }
+.btn:hover {
+    background: #00bfff;
+    color: #000;
+}
 
-    .button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #111;
-        border: 2px solid #0af;
-        border-radius: 10px;
-        padding: 1vh 1.5vw;
-        width: 100%;
-        font-size: 1.5vh;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
+/* ===== SETTINGS ALWAYS BOTTOM ===== */
+.settings {
+    margin-top: auto;
+}
 
-    .button img {
-        height: 3vh;
-        width: auto;
-        margin-right: 1vw;
+/* ===== SMALL SCREENS ===== */
+@media (max-height: 600px) {
+    .btn {
+        font-size: 1.2vh;
+        padding: 0.7vh 1vw;
     }
-
-    .button:hover {
-        background: #0af;
-        color: #000;
+    .btn img {
+        height: 2.4vh;
     }
-
-    .bottom-button {
-        margin-top: auto; /* Settings always at bottom */
-    }
-
-    /* Responsive tweaks for short screens */
-    @media (max-height: 600px) {
-        .dashboard {
-            gap: 1vh;
-        }
-        .button img {
-            height: 2.5vh;
-        }
-        .button {
-            font-size: 1.2vh;
-            padding: 0.8vh 1vw;
-        }
-        .ori-name {
-            font-size: 1.5vh;
-        }
-    }
+}
 </style>
 </head>
+
 <body>
 
-    <!-- Static Globe -->
-    <div class="globe-container">
-        <img src="assets/images/qtai_globe.png" alt="Globe">
+<!-- STATIC GLOBE -->
+<div class="globe">
+    <img src="assets/images/qtai_globe.png" alt="Globe">
+</div>
+
+<!-- ORI OLOGO -->
+<div class="ori">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
+    <div class="ori-name">Ori Ologo</div>
+</div>
+
+<!-- BUTTON STACK -->
+<div class="dashboard">
+
+    <div class="btn" onclick="go('tradingfloor.html')">
+        <img src="assets/images/tradingfloor_main.png">
+        Trading Floor
     </div>
 
-    <!-- Ori Ologo -->
-    <div class="ori-ologo">
-        <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
-        <div class="ori-name">Ori Ologo</div>
+    <div class="btn" onclick="go('traderlab.html')">
+        <img src="assets/images/traderlab_icon.png">
+        TraderLab
     </div>
 
-    <!-- Dashboard Buttons -->
-    <div class="dashboard">
-        <div class="button" id="trading-floor-btn">
-            <img src="assets/images/tradingfloor_main.png" alt="Trading Floor">
-            Trading Floor
-        </div>
-
-        <div class="button" id="traderlab-btn">
-            <img src="assets/images/traderlab_icon.png" alt="TraderLab">
-            TraderLab
-        </div>
-
-        <div class="button" id="cpilot-btn">
-            <img src="assets/images/cpilot_panel.png" alt="CPilot">
-            CPilot
-        </div>
-
-        <div class="button" id="system-btn">
-            <img src="assets/images/macarthur.png" alt="System">
-            System
-        </div>
-
-        <div class="button" id="peace-index-btn">
-            <img src="assets/images/peace_index_logo.png" alt="Peace Index">
-            Peace Index
-        </div>
-
-        <div class="button bottom-button" id="settings-btn">
-            Settings
-        </div>
+    <div class="btn" onclick="go('cpilot.html')">
+        <img src="assets/images/cpilot_panel.png">
+        CPilot
     </div>
+
+    <div class="btn" onclick="go('system.html')">
+        <img src="assets/images/macarthur.png">
+        System
+    </div>
+
+    <div class="btn" onclick="go('peace_index.html')">
+        <img src="assets/images/peace_index_logo.png">
+        Peace Index
+    </div>
+
+    <div class="btn settings" onclick="go('settings.html')">
+        Settings
+    </div>
+
+</div>
 
 <script>
-    // Button functionality (dynamic navigation)
-    document.getElementById('trading-floor-btn').addEventListener('click', () => {
-        alert("Opening Trading Floor...");
-        // Example: window.location.href = "tradingfloor.html";
-    });
+/* ===== NAVIGATION ===== */
+function go(target) {
+    speakOriOlogo("Opening " + target.replace('.html','').replace('_',' '));
+    window.location.href = target;
+}
 
-    document.getElementById('traderlab-btn').addEventListener('click', () => {
-        alert("Opening TraderLab...");
-        // Example: window.location.href = "traderlab.html";
-    });
-
-    document.getElementById('cpilot-btn').addEventListener('click', () => {
-        alert("Opening CPilot Panel...");
-        // Example: window.location.href = "cpilot.html";
-    });
-
-    document.getElementById('system-btn').addEventListener('click', () => {
-        alert("Opening System...");
-        // Example: window.location.href = "system.html";
-    });
-
-    document.getElementById('peace-index-btn').addEventListener('click', () => {
-        alert("Opening Peace Index...");
-        // Example: window.location.href = "peace_index.html";
-    });
-
-    document.getElementById('settings-btn').addEventListener('click', () => {
-        alert("Opening Settings...");
-        // Example: window.location.href = "settings.html";
-    });
-
-    // Ori Ologo speech function
-    function speakOriOlogo(text) {
-        if ('speechSynthesis' in window) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = 'en-US';
-            window.speechSynthesis.speak(msg);
-        }
+/* ===== ORI OLOGO VOICE ===== */
+function speakOriOlogo(text) {
+    if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.rate = 1;
+        msg.pitch = 1;
+        msg.lang = 'en-US';
+        speechSynthesis.cancel();
+        speechSynthesis.speak(msg);
     }
+}
 
-    // Greeting on page load
-    window.onload = () => {
-        speakOriOlogo("Welcome to Quantum Trader AI. Select an option to proceed.");
-    };
+/* ===== GREETING ===== */
+window.onload = () => {
+    speakOriOlogo("Welcome to Quantum Trader AI. Please select a module.");
+};
 </script>
 
 </body>
