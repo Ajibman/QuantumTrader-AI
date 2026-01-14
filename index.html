@@ -1,345 +1,191 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™ — Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumTrader AI™ Dashboard</title>
 
-<style>
-:root {
-  --bg: #000428;
-  --card: #071226;
-  --accent: #00ffe7;
-  --text: #ffffff;
-  --marine: rgba(0, 255, 180, 0.55);
-}
+  <!-- === CSS: Dashboard Styling === -->
+  <style>
+    /* Container */
+    .dashboard-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-/* ===== Global ===== */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    /* Top Logos */
+    .top-logos {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .top-logo {
+      height: 60px;
+      width: auto;
+    }
 
-header {
-  padding: 1rem 2rem;
-  background: var(--card);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
+    /* Ori Ologo */
+    .ori-ologo-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
 
-main {
-  flex: 1;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
+    .ori-ologo {
+      width: 150px;
+      height: auto;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0, 255, 180, 0.4);
+      animation: pulseGlow 1s infinite alternate;
+    }
 
-/* ===== Hidden Dynamic Modules 01–15 ===== */
-.module-card {
-  display: none;
-}
+    /* Voice Blob: subtle and floating above head */
+    .voice-blob {
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 7px;
+      background-color: rgba(0, 255, 180, 0.25);
+      border-radius: 50%;
+      animation: swayBlob 1s infinite alternate ease-in-out;
+    }
 
-/* ===== Panels ===== */
-.panel {
-  width: 90%;
-  max-width: 800px;
-  padding: 1rem;
-  border-radius: 1rem;
-  background: #08192e;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  color: #00ffe7;
-  font-family: monospace;
-}
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px rgba(0, 255, 180, 0.3), 0 0 30px rgba(0, 255, 180, 0.2) inset; }
+      50% { box-shadow: 0 0 25px rgba(0, 255, 180, 0.5), 0 0 50px rgba(0, 255, 180, 0.3) inset; }
+      100% { box-shadow: 0 0 15px rgba(0, 255, 180, 0.4), 0 0 40px rgba(0, 255, 180, 0.25) inset; }
+    }
 
-/* ===== Trust Line ===== */
-.trust-text {
-  font-size: 0.85rem;
-  opacity: 0.75;
-  text-align: center;
-  letter-spacing: 0.3px;
-}
+    @keyframes swayBlob {
+      0% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-52%) translateY(-1px); }
+      100% { transform: translateX(-50%) translateY(0); }
+    }
 
-/* ===== Images ===== */
-#globe,
-#peaceIndex {
-  display: block;
-  margin: 12px auto;
-  max-width: 150px;
-  height: auto;
-  cursor: pointer;
-}
+    /* Buttons Wrapper */
+    .buttons-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
 
-/* ===== Axis Container ===== */
-.axis-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  padding-top: 20px;
-}
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+    }
 
-/* ===== Buttons ===== */
-#button-container {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(140px, 1fr));
-  gap: 16px;
-  margin-top: 10px;
-}
+    .dashboard-btn {
+      padding: 12px 24px;
+      background-color: #00f2f2;
+      border: none;
+      border-radius: 8px;
+      min-width: 120px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
 
-button {
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 0.6rem;
-  background: var(--accent);
-  color: var(--bg);
-  cursor: pointer;
-  font-weight: 600;
-}
+    .dashboard-btn:hover {
+      transform: translateY(-2px);
+      background-color: #00cccc;
+    }
 
-button:hover {
-  background: #00ffd0;
-}
-
-/* ===== Ori Olokun — Circular Vignette ===== */
-#ori-ologo-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 24px 0 18px;
-}
-
-#ori-vignette {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at center,
-    rgba(0,255,180,0.12),
-    rgba(0,0,0,0.9));
-  box-shadow:
-    0 0 18px var(--marine),
-    inset 0 0 12px rgba(0,255,180,0.2);
-  animation: oriPulse 1.4s ease-in-out infinite;
-}
-
-#ori-ologo-img {
-  width: 120px;
-  height: auto;
-  border-radius: 50%;
-}
-
-#ori-ologo-name {
-  margin-top: 8px;
-  font-size: 0.95rem;
-  letter-spacing: 1px;
-  opacity: 0.8;
-}
-
-/* Pulse */
-@keyframes oriPulse {
-  0%   { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
-  50%  { box-shadow: 0 0 26px var(--marine), inset 0 0 24px rgba(0,255,180,0.55); }
-  100% { box-shadow: 0 0 12px var(--marine), inset 0 0 14px rgba(0,255,180,0.25); }
-}
-
-/* ===== Footer ===== */
-footer {
-  padding: 1rem;
-  font-size: 0.8rem;
-  text-align: center;
-  background: #050b1d;
-  opacity: 0.75;
-}
-
-/* ===== Mobile ===== */
-@media (max-width: 600px) {
-  #globe { max-width: 100px; }
-  #peaceIndex { max-width: 120px; }
-  #ori-vignette { width: 140px; height: 140px; }
-}
-</style>
+    /* Responsive */
+    @media (max-width: 600px) {
+      .button-row { flex-direction: column; gap: 15px; }
+      .top-logo { height: 50px; }
+      .ori-ologo { width: 120px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <h1>QuantumTrader AI™</h1>
-</header>
+  <!-- === Dashboard HTML === -->
+  <div class="dashboard-container">
 
-<main id="dashboard">
+    <!-- Top Logos -->
+    <div class="top-logos">
+      <img src="globe.png" alt="Globe" class="top-logo">
+      <img src="peace-index.png" alt="Peace Index" class="top-logo">
+    </div>
 
-  <!-- Hidden Modules 01–15 -->
-  <div class="module-card" id="module-01"></div>
-  <div class="module-card" id="module-02"></div>
-  <div class="module-card" id="module-03"></div>
-  <div class="module-card" id="module-04"></div>
-  <div class="module-card" id="module-05"></div>
-  <div class="module-card" id="module-06"></div>
-  <div class="module-card" id="module-07"></div>
-  <div class="module-card" id="module-08"></div>
-  <div class="module-card" id="module-09"></div>
-  <div class="module-card" id="module-10"></div>
-  <div class="module-card" id="module-11"></div>
-  <div class="module-card" id="module-12"></div>
-  <div class="module-card" id="module-13"></div>
-  <div class="module-card" id="module-14"></div>
-  <div class="module-card" id="module-15"></div>
+    <!-- Ori Ologo with subtle voice indicator -->
+    <div class="ori-ologo-container">
+      <img src="ori-ologo.png" alt="Ori Ologo" class="ori-ologo">
+      <div class="voice-blob"></div>
+    </div>
 
-  <div class="trust-text">
-    System-governed access • Disciplined execution • Automatic protection
-  </div>
-  
-  <div id="status-display" style="margin:12px 0; font-size:13px; opacity:0.85;"></div>
+    <!-- Buttons Section -->
+    <div class="buttons-wrapper">
+      <!-- Top Row -->
+      <div class="button-row">
+        <button onclick="location.href='traderlab.html'" class="dashboard-btn">TraderLab</button>
+        <button onclick="location.href='tradingfloor.html'" class="dashboard-btn">Trading Floor</button>
+        <button onclick="location.href='cpilot.html'" class="dashboard-btn">CPilot</button>
+      </div>
 
-  <!-- ===== Button Container ===== -->
-  <div id="button-container">
-    <button data-target="traderlab.html">TraderLab</button>
-    <button data-target="tradingfloor.html">Trading Floor</button>
-    <button data-target="portfolio.html">Portfolio</button>
-    <button data-target="settings.html">Settings</button>
-    <button id="system-btn">System</button>
+      <!-- Bottom Row -->
+      <div class="button-row">
+        <button onclick="location.href='portfolio.html'" class="dashboard-btn">Portfolio</button>
+        <button onclick="location.href='settings.html'" class="dashboard-btn">Settings</button>
+        <button onclick="location.href='system.html'" class="dashboard-btn">System</button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- ===== System Panel ===== -->
-  <div class="panel" id="system-panel">
-    <p><strong>System Status:</strong> OPERATIONAL ✔</p>
-    <p><strong>Core Services:</strong> Online</p>
-    <p><strong>Data Feeds:</strong> Synchronized</p>
-    <p><strong>Execution Clock:</strong> Aligned (UTC)</p>
+  <!-- === JavaScript: Voice Blob + Natural Speech === -->
+  <script>
+    const buttons = document.querySelectorAll('.dashboard-btn');
+    const voiceBlob = document.querySelector('.voice-blob');
 
-    <p><strong>Access State:</strong></p>
-    <ul>
-      <li>Subscription: Active</li>
-      <li>Trading Floor: Locked (Payment Required)</li>
-      <li>AutoTrader: Disabled (Policy)</li>
-    </ul>
+    function speakButton(buttonName) {
+      // Animate blob
+      voiceBlob.style.transform = 'translateX(-50%) translateY(-4px) scale(1.3)';
+      voiceBlob.style.backgroundColor = 'rgba(0, 255, 180, 0.6)';
 
-    <p><strong>Governance:</strong></p>
-    <ul>
-      <li>TraderLab completion required</li>
-      <li>Capital protection enforced</li>
-      <li>Medusa™ auto-regeneration active</li>
-    </ul>
+      setTimeout(() => {
+        voiceBlob.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+        voiceBlob.style.backgroundColor = 'rgba(0, 255, 180, 0.25)';
+      }, 300);
 
-    <p><strong>Identity:</strong></p>
-    <ul>
-      <li>QuantumTrader AI™ v1.0</li>
-      <li>Build: Stable</li>
-      <li>Architect: Olagoke Ajibulu</li>
-    </ul>
+      // Natural human-like voice
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(`You selected ${buttonName}`);
+        msg.lang = 'en-US';
+        msg.pitch = 1; 
+        msg.rate = 1;  
+        msg.volume = 1; 
+        const voices = window.speechSynthesis.getVoices();
+        const naturalVoice = voices.find(v => v.name.includes('Google US English')) || voices[0];
+        msg.voice = naturalVoice;
+        window.speechSynthesis.speak(msg);
+      }
+    }
 
-    <p>System provides visibility, not control.</p>
-  </div>
-
-  <!-- ===== Axis Container ===== -->
-  <div class="axis-container">
-    <img id="globe" src="assets/images/qtai_globe.png" alt="Globe">
-    <img id="peaceIndex" src="assets/images/peace_index_logo.png" alt="Peace Index">
-  </div>
-
-</main>
-
-<!-- ===== Ori Olokun ===== -->
-<div id="ori-ologo-wrapper">
-  <div id="ori-vignette">
-    <img src="assets/images/qtai_ori_olokun.png" id="ori-ologo-img" alt="Ori Olokun">
-  </div>
-  <div id="ori-ologo-name">Ori Ologo</div>
-</div>
-
-<footer>
-© 2026 QuantumTrader AI™ — All Rights Reserved |
-Olagoke Ajibulu — Visionary, Architect, Concepts and Builder
-</footer>
-
-<!-- ===== Scripts ===== -->
-<script src="js/state.js"></script>
-<script src="js/simulation.js"></script>
-<script src="js/ui.js"></script>
-
-<script>
-/* ===== App State ===== */
-const AppState = { active: null };
-
-function setActive(module) {
-  AppState.active = module;
-  renderState();
-}
-
-function renderState() {
-  const status = document.getElementById('status-display');
-  if (!status) return;
-  if (AppState.active === 'system') status.textContent = 'SYSTEM ACTIVE — visibility only, no control';
-  else if (AppState.active) status.textContent = AppState.active.toUpperCase() + ' ACTIVE';
-  else status.textContent = '';
-}
-
-/* ===== Button Wiring ===== */
-const buttons = [...document.querySelectorAll('#button-container button')].filter(b => b.id !== 'system-btn');
-buttons.forEach(btn => {
-  const target = btn.dataset.target;
-  btn.addEventListener('click', () => {
-    const moduleName = btn.textContent.toLowerCase().replace(/\s/g,'');
-    setActive(moduleName);
-    if(target) window.location.href = target;
-  });
-});
-document.getElementById('system-btn').addEventListener('click', () => setActive('system'));
-
-/* ===== Ori Ologo Live Commentary ===== */
-const peaceIndexLogo = document.getElementById('peaceIndex');
-const oriOlogoName = document.getElementById('ori-ologo-name');
-
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
-  utterance.pitch = 1.1;
-  utterance.rate = 1;
-  utterance.volume = 1;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
-}
-
-// Peace Index click
-peaceIndexLogo.addEventListener('click', () => {
-  setActive('peaceindex');
-  speak("Ori Ologo says: Fetching live Peace Index data. Evaluating global trading conditions for simulation and live modes.");
-  peaceIndexLogo.style.transform = 'scale(1.05)';
-  setTimeout(() => peaceIndexLogo.style.transform = 'scale(1)', 300);
-});
-
-// Buttons interaction
-const appButtons = [...document.querySelectorAll('#button-container button')];
-appButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const name = btn.textContent.trim();
-    if (btn.id === 'system-btn') speak("Ori Ologo notes: System panel activated. Only visibility, no control.");
-    else speak(`Ori Ologo announces: ${name} module is now active.`);
-  });
-});
-
-// AutoTrader signal hook
-function autoTraderSignal(signalText) {
-  speak(`Ori Ologo advises: ${signalText}`);
-}
-
-// Example: notify split-screen
-function notifySplitScreenMode(mode) {
-  speak(`Ori Ologo reminds: ${mode} mode active. You can view simulation and live trading simultaneously.`);
-}
-</script>
+    buttons.forEach(btn => {
+      btn.addEventListener('mouseenter', () => speakButton(btn.textContent));
+      btn.addEventListener('click', () => speakButton(btn.textContent));
+    });
+  </script>
 
 </body>
- </html>
+</html>
