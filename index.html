@@ -1,202 +1,188 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI™ — Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Dashboard</title>
+<style>
+:root {
+  --bg: #000428;
+  --card-bg: rgba(0,0,0,0.6);
+  --glow-color: #00FFFF; /* Aqua marine main */
+  --glow-accent: #000080; /* Navy blue subtle */
+  --btn-bg: #111;
+  --btn-hover: #222;
+  --text-color: #fff;
+  --accent: #0ff;
+  --font-main: 'Arial', sans-serif;
+}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #ffffff;
-      color: #000;
-      display: flex;
-      justify-content: center;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background: linear-gradient(to bottom, var(--bg), #000);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
 
-    main {
-      width: 100%;
-      max-width: 420px;
-      padding: 24px 16px 40px;
-      text-align: center;
-    }
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
 
-    /* Top icons (Globe + Peace Index) */
-    .top-icons {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    .top-icons img {
-      width: 40px;
-      height: 40px;
-    }
+header h1 {
+  font-size: 2rem;
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--glow-color), 0 0 20px var(--glow-accent);
+}
 
-    /* Ori Ologo container */
-    .ori-container {
-      margin: 12px 0 28px;
-      position: relative;
-    }
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
+}
 
-    .ori-container img {
-      width: 120px;
-      filter: drop-shadow(0 0 14px rgba(0, 255, 200, 0.6));
-      border-radius: 50%;
-      animation: pulseGlow 1s infinite alternate;
-    }
+.card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-accent);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px rgba(0, 255, 180, 0.3), 0 0 30px rgba(0, 255, 180, 0.2) inset; }
-      50% { box-shadow: 0 0 25px rgba(0, 255, 180, 0.5), 0 0 50px rgba(0, 255, 180, 0.3) inset; }
-      100% { box-shadow: 0 0 15px rgba(0, 255, 180, 0.4), 0 0 40px rgba(0, 255, 180, 0.25) inset; }
-    }
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px var(--glow-color), 0 0 40px var(--glow-accent);
+}
 
-    .ori-label {
-      margin-top: 6px;
-      font-weight: 600;
-    }
+button {
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border: none;
+  padding: 12px 18px;
+  margin-top: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
 
-    /* Voice blob */
-    .voice-blob {
-      position: absolute;
-      bottom: 110%;
-      left: 50%;
-      width: 12px;
-      height: 7px;
-      background-color: rgba(0, 255, 180, 0.25);
-      border-radius: 50%;
-      transform: translateX(-50%);
-      animation: swayBlob 1s infinite alternate ease-in-out;
-    }
+button:hover {
+  background: var(--btn-hover);
+}
 
-    @keyframes swayBlob {
-      0% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-52%) translateY(-1px); }
-      100% { transform: translateX(-50%) translateY(0); }
-    }
+#ori-ologo {
+  width: 150px;
+  margin: 20px auto;
+  animation: pulse 2s infinite;
+}
 
-    /* Dashboard buttons */
-    #dashboard-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-top: 8px;
-    }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--glow-color)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 15px var(--glow-accent)); }
+}
 
-    #dashboard-buttons button {
-      padding: 16px;
-      font-size: 17px;
-      border: none;
-      border-radius: 12px;
-      background: #00e6e6;
-      color: #000;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
+footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
 
-    #dashboard-buttons button:active {
-      transform: scale(0.97);
-    }
+/* Responsive voice notification overlay */
+#voice-notice {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px var(--glow-color);
+  display: none;
+}
 
-    /* Settings button */
-    .settings-btn {
-      background: #0066cc; /* marine blue */
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      .ori-container img { width: 100px; }
-      #dashboard-buttons button { font-size: 15px; padding: 14px; }
-      .top-icons img { width: 36px; height: 36px; }
-    }
-  </style>
+</style>
 </head>
-
 <body>
 
-  <main>
+<div class="container">
+  <header>
+    <h1>QuantumTrader AI™ Dashboard</h1>
+    <img id="ori-ologo" src="assets/ori_ologo.png" alt="Ori Ologo speaking">
+  </header>
 
-    <!-- Top icons -->
-    <div class="top-icons">
-      <img src="assets/images/qtai_globe.png" alt="Quantum Trader Globe">
-      <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo">
+  <div class="dashboard">
+    <div class="card">
+      <h3>Trading Floor</h3>
+      <button onclick="openModule('trading-floor')">Enter</button>
     </div>
-
-    <!-- Ori Ologo -->
-    <div class="ori-container">
-      <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo">
-      <div class="ori-label">Ori Ologo</div>
-      <div class="voice-blob"></div>
+    <div class="card">
+      <h3>TraderLab</h3>
+      <button onclick="openModule('trader-lab')">Enter</button>
     </div>
-
-    <!-- Dashboard Buttons -->
-    <div id="dashboard-buttons">
-
-      <button data-href="tradingfloor.html">Trading Floor</button>
-      <button data-href="traderlab.html">TraderLab</button>
-      <button data-href="cpilot.html">CPilot</button>
-      <button data-href="system.html">System</button>
-      <button data-href="peace-index.html">Peace Index</button>
-      <button data-href="settings.html" class="settings-btn">Settings</button>
-
+    <div class="card">
+      <h3>CPilot</h3>
+      <button onclick="openModule('cpilot')">Enter</button>
     </div>
+    <div class="card">
+      <h3>Peace Index</h3>
+      <button onclick="openModule('peace-index')">View</button>
+    </div>
+    <div class="card">
+      <h3>Settings</h3>
+      <button onclick="openModule('settings')">Open</button>
+    </div>
+    <div class="card">
+      <h3>System Status</h3>
+      <button onclick="openModule('system-status')">Check</button>
+    </div>
+  </div>
+</div>
 
-  </main>
+<div id="voice-notice">Voice: ...</div>
 
-  <!-- Phase 6 Script: Voice + Navigation + Isolation -->
-  <script>
-    const buttons = document.querySelectorAll('#dashboard-buttons button');
-    const voiceBlob = document.querySelector('.voice-blob');
-    let lastSelection = null;
+<footer>
+  QuantumTrader AI™ — © 2026 Olagoke Ajibulu
+</footer>
 
-    function speakButton(name) {
-      // Animate voice blob
-      voiceBlob.style.transform = 'translateX(-50%) translateY(-4px) scale(1.3)';
-      voiceBlob.style.backgroundColor = 'rgba(0, 255, 180, 0.6)';
-      setTimeout(() => {
-        voiceBlob.style.transform = 'translateX(-50%) translateY(0) scale(1)';
-        voiceBlob.style.backgroundColor = 'rgba(0, 255, 180, 0.25)';
-      }, 300);
+<script>
+function openModule(moduleName) {
+  showVoiceNotice(`You selected ${moduleName.replace('-', ' ')}`);
+  // Logic to navigate or display module goes here
+  console.log(`Module requested: ${moduleName}`);
+}
 
-      // Only speak if new selection
-      if (name === lastSelection) return;
-      lastSelection = name;
+function showVoiceNotice(message) {
+  const notice = document.getElementById('voice-notice');
+  notice.innerText = `Voice: ${message}`;
+  notice.style.display = 'block';
+  setTimeout(() => notice.style.display = 'none', 2500);
+}
 
-      // Natural human-like voice
-      if ('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(`You selected ${name}`);
-        msg.lang = 'en-US';
-        msg.rate = 1;
-        msg.pitch = 1;
-        const voices = window.speechSynthesis.getVoices();
-        const natural = voices.find(v => v.name.includes('Google US English')) || voices[0];
-        msg.voice = natural;
-        window.speechSynthesis.speak(msg);
-      }
-    }
+// Ori Ologo speaking simulation
+const oriOlogo = document.getElementById('ori-ologo');
+function speakOriOlogo(text) {
+  showVoiceNotice(text);
+  oriOlogo.classList.add('speaking');
+  setTimeout(() => oriOlogo.classList.remove('speaking'), 2000);
+}
 
-    // Button click handler
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const name = btn.textContent.trim();
-        const href = btn.dataset.href;
-
-        speakButton(name);
-
-        // Navigate only if href exists
-        if (href) {
-          window.location.href = href;
-        }
-      });
-    });
-
-    // Reset last selection when returning
-    window.addEventListener('pageshow', () => { lastSelection = null; });
-  </script>
+// Example: speak when clicking Trading Floor
+document.querySelector("button[onclick*='trading-floor']").addEventListener('click', () => {
+  speakOriOlogo("Welcome to the Trading Floor!");
+});
+</script>
 
 </body>
 </html>
