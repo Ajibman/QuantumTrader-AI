@@ -312,6 +312,55 @@ function unlockTraderLabOnly() {
   // (payment gate logic lives here)
 </script>
 
+<script>
+/* ==========================
+   ADMIN VERIFICATION LAYER
+   ========================== */
+
+document.addEventListener("keydown", function (e) {
+  // CTRL + SHIFT + V → Admin Verify
+  if (e.ctrlKey && e.shiftKey && e.key === "V") {
+    adminVerify();
+  }
+});
+
+function adminVerify() {
+  const data = JSON.parse(localStorage.getItem("qtai_access") || "{}");
+
+  if (data.status !== "pending_verification") {
+    alert("No pending payment to verify.");
+    return;
+  }
+
+  const confirmVerify = confirm(
+    "Verify payment from:\n\n" +
+    "Reference: " + data.reference + "\n\n" +
+    "Confirm payment received in ALAT?"
+  );
+
+  if (!confirmVerify) return;
+
+  activateTraderLab();
+}
+</script>
+
+ <script>
+function activateTraderLab() {
+  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30);
+
+  localStorage.setItem(
+    "qtai_access",
+    JSON.stringify({
+      status: "active",
+      expiry
+    })
+  );
+
+  speak("Payment verified. Trader Lab unlocked for thirty days.");
+  unlockTraderLabOnly();
+}
+ </script>
+ 
 </body>
 </html>
 
