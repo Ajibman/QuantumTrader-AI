@@ -1,366 +1,229 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumTrader AI</title>
-
 <style>
-:root {
-  --bg: #050b14;
-  --accent: #00e5ff;
-  --accent-dark: #0a3d62;
-  --text: #e6f6ff;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: radial-gradient(circle at top, #081726, var(--bg));
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.app {
-  width: 100%;
-  max-width: 360px;
-  height: 100%;
-  max-height: 740px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Header */
-header img {
-  width: 72px;
-  height: auto;
-  margin-top: 8px;
-}
-
-/* Center Visual */
-.visual {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.visual img {
-  width: 140px;
-  max-width: 80%;
-  height: auto;
-}
-
-/* Buttons */
-nav {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
+/* Minimal styling for buttons and level display */
 button {
-  background: linear-gradient(145deg, var(--accent-dark), #001b2e);
-  border: 1px solid rgba(0,229,255,0.35);
-  color: var(--text);
-  padding: 10px 6px;
-  font-size: 0.75rem;
-  border-radius: 10px;
-  text-align: center;
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: #0ff;
+  color: #000;
+  border: none;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
-button:active {
-  transform: scale(0.96);
-  box-shadow: 0 0 8px rgba(0,229,255,0.4);
-}
-
-button.full {
-  grid-column: span 2;
-}
-
-/* Footer */
-footer {
-  font-size: 0.6rem;
-  opacity: 0.6;
-  margin-bottom: 4px;
+button:disabled {
+  background: #444;
+  cursor: not-allowed;
 }
 </style>
 </head>
-
 <body>
-<div class="app">
 
-  <!-- HEADER -->
-  <header>
-    <img src="qtai_globe.png" alt="QuantumTrader AI" />
-  </header>
+<h1>QuantumTrader AI Dashboard</h1>
 
-  <!-- CENTER VISUAL -->
-  <div class="visual">
-    <img src="qtai_ori_ol.png" alt="Ori Ologo" />
-  </div>
+<!-- Buttons -->
+<button id="traderLabButton" onclick="requirePayment()">TraderLab</button>
+<button id="tradingFloorButton" onclick="alert('Trading Floor unlocked at Level 4');" disabled>Trading Floor</button>
+<button id="cPilotButton" onclick="alert('CPilot unlocked at Level 4');" disabled>CPilot</button>
+<button id="settingsButton" onclick="alert('Settings - Coming Soon')">Settings</button>
+<button id="gamesPavilionButton" onclick="window.location.href='games.html'">Games Pavilion</button>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <button onclick="navigate('Trading Floor')">Trading Floor</button>
-    <button onclick="requirePayment()">Trader Lab</button>
-    <button onclick="navigate('CPilot')">CPilot</button>
-    <button onclick="navigate('System Status')">System Status</button>
-    <button onclick="navigate('Settings')" class="full">Settings</button>
-  </nav>
-
-  <!-- FOOTER -->
-  <footer>
-    QuantumTrader AI © Public-Safe Build
-  </footer>
-
-</div>
-
-<script>
-/* PUBLIC-SAFE NAVIGATION HANDLER */
-function navigate(destination) {
-  speak(`You selected ${destination}. Module will open when available.`);
-}
-
-/* VOICE FEEDBACK */
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.rate = 0.95;
-  msg.pitch = 1;
-  window.speechSynthesis.speak(msg);
-}
-</script>
-
- <!-- insert this <script> block at the end of the locked index.html, before </body> -->
-<script>
-const ACCESS_KEY = "qtai_access";
-const PASS_KEY = "qtai_passed";
-const DAYS_30 = 1000 * 60 * 60 * 24 * 30;
-
-window.addEventListener("load", initAccessGate);
-
-function initAccessGate() {
-  const data = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
-  const now = Date.now();
-
-  // No activation yet
-  if (!data.status) return showPaymentPrompt();
-
-  // Expired access
-  if (now > data.expiry) return showRenewPrompt();
-
-  // Active but not passed TraderLab
-  if (data.status === "active" && !localStorage.getItem(PASS_KEY)) {
-    speak("Access granted to Trader Lab only.");
-    lockAdvancedModules();
-    return;
-  }
-
-  // Passed TraderLab → full access
-  if (localStorage.getItem(PASS_KEY)) {
-    speak("Full access restored.");
-    unlockAllModules();
-  }
-}
-
-function showPaymentPrompt() {
-  alert("Activate your QuantumTrader AI account.\nPayment: NGN 10,000 for 30 days access.");
-  if (confirm("Simulate payment success?")) activateAccount();
-}
-
-function activateAccount() {
-  const expiry = Date.now() + DAYS_30;
-  localStorage.setItem(
-    ACCESS_KEY,
-    JSON.stringify({ status: "active", expiry })
-  );
-  speak("Payment received. Trader Lab access granted for 30 days.");
-  lockAdvancedModules();
-}
-
-function showRenewPrompt() {
-  alert("Your 30-day access has expired.\nPlease renew to continue training.");
-  localStorage.removeItem(ACCESS_KEY);
-}
-
-function lockAdvancedModules() {
-  document.querySelectorAll("button").forEach(btn => {
-    const t = btn.textContent;
-    if (["Trading Floor", "CPilot"].includes(t)) {
-      btn.disabled = true;
-      btn.style.opacity = 0.4;
-    }
-  });
-}
-
-function unlockAllModules() {
-  document.querySelectorAll("button").forEach(btn => {
-    btn.disabled = false;
-    btn.style.opacity = 1;
-  });
-}
-
-// Example trigger: once the user passes Trader Lab
-function markTraderLabPassed() {
-  localStorage.setItem(PASS_KEY, "yes");
-  speak("Congratulations. You may now access Trading Floor and CPilot.");
-  unlockAllModules();
-}
-
-// Basic behavioral routing
-let randomClicks = 0;
-document.addEventListener("click", e => {
-  if (e.target.tagName !== "BUTTON") return;
-  randomClicks++;
-  if (randomClicks > 15 && !localStorage.getItem(ACCESS_KEY)) {
-    speak("Redirecting you to Games Pavilion.");
-    window.location.href = "games.html";
-  }
-});
-</script>
-
- <script>
-const ACCESS_KEY = "qtai_access";
-const PASS_KEY = "qtai_passed";
-const DAYS_30 = 1000 * 60 * 60 * 24 * 30;
-
-function requirePayment() {
-  const gate = `
-    QuantumTrader AI Access Required
-
-    Amount: NGN 10,000
-
-    Bank: WEMA Bank (ALAT)
-    Account Name: Olagoke Ajibulu
-    Account Number: 0299134895
-
-    Transfer from your banking app.
-    After payment, enter your sender name or reference.
-  `;
-
-  const reference = prompt(gate + "\n\nEnter payment reference / sender name:");
-
-  if (!reference) {
-    speak("Payment required to continue.");
-    return;
-  }
-
-  localStorage.setItem(
-    ACCESS_KEY,
-    JSON.stringify({
-      status: "pending_verification",
-      reference,
-      timestamp: Date.now()
-    })
-  );
-
-  speak("Payment submitted. Awaiting verification.");
-  lockAllModules();
-}
-
-function verifyPaymentManually() {
-  const expiry = Date.now() + DAYS_30;
-  localStorage.setItem(
-    ACCESS_KEY,
-    JSON.stringify({
-      status: "active",
-      expiry
-    })
-  );
-  speak("Payment verified. Trader Lab unlocked for 30 days.");
-  unlockTraderLabOnly();
-}
-
-function lockAllModules() {
-  document.querySelectorAll("button").forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = 0.4;
-  });
-}
-
-function unlockTraderLabOnly() {
-  document.querySelectorAll("button").forEach(btn => {
-    if (btn.textContent === "Trader Lab") {
-      btn.disabled = false;
-      btn.style.opacity = 1;
-    } else {
-      btn.disabled = true;
-      btn.style.opacity = 0.4;
-    }
-  });
-}
- </script>
-
- <script>
-  // requirePayment(), lockAllModules(), unlockTraderLabOnly()
-  // (payment gate logic lives here)
-</script>
+<!-- Level Display injected via script -->
+<div id="levelDisplay"></div>
 
 <script>
 /* ==========================
-   ADMIN VERIFICATION LAYER
+   QUANTUMTRADER AI - CORE LOGIC
+   Phase 5.3 + Phase 6.0-6.2.2
    ========================== */
 
-document.addEventListener("keydown", function (e) {
-  // CTRL + SHIFT + V → Admin Verify
+// Storage keys
+const ACCESS_KEY = "qtai_access";
+const PASS_KEY = "qtai_passed";
+const LEVEL_KEY = "qtai_level";
+const XP_KEY = "qtai_xp";
+const GUIDANCE_FAILS_KEY = "qtai_guidance_fails";
+const GRACE_KEY = "qtai_grace";
+
+// Level configuration
+const LEVELS = [
+  {level: 0, label: "Novice", xp: 0},
+  {level: 1, label: "Learner", xp: 5},
+  {level: 2, label: "Apprentice", xp: 15},
+  {level: 3, label: "Practitioner", xp: 30},
+  {level: 4, label: "Trader Ready", xp: 50},
+];
+
+// Initialize state
+if (!localStorage.getItem(XP_KEY)) localStorage.setItem(XP_KEY, 0);
+if (!localStorage.getItem(LEVEL_KEY)) localStorage.setItem(LEVEL_KEY, 0);
+if (!localStorage.getItem(GUIDANCE_FAILS_KEY)) localStorage.setItem(GUIDANCE_FAILS_KEY, 0);
+if (!localStorage.getItem(GRACE_KEY)) localStorage.setItem(GRACE_KEY, "inactive");
+
+// ==========================
+// PAYMENT & VERIFICATION
+// ==========================
+
+function requirePayment() {
+  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
+  if (access.status === "active") {
+    speak("Your account is already activated. Proceed to TraderLab.");
+    unlockTraderLabOnly();
+    return;
+  }
+  const reference = prompt("Please enter your payment reference for NGN 10,000 to ALAT account 0299134895, Olagoke Ajibulu:");
+  if (!reference) return;
+  localStorage.setItem(ACCESS_KEY, JSON.stringify({status: "pending_verification", reference}));
+  speak("Payment recorded. Awaiting verification by admin.");
+}
+
+// Admin verification: CTRL+SHIFT+V
+document.addEventListener("keydown", function(e) {
   if (e.ctrlKey && e.shiftKey && e.key === "V") {
     adminVerify();
   }
 });
 
 function adminVerify() {
-  const data = JSON.parse(localStorage.getItem("qtai_access") || "{}");
-
+  const data = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
   if (data.status !== "pending_verification") {
     alert("No pending payment to verify.");
     return;
   }
-
-  const confirmVerify = confirm(
-    "Verify payment from:\n\n" +
-    "Reference: " + data.reference + "\n\n" +
-    "Confirm payment received in ALAT?"
-  );
-
+  const confirmVerify = confirm("Verify payment from reference: " + data.reference + " received in ALAT?");
   if (!confirmVerify) return;
-
   activateTraderLab();
+}
+
+function activateTraderLab() {
+  const expiry = Date.now() + 1000*60*60*24*30; // 30 days
+  localStorage.setItem(ACCESS_KEY, JSON.stringify({status: "active", expiry}));
+  speak("Payment verified. TraderLab unlocked for thirty days.");
+  unlockTraderLabOnly();
+}
+
+// Enable TraderLab button after payment
+function unlockTraderLabOnly() {
+  const tlButton = document.getElementById("traderLabButton");
+  tlButton.disabled = false;
+}
+
+// ==========================
+// TRADERLAB LEVELS & XP
+// ==========================
+
+function recordAction({correct=false, followedGuidance=true}) {
+  let xp = parseInt(localStorage.getItem(XP_KEY));
+  let guidanceFails = parseInt(localStorage.getItem(GUIDANCE_FAILS_KEY));
+
+  if (!followedGuidance) {
+    guidanceFails += 1;
+    localStorage.setItem(GUIDANCE_FAILS_KEY, guidanceFails);
+    if (guidanceFails >= 3) {
+      speak("It seems you are not following guidance. You may try Games Pavilion for a different experience.");
+      window.location.href = "games.html";
+      return;
+    }
+  }
+
+  if (correct && followedGuidance) xp += 1;
+  localStorage.setItem(XP_KEY, xp);
+
+  updateLevel(xp);
+}
+
+function updateLevel(currentXp) {
+  let levelObj = LEVELS[0];
+  for (let i = LEVELS.length-1; i >= 0; i--) {
+    if (currentXp >= LEVELS[i].xp) {
+      levelObj = LEVELS[i];
+      break;
+    }
+  }
+
+  let currentLevel = parseInt(localStorage.getItem(LEVEL_KEY));
+  if (currentLevel !== levelObj.level) {
+    localStorage.setItem(LEVEL_KEY, levelObj.level);
+    speak("You are now " + levelObj.label + ". Keep following guidance to reach the next level.");
+  }
+
+  // Unlock Trading Floor & CPilot at Level 4
+  if (levelObj.level === 4 && localStorage.getItem(PASS_KEY) !== "yes") {
+    markTraderLabPassed();
+  }
+
+  displayLevel(levelObj.label, currentXp);
+}
+
+function displayLevel(label, xp) {
+  let levelDisplay = document.getElementById("levelDisplay");
+  levelDisplay.innerText = `Level: ${label} | XP: ${xp}`;
+}
+
+// Mark TraderLab as passed
+function markTraderLabPassed() {
+  localStorage.setItem(PASS_KEY, "yes");
+  speak("Congratulations! You are now ready to access the Trading Floor and CPilot.");
+  document.getElementById("tradingFloorButton").disabled = false;
+  document.getElementById("cPilotButton").disabled = false;
+}
+
+// ==========================
+// ORI OLOGO VOICE GUIDANCE
+// ==========================
+
+function speak(message) {
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(message);
+    utter.lang = 'en-US';
+    utter.pitch = 1;
+    utter.rate = 0.9;
+    utter.volume = 1;
+    window.speechSynthesis.speak(utter);
+  } else {
+    console.log("Ori Ologo says: " + message);
+  }
+}
+
+// ==========================
+// SOFT RESET / GRACE PERIOD
+// ==========================
+
+function startGracePeriod() {
+  localStorage.setItem(GRACE_KEY, "active");
+  const graceExpiry = Date.now() + 1000*60*60*24*7; // 7 days
+  localStorage.setItem(GRACE_KEY + "_expiry", graceExpiry);
+  speak("A seven-day grace period has been granted. Use this time to continue learning in TraderLab.");
+}
+
+function checkAccessExpiry() {
+  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
+  if (access.status !== "active") return;
+
+  const now = Date.now();
+  if (now > access.expiry) {
+    const grace = localStorage.getItem(GRACE_KEY);
+    const graceExpiry = parseInt(localStorage.getItem(GRACE_KEY + "_expiry") || 0);
+    if (grace === "active" && now <= graceExpiry) {
+      speak("You are in your grace period. Continue your TraderLab learning.");
+    } else {
+      speak("Your TraderLab access has expired. Please pay NGN 10,000 to renew your 30-day activation.");
+      lockAllModules();
+    }
+  }
+}
+
+function lockAllModules() {
+  document.getElementById("traderLabButton").disabled = true;
+  document.getElementById("tradingFloorButton").disabled = true;
+  document.getElementById("cPilotButton").disabled = true;
 }
 </script>
 
- <script>
-function activateTraderLab() {
-  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30);
-
-  localStorage.setItem(
-    "qtai_access",
-    JSON.stringify({
-      status: "active",
-      expiry
-    })
-  );
-
-  speak("Payment verified. Trader Lab unlocked for thirty days.");
-  unlockTraderLabOnly();
-}
- </script>
- 
 </body>
 </html>
-
