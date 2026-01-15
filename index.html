@@ -234,6 +234,78 @@ document.addEventListener("click", e => {
   }
 });
 </script>
+
+ <script>
+const ACCESS_KEY = "qtai_access";
+const PASS_KEY = "qtai_passed";
+const DAYS_30 = 1000 * 60 * 60 * 24 * 30;
+
+function requirePayment() {
+  const gate = `
+    QuantumTrader AI Access Required
+
+    Amount: NGN 10,000
+
+    Bank: WEMA Bank (ALAT)
+    Account Name: Olagoke Ajibulu
+    Account Number: 0299134895
+
+    Transfer from your banking app.
+    After payment, enter your sender name or reference.
+  `;
+
+  const reference = prompt(gate + "\n\nEnter payment reference / sender name:");
+
+  if (!reference) {
+    speak("Payment required to continue.");
+    return;
+  }
+
+  localStorage.setItem(
+    ACCESS_KEY,
+    JSON.stringify({
+      status: "pending_verification",
+      reference,
+      timestamp: Date.now()
+    })
+  );
+
+  speak("Payment submitted. Awaiting verification.");
+  lockAllModules();
+}
+
+function verifyPaymentManually() {
+  const expiry = Date.now() + DAYS_30;
+  localStorage.setItem(
+    ACCESS_KEY,
+    JSON.stringify({
+      status: "active",
+      expiry
+    })
+  );
+  speak("Payment verified. Trader Lab unlocked for 30 days.");
+  unlockTraderLabOnly();
+}
+
+function lockAllModules() {
+  document.querySelectorAll("button").forEach(btn => {
+    btn.disabled = true;
+    btn.style.opacity = 0.4;
+  });
+}
+
+function unlockTraderLabOnly() {
+  document.querySelectorAll("button").forEach(btn => {
+    if (btn.textContent === "Trader Lab") {
+      btn.disabled = false;
+      btn.style.opacity = 1;
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = 0.4;
+    }
+  });
+}
+ </script>
  
 </body>
 </html>
