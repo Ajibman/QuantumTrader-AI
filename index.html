@@ -147,5 +147,93 @@ function speak(text) {
 }
 </script>
 
+ <!-- insert this <script> block at the end of the locked index.html, before </body> -->
+<script>
+const ACCESS_KEY = "qtai_access";
+const PASS_KEY = "qtai_passed";
+const DAYS_30 = 1000 * 60 * 60 * 24 * 30;
+
+window.addEventListener("load", initAccessGate);
+
+function initAccessGate() {
+  const data = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
+  const now = Date.now();
+
+  // No activation yet
+  if (!data.status) return showPaymentPrompt();
+
+  // Expired access
+  if (now > data.expiry) return showRenewPrompt();
+
+  // Active but not passed TraderLab
+  if (data.status === "active" && !localStorage.getItem(PASS_KEY)) {
+    speak("Access granted to Trader Lab only.");
+    lockAdvancedModules();
+    return;
+  }
+
+  // Passed TraderLab → full access
+  if (localStorage.getItem(PASS_KEY)) {
+    speak("Full access restored.");
+    unlockAllModules();
+  }
+}
+
+function showPaymentPrompt() {
+  alert("Activate your QuantumTrader AI account.\nPayment: NGN 10,000 for 30 days access.");
+  if (confirm("Simulate payment success?")) activateAccount();
+}
+
+function activateAccount() {
+  const expiry = Date.now() + DAYS_30;
+  localStorage.setItem(
+    ACCESS_KEY,
+    JSON.stringify({ status: "active", expiry })
+  );
+  speak("Payment received. Trader Lab access granted for 30 days.");
+  lockAdvancedModules();
+}
+
+function showRenewPrompt() {
+  alert("Your 30-day access has expired.\nPlease renew to continue training.");
+  localStorage.removeItem(ACCESS_KEY);
+}
+
+function lockAdvancedModules() {
+  document.querySelectorAll("button").forEach(btn => {
+    const t = btn.textContent;
+    if (["Trading Floor", "CPilot"].includes(t)) {
+      btn.disabled = true;
+      btn.style.opacity = 0.4;
+    }
+  });
+}
+
+function unlockAllModules() {
+  document.querySelectorAll("button").forEach(btn => {
+    btn.disabled = false;
+    btn.style.opacity = 1;
+  });
+}
+
+// Example trigger: once the user passes Trader Lab
+function markTraderLabPassed() {
+  localStorage.setItem(PASS_KEY, "yes");
+  speak("Congratulations. You may now access Trading Floor and CPilot.");
+  unlockAllModules();
+}
+
+// Basic behavioral routing
+let randomClicks = 0;
+document.addEventListener("click", e => {
+  if (e.target.tagName !== "BUTTON") return;
+  randomClicks++;
+  if (randomClicks > 15 && !localStorage.getItem(ACCESS_KEY)) {
+    speak("Redirecting you to Games Pavilion.");
+    window.location.href = "games.html";
+  }
+});
+</script>
+ 
 </body>
 </html>
