@@ -4,308 +4,227 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumTrader AI</title>
+
 <style>
-/* Minimal styling for buttons and level display */
-button {
-  padding: 10px 20px;
-  margin: 5px;
+/* ===== CORE UI ===== */
+body {
+  font-family: Arial, sans-serif;
+  background: #050b14;
+  color: #e8faff;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 { margin-bottom: 15px; }
+
+/* ===== BUTTONS ===== */
+.app-buttons button {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
   font-size: 14px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: none;
   background: #0ff;
   color: #000;
-  border: none;
   cursor: pointer;
 }
-button:disabled {
+
+.app-buttons button:disabled {
   background: #444;
+  color: #aaa;
   cursor: not-allowed;
+}
+
+/* ===== ORI OLOGO ===== */
+#oriOlogoContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  text-align: center;
+}
+
+#speechIndicator {
+  width: 16px;
+  height: 16px;
+  background: #0ff;
+  border-radius: 50%;
+  margin: 6px auto 0;
+  opacity: 0;
+}
+
+#speechIndicator.blink {
+  animation: blink 0.4s infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+/* ===== LEVEL HUD ===== */
+#levelDisplay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.6);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #0ff;
 }
 </style>
 </head>
+
 <body>
 
-<h1>QuantumTrader AI Dashboard</h1>
+<h1>QuantumTrader AI</h1>
 
-<!-- Buttons -->
-<button id="traderLabButton" onclick="requirePayment()">TraderLab</button>
-<button id="tradingFloorButton" onclick="alert('Trading Floor unlocked at Level 4');" disabled>Trading Floor</button>
-<button id="cPilotButton" onclick="alert('CPilot unlocked at Level 4');" disabled>CPilot</button>
-<button id="settingsButton" onclick="alert('Settings - Coming Soon')">Settings</button>
-<button id="gamesPavilionButton" onclick="window.location.href='games.html'">Games Pavilion</button>
+<!-- ===== APP BUTTONS (PERMANENT) ===== -->
+<div class="app-buttons">
+  <button id="btnTraderLab">TraderLab</button>
+  <button id="btnTradingFloor" disabled>Trading Floor</button>
+  <button id="btnCPilot" disabled>CPilot</button>
+  <button id="btnSettings">Settings</button>
+  <button id="btnGames">Games Pavilion</button>
+  <button id="btnHelp">Help</button>
+</div>
 
-<!-- Level Display injected via script -->
-<div id="levelDisplay"></div>
+<!-- ===== LEVEL HUD ===== -->
+<div id="levelDisplay">Level: Novice | XP: 0</div>
+
+<!-- ===== ORI OLOGO (PERMANENT) ===== -->
+<div id="oriOlogoContainer">
+  <img src="qtai_ori_olokun.png" alt="Ori Ologo"
+       style="width:110px;height:110px;border-radius:50%;">
+  <div id="speechIndicator"></div>
+</div>
 
 <script>
-/* ==========================
-   QUANTUMTRADER AI - CORE LOGIC
-   Phase 5.3 + Phase 6.0-6.2.2
-   ========================== */
+/* =========================================================
+   QUANTUMTRADER AI — STABLE APP CORE
+   ========================================================= */
 
-// Storage keys
-const ACCESS_KEY = "qtai_access";
-const PASS_KEY = "qtai_passed";
-const LEVEL_KEY = "qtai_level";
-const XP_KEY = "qtai_xp";
-const GUIDANCE_FAILS_KEY = "qtai_guidance_fails";
-const GRACE_KEY = "qtai_grace";
+/* ---- STORAGE KEYS ---- */
+const ACCESS = "qtai_access";
+const XP = "qtai_xp";
+const LEVEL = "qtai_level";
+const FAILS = "qtai_fails";
+const PASSED = "qtai_passed";
 
-// Level configuration
+/* ---- LEVEL MODEL ---- */
 const LEVELS = [
-  {level: 0, label: "Novice", xp: 0},
-  {level: 1, label: "Learner", xp: 5},
-  {level: 2, label: "Apprentice", xp: 15},
-  {level: 3, label: "Practitioner", xp: 30},
-  {level: 4, label: "Trader Ready", xp: 50},
+  { lvl:0, name:"Novice", xp:0 },
+  { lvl:1, name:"Learner", xp:5 },
+  { lvl:2, name:"Apprentice", xp:15 },
+  { lvl:3, name:"Practitioner", xp:30 },
+  { lvl:4, name:"Trader Ready", xp:50 }
 ];
 
-// Initialize state
-if (!localStorage.getItem(XP_KEY)) localStorage.setItem(XP_KEY, 0);
-if (!localStorage.getItem(LEVEL_KEY)) localStorage.setItem(LEVEL_KEY, 0);
-if (!localStorage.getItem(GUIDANCE_FAILS_KEY)) localStorage.setItem(GUIDANCE_FAILS_KEY, 0);
-if (!localStorage.getItem(GRACE_KEY)) localStorage.setItem(GRACE_KEY, "inactive");
+/* ---- INIT ---- */
+function init() {
+  if (!localStorage.getItem(XP)) localStorage.setItem(XP, 0);
+  if (!localStorage.getItem(LEVEL)) localStorage.setItem(LEVEL, 0);
+  if (!localStorage.getItem(FAILS)) localStorage.setItem(FAILS, 0);
+  renderState();
+}
+init();
 
-// ==========================
-// PAYMENT & VERIFICATION
-// ==========================
+/* =========================================================
+   VOICE (ORI OLOGO)
+   ========================================================= */
+function speak(text) {
+  const ind = document.getElementById("speechIndicator");
+  if ("speechSynthesis" in window) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.9;
+    u.onstart = () => ind.classList.add("blink");
+    u.onend = () => ind.classList.remove("blink");
+    speechSynthesis.speak(u);
+  }
+}
 
+/* =========================================================
+   STATE & LEVEL LOGIC
+   ========================================================= */
+function renderState() {
+  const xp = +localStorage.getItem(XP);
+  let current = LEVELS[0];
+  for (let l of LEVELS) if (xp >= l.xp) current = l;
+
+  localStorage.setItem(LEVEL, current.lvl);
+  document.getElementById("levelDisplay").innerText =
+    `Level: ${current.name} | XP: ${xp}`;
+
+  if (current.lvl === 4 && localStorage.getItem(PASSED) !== "yes") {
+    localStorage.setItem(PASSED,"yes");
+    unlockTrading();
+    speak("You are now Trader Ready. Trading Floor and CPilot unlocked.");
+  }
+}
+
+function gainXP(amount, followed=true) {
+  if (!followed) {
+    let f = +localStorage.getItem(FAILS) + 1;
+    localStorage.setItem(FAILS, f);
+    if (f >= 3) {
+      speak("You are not following guidance. Redirecting to Games Pavilion.");
+      location.href = "games.html";
+    }
+    return;
+  }
+  localStorage.setItem(XP, +localStorage.getItem(XP) + amount);
+  renderState();
+}
+
+/* =========================================================
+   ACCESS CONTROL
+   ========================================================= */
 function requirePayment() {
-  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
-  if (access.status === "active") {
-    speak("Your account is already activated. Proceed to TraderLab.");
-    unlockTraderLabOnly();
+  const acc = JSON.parse(localStorage.getItem(ACCESS) || "{}");
+  if (acc.active) {
+    speak("Access confirmed. Welcome back to TraderLab.");
     return;
   }
-  const reference = prompt("Please enter your payment reference for NGN 10,000 to ALAT account 0299134895, Olagoke Ajibulu:");
-  if (!reference) return;
-  localStorage.setItem(ACCESS_KEY, JSON.stringify({status: "pending_verification", reference}));
-  speak("Payment recorded. Awaiting verification by admin.");
+  const ref = prompt(
+    "Pay NGN 10,000 to WEMA ALAT\nAcct: 0299134895\nName: Olagoke Ajibulu\n\nEnter payment reference:"
+  );
+  if (!ref) return;
+  localStorage.setItem(ACCESS, JSON.stringify({
+    active:true,
+    expiry: Date.now() + 30*24*60*60*1000
+  }));
+  speak("Payment received. TraderLab activated for thirty days.");
 }
 
-// Admin verification: CTRL+SHIFT+V
-document.addEventListener("keydown", function(e) {
-  if (e.ctrlKey && e.shiftKey && e.key === "V") {
-    adminVerify();
-  }
-});
-
-function adminVerify() {
-  const data = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
-  if (data.status !== "pending_verification") {
-    alert("No pending payment to verify.");
-    return;
-  }
-  const confirmVerify = confirm("Verify payment from reference: " + data.reference + " received in ALAT?");
-  if (!confirmVerify) return;
-  activateTraderLab();
+/* =========================================================
+   UNLOCKS
+   ========================================================= */
+function unlockTrading() {
+  document.getElementById("btnTradingFloor").disabled = false;
+  document.getElementById("btnCPilot").disabled = false;
 }
 
-function activateTraderLab() {
-  const expiry = Date.now() + 1000*60*60*24*30; // 30 days
-  localStorage.setItem(ACCESS_KEY, JSON.stringify({status: "active", expiry}));
-  speak("Payment verified. TraderLab unlocked for thirty days.");
-  unlockTraderLabOnly();
-}
+/* =========================================================
+   BUTTON WIRING (NO DOM DESTRUCTION)
+   ========================================================= */
+document.getElementById("btnTraderLab").onclick = () => {
+  requirePayment();
+  gainXP(1,true);
+};
 
-// Enable TraderLab button after payment
-function unlockTraderLabOnly() {
-  const tlButton = document.getElementById("traderLabButton");
-  tlButton.disabled = false;
-}
+document.getElementById("btnTradingFloor").onclick = () =>
+  speak("Entering Trading Floor.");
 
-// ==========================
-// TRADERLAB LEVELS & XP
-// ==========================
+document.getElementById("btnCPilot").onclick = () =>
+  speak("CPilot online.");
 
-function recordAction({correct=false, followedGuidance=true}) {
-  let xp = parseInt(localStorage.getItem(XP_KEY));
-  let guidanceFails = parseInt(localStorage.getItem(GUIDANCE_FAILS_KEY));
+document.getElementById("btnGames").onclick = () =>
+  location.href = "games.html";
 
-  if (!followedGuidance) {
-    guidanceFails += 1;
-    localStorage.setItem(GUIDANCE_FAILS_KEY, guidanceFails);
-    if (guidanceFails >= 3) {
-      speak("It seems you are not following guidance. You may try Games Pavilion for a different experience.");
-      window.location.href = "games.html";
-      return;
-    }
-  }
-
-  if (correct && followedGuidance) xp += 1;
-  localStorage.setItem(XP_KEY, xp);
-
-  updateLevel(xp);
-}
-
-function updateLevel(currentXp) {
-  let levelObj = LEVELS[0];
-  for (let i = LEVELS.length-1; i >= 0; i--) {
-    if (currentXp >= LEVELS[i].xp) {
-      levelObj = LEVELS[i];
-      break;
-    }
-  }
-
-  let currentLevel = parseInt(localStorage.getItem(LEVEL_KEY));
-  if (currentLevel !== levelObj.level) {
-    localStorage.setItem(LEVEL_KEY, levelObj.level);
-    speak("You are now " + levelObj.label + ". Keep following guidance to reach the next level.");
-  }
-
-  // Unlock Trading Floor & CPilot at Level 4
-  if (levelObj.level === 4 && localStorage.getItem(PASS_KEY) !== "yes") {
-    markTraderLabPassed();
-  }
-
-  displayLevel(levelObj.label, currentXp);
-}
-
-function displayLevel(label, xp) {
-  let levelDisplay = document.getElementById("levelDisplay");
-  levelDisplay.innerText = `Level: ${label} | XP: ${xp}`;
-}
-
-// Mark TraderLab as passed
-function markTraderLabPassed() {
-  localStorage.setItem(PASS_KEY, "yes");
-  speak("Congratulations! You are now ready to access the Trading Floor and CPilot.");
-  document.getElementById("tradingFloorButton").disabled = false;
-  document.getElementById("cPilotButton").disabled = false;
-}
-
-// ==========================
-// ORI OLOGO VOICE GUIDANCE
-// ==========================
-
-function speak(message) {
-  if ('speechSynthesis' in window) {
-    const utter = new SpeechSynthesisUtterance(message);
-    utter.lang = 'en-US';
-    utter.pitch = 1;
-    utter.rate = 0.9;
-    utter.volume = 1;
-    window.speechSynthesis.speak(utter);
-  } else {
-    console.log("Ori Ologo says: " + message);
-  }
-}
-
-// ==========================
-// SOFT RESET / GRACE PERIOD
-// ==========================
-
-function startGracePeriod() {
-  localStorage.setItem(GRACE_KEY, "active");
-  const graceExpiry = Date.now() + 1000*60*60*24*7; // 7 days
-  localStorage.setItem(GRACE_KEY + "_expiry", graceExpiry);
-  speak("A seven-day grace period has been granted. Use this time to continue learning in TraderLab.");
-}
-
-function checkAccessExpiry() {
-  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
-  if (access.status !== "active") return;
-
-  const now = Date.now();
-  if (now > access.expiry) {
-    const grace = localStorage.getItem(GRACE_KEY);
-    const graceExpiry = parseInt(localStorage.getItem(GRACE_KEY + "_expiry") || 0);
-    if (grace === "active" && now <= graceExpiry) {
-      speak("You are in your grace period. Continue your TraderLab learning.");
-    } else {
-      speak("Your TraderLab access has expired. Please pay NGN 10,000 to renew your 30-day activation.");
-      lockAllModules();
-    }
-  }
-}
-
-function lockAllModules() {
-  document.getElementById("traderLabButton").disabled = true;
-  document.getElementById("tradingFloorButton").disabled = true;
-  document.getElementById("cPilotButton").disabled = true;
-}
+document.getElementById("btnHelp").onclick = () =>
+  speak("Follow Ori Ologo guidance to progress.");
 </script>
 
-<script>
-/* ==========================
-   TEST HARNESS - SIMULATION TOOL
-   ========================== */
-
-function testHarness() {
-  const container = document.createElement("div");
-  container.style.position = "fixed";
-  container.style.bottom = "10px";
-  container.style.left = "10px";
-  container.style.background = "#222";
-  container.style.color = "#0ff";
-  container.style.padding = "10px";
-  container.style.borderRadius = "8px";
-  container.style.fontSize = "12px";
-  container.style.zIndex = "9999";
-
-  container.innerHTML = `
-    <strong>Test Harness</strong><br>
-    <button onclick="simulateXP(1)">+1 XP</button>
-    <button onclick="simulateXP(5)">+5 XP</button>
-    <button onclick="simulateFailure()">Guidance Fail</button>
-    <button onclick="startGracePeriod()">Start Grace</button>
-    <button onclick="simulateExpiry()">Expire Access</button>
-    <button onclick="resetTest()">Reset All</button>
-  `;
-
-  document.body.appendChild(container);
-}
-
-// Simulate XP gain
-function simulateXP(amount) {
-  let xp = parseInt(localStorage.getItem(XP_KEY)) || 0;
-  xp += amount;
-  localStorage.setItem(XP_KEY, xp);
-  speak("Simulated XP gain: " + amount);
-  updateLevel(xp);
-}
-
-// Simulate guidance failure
-function simulateFailure() {
-  let fails = parseInt(localStorage.getItem(GUIDANCE_FAILS_KEY)) || 0;
-  fails += 1;
-  localStorage.setItem(GUIDANCE_FAILS_KEY, fails);
-  speak("Simulated guidance failure.");
-  if (fails >= 3) {
-    speak("Simulation: User should be redirected to Games Pavilion.");
-    // Comment out next line during testing if you don't want actual redirect
-    // window.location.href = "games.html";
-  }
-}
-
-// Simulate access expiry
-function simulateExpiry() {
-  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
-  if (access.status === "active") {
-    access.expiry = Date.now() - 1000; // set expiry to past
-    localStorage.setItem(ACCESS_KEY, JSON.stringify(access));
-    checkAccessExpiry();
-    speak("Simulated access expiry.");
-  } else {
-    speak("No active access to expire.");
-  }
-}
-
-// Reset all localStorage for fresh test
-function resetTest() {
-  localStorage.removeItem(XP_KEY);
-  localStorage.removeItem(LEVEL_KEY);
-  localStorage.removeItem(GUIDANCE_FAILS_KEY);
-  localStorage.removeItem(ACCESS_KEY);
-  localStorage.removeItem(PASS_KEY);
-  localStorage.removeItem(GRACE_KEY);
-  localStorage.removeItem(GRACE_KEY + "_expiry");
-  speak("All test data reset.");
-  location.reload();
-}
-
-// Initialize test harness UI
-testHarness();
-</script>
- 
 </body>
 </html>
