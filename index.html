@@ -17,21 +17,31 @@ body {
 
 h1 { margin-bottom: 15px; }
 
-/* ===== BUTTONS ===== */
+/* ===== APP BUTTONS (APP-READY STYLE) ===== */
 .app-buttons button {
   width: 100%;
   padding: 12px;
   margin: 6px 0;
   font-size: 14px;
   border-radius: 10px;
-  border: none;
-  background: #0ff;
-  color: #000;
+  border: 1px solid #2A99A0; /* subtle navy edge */
+  background: linear-gradient(145deg, #40E0D0, #30B0C0); /* aquamarine + navy */
+  color: #000; /* readable text */
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.app-buttons button:hover {
+  background: linear-gradient(145deg, #3AC8C8, #28A0A0); /* subtle hover */
+  transform: scale(1.02);
+}
+
+.app-buttons button:focus {
+  outline: 2px solid #30B0C0; /* accessibility highlight */
 }
 
 .app-buttons button:disabled {
-  background: #444;
+  background: linear-gradient(145deg, #36CFCF, #2A99A0); /* calm disabled */
   color: #aaa;
   cursor: not-allowed;
 }
@@ -80,7 +90,7 @@ h1 { margin-bottom: 15px; }
 
 <h1>QuantumTrader AI</h1>
 
-<!-- ===== APP BUTTONS (PERMANENT) ===== -->
+<!-- ===== APP BUTTONS ===== -->
 <div class="app-buttons">
   <button id="btnTraderLab">TraderLab</button>
   <button id="btnTradingFloor" disabled>Trading Floor</button>
@@ -93,7 +103,7 @@ h1 { margin-bottom: 15px; }
 <!-- ===== LEVEL HUD ===== -->
 <div id="levelDisplay">Level: Novice | XP: 0</div>
 
-<!-- ===== ORI OLOGO (PERMANENT) ===== -->
+<!-- ===== ORI OLOGO AVATAR ===== -->
 <div id="oriOlogoContainer">
   <img src="qtai_ori_olokun.png" alt="Ori Ologo"
        style="width:110px;height:110px;border-radius:50%;">
@@ -102,7 +112,7 @@ h1 { margin-bottom: 15px; }
 
 <script>
 /* =========================================================
-   QUANTUMTRADER AI — STABLE APP CORE
+   QUANTUMTRADER AI — APP-READY CORE
    ========================================================= */
 
 /* ---- STORAGE KEYS ---- */
@@ -206,7 +216,7 @@ function unlockTrading() {
 }
 
 /* =========================================================
-   BUTTON WIRING (NO DOM DESTRUCTION)
+   BUTTON WIRING
    ========================================================= */
 document.getElementById("btnTraderLab").onclick = () => {
   requirePayment();
@@ -224,6 +234,10 @@ document.getElementById("btnGames").onclick = () =>
 
 document.getElementById("btnHelp").onclick = () =>
   speak("Follow Ori Ologo guidance to progress.");
+
+document.getElementById("btnSettings").onclick = () =>
+  speak("Settings selected. Adjust app preferences here.");
+
 </script>
 
 </body>
