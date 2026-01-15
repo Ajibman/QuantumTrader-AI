@@ -225,5 +225,87 @@ function lockAllModules() {
 }
 </script>
 
+<script>
+/* ==========================
+   TEST HARNESS - SIMULATION TOOL
+   ========================== */
+
+function testHarness() {
+  const container = document.createElement("div");
+  container.style.position = "fixed";
+  container.style.bottom = "10px";
+  container.style.left = "10px";
+  container.style.background = "#222";
+  container.style.color = "#0ff";
+  container.style.padding = "10px";
+  container.style.borderRadius = "8px";
+  container.style.fontSize = "12px";
+  container.style.zIndex = "9999";
+
+  container.innerHTML = `
+    <strong>Test Harness</strong><br>
+    <button onclick="simulateXP(1)">+1 XP</button>
+    <button onclick="simulateXP(5)">+5 XP</button>
+    <button onclick="simulateFailure()">Guidance Fail</button>
+    <button onclick="startGracePeriod()">Start Grace</button>
+    <button onclick="simulateExpiry()">Expire Access</button>
+    <button onclick="resetTest()">Reset All</button>
+  `;
+
+  document.body.appendChild(container);
+}
+
+// Simulate XP gain
+function simulateXP(amount) {
+  let xp = parseInt(localStorage.getItem(XP_KEY)) || 0;
+  xp += amount;
+  localStorage.setItem(XP_KEY, xp);
+  speak("Simulated XP gain: " + amount);
+  updateLevel(xp);
+}
+
+// Simulate guidance failure
+function simulateFailure() {
+  let fails = parseInt(localStorage.getItem(GUIDANCE_FAILS_KEY)) || 0;
+  fails += 1;
+  localStorage.setItem(GUIDANCE_FAILS_KEY, fails);
+  speak("Simulated guidance failure.");
+  if (fails >= 3) {
+    speak("Simulation: User should be redirected to Games Pavilion.");
+    // Comment out next line during testing if you don't want actual redirect
+    // window.location.href = "games.html";
+  }
+}
+
+// Simulate access expiry
+function simulateExpiry() {
+  const access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "{}");
+  if (access.status === "active") {
+    access.expiry = Date.now() - 1000; // set expiry to past
+    localStorage.setItem(ACCESS_KEY, JSON.stringify(access));
+    checkAccessExpiry();
+    speak("Simulated access expiry.");
+  } else {
+    speak("No active access to expire.");
+  }
+}
+
+// Reset all localStorage for fresh test
+function resetTest() {
+  localStorage.removeItem(XP_KEY);
+  localStorage.removeItem(LEVEL_KEY);
+  localStorage.removeItem(GUIDANCE_FAILS_KEY);
+  localStorage.removeItem(ACCESS_KEY);
+  localStorage.removeItem(PASS_KEY);
+  localStorage.removeItem(GRACE_KEY);
+  localStorage.removeItem(GRACE_KEY + "_expiry");
+  speak("All test data reset.");
+  location.reload();
+}
+
+// Initialize test harness UI
+testHarness();
+</script>
+ 
 </body>
 </html>
