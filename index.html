@@ -3,241 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI</title>
-
+<title>QuantumTrader AI - App Ready</title>
 <style>
-/* ===== CORE UI ===== */
-body {
-  font-family: Arial, sans-serif;
-  background: #050b14;
-  color: #e8faff;
-  margin: 0;
-  padding: 20px;
-}
+  /* GENERAL BODY */
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f8fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding-top: 50px;
+  }
 
-h1 { margin-bottom: 15px; }
+  /* CHARACTER CONTAINER */
+  #character {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 50px;
+  }
 
-/* ===== APP BUTTONS (APP-READY STYLE) ===== */
-.app-buttons button {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  font-size: 14px;
-  border-radius: 10px;
-  border: 1px solid #2A99A0; /* subtle navy edge */
-  background: linear-gradient(145deg, #40E0D0, #30B0C0); /* aquamarine + navy */
-  color: #000; /* readable text */
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
+  /* EYES */
+  .eye {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid #333;
+    overflow: hidden;
+  }
 
-.app-buttons button:hover {
-  background: linear-gradient(145deg, #3AC8C8, #28A0A0); /* subtle hover */
-  transform: scale(1.02);
-}
+  .pupil {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #333;
+    border-radius: 50%;
+    top: 10px;
+    left: 10px;
+    transition: transform 0.3s ease-out;
+  }
 
-.app-buttons button:focus {
-  outline: 2px solid #30B0C0; /* accessibility highlight */
-}
+  #eye-left { top: 50px; left: 40px; }
+  #eye-right { top: 50px; right: 40px; }
 
-.app-buttons button:disabled {
-  background: linear-gradient(145deg, #36CFCF, #2A99A0); /* calm disabled */
-  color: #aaa;
-  cursor: not-allowed;
-}
+  /* MOUTH */
+  #mouth {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 10px;
+    background: #c33;
+    border-radius: 5px;
+    transition: height 0.1s ease-out;
+  }
 
-/* ===== ORI OLOGO ===== */
-#oriOlogoContainer {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  text-align: center;
-}
+  /* MODULE BUTTONS */
+  #modules {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+  }
 
-#speechIndicator {
-  width: 16px;
-  height: 16px;
-  background: #0ff;
-  border-radius: 50%;
-  margin: 6px auto 0;
-  opacity: 0;
-}
+  .module-button {
+    padding: 15px 30px;
+    background: #6dd5fa; /* Aqua marine base */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #fff;
+    transition: background 0.3s, transform 0.2s;
+  }
 
-#speechIndicator.blink {
-  animation: blink 0.4s infinite;
-}
+  .module-button:hover,
+  .module-button:focus {
+    background: #5bb0d9; /* Slight navy tone */
+    transform: scale(1.05);
+    outline: none;
+  }
 
-@keyframes blink {
-  0%,100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.4); }
-}
+  /* AUDIO PLAYER */
+  audio {
+    margin-top: 20px;
+    width: 90%;
+    max-width: 500px;
+  }
 
-/* ===== LEVEL HUD ===== */
-#levelDisplay {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.6);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  color: #0ff;
-}
 </style>
 </head>
-
 <body>
 
-<h1>QuantumTrader AI</h1>
-
-<!-- ===== APP BUTTONS ===== -->
-<div class="app-buttons">
-  <button id="btnTraderLab">TraderLab</button>
-  <button id="btnTradingFloor" disabled>Trading Floor</button>
-  <button id="btnCPilot" disabled>CPilot</button>
-  <button id="btnSettings">Settings</button>
-  <button id="btnGames">Games Pavilion</button>
-  <button id="btnHelp">Help</button>
+<!-- CHARACTER -->
+<div id="character">
+  <div id="eye-left" class="eye"><div class="pupil"></div></div>
+  <div id="eye-right" class="eye"><div class="pupil"></div></div>
+  <div id="mouth"></div>
 </div>
 
-<!-- ===== LEVEL HUD ===== -->
-<div id="levelDisplay">Level: Novice | XP: 0</div>
-
-<!-- ===== ORI OLOGO AVATAR ===== -->
-<div id="oriOlogoContainer">
-  <img src="qtai_ori_olokun.png" alt="Ori Ologo"
-       style="width:110px;height:110px;border-radius:50%;">
-  <div id="speechIndicator"></div>
+<!-- MODULE BUTTONS -->
+<div id="modules">
+  <button class="module-button" data-x="100" data-y="300">TraderLab</button>
+  <button class="module-button" data-x="250" data-y="300">Trading Floor</button>
+  <button class="module-button" data-x="400" data-y="300">CPilot</button>
 </div>
+
+<!-- AUDIO SAMPLE -->
+<audio id="voice" src="voice_sample.mp3" controls></audio>
 
 <script>
-/* =========================================================
-   QUANTUMTRADER AI — APP-READY CORE
-   ========================================================= */
+const mouth = document.getElementById('mouth');
+const leftPupil = document.querySelector('#eye-left .pupil');
+const rightPupil = document.querySelector('#eye-right .pupil');
+const buttons = document.querySelectorAll('.module-button');
+const audio = document.getElementById('voice');
 
-/* ---- STORAGE KEYS ---- */
-const ACCESS = "qtai_access";
-const XP = "qtai_xp";
-const LEVEL = "qtai_level";
-const FAILS = "qtai_fails";
-const PASSED = "qtai_passed";
+let audioCtx, analyser, dataArray;
 
-/* ---- LEVEL MODEL ---- */
-const LEVELS = [
-  { lvl:0, name:"Novice", xp:0 },
-  { lvl:1, name:"Learner", xp:5 },
-  { lvl:2, name:"Apprentice", xp:15 },
-  { lvl:3, name:"Practitioner", xp:30 },
-  { lvl:4, name:"Trader Ready", xp:50 }
-];
-
-/* ---- INIT ---- */
-function init() {
-  if (!localStorage.getItem(XP)) localStorage.setItem(XP, 0);
-  if (!localStorage.getItem(LEVEL)) localStorage.setItem(LEVEL, 0);
-  if (!localStorage.getItem(FAILS)) localStorage.setItem(FAILS, 0);
-  renderState();
-}
-init();
-
-/* =========================================================
-   VOICE (ORI OLOGO)
-   ========================================================= */
-function speak(text) {
-  const ind = document.getElementById("speechIndicator");
-  if ("speechSynthesis" in window) {
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.9;
-    u.onstart = () => ind.classList.add("blink");
-    u.onend = () => ind.classList.remove("blink");
-    speechSynthesis.speak(u);
+// Initialize audio analyser when audio plays
+audio.addEventListener('play', () => {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioCtx.createMediaElementSource(audio);
+    analyser = audioCtx.createAnalyser();
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    animateLips();
   }
+});
+
+// Animate lips based on audio amplitude
+function animateLips() {
+  requestAnimationFrame(animateLips);
+  analyser.getByteFrequencyData(dataArray);
+  const avg = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
+  const newHeight = 10 + (avg / 255) * 30; // 10px closed -> 40px max open
+  mouth.style.height = `${newHeight}px`;
 }
 
-/* =========================================================
-   STATE & LEVEL LOGIC
-   ========================================================= */
-function renderState() {
-  const xp = +localStorage.getItem(XP);
-  let current = LEVELS[0];
-  for (let l of LEVELS) if (xp >= l.xp) current = l;
+// Smooth eyes tracking active module
+buttons.forEach(btn => {
+  btn.addEventListener('mouseover', () => moveEyesTo(btn));
+  btn.addEventListener('focus', () => moveEyesTo(btn));
+  btn.addEventListener('click', () => moveEyesTo(btn));
+});
 
-  localStorage.setItem(LEVEL, current.lvl);
-  document.getElementById("levelDisplay").innerText =
-    `Level: ${current.name} | XP: ${xp}`;
+function moveEyesTo(button) {
+  const rect = button.getBoundingClientRect();
+  const charRect = document.getElementById('character').getBoundingClientRect();
+  const x = rect.left + rect.width/2 - charRect.left - 20;
+  const y = rect.top + rect.height/2 - charRect.top - 20;
 
-  if (current.lvl === 4 && localStorage.getItem(PASSED) !== "yes") {
-    localStorage.setItem(PASSED,"yes");
-    unlockTrading();
-    speak("You are now Trader Ready. Trading Floor and CPilot unlocked.");
-  }
+  leftPupil.style.transform = `translate(${x/10}px, ${y/10}px)`;
+  rightPupil.style.transform = `translate(${x/10}px, ${y/10}px)`;
 }
-
-function gainXP(amount, followed=true) {
-  if (!followed) {
-    let f = +localStorage.getItem(FAILS) + 1;
-    localStorage.setItem(FAILS, f);
-    if (f >= 3) {
-      speak("You are not following guidance. Redirecting to Games Pavilion.");
-      location.href = "games.html";
-    }
-    return;
-  }
-  localStorage.setItem(XP, +localStorage.getItem(XP) + amount);
-  renderState();
-}
-
-/* =========================================================
-   ACCESS CONTROL
-   ========================================================= */
-function requirePayment() {
-  const acc = JSON.parse(localStorage.getItem(ACCESS) || "{}");
-  if (acc.active) {
-    speak("Access confirmed. Welcome back to TraderLab.");
-    return;
-  }
-  const ref = prompt(
-    "Pay NGN 10,000 to WEMA ALAT\nAcct: 0299134895\nName: Olagoke Ajibulu\n\nEnter payment reference:"
-  );
-  if (!ref) return;
-  localStorage.setItem(ACCESS, JSON.stringify({
-    active:true,
-    expiry: Date.now() + 30*24*60*60*1000
-  }));
-  speak("Payment received. TraderLab activated for thirty days.");
-}
-
-/* =========================================================
-   UNLOCKS
-   ========================================================= */
-function unlockTrading() {
-  document.getElementById("btnTradingFloor").disabled = false;
-  document.getElementById("btnCPilot").disabled = false;
-}
-
-/* =========================================================
-   BUTTON WIRING
-   ========================================================= */
-document.getElementById("btnTraderLab").onclick = () => {
-  requirePayment();
-  gainXP(1,true);
-};
-
-document.getElementById("btnTradingFloor").onclick = () =>
-  speak("Entering Trading Floor.");
-
-document.getElementById("btnCPilot").onclick = () =>
-  speak("CPilot online.");
-
-document.getElementById("btnGames").onclick = () =>
-  location.href = "games.html";
-
-document.getElementById("btnHelp").onclick = () =>
-  speak("Follow Ori Ologo guidance to progress.");
-
-document.getElementById("btnSettings").onclick = () =>
-  speak("Settings selected. Adjust app preferences here.");
-
 </script>
 
 </body>
