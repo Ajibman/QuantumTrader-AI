@@ -37,48 +37,17 @@ main {
   margin: auto;
 }
 
-.tabs {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.tab {
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.6rem;
-  background: var(--card);
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.tab.active {
-  background: var(--accent);
-  color: var(--bg);
-}
-
 .panel {
   background: #08192e;
   border-radius: 1rem;
   padding: 1.2rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 0 12px rgba(0,0,0,.5);
-  display: none;
-}
-
-.panel.active {
-  display: block;
 }
 
 h2 {
   color: var(--accent);
   margin-top: 0;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
 }
 
 button {
@@ -95,13 +64,11 @@ button:hover {
   background: #00ffd0;
 }
 
-select {
-  padding: 0.4rem 0.6rem;
-  border-radius: 0.4rem;
-  background: var(--card);
-  color: var(--text);
-  border: none;
-  margin-right: 0.5rem;
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -114,106 +81,63 @@ select {
 
 <main>
 
-  <div class="tabs">
-    <div class="tab active" data-panel="market">Market Overview</div>
-    <div class="tab" data-panel="autotrader">AutoTrader</div>
-    <div class="tab" data-panel="candlestick">Candlestick / Patterns</div>
-    <div class="tab" data-panel="events">Economic Events</div>
-  </div>
-
-  <!-- Market Overview Panel -->
-  <div class="panel active" id="market">
+  <div class="panel">
     <h2>Market State Overview</h2>
     <p>
       Aggregated intelligence from Peace Indexes, Forex markets,
-      commodities, metals, oil, shares and global indexes.
+      commodities, metals, oil, shares, and global indexes.
     </p>
     <p>
       Ori Ologo continuously evaluates whether the current environment
       is suitable for trading or demands restraint.
     </p>
-    <div class="panel">
-      <h2>Ori Ologo Commentary</h2>
-      <p id="ori-commentary">Awaiting market alignment…</p>
-    </div>
-
-    <div class="panel">
-      <h2>Execution Discipline</h2>
-      <ul>
-        <li>No forced trades</li>
-        <li>No emotional execution</li>
-        <li>Capital protection enforced</li>
-        <li>Peace-weighted market bias</li>
-      </ul>
-    </div>
   </div>
 
-  <!-- AutoTrader Panel -->
-  <div class="panel" id="autotrader">
-    <h2>AutoTrader Simulation</h2>
-    <p>Select Market, TA Tool, and Pattern for simulation trade.</p>
-
-    <div>
-      <label>Market:</label>
-      <select id="market-select">
-        <option value="SP500">S&P 500</option>
-        <option value="ECurrencies">E-Currencies</option>
-        <option value="Commodities">Commodities</option>
-        <option value="Metals">Metals</option>
-        <option value="Oil">Oil</option>
-        <option value="Crypto">Cryptocurrencies</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Technical Analysis Tool:</label>
-      <select id="ta-select">
-        <option value="Preset">Preset (default)</option>
-        <option value="TA1">TA Tool 1</option>
-        <option value="TA2">TA Tool 2</option>
-        <option value="TA3">TA Tool 3</option>
-        <option value="TA4">TA Tool 4</option>
-        <option value="TA5">TA Tool 5</option>
-        <option value="TA6">TA Tool 6</option>
-        <option value="TA7">TA Tool 7</option>
-        <option value="TA8">TA Tool 8</option>
-        <option value="TA9">TA Tool 9</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Pattern:</label>
-      <select id="pattern-select">
-        <option value="Doji">Doji</option>
-        <option value="Hammer">Hammer</option>
-        <option value="Engulfing">Engulfing</option>
-      </select>
-    </div>
-
-    <button id="execute-trade">Execute Simulated Trade</button>
-
-    <div class="panel" style="margin-top:1rem;">
-      <h3>Simulation Trade Log</h3>
-      <ul id="trade-log"></ul>
-    </div>
-
-    <p style="color: var(--warn); font-size: 0.9rem;">
-      Forex-Factory / Economic Events integration coming in a future update.
-    </p>
+  <div class="panel">
+    <h2>Ori Ologo Commentary</h2>
+    <p id="ori-commentary">Awaiting market alignment…</p>
   </div>
 
-  <!-- Candlestick & Pattern Panel (Placeholder) -->
-  <div class="panel" id="candlestick">
-    <h2>Candlestick & Pattern Engine (Coming Soon)</h2>
-    <p>Chart visualization and pattern recognition will be integrated here.</p>
-    <button disabled>Load Chart (stub)</button>
+  <div class="panel">
+    <h2>Simulation / AutoTrader</h2>
+    <label for="market-select">Select Market:</label>
+    <select id="market-select">
+      <option value="SP500">S&P 500</option>
+      <option value="Forex">E-Currencies</option>
+      <option value="Crypto">Cryptocurrencies</option>
+    </select>
+    <label for="ta-select">Select TA Tool:</label>
+    <select id="ta-select">
+      <option value="preset">Preset Default</option>
+      <option value="tool1">Tool 1</option>
+      <option value="tool2">Tool 2</option>
+      <option value="tool3">Tool 3</option>
+      <option value="tool4">Tool 4</option>
+      <option value="tool5">Tool 5</option>
+      <option value="tool6">Tool 6</option>
+      <option value="tool7">Tool 7</option>
+      <option value="tool8">Tool 8</option>
+      <option value="tool9">Tool 9</option>
+      <option value="tool10">Tool 10</option>
+    </select>
+    <label for="pattern-select">Select Pattern:</label>
+    <select id="pattern-select">
+      <option value="doji">Doji</option>
+      <option value="hammer">Hammer</option>
+      <option value="engulfing">Engulfing</option>
+    </select>
+    <button id="execute-sim">Execute Simulated Trade</button>
+    <div id="simulation-log" style="margin-top:1rem; max-height:200px; overflow-y:auto; color:#00ffd0;"></div>
   </div>
 
-  <!-- Economic Events / Forex-Factory Panel (Placeholder) -->
-  <div class="panel" id="events">
-    <h2>Economic Events / Forex-Factory (Coming Soon)</h2>
-    <p>Economic events awareness will be integrated here in the future.</p>
-    <button disabled>View Upcoming Events (stub)</button>
+  <div class="panel">
+    <h2>Execution Discipline</h2>
+    <ul>
+      <li>No forced trades</li>
+      <li>No emotional execution</li>
+      <li>Capital protection enforced</li>
+      <li>Peace-weighted market bias</li>
+    </ul>
   </div>
 
 </main>
@@ -223,43 +147,27 @@ select {
 </footer>
 
 <script>
-  // Tab switching
-  const tabs = document.querySelectorAll(".tab");
-  const panels = document.querySelectorAll(".panel");
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      const panelId = tab.getAttribute("data-panel");
-      panels.forEach(p => p.classList.remove("active"));
-      document.getElementById(panelId).classList.add("active");
-    });
-  });
-
-  // Placeholder commentary
-  const oriCommentary = document.getElementById("ori-commentary");
-  oriCommentary.textContent = "Markets stable. Peace-weighted conditions acceptable. Await confirmation.";
-
-  // AutoTrader simulation logic
-  const executeBtn = document.getElementById("execute-trade");
-  const tradeLog = document.getElementById("trade-log");
-  const marketSelect = document.getElementById("market-select");
-  const taSelect = document.getElementById("ta-select");
-  const patternSelect = document.getElementById("pattern-select");
+document.addEventListener("DOMContentLoaded", () => {
+  const ori = document.getElementById("ori-commentary");
+  const executeBtn = document.getElementById("execute-sim");
+  const simLog = document.getElementById("simulation-log");
 
   executeBtn.addEventListener("click", () => {
-    const market = marketSelect.value;
-    const ta = taSelect.value;
-    const pattern = patternSelect.value;
-    const peaceIndex = Math.floor(Math.random() * 101); // Simulated Peace Index 0-100
-    const price = (Math.random() * 1000).toFixed(2); // Simulated market price
+    const market = document.getElementById("market-select").value;
+    const ta = document.getElementById("ta-select").value;
+    const pattern = document.getElementById("pattern-select").value;
 
-    let status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
+    // Simulate Peace Index (0-100)
+    const peaceIndex = Math.floor(Math.random() * 101);
+    const status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
 
-    const entry = document.createElement("li");
-    entry.textContent = `[${new Date().toLocaleTimeString()}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Price: ${price}, Peace Index: ${peaceIndex} → ${status}`;
-    tradeLog.prepend(entry);
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Peace Index: ${peaceIndex}, Status: ${status}`;
+    
+    simLog.prepend(logEntry + "<br>");
+    ori.textContent = `Ori Ologo Advisory: Last trade ${status} at ${timestamp}`;
   });
+});
 </script>
 
 </body>
