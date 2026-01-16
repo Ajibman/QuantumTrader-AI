@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -67,9 +67,14 @@
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .buttons button:hover {
+  .buttons button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .buttons button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 
   footer {
@@ -114,13 +119,32 @@
 </footer>
 
 <script>
-  // Placeholder click actions
-  document.getElementById('traderLabBtn').onclick = () => alert('Trader Lab clicked!');
-  document.getElementById('tradingFloorBtn').onclick = () => alert('Trading Floor clicked!');
-  document.getElementById('cPilotBtn').onclick = () => alert('CPilot clicked!');
-  document.getElementById('gamesPavilionBtn').onclick = () => alert('Games Pavilion clicked!');
-  document.getElementById('helpBtn').onclick = () => alert('Help clicked!');
-  document.getElementById('settingsBtn').onclick = () => alert('Settings clicked!');
+  // -------------------------------
+  // Single-user click logic for Phase 6
+  // -------------------------------
+
+  // Trader Lab: active
+  document.getElementById('traderLabBtn').addEventListener('click', function() {
+    window.location.href = "trader-lab.html"; // replace with actual page
+  });
+
+  // Locked buttons list
+  const lockedButtons = [
+    "tradingFloorBtn",
+    "cPilotBtn",
+    "gamesPavilionBtn",
+    "helpBtn",
+    "settingsBtn"
+  ];
+
+  // Disable locked buttons and add alert on click
+  lockedButtons.forEach(id => {
+    const btn = document.getElementById(id);
+    btn.disabled = true;
+    btn.addEventListener('click', function() {
+      alert("This section is locked until you complete Trader Lab.");
+    });
+  });
 </script>
 
 </body>
