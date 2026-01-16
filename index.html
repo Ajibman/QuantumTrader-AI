@@ -1,193 +1,127 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader AI - Phase 1-6 App</title>
-  <style>
-    /* === Reset & Base === */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Trader AI</title>
+<style>
+  /* General resets */
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 
-    /* === Main Container === */
-    .app-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+  body {
+    background-color: #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+  }
 
-    /* === Logo Images === */
-    .logo-top {
-      max-width: 200px;
-      width: 20vw;
-      height: auto;
-      margin-bottom: 1rem;
-    }
+  header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    .peace-index-logo {
-      max-width: 150px;
-      width: 15vw;
-      height: auto;
-      margin-bottom: 1rem;
-    }
+  header img {
+    max-width: 150px;
+    height: auto;
+  }
 
-    /* === Buttons === */
-    .buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+  }
 
-    .app-button {
-      background: linear-gradient(145deg, #7fdbff, #1e3a5f); /* aqua + navy accent */
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      cursor: pointer;
-      flex: 1 1 120px;
-      max-width: 180px;
-      min-width: 100px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+  .image-container {
+    margin-bottom: 20px;
+    position: relative;
+  }
 
-    .app-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+  .image-container img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    display: block;
+  }
 
-    /* === Static Globe & Ori Ologo === */
-    .static-globe {
-      width: 200px;
-      max-width: 25vw;
-      height: auto;
-      margin-bottom: 1rem;
-    }
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+  }
 
-    .ori-olokun {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      width: 80px;
-      max-width: 15vw;
-      height: auto;
-    }
+  .buttons button {
+    background: linear-gradient(145deg, #66c0c1, #345f7f); /* Aqua + subtle navy */
+    border: none;
+    color: white;
+    padding: 15px 10px;
+    font-size: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
 
-    /* === Audio Controls (hidden) === */
-    audio {
-      display: none;
-    }
+  .buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
 
-    /* === Responsive Media Queries === */
-    @media (max-width: 768px) {
-      .buttons-container {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      .app-button {
-        width: 80%;
-        max-width: 200px;
-      }
-      .logo-top {
-        width: 30vw;
-      }
-      .peace-index-logo {
-        width: 25vw;
-      }
-      .static-globe {
-        width: 35vw;
-      }
-      .ori-olokun {
-        width: 20vw;
-      }
-    }
+  footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 10px 0;
+  }
 
-    @media (max-width: 480px) {
-      .app-button {
-        width: 90%;
-        font-size: 0.9rem;
-      }
-      .logo-top {
-        width: 40vw;
-      }
-      .peace-index-logo {
-        width: 30vw;
-      }
-      .static-globe {
-        width: 45vw;
-      }
-      .ori-olokun {
-        width: 25vw;
-      }
-    }
+  footer img {
+    max-width: 100px;
+    height: auto;
+  }
 
-  </style>
+  @media (max-width: 480px) {
+    .buttons { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- Top Logo -->
-    <img src="qtai_ori_olokun.png" alt="QT AI Logo" class="logo-top">
+<header>
+  <img src="peace_index_logo.png" alt="Peace Index Logo">
+</header>
 
-    <!-- Peace Index Logo -->
-    <img src="peace_index_logo.png" alt="Peace Index" class="peace-index-logo">
-
-    <!-- Static Globe -->
-    <img src="qtai_globe.png" alt="Static Globe" class="static-globe">
-
-    <!-- Buttons -->
-    <div class="buttons-container">
-      <button class="app-button" onclick="handleButton('TradingFloor')">Trading Floor</button>
-      <button class="app-button" onclick="handleButton('CPilot')">CPilot</button>
-      <button class="app-button" onclick="handleButton('Module01')">Module 01</button>
-      <button class="app-button" onclick="handleButton('Module02')">Module 02</button>
-      <button class="app-button" onclick="handleButton('Module03')">Module 03</button>
-      <button class="app-button" onclick="handleButton('Module04')">Module 04</button>
-    </div>
+<main>
+  <div class="image-container">
+    <img src="qtai_globe.png" alt="Quantum Trader AI Globe">
   </div>
 
-  <!-- Ori Ologo Bottom Right -->
-  <img src="qtai_ori_olokun.png" alt="Ori Ologo" class="ori-olokun">
+  <div class="buttons">
+    <button id="traderLabBtn">Trader Lab</button>
+    <button id="tradingFloorBtn">Trading Floor</button>
+    <button id="cPilotBtn">CPilot</button>
+    <button id="gamesPavilionBtn">Games Pavilion</button>
+    <button id="helpBtn">Help</button>
+    <button id="settingsBtn">Settings</button>
+  </div>
+</main>
 
-  <!-- Voice / Audio -->
-  <audio id="welcomeVoice" src="audio/welcome.mp3" preload="auto"></audio>
+<footer>
+  <img src="qtai_ori_olokun.png" alt="Ori Ologo">
+</footer>
 
-  <script>
-    // === Button Click Handler ===
-    function handleButton(module) {
-      // Play welcome voice on first interaction
-      const audio = document.getElementById('welcomeVoice');
-      if (audio) audio.play();
-
-      // Existing Phase 1-6 logic preserved
-      console.log('Button clicked:', module);
-      // TODO: Add your current navigation or module loading logic here
-    }
-
-    // Optional: Play voice on page load
-    window.addEventListener('load', () => {
-      const audio = document.getElementById('welcomeVoice');
-      if (audio) audio.play().catch(e => console.log('Voice play prevented:', e));
-    });
-  </script>
+<script>
+  // Placeholder click actions
+  document.getElementById('traderLabBtn').onclick = () => alert('Trader Lab clicked!');
+  document.getElementById('tradingFloorBtn').onclick = () => alert('Trading Floor clicked!');
+  document.getElementById('cPilotBtn').onclick = () => alert('CPilot clicked!');
+  document.getElementById('gamesPavilionBtn').onclick = () => alert('Games Pavilion clicked!');
+  document.getElementById('helpBtn').onclick = () => alert('Help clicked!');
+  document.getElementById('settingsBtn').onclick = () => alert('Settings clicked!');
+</script>
 
 </body>
 </html>
