@@ -94,6 +94,15 @@ button {
 button:hover {
   background: #00ffd0;
 }
+
+select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.4rem;
+  background: var(--card);
+  color: var(--text);
+  border: none;
+  margin-right: 0.5rem;
+}
 </style>
 </head>
 
@@ -125,9 +134,7 @@ button:hover {
     </p>
     <div class="panel">
       <h2>Ori Ologo Commentary</h2>
-      <p id="ori-commentary">
-        Awaiting market alignment…
-      </p>
+      <p id="ori-commentary">Awaiting market alignment…</p>
     </div>
 
     <div class="panel">
@@ -141,39 +148,71 @@ button:hover {
     </div>
   </div>
 
-  <!-- AutoTrader Panel (Placeholder) -->
+  <!-- AutoTrader Panel -->
   <div class="panel" id="autotrader">
-    <h2>AutoTrader Logic (Coming Soon)</h2>
-    <p>
-      This panel is a placeholder for AutoTrader functionality.
-      Trade execution buttons and AI logic will be wired here.
-    </p>
-    <p>
-      Selected Market, Peace Index, and TA selection will be used.
-    </p>
-    <button disabled>Execute Simulated Trade (stub)</button>
+    <h2>AutoTrader Simulation</h2>
+    <p>Select Market, TA Tool, and Pattern for simulation trade.</p>
+
+    <div>
+      <label>Market:</label>
+      <select id="market-select">
+        <option value="SP500">S&P 500</option>
+        <option value="ECurrencies">E-Currencies</option>
+        <option value="Commodities">Commodities</option>
+        <option value="Metals">Metals</option>
+        <option value="Oil">Oil</option>
+        <option value="Crypto">Cryptocurrencies</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Technical Analysis Tool:</label>
+      <select id="ta-select">
+        <option value="Preset">Preset (default)</option>
+        <option value="TA1">TA Tool 1</option>
+        <option value="TA2">TA Tool 2</option>
+        <option value="TA3">TA Tool 3</option>
+        <option value="TA4">TA Tool 4</option>
+        <option value="TA5">TA Tool 5</option>
+        <option value="TA6">TA Tool 6</option>
+        <option value="TA7">TA Tool 7</option>
+        <option value="TA8">TA Tool 8</option>
+        <option value="TA9">TA Tool 9</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Pattern:</label>
+      <select id="pattern-select">
+        <option value="Doji">Doji</option>
+        <option value="Hammer">Hammer</option>
+        <option value="Engulfing">Engulfing</option>
+      </select>
+    </div>
+
+    <button id="execute-trade">Execute Simulated Trade</button>
+
+    <div class="panel" style="margin-top:1rem;">
+      <h3>Simulation Trade Log</h3>
+      <ul id="trade-log"></ul>
+    </div>
+
     <p style="color: var(--warn); font-size: 0.9rem;">
-      Forex-Factory / Economic Events integration will be added here later.
+      Forex-Factory / Economic Events integration coming in a future update.
     </p>
   </div>
 
   <!-- Candlestick & Pattern Panel (Placeholder) -->
   <div class="panel" id="candlestick">
     <h2>Candlestick & Pattern Engine (Coming Soon)</h2>
-    <p>
-      Chart visualization, candlestick patterns, and technical analysis
-      tools will be integrated here.
-    </p>
+    <p>Chart visualization and pattern recognition will be integrated here.</p>
     <button disabled>Load Chart (stub)</button>
   </div>
 
   <!-- Economic Events / Forex-Factory Panel (Placeholder) -->
   <div class="panel" id="events">
     <h2>Economic Events / Forex-Factory (Coming Soon)</h2>
-    <p>
-      Economic events awareness and their impact on trading will be
-      integrated here in the future.
-    </p>
+    <p>Economic events awareness will be integrated here in the future.</p>
     <button disabled>View Upcoming Events (stub)</button>
   </div>
 
@@ -187,14 +226,10 @@ button:hover {
   // Tab switching
   const tabs = document.querySelectorAll(".tab");
   const panels = document.querySelectorAll(".panel");
-
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-      // Set active tab
       tabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-
-      // Show corresponding panel
       const panelId = tab.getAttribute("data-panel");
       panels.forEach(p => p.classList.remove("active"));
       document.getElementById(panelId).classList.add("active");
@@ -202,8 +237,29 @@ button:hover {
   });
 
   // Placeholder commentary
-  document.getElementById("ori-commentary").textContent =
-    "Markets stable. Peace-weighted conditions acceptable. Await confirmation.";
+  const oriCommentary = document.getElementById("ori-commentary");
+  oriCommentary.textContent = "Markets stable. Peace-weighted conditions acceptable. Await confirmation.";
+
+  // AutoTrader simulation logic
+  const executeBtn = document.getElementById("execute-trade");
+  const tradeLog = document.getElementById("trade-log");
+  const marketSelect = document.getElementById("market-select");
+  const taSelect = document.getElementById("ta-select");
+  const patternSelect = document.getElementById("pattern-select");
+
+  executeBtn.addEventListener("click", () => {
+    const market = marketSelect.value;
+    const ta = taSelect.value;
+    const pattern = patternSelect.value;
+    const peaceIndex = Math.floor(Math.random() * 101); // Simulated Peace Index 0-100
+    const price = (Math.random() * 1000).toFixed(2); // Simulated market price
+
+    let status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
+
+    const entry = document.createElement("li");
+    entry.textContent = `[${new Date().toLocaleTimeString()}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Price: ${price}, Peace Index: ${peaceIndex} → ${status}`;
+    tradeLog.prepend(entry);
+  });
 </script>
 
 </body>
