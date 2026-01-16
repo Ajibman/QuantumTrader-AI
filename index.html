@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI - Interactive Preview</title>
+  <title>Quantum Trader AI - App Ready Preview</title>
   <style>
     * {
       box-sizing: border-box;
@@ -37,7 +37,7 @@
       margin: 25px 0;
     }
 
-    /* Button style */
+    /* Button style (locked) */
     .app-button {
       padding: 12px 18px;
       min-width: 120px;
@@ -52,28 +52,21 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
     }
 
-    /* Enhanced hover glow */
     .app-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 12px rgba(0,0,0,0.25);
       filter: brightness(1.1);
     }
 
-    /* Globe */
+    /* Globe (static) */
     .globe {
       width: 200px;
       height: 200px;
       object-fit: contain;
       margin: 20px 0;
-      animation: rotateGlobe 30s linear infinite;
     }
 
-    @keyframes rotateGlobe {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Ori Ologo bottom right */
+    /* Ori Ologo (static) */
     .ori-olokun {
       position: fixed;
       bottom: 12px;
@@ -81,13 +74,6 @@
       width: 80px;
       height: auto;
       opacity: 0.95;
-      animation: rollOri 8s linear infinite;
-    }
-
-    @keyframes rollOri {
-      0% { transform: rotate(0deg); }
-      50% { transform: rotate(180deg); }
-      100% { transform: rotate(360deg); }
     }
 
     /* Responsive adjustments */
@@ -119,10 +105,10 @@
     <button class="app-button" onclick="buttonClicked('Settings')">Settings</button>
   </div>
 
-  <!-- Globe -->
+  <!-- Globe (static) -->
   <img src="qtai_globe.png" alt="Quantum Trader AI Globe" class="globe">
 
-  <!-- Ori Ologo -->
+  <!-- Ori Ologo (static) -->
   <img src="qtai_ori_olokun.png" alt="Ori Ologo" class="ori-olokun">
 
   <script>
