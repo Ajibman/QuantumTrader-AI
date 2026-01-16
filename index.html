@@ -147,5 +147,57 @@
   });
 </script>
 
+ <script>
+  // Utility: simple bubble alert (can be upgraded later)
+  function bubble(message) {
+    alert(message);
+  }
+
+  // TraderLab — ACTIVE
+  document.getElementById("traderLabBtn").addEventListener("click", () => {
+    window.location.href = "traderlab/index.html";
+  });
+
+  // CPilot — staged
+  document.getElementById("cPilotBtn").addEventListener("click", () => {
+    bubble(
+      "CPilot is under controlled activation.\n" +
+      "System intelligence is being aligned after TraderLab validation."
+    );
+  });
+
+  // Trading Floor — sequenced
+  document.getElementById("tradingFloorBtn").addEventListener("click", () => {
+    bubble(
+      "Trading Floor access is sequenced.\n" +
+      "Activation follows TraderLab readiness checks."
+    );
+  });
+
+  // Games Pavilion — informational
+  document.getElementById("gamesPavilionBtn").addEventListener("click", () => {
+    bubble(
+      "Games Pavilion is available for exploration.\n" +
+      "A lighter environment within the Quantum ecosystem."
+    );
+  });
+
+  // Help — structured
+  document.getElementById("helpBtn").addEventListener("click", () => {
+    bubble(
+      "Help & guidance are being structured.\n" +
+      "Clear pathways will be available as modules come online."
+    );
+  });
+
+  // Settings — stabilizing
+  document.getElementById("settingsBtn").addEventListener("click", () => {
+    bubble(
+      "System settings are stabilizing.\n" +
+      "User-level configuration will unlock progressively."
+    );
+  });
+</script>
+ 
 </body>
 </html>
