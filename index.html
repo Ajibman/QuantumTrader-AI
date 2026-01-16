@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™</title>
+<title>QuantumTrader AI - App Ready</title>
 <style>
-  /* GENERAL BODY */
   body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +17,7 @@
     padding-top: 50px;
   }
 
-  /* CHARACTER CONTAINER */
+  /* CHARACTER */
   #character {
     position: relative;
     width: 200px;
@@ -26,7 +25,6 @@
     margin-bottom: 50px;
   }
 
-  /* EYES */
   .eye {
     position: absolute;
     width: 40px;
@@ -51,7 +49,6 @@
   #eye-left { top: 50px; left: 40px; }
   #eye-right { top: 50px; right: 40px; }
 
-  /* MOUTH */
   #mouth {
     position: absolute;
     bottom: 40px;
@@ -74,31 +71,31 @@
   }
 
   .module-button {
-    padding: 15px 30px;
-    background: #6dd5fa; /* Aqua marine base */
+    padding: 15px 25px;
+    background: #6dd5fa;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
     color: #fff;
+    flex: 0 0 150px; /* equal width for all buttons */
+    text-align: center;
     transition: background 0.3s, transform 0.2s;
   }
 
   .module-button:hover,
   .module-button:focus {
-    background: #5bb0d9; /* Slight navy tone */
+    background: #5bb0d9; 
     transform: scale(1.05);
     outline: none;
   }
 
-  /* AUDIO PLAYER */
   audio {
     margin-top: 20px;
     width: 90%;
     max-width: 500px;
   }
-
 </style>
 </head>
 <body>
@@ -112,12 +109,14 @@
 
 <!-- MODULE BUTTONS -->
 <div id="modules">
-  <button class="module-button" data-x="100" data-y="300">TraderLab</button>
-  <button class="module-button" data-x="250" data-y="300">Trading Floor</button>
-  <button class="module-button" data-x="400" data-y="300">CPilot</button>
+  <button class="module-button">TraderLab</button>
+  <button class="module-button">Trading Floor</button>
+  <button class="module-button">CPilot</button>
+  <button class="module-button">Analytics</button>
+  <button class="module-button">Portfolio</button>
+  <button class="module-button">Settings</button>
 </div>
 
-<!-- AUDIO SAMPLE -->
 <audio id="voice" src="voice_sample.mp3" controls></audio>
 
 <script>
