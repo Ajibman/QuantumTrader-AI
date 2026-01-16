@@ -12,6 +12,7 @@
   --accent: #00ffe7;
   --text: #ffffff;
   --warn: #ffb000;
+  --success: #00ff8c;
 }
 
 body {
@@ -55,6 +56,11 @@ h2 {
   font-size: 0.9rem;
 }
 
+.success {
+  color: var(--success);
+  font-weight: bold;
+}
+
 button {
   padding: 0.6rem 1.2rem;
   border-radius: 0.6rem;
@@ -63,10 +69,17 @@ button {
   color: var(--bg);
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 0.6rem;
 }
 
 button:hover {
   background: #00ffd0;
+}
+
+button:disabled {
+  background: #005f5f;
+  cursor: not-allowed;
 }
 
 footer {
@@ -74,6 +87,11 @@ footer {
   padding: 1rem;
   font-size: 0.8rem;
   opacity: 0.7;
+}
+
+#proceed-trading {
+  display: none;
+  margin-top: 1rem;
 }
 </style>
 </head>
@@ -122,10 +140,9 @@ footer {
 
   <div class="panel">
     <h2>Qualification Status</h2>
-    <p id="qualification-status">
-      Status: Not yet qualified
-    </p>
+    <p id="qualification-status">Status: Not yet qualified</p>
     <button id="begin-assessment">Begin Discipline Assessment</button>
+    <button id="proceed-trading">Proceed to Trading Floor</button>
   </div>
 
   <div class="panel">
@@ -144,12 +161,22 @@ footer {
 <script>
   const status = document.getElementById("qualification-status");
   const btn = document.getElementById("begin-assessment");
+  const proceedBtn = document.getElementById("proceed-trading");
 
   btn.addEventListener("click", () => {
     status.textContent = "Status: Assessment in progress...";
+    btn.disabled = true;
+
     setTimeout(() => {
       status.textContent = "Status: Qualified ✔ Discipline verified";
+      status.classList.add("success");
+      proceedBtn.style.display = "inline-block";
     }, 2000);
+  });
+
+  proceedBtn.addEventListener("click", () => {
+    // Navigate to Trading Floor
+    window.location.href = "tradingfloor.html"; // adjust path if needed
   });
 </script>
 
