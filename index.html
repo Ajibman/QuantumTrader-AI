@@ -3,119 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI - App Ready Preview</title>
+  <title>QuantumTrader AI - Phase 1-6 App</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
+    /* === Reset & Base === */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #f5faff;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
       display: flex;
       flex-direction: column;
-      align-items: center;
       min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
     }
 
-    /* Header / Logo */
-    .logo-header {
-      margin-top: 20px;
-      width: 150px;
-      height: auto;
+    /* === Main Container === */
+    .app-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
-    /* Buttons container */
+    /* === Logo Images === */
+    .logo-top {
+      max-width: 200px;
+      width: 20vw;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+    .peace-index-logo {
+      max-width: 150px;
+      width: 15vw;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+    /* === Buttons === */
     .buttons-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
-      margin: 25px 0;
+      gap: 1rem;
+      width: 100%;
+      margin-bottom: 2rem;
     }
 
-    /* Button style (locked) */
     .app-button {
-      padding: 12px 18px;
-      min-width: 120px;
-      text-align: center;
-      font-size: 0.9rem;
-      border-radius: 8px;
+      background: linear-gradient(145deg, #7fdbff, #1e3a5f); /* aqua + navy accent */
+      color: #fff;
       border: none;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      font-size: 1rem;
       cursor: pointer;
-      color: white;
-      background: linear-gradient(145deg, #7fe6e0, #3f5a8f);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+      flex: 1 1 120px;
+      max-width: 180px;
+      min-width: 100px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .app-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 12px rgba(0,0,0,0.25);
-      filter: brightness(1.1);
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* Globe (static) */
-    .globe {
+    /* === Static Globe & Ori Ologo === */
+    .static-globe {
       width: 200px;
-      height: 200px;
-      object-fit: contain;
-      margin: 20px 0;
+      max-width: 25vw;
+      height: auto;
+      margin-bottom: 1rem;
     }
 
-    /* Ori Ologo (static) */
     .ori-olokun {
       position: fixed;
-      bottom: 12px;
-      right: 12px;
+      bottom: 10px;
+      right: 10px;
       width: 80px;
+      max-width: 15vw;
       height: auto;
-      opacity: 0.95;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 400px) {
-      .app-button {
-        min-width: 90px;
-        font-size: 0.8rem;
-        padding: 10px 14px;
+    /* === Audio Controls (hidden) === */
+    audio {
+      display: none;
+    }
+
+    /* === Responsive Media Queries === */
+    @media (max-width: 768px) {
+      .buttons-container {
+        flex-direction: column;
+        gap: 0.75rem;
       }
-      .globe {
-        width: 150px;
-        height: 150px;
+      .app-button {
+        width: 80%;
+        max-width: 200px;
+      }
+      .logo-top {
+        width: 30vw;
+      }
+      .peace-index-logo {
+        width: 25vw;
+      }
+      .static-globe {
+        width: 35vw;
+      }
+      .ori-olokun {
+        width: 20vw;
       }
     }
+
+    @media (max-width: 480px) {
+      .app-button {
+        width: 90%;
+        font-size: 0.9rem;
+      }
+      .logo-top {
+        width: 40vw;
+      }
+      .peace-index-logo {
+        width: 30vw;
+      }
+      .static-globe {
+        width: 45vw;
+      }
+      .ori-olokun {
+        width: 25vw;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- Header Logo -->
-  <img src="peace_index_logo.png" alt="Peace Index Logo" class="logo-header">
+  <div class="app-container">
+    <!-- Top Logo -->
+    <img src="qtai_ori_olokun.png" alt="QT AI Logo" class="logo-top">
 
-  <!-- Buttons -->
-  <div class="buttons-container">
-    <button class="app-button" onclick="buttonClicked('TraderLab')">TraderLab</button>
-    <button class="app-button" onclick="buttonClicked('Trading Floor')">Trading Floor</button>
-    <button class="app-button" onclick="buttonClicked('CPilot')">CPilot</button>
-    <button class="app-button" onclick="buttonClicked('Analytics')">Analytics</button>
-    <button class="app-button" onclick="buttonClicked('Portfolio')">Portfolio</button>
-    <button class="app-button" onclick="buttonClicked('Settings')">Settings</button>
+    <!-- Peace Index Logo -->
+    <img src="peace_index_logo.png" alt="Peace Index" class="peace-index-logo">
+
+    <!-- Static Globe -->
+    <img src="qtai_globe.png" alt="Static Globe" class="static-globe">
+
+    <!-- Buttons -->
+    <div class="buttons-container">
+      <button class="app-button" onclick="handleButton('TradingFloor')">Trading Floor</button>
+      <button class="app-button" onclick="handleButton('CPilot')">CPilot</button>
+      <button class="app-button" onclick="handleButton('Module01')">Module 01</button>
+      <button class="app-button" onclick="handleButton('Module02')">Module 02</button>
+      <button class="app-button" onclick="handleButton('Module03')">Module 03</button>
+      <button class="app-button" onclick="handleButton('Module04')">Module 04</button>
+    </div>
   </div>
 
-  <!-- Globe (static) -->
-  <img src="qtai_globe.png" alt="Quantum Trader AI Globe" class="globe">
-
-  <!-- Ori Ologo (static) -->
+  <!-- Ori Ologo Bottom Right -->
   <img src="qtai_ori_olokun.png" alt="Ori Ologo" class="ori-olokun">
 
+  <!-- Voice / Audio -->
+  <audio id="welcomeVoice" src="audio/welcome.mp3" preload="auto"></audio>
+
   <script>
-    // Placeholder button click handler
-    function buttonClicked(name) {
-      alert(name + " button clicked!");
+    // === Button Click Handler ===
+    function handleButton(module) {
+      // Play welcome voice on first interaction
+      const audio = document.getElementById('welcomeVoice');
+      if (audio) audio.play();
+
+      // Existing Phase 1-6 logic preserved
+      console.log('Button clicked:', module);
+      // TODO: Add your current navigation or module loading logic here
     }
+
+    // Optional: Play voice on page load
+    window.addEventListener('load', () => {
+      const audio = document.getElementById('welcomeVoice');
+      if (audio) audio.play().catch(e => console.log('Voice play prevented:', e));
+    });
   </script>
 
 </body>
