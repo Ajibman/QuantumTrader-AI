@@ -122,79 +122,67 @@
   // -------------------------------
   // Single-user click logic for Phase 6
   // -------------------------------
-
-  // Trader Lab: active
-  document.getElementById('traderLabBtn').addEventListener('click', function() {
-    window.location.href = "trader-lab.html"; // replace with actual page
-  });
-
-  // Locked buttons list
-  const lockedButtons = [
-    "tradingFloorBtn",
-    "cPilotBtn",
-    "gamesPavilionBtn",
-    "helpBtn",
-    "settingsBtn"
-  ];
-
-  // Disable locked buttons and add alert on click
-  lockedButtons.forEach(id => {
-    const btn = document.getElementById(id);
-    btn.disabled = true;
-    btn.addEventListener('click', function() {
-      alert("This section is locked until you complete Trader Lab.");
-    });
-  });
-</script>
-
+  
  <script>
-  // Utility: simple bubble alert (can be upgraded later)
+  // ===============================
+  // Quantum Trader AI — Homepage Button Wiring
+  // TraderLab active, others staged
+  // ===============================
+
+  // Utility function for bubble messages
   function bubble(message) {
     alert(message);
   }
 
-  // TraderLab — ACTIVE
-  document.getElementById("traderLabBtn").addEventListener("click", () => {
-    window.location.href = "traderlab/index.html";
+  // === TraderLab button — ACTIVE navigation ===
+  const traderLabBtn = document.getElementById("traderLabBtn");
+  traderLabBtn.addEventListener("click", () => {
+    // Direct navigation — no alert, no interference
+    window.location.href = "traderlab.html";
   });
 
-  // CPilot — staged
-  document.getElementById("cPilotBtn").addEventListener("click", () => {
+  // === CPilot button — staged ===
+  const cPilotBtn = document.getElementById("cPilotBtn");
+  cPilotBtn.addEventListener("click", () => {
     bubble(
       "CPilot is under controlled activation.\n" +
       "System intelligence is being aligned after TraderLab validation."
     );
   });
 
-  // Trading Floor — sequenced
-  document.getElementById("tradingFloorBtn").addEventListener("click", () => {
+  // === Trading Floor button — staged ===
+  const tradingFloorBtn = document.getElementById("tradingFloorBtn");
+  tradingFloorBtn.addEventListener("click", () => {
     bubble(
       "Trading Floor access is sequenced.\n" +
       "Activation follows TraderLab readiness checks."
     );
   });
 
-  // Games Pavilion — informational
-  document.getElementById("gamesPavilionBtn").addEventListener("click", () => {
+  // === Settings button — staged ===
+  const settingsBtn = document.getElementById("settingsBtn");
+  settingsBtn.addEventListener("click", () => {
+    bubble(
+      "Settings module is stabilizing.\n" +
+      "User-level configuration will unlock progressively."
+    );
+  });
+
+  // === Games Pavilion button — info-only ===
+  const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
+  gamesPavilionBtn.addEventListener("click", () => {
     bubble(
       "Games Pavilion is available for exploration.\n" +
       "A lighter environment within the Quantum ecosystem."
     );
   });
 
-  // Help — structured
-  document.getElementById("helpBtn").addEventListener("click", () => {
+  // === Help button — info-only ===
+  const helpBtn = document.getElementById("helpBtn");
+  helpBtn.addEventListener("click", () => {
     bubble(
       "Help & guidance are being structured.\n" +
       "Clear pathways will be available as modules come online."
-    );
-  });
-
-  // Settings — stabilizing
-  document.getElementById("settingsBtn").addEventListener("click", () => {
-    bubble(
-      "System settings are stabilizing.\n" +
-      "User-level configuration will unlock progressively."
     );
   });
 </script>
