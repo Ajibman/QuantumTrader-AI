@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,6 +11,7 @@
   --card: #071226;
   --accent: #00ffe7;
   --text: #ffffff;
+  --warn: #ffb000;
 }
 
 body {
@@ -36,12 +37,36 @@ main {
   margin: auto;
 }
 
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  background: var(--card);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
 .panel {
   background: #08192e;
   border-radius: 1rem;
   padding: 1.2rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 0 12px rgba(0,0,0,.5);
+  display: none;
+}
+
+.panel.active {
+  display: block;
 }
 
 h2 {
@@ -55,6 +80,20 @@ footer {
   font-size: 0.8rem;
   opacity: 0.7;
 }
+
+button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00ffd0;
+}
 </style>
 </head>
 
@@ -66,7 +105,15 @@ footer {
 
 <main>
 
-  <div class="panel">
+  <div class="tabs">
+    <div class="tab active" data-panel="market">Market Overview</div>
+    <div class="tab" data-panel="autotrader">AutoTrader</div>
+    <div class="tab" data-panel="candlestick">Candlestick / Patterns</div>
+    <div class="tab" data-panel="events">Economic Events</div>
+  </div>
+
+  <!-- Market Overview Panel -->
+  <div class="panel active" id="market">
     <h2>Market State Overview</h2>
     <p>
       Aggregated intelligence from Peace Indexes, Forex markets,
@@ -76,23 +123,58 @@ footer {
       Ori Ologo continuously evaluates whether the current environment
       is suitable for trading or demands restraint.
     </p>
+    <div class="panel">
+      <h2>Ori Ologo Commentary</h2>
+      <p id="ori-commentary">
+        Awaiting market alignment…
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>Execution Discipline</h2>
+      <ul>
+        <li>No forced trades</li>
+        <li>No emotional execution</li>
+        <li>Capital protection enforced</li>
+        <li>Peace-weighted market bias</li>
+      </ul>
+    </div>
   </div>
 
-  <div class="panel">
-    <h2>Ori Ologo Commentary</h2>
-    <p id="ori-commentary">
-      Awaiting market alignment…
+  <!-- AutoTrader Panel (Placeholder) -->
+  <div class="panel" id="autotrader">
+    <h2>AutoTrader Logic (Coming Soon)</h2>
+    <p>
+      This panel is a placeholder for AutoTrader functionality.
+      Trade execution buttons and AI logic will be wired here.
+    </p>
+    <p>
+      Selected Market, Peace Index, and TA selection will be used.
+    </p>
+    <button disabled>Execute Simulated Trade (stub)</button>
+    <p style="color: var(--warn); font-size: 0.9rem;">
+      Forex-Factory / Economic Events integration will be added here later.
     </p>
   </div>
 
-  <div class="panel">
-    <h2>Execution Discipline</h2>
-    <ul>
-      <li>No forced trades</li>
-      <li>No emotional execution</li>
-      <li>Capital protection enforced</li>
-      <li>Peace-weighted market bias</li>
-    </ul>
+  <!-- Candlestick & Pattern Panel (Placeholder) -->
+  <div class="panel" id="candlestick">
+    <h2>Candlestick & Pattern Engine (Coming Soon)</h2>
+    <p>
+      Chart visualization, candlestick patterns, and technical analysis
+      tools will be integrated here.
+    </p>
+    <button disabled>Load Chart (stub)</button>
+  </div>
+
+  <!-- Economic Events / Forex-Factory Panel (Placeholder) -->
+  <div class="panel" id="events">
+    <h2>Economic Events / Forex-Factory (Coming Soon)</h2>
+    <p>
+      Economic events awareness and their impact on trading will be
+      integrated here in the future.
+    </p>
+    <button disabled>View Upcoming Events (stub)</button>
   </div>
 
 </main>
@@ -102,7 +184,24 @@ footer {
 </footer>
 
 <script>
-  // Placeholder for live commentary
+  // Tab switching
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Set active tab
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Show corresponding panel
+      const panelId = tab.getAttribute("data-panel");
+      panels.forEach(p => p.classList.remove("active"));
+      document.getElementById(panelId).classList.add("active");
+    });
+  });
+
+  // Placeholder commentary
   document.getElementById("ori-commentary").textContent =
     "Markets stable. Peace-weighted conditions acceptable. Await confirmation.";
 </script>
