@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — CPilot</title>
+
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --warn: #ffb000;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  background: var(--card);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.panel {
+  background: #08192e;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 12px rgba(0,0,0,.5);
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00ffd0;
+}
+
+select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.4rem;
+  background: var(--card);
+  color: var(--text);
+  border: none;
+  margin-right: 0.5rem;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CPilot</h1>
+</header>
+
+<main>
+
+  <div class="tabs">
+    <div class="tab active" data-panel="sim">Simulation</div>
+    <div class="tab" data-panel="live">Live</div>
+    <div class="tab" data-panel="advisory">Ori Ologo Advisory</div>
+  </div>
+
+  <!-- Simulation Panel -->
+  <div class="panel active" id="sim">
+    <h2>Simulation Mode</h2>
+    <p>
+      Execute simulated trading missions using your selected market, TA tool,
+      and candlestick/pattern preferences.
+    </p>
+
+    <div>
+      <label>Market:</label>
+      <select id="sim-market">
+        <option value="SP500">S&P 500</option>
+        <option value="ECurrencies">E-Currencies</option>
+        <option value="Commodities">Commodities</option>
+        <option value="Metals">Metals</option>
+        <option value="Oil">Oil</option>
+        <option value="Crypto">Cryptocurrencies</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Technical Analysis Tool:</label>
+      <select id="sim-ta">
+        <option value="Preset">Preset (default)</option>
+        <option value="TA1">TA Tool 1</option>
+        <option value="TA2">TA Tool 2</option>
+        <option value="TA3">TA Tool 3</option>
+        <option value="TA4">TA Tool 4</option>
+        <option value="TA5">TA Tool 5</option>
+        <option value="TA6">TA Tool 6</option>
+        <option value="TA7">TA Tool 7</option>
+        <option value="TA8">TA Tool 8</option>
+        <option value="TA9">TA Tool 9</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Pattern:</label>
+      <select id="sim-pattern">
+        <option value="Doji">Doji</option>
+        <option value="Hammer">Hammer</option>
+        <option value="Engulfing">Engulfing</option>
+      </select>
+    </div>
+
+    <button id="execute-sim">Execute Simulated Trade</button>
+
+    <div class="panel" style="margin-top:1rem;">
+      <h3>Simulation Trade Log</h3>
+      <ul id="sim-log"></ul>
+    </div>
+
+    <p style="color: var(--warn); font-size: 0.9rem;">
+      Live trading and Forex-Factory integration coming in future updates.
+    </p>
+  </div>
+
+  <!-- Live Panel -->
+  <div class="panel" id="live">
+    <h2>Live Mode (Placeholder)</h2>
+    <p>
+      Live trading will be available once subscription and capital conditions are met.
+    </p>
+    <button disabled>Execute Live Trade (stub)</button>
+    <p style="color: var(--warn); font-size: 0.9rem;">
+      Honorary Architect exemption is acknowledged.
+    </p>
+  </div>
+
+  <!-- Ori Ologo Advisory Panel -->
+  <div class="panel" id="advisory">
+    <h2>Ori Ologo Advisory</h2>
+    <p>
+      Advisory messages, alerts, and trade suggestions will appear here.
+      Currently stubbed for simulation review.
+    </p>
+    <ul id="advisory-log"></ul>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — CPilot
+</footer>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const panelId = tab.getAttribute("data-panel");
+      panels.forEach(p => p.classList.remove("active"));
+      document.getElementById(panelId).classList.add("active");
+    });
+  });
+
+  // Simulation AutoTrader logic
+  const simExecute = document.getElementById("execute-sim");
+  const simLog = document.getElementById("sim-log");
+  const simMarket = document.getElementById("sim-market");
+  const simTA = document.getElementById("sim-ta");
+  const simPattern = document.getElementById("sim-pattern");
+
+  simExecute.addEventListener("click", () => {
+    const market = simMarket.value;
+    const ta = simTA.value;
+    const pattern = simPattern.value;
+    const peaceIndex = Math.floor(Math.random() * 101);
+    const price = (Math.random() * 1000).toFixed(2);
+    const status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
+
+    const entry = document.createElement("li");
+    entry.textContent = `[${new Date().toLocaleTimeString()}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Price: ${price}, Peace Index: ${peaceIndex} → ${status}`;
+    simLog.prepend(entry);
+
+    // Advisory stub
+    const advisoryLog = document.getElementById("advisory-log");
+    const advisoryEntry = document.createElement("li");
+    advisoryEntry.textContent = `Advisory: ${status} at ${market} with pattern ${pattern}`;
+    advisoryLog.prepend(advisoryEntry);
+  });
+</script>
+
+</body>
+</html>
