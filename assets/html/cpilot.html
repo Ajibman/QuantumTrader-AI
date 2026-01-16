@@ -44,10 +44,11 @@ main {
 }
 
 .tab {
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.6rem;
-  background: var(--card);
+  padding: 0.5rem 1rem;
   cursor: pointer;
+  border-radius: 0.5rem;
+  background: var(--card);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -69,21 +70,9 @@ main {
   display: block;
 }
 
-h2 {
-  color: var(--accent);
-  margin-top: 0;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
 button {
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
   border: none;
   background: var(--accent);
   color: var(--bg);
@@ -95,13 +84,18 @@ button:hover {
   background: #00ffd0;
 }
 
-select {
-  padding: 0.4rem 0.6rem;
-  border-radius: 0.4rem;
-  background: var(--card);
-  color: var(--text);
-  border: none;
-  margin-right: 0.5rem;
+#simulation-log, #advisory-log {
+  margin-top: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  color: #00ffd0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -113,92 +107,58 @@ select {
 </header>
 
 <main>
-
   <div class="tabs">
-    <div class="tab active" data-panel="sim">Simulation</div>
-    <div class="tab" data-panel="live">Live</div>
-    <div class="tab" data-panel="advisory">Ori Ologo Advisory</div>
+    <div class="tab active" data-panel="simulation-panel">Simulation</div>
+    <div class="tab" data-panel="live-panel">Live</div>
+    <div class="tab" data-panel="advisory-panel">Advisory</div>
   </div>
 
   <!-- Simulation Panel -->
-  <div class="panel active" id="sim">
-    <h2>Simulation Mode</h2>
-    <p>
-      Execute simulated trading missions using your selected market, TA tool,
-      and candlestick/pattern preferences.
-    </p>
+  <div id="simulation-panel" class="panel active">
+    <label for="sim-market">Market:</label>
+    <select id="sim-market">
+      <option value="SP500">S&P 500</option>
+      <option value="Forex">E-Currencies</option>
+      <option value="Crypto">Cryptocurrencies</option>
+    </select>
 
-    <div>
-      <label>Market:</label>
-      <select id="sim-market">
-        <option value="SP500">S&P 500</option>
-        <option value="ECurrencies">E-Currencies</option>
-        <option value="Commodities">Commodities</option>
-        <option value="Metals">Metals</option>
-        <option value="Oil">Oil</option>
-        <option value="Crypto">Cryptocurrencies</option>
-      </select>
-    </div>
+    <label for="sim-ta">TA Tool:</label>
+    <select id="sim-ta">
+      <option value="preset">Preset Default</option>
+      <option value="tool1">Tool 1</option>
+      <option value="tool2">Tool 2</option>
+      <option value="tool3">Tool 3</option>
+      <option value="tool4">Tool 4</option>
+      <option value="tool5">Tool 5</option>
+      <option value="tool6">Tool 6</option>
+      <option value="tool7">Tool 7</option>
+      <option value="tool8">Tool 8</option>
+      <option value="tool9">Tool 9</option>
+      <option value="tool10">Tool 10</option>
+    </select>
 
-    <div>
-      <label>Technical Analysis Tool:</label>
-      <select id="sim-ta">
-        <option value="Preset">Preset (default)</option>
-        <option value="TA1">TA Tool 1</option>
-        <option value="TA2">TA Tool 2</option>
-        <option value="TA3">TA Tool 3</option>
-        <option value="TA4">TA Tool 4</option>
-        <option value="TA5">TA Tool 5</option>
-        <option value="TA6">TA Tool 6</option>
-        <option value="TA7">TA Tool 7</option>
-        <option value="TA8">TA Tool 8</option>
-        <option value="TA9">TA Tool 9</option>
-      </select>
-    </div>
+    <label for="sim-pattern">Pattern:</label>
+    <select id="sim-pattern">
+      <option value="doji">Doji</option>
+      <option value="hammer">Hammer</option>
+      <option value="engulfing">Engulfing</option>
+    </select>
 
-    <div>
-      <label>Pattern:</label>
-      <select id="sim-pattern">
-        <option value="Doji">Doji</option>
-        <option value="Hammer">Hammer</option>
-        <option value="Engulfing">Engulfing</option>
-      </select>
-    </div>
+    <button id="sim-execute">Execute Simulated Trade</button>
 
-    <button id="execute-sim">Execute Simulated Trade</button>
-
-    <div class="panel" style="margin-top:1rem;">
-      <h3>Simulation Trade Log</h3>
-      <ul id="sim-log"></ul>
-    </div>
-
-    <p style="color: var(--warn); font-size: 0.9rem;">
-      Live trading and Forex-Factory integration coming in future updates.
-    </p>
+    <div id="simulation-log"></div>
   </div>
 
   <!-- Live Panel -->
-  <div class="panel" id="live">
-    <h2>Live Mode (Placeholder)</h2>
-    <p>
-      Live trading will be available once subscription and capital conditions are met.
-    </p>
-    <button disabled>Execute Live Trade (stub)</button>
-    <p style="color: var(--warn); font-size: 0.9rem;">
-      Honorary Architect exemption is acknowledged.
-    </p>
+  <div id="live-panel" class="panel">
+    <p>Live trading currently inactive. Placeholders for future AutoTrader wiring.</p>
   </div>
 
-  <!-- Ori Ologo Advisory Panel -->
-  <div class="panel" id="advisory">
-    <h2>Ori Ologo Advisory</h2>
-    <p>
-      Advisory messages, alerts, and trade suggestions will appear here.
-      Currently stubbed for simulation review.
-    </p>
-    <ul id="advisory-log"></ul>
+  <!-- Advisory Panel -->
+  <div id="advisory-panel" class="panel">
+    <button id="advisory-log-btn">Update Advisory Log</button>
+    <div id="advisory-log"></div>
   </div>
-
 </main>
 
 <footer>
@@ -206,44 +166,49 @@ select {
 </footer>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
   // Tab switching
   const tabs = document.querySelectorAll(".tab");
   const panels = document.querySelectorAll(".panel");
+
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
       tabs.forEach(t => t.classList.remove("active"));
+      panels.forEach(p => p.classList.remove("active"));
+
       tab.classList.add("active");
       const panelId = tab.getAttribute("data-panel");
-      panels.forEach(p => p.classList.remove("active"));
       document.getElementById(panelId).classList.add("active");
     });
   });
 
-  // Simulation AutoTrader logic
-  const simExecute = document.getElementById("execute-sim");
-  const simLog = document.getElementById("sim-log");
-  const simMarket = document.getElementById("sim-market");
-  const simTA = document.getElementById("sim-ta");
-  const simPattern = document.getElementById("sim-pattern");
+  // Simulation Trade Logic
+  const simExecute = document.getElementById("sim-execute");
+  const simLog = document.getElementById("simulation-log");
 
   simExecute.addEventListener("click", () => {
-    const market = simMarket.value;
-    const ta = simTA.value;
-    const pattern = simPattern.value;
+    const market = document.getElementById("sim-market").value;
+    const ta = document.getElementById("sim-ta").value;
+    const pattern = document.getElementById("sim-pattern").value;
+
     const peaceIndex = Math.floor(Math.random() * 101);
-    const price = (Math.random() * 1000).toFixed(2);
     const status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
+    const timestamp = new Date().toLocaleTimeString();
 
-    const entry = document.createElement("li");
-    entry.textContent = `[${new Date().toLocaleTimeString()}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Price: ${price}, Peace Index: ${peaceIndex} → ${status}`;
-    simLog.prepend(entry);
-
-    // Advisory stub
-    const advisoryLog = document.getElementById("advisory-log");
-    const advisoryEntry = document.createElement("li");
-    advisoryEntry.textContent = `Advisory: ${status} at ${market} with pattern ${pattern}`;
-    advisoryLog.prepend(advisoryEntry);
+    simLog.prepend(
+      `[${timestamp}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Peace Index: ${peaceIndex}, Status: ${status}<br>`
+    );
   });
+
+  // Advisory Log Logic
+  const advisoryBtn = document.getElementById("advisory-log-btn");
+  const advisoryLog = document.getElementById("advisory-log");
+
+  advisoryBtn.addEventListener("click", () => {
+    const timestamp = new Date().toLocaleTimeString();
+    advisoryLog.prepend(`[${timestamp}] Advisory update triggered.<br>`);
+  });
+});
 </script>
 
 </body>
