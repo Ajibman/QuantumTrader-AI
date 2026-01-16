@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Trader AI - Progressive View</title>
+  <title>Quantum Trader AI - Interactive Preview</title>
   <style>
-    /* Reset & basic styles */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
     body {
       background: #f5faff;
       display: flex;
@@ -47,13 +47,16 @@
       border: none;
       cursor: pointer;
       color: white;
-      background: linear-gradient(145deg, #7fe6e0, #3f5a8f); /* aqua + subtle navy */
+      background: linear-gradient(145deg, #7fe6e0, #3f5a8f);
       box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
     }
+
+    /* Enhanced hover glow */
     .app-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.25);
+      filter: brightness(1.1);
     }
 
     /* Globe */
@@ -62,6 +65,12 @@
       height: 200px;
       object-fit: contain;
       margin: 20px 0;
+      animation: rotateGlobe 30s linear infinite;
+    }
+
+    @keyframes rotateGlobe {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Ori Ologo bottom right */
@@ -72,6 +81,13 @@
       width: 80px;
       height: auto;
       opacity: 0.95;
+      animation: rollOri 8s linear infinite;
+    }
+
+    @keyframes rollOri {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Responsive adjustments */
@@ -95,12 +111,12 @@
 
   <!-- Buttons -->
   <div class="buttons-container">
-    <button class="app-button">TraderLab</button>
-    <button class="app-button">Trading Floor</button>
-    <button class="app-button">CPilot</button>
-    <button class="app-button">Analytics</button>
-    <button class="app-button">Portfolio</button>
-    <button class="app-button">Settings</button>
+    <button class="app-button" onclick="buttonClicked('TraderLab')">TraderLab</button>
+    <button class="app-button" onclick="buttonClicked('Trading Floor')">Trading Floor</button>
+    <button class="app-button" onclick="buttonClicked('CPilot')">CPilot</button>
+    <button class="app-button" onclick="buttonClicked('Analytics')">Analytics</button>
+    <button class="app-button" onclick="buttonClicked('Portfolio')">Portfolio</button>
+    <button class="app-button" onclick="buttonClicked('Settings')">Settings</button>
   </div>
 
   <!-- Globe -->
@@ -108,6 +124,13 @@
 
   <!-- Ori Ologo -->
   <img src="qtai_ori_olokun.png" alt="Ori Ologo" class="ori-olokun">
+
+  <script>
+    // Placeholder button click handler
+    function buttonClicked(name) {
+      alert(name + " button clicked!");
+    }
+  </script>
 
 </body>
 </html>
