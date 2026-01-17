@@ -152,6 +152,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+ 
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const status = document.getElementById("qualification-status");
+  const btn = document.getElementById("begin-assessment");
 
+  btn.addEventListener("click", () => {
+    // Lock button to prevent spam clicks
+    btn.disabled = true;
+
+    // Step 1 — Start assessment
+    status.textContent = "Status: Assessment in progress...";
+
+    // Step 2 — Simulate multiple checks (discipline, peace, macro-awareness)
+    setTimeout(() => {
+      status.textContent = "Status: Discipline Verified ✔";
+    }, 2000);
+
+    setTimeout(() => {
+      status.textContent = "Status: Qualified ✔ TraderLab complete";
+      // Optional: you could now trigger CPilot/Trading Floor unlock messages
+    }, 4000);
+  });
+});
+</script>
+ 
 </body>
 </html>
