@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — CPilot</title>
+
+<style>
+:root {
+  --bg: #050b1f;
+  --card: #0b1736;
+  --accent: #7cf3ff;
+  --text: #ffffff;
+  --notice: #ffcc66;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1.2rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.panel {
+  background: #0e1f44;
+  border-radius: 1rem;
+  padding: 1.4rem;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 0 14px rgba(0,0,0,.5);
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.notice {
+  color: var(--notice);
+  font-size: 0.9rem;
+}
+
+.status {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+button {
+  padding: 0.7rem 1.4rem;
+  border-radius: 0.7rem;
+  border: none;
+  background: var(--accent);
+  color: #001018;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CPilot</h1>
+  <p class="notice">Cognitive Pilot — intelligence guidance layer</p>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>Role of CPilot</h2>
+    <p>
+      CPilot is not an autopilot.
+      It is a <strong>cognitive companion</strong> that reinforces discipline,
+      probability awareness, and decision restraint.
+    </p>
+    <p class="notice">
+      CPilot does not override trader intent. It corrects reckless deviation.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>System State</h2>
+    <p id="cpilot-status" class="status">
+      Status: Controlled activation — awaiting TraderLab validation
+    </p>
+    <button id="initializeBtn" disabled>
+      Initialize CPilot
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>Architect Access</h2>
+    <p>
+      System Architect access bypasses staged restrictions.
+      CPilot intelligence layers remain observable but restrained.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — CPilot
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const status = document.getElementById("cpilot-status");
+  const btn = document.getElementById("initializeBtn");
+
+  // Placeholder for future TraderLab signal
+  const traderLabQualified = false;
+
+  if (traderLabQualified) {
+    status.textContent = "Status: Ready — CPilot alignment available";
+    btn.disabled = false;
+  }
+
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    status.textContent = "Status: Initializing cognitive alignment...";
+    setTimeout(() => {
+      status.textContent = "Status: CPilot online ✔ Guidance layer active";
+    }, 2500);
+  });
+});
+</script>
+
+</body>
+</html>
