@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -101,7 +101,7 @@ footer {
       probability awareness, and decision restraint.
     </p>
     <p class="notice">
-      CPilot does not override trader intent. It corrects reckless deviation and gambler mentality. 
+      CPilot does not override trader intent. It corrects reckless deviation and gambler mentality.
     </p>
   </div>
 
@@ -123,14 +123,14 @@ footer {
     </p>
   </div>
 
-<div class="panel">
-  <h2>CPilot Advisory</h2>
-  <p class="notice">
-    Guidance emphasizes restraint, probability awareness, and capital protection.
-    No execution, no automation.
-  </p>
-</div>
-  
+  <div class="panel">
+    <h2>CPilot Advisory</h2>
+    <p class="notice">
+      Guidance emphasizes restraint, probability awareness, and capital protection.
+      No execution, no automation.
+    </p>
+  </div>
+
 </main>
 
 <footer>
@@ -142,41 +142,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("cpilot-status");
   const btn = document.getElementById("initializeBtn");
 
-  // Placeholder for future TraderLab signal
-  const traderLabQualified = false;
-
-  if (traderLabQualified) {
-    status.textContent = "Status: Ready — CPilot alignment available";
-    btn.disabled = false;
-  }
-
-  btn.addEventListener("click", () => {
-    btn.disabled = true;
-    status.textContent = "Status: Initializing cognitive alignment...";
-    setTimeout(() => {
-      status.textContent = "Status: CPilot online ✔ Guidance layer active";
-    }, 2500);
-  });
-});
-</script>
-
-document.addEventListener("DOMContentLoaded", () => {
-  const status = document.getElementById("cpilot-status");
-  const btn = document.getElementById("initializeBtn");
-
+  /* STEP 1 — Wait for TraderLab qualification */
   document.addEventListener("TraderLabQualified", () => {
     status.textContent = "Status: Ready — CPilot alignment available";
     btn.disabled = false;
   });
 
+  /* STEP 2 — Initialize CPilot */
   btn.addEventListener("click", () => {
     btn.disabled = true;
     status.textContent = "Status: Initializing cognitive alignment...";
+
     setTimeout(() => {
       status.textContent = "Status: CPilot online ✔ Guidance layer active";
+
+      /* STEP 3 — Signal Trading Floor readiness */
+      document.dispatchEvent(new Event("CPilotCleared"));
+
     }, 2500);
   });
 });
-  
+</script>
+
 </body>
 </html>
