@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,12 +7,11 @@
 
 <style>
 :root {
-  --bg: #040916;
-  --card: #0a1633;
-  --accent: #5ee1ff;
+  --bg: #030816;
+  --card: #0a1533;
+  --accent: #4dd6ff;
   --text: #ffffff;
-  --notice: #ffcc66;
-  --lock: #ff6b6b;
+  --warn: #ffb84d;
 }
 
 body {
@@ -39,11 +38,11 @@ main {
 }
 
 .panel {
-  background: #0d2048;
+  background: #0e1c3f;
   border-radius: 1rem;
   padding: 1.5rem;
   margin-bottom: 1.8rem;
-  box-shadow: 0 0 16px rgba(0,0,0,.5);
+  box-shadow: 0 0 16px rgba(0,0,0,.55);
 }
 
 h2 {
@@ -52,32 +51,13 @@ h2 {
 }
 
 .notice {
-  color: var(--notice);
-  font-size: 0.9rem;
+  color: var(--warn);
+  font-size: 0.95rem;
 }
 
 .status {
   font-weight: 600;
-  margin-top: 0.5rem;
-}
-
-.locked {
-  color: var(--lock);
-}
-
-button {
-  padding: 0.8rem 1.6rem;
-  border-radius: 0.8rem;
-  border: none;
-  background: var(--accent);
-  color: #001018;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  margin-top: 0.6rem;
 }
 
 footer {
@@ -93,81 +73,47 @@ footer {
 
 <header>
   <h1>Trading Floor</h1>
-  <p class="notice">Execution environment — access strictly sequenced</p>
+  <p class="notice">Execution environment — controlled & supervised</p>
 </header>
 
 <main>
-  
-  <div class="panel">
-    <h2>Trading Floor</h2>
-
-    <p id="floor-status" class="status">
-      Status: LOCKED — CPilot clearance required
-    </p>
-
-    <button id="enterFloorBtn" disabled>
-      Enter Trading Floor
-    </button>
-
-    <p class="notice">
-      Execution layer remains inaccessible until cognitive clearance is confirmed.
-    </p>
-  </div>
-
-</main>
-  
-<main>
 
   <div class="panel">
-    <h2>Trading Floor Role</h2>
+    <h2>Purpose of the Trading Floor</h2>
     <p>
-      The Trading Floor is where trade execution occurs.
-      It is intentionally separated from training and intelligence layers.
-      It is the place to invest and make money through shear discipline and integrity.
+      The Trading Floor is the final execution environment of QuantumTrader AI™.
+      It is <strong>not accessible by confidence</strong>, only by qualification.
     </p>
     <p class="notice">
-      Access is not granted without successful completion of TraderLab
-      and CPilot alignmentOn other words, Training is a core concept here.
+      No live execution is enabled at this stage.
     </p>
   </div>
 
   <div class="panel">
-    <h2>System Status</h2>
-    <p id="floor-status" class="status locked">
+    <h2>System Verification State</h2>
+    <p id="floor-status" class="status">
       Status: Locked — awaiting CPilot clearance
     </p>
-    <button id="enterFloorBtn" disabled>
-      Enter Trading Floor
-    </button>
   </div>
 
   <div class="panel">
-    <h2>Execution Discipline</h2>
+    <h2>Execution Boundary</h2>
     <ul>
-      <li>No impulsive entries</li>
-      <li>No revenge trades</li>
-      <li>No override without justification</li>
-      <li>Capital preservation enforced</li>
+      <li>No order routing</li>
+      <li>No broker/API connections</li>
+      <li>No automation</li>
+      <li>Observation only</li>
     </ul>
+    <p class="notice">
+      This boundary protects capital, system integrity, and trademark intent.
+    </p>
   </div>
 
-<div class="panel">
-  <h2>Simulation Execution</h2>
-  <p class="notice">
-    This environment operates in simulation mode only.
-    No live capital is deployed during public testing.
-  </p>
-  <p>
-    Execution signals, latency, and safeguards are observed —
-    not acted upon.
-  </p>
-</div>
-  
   <div class="panel">
-    <h2>Architect Access</h2>
+    <h2>Architect Note</h2>
     <p>
-      System Architect retains observational access.
-      Execution controls remain locked during public testing.
+      System Architect access supersedes staged locks.
+      Public-facing state remains restricted by design.
     </p>
   </div>
 
@@ -180,26 +126,13 @@ footer {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("floor-status");
-  const btn = document.getElementById("enterFloorBtn");
 
-  // Placeholder for CPilot clearance
-  const cPilotCleared = false;
-
-  if (cPilotCleared) {
-    status.textContent = "Status: Ready — execution environment available";
-    status.classList.remove("locked");
-    btn.disabled = false;
-  }
-
-  btn.addEventListener("click", () => {
-    btn.disabled = true;
-    status.textContent = "Status: Initializing execution safeguards...";
-    setTimeout(() => {
-      status.textContent = "Status: Trading Floor live ✔ (simulation only)";
-    }, 3000);
+  // Placeholder: CPilot signal
+  document.addEventListener("CPilotCleared", () => {
+    status.textContent = "Status: Verified ✔ Trading Floor observation enabled";
   });
 });
 </script>
-  
+
 </body>
 </html>
