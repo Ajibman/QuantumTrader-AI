@@ -123,6 +123,14 @@ footer {
     </p>
   </div>
 
+<div class="panel">
+  <h2>CPilot Advisory</h2>
+  <p class="notice">
+    Guidance emphasizes restraint, probability awareness, and capital protection.
+    No execution, no automation.
+  </p>
+</div>
+  
 </main>
 
 <footer>
@@ -152,5 +160,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+document.addEventListener("DOMContentLoaded", () => {
+  const status = document.getElementById("cpilot-status");
+  const btn = document.getElementById("initializeBtn");
+
+  document.addEventListener("TraderLabQualified", () => {
+    status.textContent = "Status: Ready — CPilot alignment available";
+    btn.disabled = false;
+  });
+
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    status.textContent = "Status: Initializing cognitive alignment...";
+    setTimeout(() => {
+      status.textContent = "Status: CPilot online ✔ Guidance layer active";
+    }, 2500);
+  });
+});
+  
 </body>
 </html>
