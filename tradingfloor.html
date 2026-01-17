@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Trading Floor</title>
+
+<style>
+:root {
+  --bg: #040916;
+  --card: #0a1633;
+  --accent: #5ee1ff;
+  --text: #ffffff;
+  --notice: #ffcc66;
+  --lock: #ff6b6b;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1.2rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.panel {
+  background: #0d2048;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 0 16px rgba(0,0,0,.5);
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.notice {
+  color: var(--notice);
+  font-size: 0.9rem;
+}
+
+.status {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.locked {
+  color: var(--lock);
+}
+
+button {
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.8rem;
+  border: none;
+  background: var(--accent);
+  color: #001018;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Trading Floor</h1>
+  <p class="notice">Execution environment — access strictly sequenced</p>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>Trading Floor Role</h2>
+    <p>
+      The Trading Floor is where execution occurs.
+      It is intentionally separated from training and intelligence layers.
+    </p>
+    <p class="notice">
+      No access is granted without successful completion of TraderLab
+      and CPilot alignment.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>System Status</h2>
+    <p id="floor-status" class="status locked">
+      Status: Locked — awaiting CPilot clearance
+    </p>
+    <button id="enterFloorBtn" disabled>
+      Enter Trading Floor
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>Execution Discipline</h2>
+    <ul>
+      <li>No impulsive entries</li>
+      <li>No revenge trades</li>
+      <li>No override without justification</li>
+      <li>Capital preservation enforced</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Architect Access</h2>
+    <p>
+      System Architect retains observational access.
+      Execution controls remain locked during public testing.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — Trading Floor
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const status = document.getElementById("floor-status");
+  const btn = document.getElementById("enterFloorBtn");
+
+  // Placeholder for CPilot clearance
+  const cPilotCleared = false;
+
+  if (cPilotCleared) {
+    status.textContent = "Status: Ready — execution environment available";
+    status.classList.remove("locked");
+    btn.disabled = false;
+  }
+
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    status.textContent = "Status: Initializing execution safeguards...";
+    setTimeout(() => {
+      status.textContent = "Status: Trading Floor live ✔ (simulation only)";
+    }, 3000);
+  });
+});
+</script>
+
+</body>
+</html>
