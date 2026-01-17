@@ -198,6 +198,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+<script>
+document.getElementById("traderLabBtn").onclick = () => {
+  window.location.href = "traderlab.html";
+};
+
+document.getElementById("cPilotBtn").onclick = () => {
+  window.location.href = "cpilot.html";
+};
+
+document.getElementById("tradingFloorBtn").onclick = () => {
+  window.location.href = "tradingfloor.html";
+};
+
+// Locked / staged buttons
+document.getElementById("settingsBtn").onclick = () => {
+  alert("Settings is staged. Access will open after system verification.");
+};
+
+document.getElementById("gamesPavilionBtn").onclick = () => {
+  alert("Games Pavilion is intentionally dormant at this stage.");
+};
+
+document.getElementById("helpBtn").onclick = () => {
+  alert("Help system will activate during public onboarding.");
+};
+</script>
  
 </body>
 </html>
