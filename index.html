@@ -186,6 +186,18 @@
     );
   });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const gamesBtn = document.getElementById("gamesBtn");
+
+  if (gamesBtn) {
+    gamesBtn.addEventListener("click", () => {
+      window.location.href = "games.html";
+    });
+  }
+});
+</script>
  
 </body>
 </html>
