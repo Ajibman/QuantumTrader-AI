@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quantum Trader AI</title>
 <style>
-  /* General resets */
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 
   body {
@@ -24,10 +23,7 @@
     margin-bottom: 20px;
   }
 
-  header img {
-    max-width: 150px;
-    height: auto;
-  }
+  header img { max-width: 150px; height: auto; }
 
   main {
     display: flex;
@@ -37,17 +33,9 @@
     max-width: 480px;
   }
 
-  .image-container {
-    margin-bottom: 20px;
-    position: relative;
-  }
+  .image-container { margin-bottom: 20px; position: relative; }
 
-  .image-container img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    display: block;
-  }
+  .image-container img { width: 100%; max-width: 300px; height: auto; display: block; }
 
   .buttons {
     display: grid;
@@ -57,40 +45,47 @@
   }
 
   .buttons button {
-    background: linear-gradient(145deg, #66c0c1, #345f7f); /* Aqua + subtle navy */
+    position: relative;
+    background: linear-gradient(145deg, #66c0c1, #345f7f);
     border: none;
     color: white;
     padding: 15px 10px;
     font-size: 16px;
     border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
   }
 
-  .buttons button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  .buttons button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+  .buttons button:disabled, .locked { opacity: 0.5; cursor: not-allowed; }
+
+  .buttons button .icon { position: absolute; right: 10px; top: 10px; font-size: 18px; }
+
+  .buttons button.unlocked {
+    animation: unlockFlash 0.5s ease-out;
   }
 
-  .buttons button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+  .buttons button.next-unlock {
+    animation: glowPulse 1.5s infinite;
   }
 
-  footer {
-    margin-top: auto;
-    text-align: center;
-    padding: 10px 0;
+  @keyframes unlockFlash {
+    0% { box-shadow: 0 0 0 rgba(0,255,0,0); transform: scale(1); }
+    50% { box-shadow: 0 0 12px rgba(0,255,0,0.7); transform: scale(1.05); }
+    100% { box-shadow: 0 0 0 rgba(0,255,0,0); transform: scale(1); }
   }
 
-  footer img {
-    max-width: 100px;
-    height: auto;
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 0 rgba(0,255,0,0.3); }
+    50% { box-shadow: 0 0 15px rgba(0,255,0,0.6); }
+    100% { box-shadow: 0 0 0 rgba(0,255,0,0.3); }
   }
 
-  @media (max-width: 480px) {
-    .buttons { grid-template-columns: 1fr; }
-  }
+  footer { margin-top: auto; text-align: center; padding: 10px 0; }
+  footer img { max-width: 100px; height: auto; }
+
+  @media (max-width: 480px) { .buttons { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -106,12 +101,12 @@
   </div>
 
   <div class="buttons">
-    <button id="traderLabBtn">Trader Lab</button>
-    <button id="tradingFloorBtn">Trading Floor</button>
-    <button id="cPilotBtn">CPilot</button>
-    <button id="gamesPavilionBtn">Games Pavilion</button>
-    <button id="helpBtn">Help</button>
-    <button id="settingsBtn">Settings</button>
+    <button id="traderLabBtn">Trader Lab <span class="icon" id="traderIcon">🔒</span></button>
+    <button id="tradingFloorBtn" class="locked">Trading Floor <span class="icon">🔒</span></button>
+    <button id="cPilotBtn" class="locked">CPilot <span class="icon">🔒</span></button>
+    <button id="gamesPavilionBtn">Games Pavilion <span class="icon">ℹ️</span></button>
+    <button id="helpBtn">Help <span class="icon">ℹ️</span></button>
+    <button id="settingsBtn" class="locked">Settings <span class="icon">🔒</span></button>
   </div>
 </main>
 
@@ -120,129 +115,68 @@
 </footer>
 
 <script>
+const INTERNAL_TEST = true;
+let paymentStatus = false;
 
-<script>
-  // ===== INTERNAL TEST MODE =====
-  const INTERNAL_TEST = true; // <-- set to false before public release
-</script>
+function bubble(message) { alert(message); }
 
+// Buttons
+const traderLabBtn = document.getElementById("traderLabBtn");
+const traderIcon = document.getElementById("traderIcon");
+const tradingFloorBtn = document.getElementById("tradingFloorBtn");
+const cPilotBtn = document.getElementById("cPilotBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
+const helpBtn = document.getElementById("helpBtn");
 
- <script>
-  // -------------------------------
-  // Single-user click logic for Phase 6
-  // -------------------------------
- </script> 
- 
- <script>
-  // ===============================
-  // Quantum Trader AI — Homepage Button Wiring
-  // TraderLab active, others staged
-  // ===============================
+// ---- TraderLab ----
+traderLabBtn.addEventListener("click", (e) => {
+  if (!paymentStatus && INTERNAL_TEST) {
+    e.preventDefault();
+    const pay = confirm("Simulate NGN 10,000 payment to unlock TraderLab?");
+    if (pay) {
+      paymentStatus = true;
+      traderIcon.textContent = "✅";
+      traderLabBtn.classList.add("unlocked");
+      bubble("Payment successful! TraderLab access unlocked.");
 
-  // Utility function for bubble messages
-  function bubble(message) {
-    alert(message);
-  }
+      // Next modules glow
+      tradingFloorBtn.classList.add("next-unlock");
+      cPilotBtn.classList.add("next-unlock");
 
-  // === TraderLab button — ACTIVE navigation ===
-  const traderLabBtn = document.getElementById("traderLabBtn");
-  traderLabBtn.addEventListener("click", () => {
-   // Direct navigation — no alert, no interference
+      setTimeout(() => { window.location.href = "traderlab.html"; }, 500);
+    } else {
+      bubble("Payment not made. Access blocked.");
+    }
+  } else if (paymentStatus || !INTERNAL_TEST) {
     window.location.href = "traderlab.html";
-  });
-
-  traderLabBtn.addEventListener("click", () => {
-  if (INTERNAL_TEST) {
-    window.location.href = "traderlab.html";
-  } else {
-    alert("Public access is currently in waiting state.");
   }
 });
 
-  // === CPilot button — staged ===
-  const cPilotBtn = document.getElementById("cPilotBtn");
-  cPilotBtn.addEventListener("click", () => {
-    bubble(
-      "CPilot is under controlled activation.\n" +
-      "System intelligence is being aligned after TraderLab validation."
-    );
-  });
+// ---- Staged Modules ----
+function lockedAlert(moduleName) {
+  bubble(`${moduleName} is currently locked.\nAccess will open after system verification.`);
+}
+tradingFloorBtn.addEventListener("click", () => lockedAlert("Trading Floor"));
+cPilotBtn.addEventListener("click", () => lockedAlert("CPilot"));
+settingsBtn.addEventListener("click", () => lockedAlert("Settings"));
 
-  // === Trading Floor button — staged ===
-  const tradingFloorBtn = document.getElementById("tradingFloorBtn");
-  tradingFloorBtn.addEventListener("click", () => {
-    bubble(
-      "Trading Floor access is sequenced.\n" +
-      "Activation follows TraderLab readiness checks."
-    );
-  });
-
-  // === Settings button — staged ===
-  const settingsBtn = document.getElementById("settingsBtn");
-  settingsBtn.addEventListener("click", () => {
-    bubble(
-      "Settings module is stabilizing.\n" +
-      "User-level configuration will unlock progressively."
-    );
-  });
-
-  // === Games Pavilion button — info-only ===
-  const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
-  gamesPavilionBtn.addEventListener("click", () => {
-    bubble(
-      "Games Pavilion is available for exploration.\n" +
-      "A lighter environment within the Quantum ecosystem."
-    );
-  });
-
-  // === Help button — info-only ===
-  const helpBtn = document.getElementById("helpBtn");
-  helpBtn.addEventListener("click", () => {
-    bubble(
-      "Help & guidance are being structured.\n" +
-      "Clear pathways will be available as modules come online."
-    );
-  });
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const gamesBtn = document.getElementById("gamesBtn");
-
-  if (gamesBtn) {
-    gamesBtn.addEventListener("click", () => {
-      window.location.href = "games.html";
-    });
-  }
+// ---- Info-only ----
+gamesPavilionBtn.addEventListener("click", () => {
+  bubble("Games Pavilion is available for exploration.\nA lighter environment within the Quantum ecosystem.");
 });
+helpBtn.addEventListener("click", () => {
+  bubble("Help & guidance are being structured.\nClear pathways will be available as modules come online.");
+});
+
+// ---- Optional Dev Reset ----
+if (INTERNAL_TEST) {
+  const resetDiv = document.createElement("div");
+  resetDiv.style.marginTop = "20px";
+  resetDiv.innerHTML = `<button onclick="paymentStatus=false; traderIcon.textContent='🔒'; traderLabBtn.classList.remove('unlocked'); tradingFloorBtn.classList.remove('next-unlock'); cPilotBtn.classList.remove('next-unlock');">Reset TraderLab Payment</button>`;
+  document.body.appendChild(resetDiv);
+}
 </script>
 
-<script>
-document.getElementById("traderLabBtn").onclick = () => {
-  window.location.href = "traderlab.html";
-};
-
-document.getElementById("cPilotBtn").onclick = () => {
-  window.location.href = "cpilot.html";
-};
-
-document.getElementById("tradingFloorBtn").onclick = () => {
-  window.location.href = "tradingfloor.html";
-};
-
-// Locked / staged buttons
-document.getElementById("settingsBtn").onclick = () => {
-  alert("Settings is staged. Access will open after system verification.");
-};
-
-document.getElementById("gamesPavilionBtn").onclick = () => {
-  alert("Games Pavilion is intentionally dormant at this stage.");
-};
-
-document.getElementById("helpBtn").onclick = () => {
-  alert("Help system will activate during public onboarding.");
-};
-</script>
- 
 </body>
 </html>
