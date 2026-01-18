@@ -1,182 +1,196 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™ — TraderLab</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI™ — TraderLab</title>
 
-<style>
-:root {
-  --bg: #000428;
-  --card: #071226;
-  --accent: #00ffe7;
-  --text: #ffffff;
-  --warn: #ffb000;
-}
+  <style>
+    :root {
+      --bg: #000428;
+      --card: #071226;
+      --panel: #08192e;
+      --accent: #00ffe7;
+      --text: #ffffff;
+      --warn: #ffb000;
+    }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-header {
-  padding: 1rem 2rem;
-  background: var(--card);
-  box-shadow: 0 2px 6px rgba(0,0,0,.6);
-}
+    header {
+      padding: 1rem 2rem;
+      background: var(--card);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
 
-main {
-  flex: 1;
-  padding: 2rem;
-  max-width: 1000px;
-  margin: auto;
-}
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
 
-.panel {
-  background: #08192e;
-  border-radius: 1rem;
-  padding: 1.2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 0 12px rgba(0,0,0,.5);
-}
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+      width: 100%;
+    }
 
-h2 {
-  color: var(--accent);
-  margin-top: 0;
-}
+    .panel {
+      background: var(--panel);
+      border-radius: 1rem;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    }
 
-.notice {
-  color: var(--warn);
-  font-size: 0.9rem;
-}
+    h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
 
-button {
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.6rem;
-  border: none;
-  background: var(--accent);
-  color: var(--bg);
-  font-weight: 600;
-  cursor: pointer;
-}
+    ul {
+      padding-left: 1.2rem;
+    }
 
-button:hover {
-  background: #00ffd0;
-}
+    li {
+      margin-bottom: 0.4rem;
+    }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-</style>
+    .notice {
+      color: var(--warn);
+      font-size: 0.9rem;
+    }
+
+    button {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.6rem;
+      border: none;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    button:hover:not(:disabled) {
+      background: #00ffd0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .internal-flag {
+      opacity: 0.6;
+      margin: 8px 0;
+      padding-left: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <h1>TraderLab</h1>
-</header>
+  <!-- Optional internal testing marker -->
+  <div class="internal-flag">TraderLab — Internal Test Access</div>
 
-<main>
+  <header>
+    <h1>TraderLab</h1>
+  </header>
 
-  <div class="panel">
-    <h2>Purpose of TraderLab</h2>
-    <p>
-      TraderLab establishes <strong>discipline, restraint, and decision integrity</strong>.
-      This system is not for reckless participation or gambling.
-    </p>
-    <p>
-      Only traders who complete TraderLab Training are allowed access to
-      advanced Trading Floor and CPilot capabilities.
-    </p>
-  </div>
+  <main>
 
-  <div class="panel">
-    <h2>Core Principles</h2>
-    <ul>
-      <li>Capital preservation before profit</li>
-      <li>Peace-weighted market awareness</li>
-      <li>No revenge trading</li>
-      <li>No emotional overrides</li>
-      <li>Respect Ori Ologo guidance and Logic</li>
-    </ul>
-  </div>
+    <div class="panel">
+      <h2>Purpose of TraderLab</h2>
+      <p>
+        TraderLab establishes <strong>discipline, restraint, and decision integrity</strong>.
+        This system is not designed for reckless participation or gambling.
+      </p>
+      <p>
+        Only traders who complete TraderLab training may proceed to advanced
+        Trading Floor and CPilot capabilities.
+      </p>
+    </div>
 
-  <div class="panel">
-    <h2>Simulation Discipline</h2>
-    <p>
-      Traders are evaluated using <strong>simulation trading</strong> under varying
-      peace, volatility, macro-economic, and global business conditions.
-    </p>
-    <p class="notice">
-      Simulation performance determines access — not confidence.
-    </p>
-  </div>
+    <div class="panel">
+      <h2>Core Principles</h2>
+      <ul>
+        <li>Capital preservation before profit</li>
+        <li>Peace-weighted market awareness</li>
+        <li>No revenge trading</li>
+        <li>No emotional overrides</li>
+        <li>Respect Ori Ologo guidance and system logic</li>
+      </ul>
+    </div>
 
-  <div class="panel">
-    <h2>Qualification Status</h2>
-    <p id="qualification-status">Status: Not yet qualified</p>
-    <button id="begin-assessment">Begin Discipline Assessment</button>
-  </div>
+    <div class="panel">
+      <h2>Simulation Discipline</h2>
+      <p>
+        Traders are evaluated using <strong>simulation trading</strong> under varying
+        peace, volatility, macro-economic, and global business conditions.
+      </p>
+      <p class="notice">
+        Simulation performance determines access — not confidence.
+      </p>
+    </div>
 
-  <div class="panel">
-    <h2>Architect Honorary Exemption</h2>
-    <p>
-      System Architect, Visionary, Designer and Builder is exempt from TraderLab restrictions.
-    </p>
-  </div>
+    <div class="panel">
+      <h2>Qualification Status</h2>
+      <p id="qualification-status">Status: Not yet qualified</p>
+      <button id="begin-assessment">Begin Discipline Assessment</button>
+    </div>
 
-</main>
+    <div class="panel">
+      <h2>Architect Honorary Exemption</h2>
+      <p>
+        System Architect, Visionary, Designer, and Builder is exempt from TraderLab restrictions.
+      </p>
+    </div>
 
-<footer>
-© 2026 QuantumTrader AI™ — TraderLab
-</footer>
+  </main>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const status = document.getElementById("qualification-status");
-  const btn = document.getElementById("begin-assessment");
+  <footer>
+    © 2026 QuantumTrader AI™ — TraderLab
+  </footer>
 
-  btn.addEventListener("click", () => {
-    status.textContent = "Status: Assessment in progress...";
-    setTimeout(() => {
-      status.textContent = "Status: Qualified ✔ Discipline verified";
-    }, 2000);
-  });
-});
-</script>
- 
- <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const status = document.getElementById("qualification-status");
-  const btn = document.getElementById("begin-assessment");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const status = document.getElementById("qualification-status");
+      const btn = document.getElementById("begin-assessment");
 
-  btn.addEventListener("click", () => {
-    // Lock button to prevent spam clicks
-    btn.disabled = true;
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        status.textContent = "Status: Assessment in progress...";
 
-    // Step 1 — Start assessment
-    status.textContent = "Status: Assessment in progress...";
+        setTimeout(() => {
+          status.textContent = "Status: Discipline Verified ✔";
+        }, 2000);
 
-    // Step 2 — Simulate multiple checks (discipline, peace, macro-awareness)
-    setTimeout(() => {
-      status.textContent = "Status: Discipline Verified ✔";
-    }, 2000);
+        setTimeout(() => {
+          status.textContent = "Status: Qualified ✔ TraderLab complete";
+        }, 4000);
+      });
+    });
+  </script>
 
-    setTimeout(() => {
-      status.textContent = "Status: Qualified ✔ TraderLab complete";
-      // Optional: you could now trigger CPilot/Trading Floor unlock messages
-    }, 4000);
-  });
-});
-</script>
- 
 </body>
 </html>
