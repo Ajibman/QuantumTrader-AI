@@ -144,9 +144,17 @@
   // === TraderLab button — ACTIVE navigation ===
   const traderLabBtn = document.getElementById("traderLabBtn");
   traderLabBtn.addEventListener("click", () => {
-    // Direct navigation — no alert, no interference
+   // Direct navigation — no alert, no interference
     window.location.href = "traderlab.html";
   });
+
+  traderLabBtn.addEventListener("click", () => {
+  if (INTERNAL_TEST) {
+    window.location.href = "traderlab.html";
+  } else {
+    alert("Public access is currently in waiting state.");
+  }
+});
 
   // === CPilot button — staged ===
   const cPilotBtn = document.getElementById("cPilotBtn");
