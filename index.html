@@ -178,5 +178,19 @@ if (INTERNAL_TEST) {
 }
 </script>
 
+<script>
+  document.getElementById("resetPaymentBtn")?.addEventListener("click", () => {
+    // Clear payment + access state
+    localStorage.removeItem("qtai_payment_status");
+    localStorage.removeItem("qtai_access_level");
+    localStorage.removeItem("qtai_traderlab_progress");
+
+    alert("TraderLab payment state has been reset.");
+
+    // Optional: force reload to re-evaluate logic
+    location.reload();
+  });
+</script>
+ 
 </body>
 </html>
