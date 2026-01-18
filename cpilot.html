@@ -9,6 +9,7 @@
 :root {
   --bg: #050b1f;
   --card: #0b1736;
+  --panel: #0e1f44;
   --accent: #7cf3ff;
   --text: #ffffff;
   --notice: #ffcc66;
@@ -38,7 +39,7 @@ main {
 }
 
 .panel {
-  background: #0e1f44;
+  background: var(--panel);
   border-radius: 1rem;
   padding: 1.4rem;
   margin-bottom: 1.6rem;
@@ -108,9 +109,9 @@ footer {
   <div class="panel">
     <h2>System State</h2>
     <p id="cpilot-status" class="status">
-      Status: Controlled activation — awaiting TraderLab validation
+      Status: Internal test mode — initialization available
     </p>
-    <button id="initializeBtn" disabled>
+    <button id="initializeBtn">
       Initialize CPilot
     </button>
   </div>
@@ -138,21 +139,10 @@ footer {
 </footer>
 
 <script>
-if (INTERNAL_TEST) {
-  window.location.href = "cpilot.html";
-}
- 
 document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("cpilot-status");
   const btn = document.getElementById("initializeBtn");
 
-  /* STEP 1 — Wait for TraderLab qualification */
-  document.addEventListener("TraderLabQualified", () => {
-    status.textContent = "Status: Ready — CPilot alignment available";
-    btn.disabled = false;
-  });
-
-  /* STEP 2 — Initialize CPilot */
   btn.addEventListener("click", () => {
     btn.disabled = true;
     status.textContent = "Status: Initializing cognitive alignment...";
@@ -160,8 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       status.textContent = "Status: CPilot online ✔ Guidance layer active";
 
-      /* STEP 3 — Signal Trading Floor readiness */
-      document.dispatchEvent(new Event("CPilotCleared"));
+      // Future hook (not active in Phase 6)
+      // document.dispatchEvent(new Event("CPilotCleared"));
 
     }, 2500);
   });
