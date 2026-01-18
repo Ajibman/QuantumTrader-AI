@@ -138,6 +138,10 @@ footer {
 </footer>
 
 <script>
+if (INTERNAL_TEST) {
+  window.location.href = "cpilot.html";
+}
+ 
 document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("cpilot-status");
   const btn = document.getElementById("initializeBtn");
