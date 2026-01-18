@@ -124,6 +124,10 @@ footer {
 </footer>
 
 <script>
+if (INTERNAL_TEST) {
+  window.location.href = "tradingfloor.html";
+}
+ 
 document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("floor-status");
 
