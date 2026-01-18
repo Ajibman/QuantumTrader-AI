@@ -1,113 +1,248 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumTrader-AI</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Trader AI</title>
+<style>
+  /* General resets */
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 
-    .banner {
-      position: fixed;
-      top: 10px;
-      right: -50px;
-      background: #ff9800;
-      color: white;
-      font-weight: bold;
-      padding: 10px 60px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9999;
-    }
+  body {
+    background-color: #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+  }
 
-    .logo-container {
-      margin-top: 80px;
-    }
+  header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    .logo-container img {
-      width: 250px;
-      height: auto;
-    }
+  header img {
+    max-width: 150px;
+    height: auto;
+  }
 
-    .logo-container p {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #1a1a1a;
-    }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+  }
 
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #ffffff;
-    }
+  .image-container {
+    margin-bottom: 20px;
+    position: relative;
+  }
 
-    footer img {
-      max-width: 200px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: blink 3s ease-in-out infinite;
-    }
+  .image-container img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    display: block;
+  }
 
-    footer p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333333;
-      margin: 0;
-    }
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+  }
 
-    /* Blink animation for Ori Olokun */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
+  .buttons button {
+    background: linear-gradient(145deg, #66c0c1, #345f7f); /* Aqua + subtle navy */
+    border: none;
+    color: white;
+    padding: 15px 10px;
+    font-size: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
 
-    /* Rotation keyframes */
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
+  .buttons button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .buttons button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  footer img {
+    max-width: 100px;
+    height: auto;
+  }
+
+  @media (max-width: 480px) {
+    .buttons { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Banner -->
-  <div class="banner">Coming Soon</div>
+<header>
+  <img src="peace_index_logo.png" alt="Peace Index Logo">
+  <div class="peace-caption">Peace before Profits</div>
+</header>
 
-  <!-- Main logo with caption -->
-  <div class="logo-container">
-    <img id="qtai-logo" src="assets/qtai-logo-seal.png" alt="QT AI Logo Seal">
-    <p>Built with discipline, patience and integrity</p>
+<main>
+  <div class="image-container">
+    <img src="qtai_globe.png" alt="Quantum Trader AI Globe">
   </div>
 
-  <!-- Middle: Globe logo -->
-  <div class="logo-container">
-    <img src="assets/qtai-logo-globe.png" alt="QT AI Globe Logo">
-    <p>Global Reach, Quantum Velocity</p>
+  <div class="buttons">
+    <button id="traderLabBtn">Trader Lab</button>
+    <button id="tradingFloorBtn">Trading Floor</button>
+    <button id="cPilotBtn">CPilot</button>
+    <button id="gamesPavilionBtn">Games Pavilion</button>
+    <button id="helpBtn">Help</button>
+    <button id="settingsBtn">Settings</button>
   </div>
+</main>
 
-  <!-- Footer: Ori Olokun image with caption -->
-  <footer>
-    <img src="assets/qtai-logo-ori.png" alt="Ori Olokun">
-    <p>The power of knowledge, wisdom, innovation and clarity</p>
-  </footer>
+<footer>
+  <img src="qtai_ori_olokun.png" alt="Ori Ologo">
+</footer>
 
-  <script>
-    // Trigger rotation on Nov 9, 2025
-    const rolloutDate = new Date("2025-11-09T00:00:00Z"); // UTC midnight
-    const now = new Date();
+<script>
 
-    if (now >= rolloutDate) {
-      const logo = document.getElementById("qtai-logo");
-      logo.src = "assets/qtai-rotatelogo.png"; // switch to rotating version
-      logo.style.animation = "rotate 30s linear infinite"; // slower, majestic
-    }
-  </script>
+<script>
+  // ===== INTERNAL TEST MODE =====
+  const INTERNAL_TEST = true; // <-- set to false before public release
+</script>
+
+
+ <script>
+  // -------------------------------
+  // Single-user click logic for Phase 6
+  // -------------------------------
+ </script> 
+ 
+ <script>
+  // ===============================
+  // Quantum Trader AI — Homepage Button Wiring
+  // TraderLab active, others staged
+  // ===============================
+
+  // Utility function for bubble messages
+  function bubble(message) {
+    alert(message);
+  }
+
+  // === TraderLab button — ACTIVE navigation ===
+  const traderLabBtn = document.getElementById("traderLabBtn");
+  traderLabBtn.addEventListener("click", () => {
+   // Direct navigation — no alert, no interference
+    window.location.href = "traderlab.html";
+  });
+
+  traderLabBtn.addEventListener("click", () => {
+  if (INTERNAL_TEST) {
+    window.location.href = "traderlab.html";
+  } else {
+    alert("Public access is currently in waiting state.");
+  }
+});
+
+  // === CPilot button — staged ===
+  const cPilotBtn = document.getElementById("cPilotBtn");
+  cPilotBtn.addEventListener("click", () => {
+    bubble(
+      "CPilot is under controlled activation.\n" +
+      "System intelligence is being aligned after TraderLab validation."
+    );
+  });
+
+  // === Trading Floor button — staged ===
+  const tradingFloorBtn = document.getElementById("tradingFloorBtn");
+  tradingFloorBtn.addEventListener("click", () => {
+    bubble(
+      "Trading Floor access is sequenced.\n" +
+      "Activation follows TraderLab readiness checks."
+    );
+  });
+
+  // === Settings button — staged ===
+  const settingsBtn = document.getElementById("settingsBtn");
+  settingsBtn.addEventListener("click", () => {
+    bubble(
+      "Settings module is stabilizing.\n" +
+      "User-level configuration will unlock progressively."
+    );
+  });
+
+  // === Games Pavilion button — info-only ===
+  const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
+  gamesPavilionBtn.addEventListener("click", () => {
+    bubble(
+      "Games Pavilion is available for exploration.\n" +
+      "A lighter environment within the Quantum ecosystem."
+    );
+  });
+
+  // === Help button — info-only ===
+  const helpBtn = document.getElementById("helpBtn");
+  helpBtn.addEventListener("click", () => {
+    bubble(
+      "Help & guidance are being structured.\n" +
+      "Clear pathways will be available as modules come online."
+    );
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const gamesBtn = document.getElementById("gamesBtn");
+
+  if (gamesBtn) {
+    gamesBtn.addEventListener("click", () => {
+      window.location.href = "games.html";
+    });
+  }
+});
+</script>
+
+<script>
+document.getElementById("traderLabBtn").onclick = () => {
+  window.location.href = "traderlab.html";
+};
+
+document.getElementById("cPilotBtn").onclick = () => {
+  window.location.href = "cpilot.html";
+};
+
+document.getElementById("tradingFloorBtn").onclick = () => {
+  window.location.href = "tradingfloor.html";
+};
+
+// Locked / staged buttons
+document.getElementById("settingsBtn").onclick = () => {
+  alert("Settings is staged. Access will open after system verification.");
+};
+
+document.getElementById("gamesPavilionBtn").onclick = () => {
+  alert("Games Pavilion is intentionally dormant at this stage.");
+};
+
+document.getElementById("helpBtn").onclick = () => {
+  alert("Help system will activate during public onboarding.");
+};
+</script>
+ 
 </body>
 </html>

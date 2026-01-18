@@ -1,0 +1,9 @@
+processPayment(payment, options)   --> payments.js
+  - Executes actual payment logic
+  - Logs reflections if requested
+  - Works for SIMULATION or LIVE
+
+handlePaymentRequest(method, amount)   --> handle-payment-request.js
+  - Layer-based router: NONE / SIMULATED / LIVE
+  - Adds reflections, notifications
+  - Separate from Option triggers
