@@ -91,6 +91,27 @@
 
 <footer>
   <img src="qtai_ori_olokun.png" alt="Ori Ologo">
+
+  <!-- ✅ Reset Button under Ori Ologo -->
+  <div style="margin-top: 10px; text-align: center;">
+    <button onclick="
+      paymentStatus=false;
+      traderIcon.textContent='🔒';
+      alert('TraderLab payment reset');
+    " style="
+      background: linear-gradient(145deg, #ff6b6b, #c0392b);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      font-size: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+      Reset TraderLab Payment
+    </button>
+  </div>
 </footer>
 
 <script>
@@ -129,21 +150,6 @@ cPilotBtn.onclick = () => bubble("CPilot is locked.");
 settingsBtn.onclick = () => bubble("Settings is locked.");
 gamesPavilionBtn.onclick = () => bubble("Games Pavilion is informational.");
 helpBtn.onclick = () => bubble("Help module coming soon.");
-
-/* ✅ SINGLE RESET BUTTON (DEV ONLY) */
-if (INTERNAL_TEST) {
-  const resetDiv = document.createElement("div");
-  resetDiv.style.marginTop = "20px";
-  resetDiv.innerHTML = `
-    <button onclick="
-      paymentStatus=false;
-      traderIcon.textContent='🔒';
-      alert('TraderLab payment reset');
-    ">
-      Reset TraderLab Payment
-    </button>`;
-  document.body.appendChild(resetDiv);
-}
 </script>
 
 </body>
