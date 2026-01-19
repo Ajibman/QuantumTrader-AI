@@ -12,6 +12,7 @@
     --text: #ffffff;
     --success: #0aff7c;
     --error: #ff3b3b;
+    --hint: #ffd966;
     --btn-bg: #17336d;
     --btn-hover: #2a4aad;
   }
@@ -38,17 +39,13 @@
     color: var(--text);
     border: none;
     padding: 10px 20px;
-    margin: 10px 0;
+    margin: 10px 5px 10px 0;
     cursor: pointer;
     font-size: 1rem;
     border-radius: 5px;
   }
   button:hover {
     background-color: var(--btn-hover);
-  }
-  .message {
-    margin-top: 15px;
-    font-size: 0.95rem;
   }
   .disabled {
     opacity: 0.5;
@@ -67,6 +64,30 @@
     font-weight: bold;
     margin-top: 5px;
   }
+  #progress-bar-container {
+    background-color: #111;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 20px;
+    margin: 10px 0;
+  }
+  #progress-bar {
+    background-color: var(--accent);
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s;
+  }
+  #step-blocks {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+  }
+  .step-block {
+    flex: 1;
+    height: 15px;
+    background-color: #444;
+    border-radius: 3px;
+  }
 </style>
 </head>
 <body>
@@ -81,7 +102,12 @@
   <div class="message" id="status-message"></div>
   
   <div id="assessment-container" style="display:none;">
+    <div id="step-blocks"></div>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
     <p id="assessment-step"></p>
+    <button id="hint-btn">Ask for Hint</button>
     <p id="feedback" class="feedback"></p>
     <p id="assessment-score"></p>
   </div>
@@ -137,11 +163,14 @@
     alert('Subscription reset successfully for another 30 days.');
   }
 
-  // === Fully Automated TraderLab Assessment ===
+  // === Fully Automated Assessment with Visual Score and Hints ===
   const assessmentContainer = document.getElementById('assessment-container');
   const assessmentStepEl = document.getElementById('assessment-step');
   const feedbackEl = document.getElementById('feedback');
   const assessmentScoreEl = document.getElementById('assessment-score');
+  const progressBar = document.getElementById('progress-bar');
+  const stepBlocksContainer = document.getElementById('step-blocks');
+  const hintBtn = document.getElementById('hint-btn');
 
   const assessmentSteps = [
     'Simulate opening a trade position.',
@@ -151,8 +180,32 @@
     'Review your trade performance and confirm insights.'
   ];
 
+  const hints = [
+    'Hint: Click the mock "Open Trade" button to start.',
+    'Hint: Look for market patterns to decide buy/sell.',
+    'Hint: Place a stop-loss slightly below entry price.',
+    'Hint: Confirm the trade execution after stop-loss.',
+    'Hint: Review trade report to learn from results.'
+  ];
+
   let currentStep = 0;
   let score = 0;
+  let stepScores = [];
+  let usedHints = [];
+
+  function initializeStepBlocks() {
+    stepBlocksContainer.innerHTML = '';
+    for (let i = 0; i < assessmentSteps.length; i++) {
+      const block = document.createElement('div');
+      block.classList.add('step-block');
+      stepBlocksContainer.appendChild(block);
+    }
+  }
+
+  function updateVisualProgress() {
+    const progressPercent = (score / (assessmentSteps.length * 20)) * 100;
+    progressBar.style.width = progressPercent + '%';
+  }
 
   function startAssessment() {
     if (!isSubscriptionActive()) {
@@ -162,8 +215,11 @@
     assessmentContainer.style.display = 'block';
     currentStep = 0;
     score = 0;
+    stepScores = [];
+    usedHints = [];
     feedbackEl.textContent = '';
     assessmentScoreEl.textContent = '';
+    initializeStepBlocks();
     runStep();
   }
 
@@ -173,30 +229,54 @@
       return;
     }
 
-    const step = assessmentSteps[currentStep];
-    assessmentStepEl.textContent = `Step ${currentStep + 1}: ${step}`;
+    assessmentStepEl.textContent = `Step ${currentStep + 1}: ${assessmentSteps[currentStep]}`;
+    feedbackEl.textContent = '';
+    hintBtn.style.display = 'inline-block';
 
-    // Simulate assessment evaluation
-    const stepCorrect = Math.random() < 0.9; // 90% chance user "passes" step
-    if (stepCorrect) {
-      score += 20;
-      feedbackEl.textContent = 'Correct! +20 points.';
-      feedbackEl.style.color = 'var(--success)';
-    } else {
-      feedbackEl.textContent = 'Missed step! 0 points.';
-      feedbackEl.style.color = 'var(--error)';
-    }
+    // Simulate automatic evaluation
+    setTimeout(() => {
+      const stepCorrect = Math.random() < 0.9; // 90% chance
+      let stepScore = stepCorrect ? 20 : 0;
+      stepScores.push(stepScore);
 
-    currentStep++;
-    setTimeout(runStep, 1500); // 1.5s delay for next step
+      // Update step block color
+      const block = stepBlocksContainer.children[currentStep];
+      block.style.backgroundColor = stepCorrect ? 'var(--success)' : 'var(--error)';
+
+      // Update total score
+      score += stepScore;
+      updateVisualProgress();
+
+      feedbackEl.textContent = stepCorrect ? 'Correct! +20 points.' : 'Missed step! 0 points.';
+      feedbackEl.style.color = stepCorrect ? 'var(--success)' : 'var(--error)';
+
+      currentStep++;
+      setTimeout(runStep, 1500);
+    }, 800); // step evaluation delay
   }
+
+  hintBtn.addEventListener('click', () => {
+    if (currentStep >= assessmentSteps.length) return;
+    const hint = hints[currentStep];
+    feedbackEl.textContent = hint;
+    feedbackEl.style.color = 'var(--hint)';
+
+    // Reduce score slightly if hint used
+    score = Math.max(0, score - 5);
+    usedHints.push(currentStep);
+    updateVisualProgress();
+  });
 
   function endAssessment() {
     assessmentStepEl.textContent = 'Assessment completed!';
     feedbackEl.textContent = '';
+    hintBtn.style.display = 'none';
     assessmentScoreEl.textContent = `Your total score: ${score} / 100`;
-    // Log result locally
-    localStorage.setItem('traderlab_last_score', JSON.stringify({ score, date: new Date().toISOString() }));
+    localStorage.setItem('traderlab_last_score', JSON.stringify({ 
+      score, 
+      date: new Date().toISOString(),
+      hintsUsed: usedHints
+    }));
   }
 
   // === Event Listeners ===
