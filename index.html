@@ -62,32 +62,11 @@
 
   .buttons button .icon { position: absolute; right: 10px; top: 10px; font-size: 18px; }
 
-  .buttons button.unlocked {
-    animation: unlockFlash 0.5s ease-out;
-  }
-
-  .buttons button.next-unlock {
-    animation: glowPulse 1.5s infinite;
-  }
-
-  @keyframes unlockFlash {
-    0% { box-shadow: 0 0 0 rgba(0,255,0,0); transform: scale(1); }
-    50% { box-shadow: 0 0 12px rgba(0,255,0,0.7); transform: scale(1.05); }
-    100% { box-shadow: 0 0 0 rgba(0,255,0,0); transform: scale(1); }
-  }
-
-  @keyframes glowPulse {
-    0% { box-shadow: 0 0 0 rgba(0,255,0,0.3); }
-    50% { box-shadow: 0 0 15px rgba(0,255,0,0.6); }
-    100% { box-shadow: 0 0 0 rgba(0,255,0,0.3); }
-  }
-
   footer { margin-top: auto; text-align: center; padding: 10px 0; }
   footer img { max-width: 100px; height: auto; }
-
-  @media (max-width: 480px) { .buttons { grid-template-columns: 1fr; } }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -120,7 +99,6 @@ let paymentStatus = false;
 
 function bubble(message) { alert(message); }
 
-// Buttons
 const traderLabBtn = document.getElementById("traderLabBtn");
 const traderIcon = document.getElementById("traderIcon");
 const tradingFloorBtn = document.getElementById("tradingFloorBtn");
@@ -129,7 +107,6 @@ const settingsBtn = document.getElementById("settingsBtn");
 const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
 const helpBtn = document.getElementById("helpBtn");
 
-// ---- TraderLab ----
 traderLabBtn.addEventListener("click", (e) => {
   if (!paymentStatus && INTERNAL_TEST) {
     e.preventDefault();
@@ -137,102 +114,37 @@ traderLabBtn.addEventListener("click", (e) => {
     if (pay) {
       paymentStatus = true;
       traderIcon.textContent = "✅";
-      traderLabBtn.classList.add("unlocked");
       bubble("Payment successful! TraderLab access unlocked.");
-
-      // Next modules glow
-      tradingFloorBtn.classList.add("next-unlock");
-      cPilotBtn.classList.add("next-unlock");
-
-      setTimeout(() => { window.location.href = "traderlab.html"; }, 500);
+      setTimeout(() => { window.location.href = "traderlab.html"; }, 300);
     } else {
       bubble("Payment not made. Access blocked.");
     }
-  } else if (paymentStatus || !INTERNAL_TEST) {
+  } else {
     window.location.href = "traderlab.html";
   }
 });
 
-// ---- Staged Modules ----
-function lockedAlert(moduleName) {
-  bubble(`${moduleName} is currently locked.\nAccess will open after system verification.`);
-}
-tradingFloorBtn.addEventListener("click", () => lockedAlert("Trading Floor"));
-cPilotBtn.addEventListener("click", () => lockedAlert("CPilot"));
-settingsBtn.addEventListener("click", () => lockedAlert("Settings"));
+tradingFloorBtn.onclick = () => bubble("Trading Floor is locked.");
+cPilotBtn.onclick = () => bubble("CPilot is locked.");
+settingsBtn.onclick = () => bubble("Settings is locked.");
+gamesPavilionBtn.onclick = () => bubble("Games Pavilion is informational.");
+helpBtn.onclick = () => bubble("Help module coming soon.");
 
-// ---- Info-only ----
-gamesPavilionBtn.addEventListener("click", () => {
-  bubble("Games Pavilion is available for exploration.\nA lighter environment within the Quantum ecosystem.");
-});
-helpBtn.addEventListener("click", () => {
-  bubble("Help & guidance are being structured.\nClear pathways will be available as modules come online.");
-});
-
-// ---- Optional Dev Reset ----
+/* ✅ SINGLE RESET BUTTON (DEV ONLY) */
 if (INTERNAL_TEST) {
   const resetDiv = document.createElement("div");
   resetDiv.style.marginTop = "20px";
-  resetDiv.innerHTML = `<button onclick="paymentStatus=false; traderIcon.textContent='🔒'; traderLabBtn.classList.remove('unlocked'); tradingFloorBtn.classList.remove('next-unlock'); cPilotBtn.classList.remove('next-unlock');">Reset TraderLab Payment</button>`;
+  resetDiv.innerHTML = `
+    <button onclick="
+      paymentStatus=false;
+      traderIcon.textContent='🔒';
+      alert('TraderLab payment reset');
+    ">
+      Reset TraderLab Payment
+    </button>`;
   document.body.appendChild(resetDiv);
 }
 </script>
 
-<script>
-  document.getElementById("resetPaymentBtn")?.addEventListener("click", () => {
-    // Clear payment + access state
-    localStorage.removeItem("qtai_payment_status");
-    localStorage.removeItem("qtai_access_level");
-    localStorage.removeItem("qtai_traderlab_progress");
-
-    alert("TraderLab payment state has been reset.");
-
-    // Optional: force reload to re-evaluate logic
-    location.reload();
-  });
-</script>
-
-<script>
-  function injectTraderLabResetButton() {
-    const traderLab = document.getElementById("traderLab");
-    if (!traderLab) return;
-
-    // Prevent duplicates
-    if (document.getElementById("resetTraderLabPayment")) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.style.marginTop = "40px";
-    wrapper.style.textAlign = "center";
-
-    const btn = document.createElement("button");
-    btn.id = "resetTraderLabPayment";
-    btn.innerText = "Reset TraderLab Payment";
-    btn.style.background = "#0b1736";
-    btn.style.color = "#7cf3ff";
-    btn.style.border = "1px solid #7cf3ff";
-    btn.style.padding = "12px 20px";
-    btn.style.fontSize = "14px";
-    btn.style.borderRadius = "6px";
-    btn.style.cursor = "pointer";
-
-    btn.onclick = () => {
-      localStorage.removeItem("qtai_payment_status");
-      localStorage.removeItem("qtai_traderlab_access");
-      localStorage.removeItem("qtai_traderlab_progress");
-
-      alert("TraderLab payment state reset.");
-      location.reload();
-    };
-
-    wrapper.appendChild(btn);
-    traderLab.appendChild(wrapper);
-  }
-
-  // Inject after page load
-  window.addEventListener("load", () => {
-    setTimeout(injectTraderLabResetButton, 300);
-  });
-</script>
- 
 </body>
 </html>
