@@ -152,5 +152,24 @@ gamesPavilionBtn.onclick = () => bubble("Games Pavilion is informational.");
 helpBtn.onclick = () => bubble("Help module coming soon.");
 </script>
 
+<button id="paymentResetButton" 
+        style="background-color: #6a0dad; 
+               color: white; 
+               font-weight: bold; 
+               padding: 10px 20px; 
+               border: none; 
+               border-radius: 5px; 
+               cursor: pointer; 
+               transition: background-color 0.3s;">
+  Reset Payment
+</button>
+
+<script>
+  // Optional: hover effect
+  const btn = document.getElementById('paymentResetButton');
+  btn.addEventListener('mouseenter', () => btn.style.backgroundColor = '#7f33e0');
+  btn.addEventListener('mouseleave', () => btn.style.backgroundColor = '#6a0dad');
+</script>
+ 
 </body>
 </html>
