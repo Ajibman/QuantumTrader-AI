@@ -191,6 +191,48 @@ if (INTERNAL_TEST) {
     location.reload();
   });
 </script>
+
+<script>
+  function injectTraderLabResetButton() {
+    const traderLab = document.getElementById("traderLab");
+    if (!traderLab) return;
+
+    // Prevent duplicates
+    if (document.getElementById("resetTraderLabPayment")) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.style.marginTop = "40px";
+    wrapper.style.textAlign = "center";
+
+    const btn = document.createElement("button");
+    btn.id = "resetTraderLabPayment";
+    btn.innerText = "Reset TraderLab Payment";
+    btn.style.background = "#0b1736";
+    btn.style.color = "#7cf3ff";
+    btn.style.border = "1px solid #7cf3ff";
+    btn.style.padding = "12px 20px";
+    btn.style.fontSize = "14px";
+    btn.style.borderRadius = "6px";
+    btn.style.cursor = "pointer";
+
+    btn.onclick = () => {
+      localStorage.removeItem("qtai_payment_status");
+      localStorage.removeItem("qtai_traderlab_access");
+      localStorage.removeItem("qtai_traderlab_progress");
+
+      alert("TraderLab payment state reset.");
+      location.reload();
+    };
+
+    wrapper.appendChild(btn);
+    traderLab.appendChild(wrapper);
+  }
+
+  // Inject after page load
+  window.addEventListener("load", () => {
+    setTimeout(injectTraderLabResetButton, 300);
+  });
+</script>
  
 </body>
 </html>
