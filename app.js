@@ -51,3 +51,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+
+function resetSubscription() {
+  const active = localStorage.getItem("qt_subscription_active");
+
+  if (active !== "true") {
+    alert("No active subscription to reset.");
+    return;
+  }
+
+  localStorage.removeItem("qt_subscription_active");
+  localStorage.removeItem("qt_subscription_start");
+  localStorage.removeItem("qt_subscription_expiry");
+
+  alert("Subscription Reset");
+  location.reload();
+}
