@@ -3,64 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TraderLab — Quantum Trader AI</title>
+<title>Quantum Trader AI — TraderLab</title>
 <style>
+  :root {
+    --bg: #050b1f;
+    --card: #0b1736;
+    --accent: #7cf3ff;
+    --text: #ffffff;
+    --btn-bg: #17336d;
+    --btn-hover: #2a4aad;
+  }
   body {
+    background-color: var(--bg);
+    color: var(--text);
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--card);
+  }
+  h1 {
+    margin-bottom: 5px;
+  }
+  .content {
     padding: 20px;
   }
-
-  h1 { margin-bottom: 20px; }
-
-  .content {
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
   button {
-    background: linear-gradient(145deg, #66c0c1, #345f7f);
+    background-color: var(--btn-bg);
+    color: var(--text);
     border: none;
-    color: white;
-    padding: 15px;
-    font-size: 16px;
-    border-radius: 12px;
+    padding: 10px 20px;
+    margin: 10px 0;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
+    border-radius: 5px;
   }
-
-  button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-
-  .locked { opacity: 0.5; cursor: not-allowed; }
+  button:hover {
+    background-color: var(--btn-hover);
+  }
+  .message {
+    margin-top: 15px;
+    font-size: 0.95rem;
+  }
+  .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 </style>
 </head>
 <body>
-
-<h1>TraderLab</h1>
+<header>
+  <h1>Quantum Trader AI™ — TraderLab</h1>
+  <p>Access is gated. Only valid subscriptions can use TraderLab features.</p>
+</header>
 
 <div class="content">
-  <button id="module1Btn">Module 1</button>
-  <button id="module2Btn">Module 2</button>
-  <button id="module3Btn">Module 3</button>
-  <!-- Add your other module buttons here -->
+  <button id="start-assessment">Start TraderLab Assessment</button>
+  <button id="reset-subscription">Reset Subscription</button>
+  <div class="message" id="status-message"></div>
 </div>
 
 <script>
-  const module1Btn = document.getElementById("module1Btn");
-  const module2Btn = document.getElementById("module2Btn");
-  const module3Btn = document.getElementById("module3Btn");
+  // === Subscription Logic ===
+  const SUB_KEY = 'qtai_traderlab_subscription';
+  const SUB_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
 
-  module1Btn.onclick = () => alert("Module 1 coming soon.");
-  module2Btn.onclick = () => alert("Module 2 coming soon.");
-  module3Btn.onclick = () => alert("Module 3 coming soon.");
+  const statusMessage = document.getElementById('status-message');
+  const startBtn = document.getElementById('start-assessment');
+  const resetBtn = document.getElementById('reset-subscription');
+
+  function getSubscription() {
+    const data = localStorage.getItem(SUB_KEY);
+    if (!data) return null;
+    const parsed = JSON.parse(data);
+    parsed.expiry = new Date(parsed.expiry);
+    return parsed;
+  }
+
+  function isSubscriptionActive() {
+    const sub = getSubscription();
+    if (!sub) return false;
+    return new Date() < sub.expiry;
+  }
+
+  function updateStatusMessage() {
+    if (isSubscriptionActive()) {
+      const sub = getSubscription();
+      statusMessage.textContent = `Subscription active until ${sub.expiry.toLocaleString()}.`;
+      startBtn.disabled = false;
+      resetBtn.disabled = false;
+      resetBtn.classList.remove('disabled');
+    } else {
+      statusMessage.textContent = 'No active subscription. Please pay to access TraderLab.';
+      startBtn.disabled = true;
+      resetBtn.disabled = true;
+      resetBtn.classList.add('disabled');
+    }
+  }
+
+  function startAssessment() {
+    if (!isSubscriptionActive()) {
+      alert('Access denied. Your subscription is inactive.');
+      return;
+    }
+    // Logic to start TraderLab assessment
+    alert('Proceed with TraderLab assessment automation');
+  }
+
+  function resetSubscription() {
+    if (!isSubscriptionActive()) {
+      alert('Cannot reset. No active subscription.');
+      return;
+    }
+    const now = new Date();
+    const newExpiry = new Date(now.getTime() + SUB_DURATION);
+    localStorage.setItem(SUB_KEY, JSON.stringify({ expiry: newExpiry.toISOString() }));
+    updateStatusMessage();
+    alert('Subscription reset successfully for another 30 days.');
+  }
+
+  // === Event Listeners ===
+  startBtn.addEventListener('click', startAssessment);
+  resetBtn.addEventListener('click', resetSubscription);
+
+  // === Initialize subscription for demo purposes ===
+  if (!getSubscription()) {
+    const now = new Date();
+    const demoExpiry = new Date(now.getTime() + SUB_DURATION);
+    localStorage.setItem(SUB_KEY, JSON.stringify({ expiry: demoExpiry.toISOString() }));
+  }
+
+  // === Initialize UI ===
+  updateStatusMessage();
 </script>
-
+ 
 </body>
 </html>
