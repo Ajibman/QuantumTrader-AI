@@ -13,6 +13,7 @@
   --accent: #7cf3ff;
   --text: #ffffff;
   --notice: #ffcc66;
+  --success: #0aff7c;
 }
 
 body {
@@ -46,20 +47,11 @@ main {
   box-shadow: 0 0 14px rgba(0,0,0,.5);
 }
 
-h2 {
-  color: var(--accent);
-  margin-top: 0;
-}
+h2 { color: var(--accent); margin-top: 0; }
 
-.notice {
-  color: var(--notice);
-  font-size: 0.9rem;
-}
+.notice { color: var(--notice); font-size: 0.9rem; }
 
-.status {
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
+.status { font-weight: 600; margin-top: 0.5rem; }
 
 button {
   padding: 0.7rem 1.4rem;
@@ -69,6 +61,7 @@ button {
   color: #001018;
   font-weight: 600;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:disabled {
@@ -76,12 +69,40 @@ button:disabled {
   cursor: not-allowed;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
+input[type=number] {
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: none;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.radio-group label {
+  background: var(--card);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.radio-group input {
+  margin-right: 5px;
+}
+
+.wallet {
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--success);
+}
+
+footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 </style>
 </head>
 
@@ -97,39 +118,46 @@ footer {
   <div class="panel">
     <h2>Role of CPilot</h2>
     <p>
-      CPilot is not an autopilot.
-      It is a <strong>cognitive companion</strong> that reinforces discipline,
-      probability awareness, and decision restraint.
+      CPilot is a <strong>cognitive companion</strong> that reinforces discipline, probability awareness, and decision restraint.
     </p>
     <p class="notice">
-      CPilot does not override trader intent. It corrects reckless deviation and gambler mentality.
+      It guides auto-trading and ensures your capital is used effectively.
     </p>
+  </div>
+
+  <div class="panel">
+    <h2>AutoTrader Setup</h2>
+    <label for="tradeCapital">Trading Capital (#)</label>
+    <input type="number" id="tradeCapital" placeholder="Enter trading capital">
+
+    <label>Select AutoTrader Interval:</label>
+    <div class="radio-group" id="intervalRadios">
+      <label><input type="radio" name="interval" value="15">15s</label>
+      <label><input type="radio" name="interval" value="30">30s</label>
+      <label><input type="radio" name="interval" value="60">60s</label>
+      <label><input type="radio" name="interval" value="120">120s</label>
+      <label><input type="radio" name="interval" value="180">180s</label>
+      <label><input type="radio" name="interval" value="300">300s</label>
+      <label><input type="radio" name="interval" value="600">10m</label>
+      <label><input type="radio" name="interval" value="1800">30m</label>
+      <label><input type="radio" name="interval" value="3600">1h</label>
+      <label><input type="radio" name="interval" value="86400">24h</label>
+      <label><input type="radio" name="interval" value="172800">48h</label>
+      <label><input type="radio" name="interval" value="259200">72h</label>
+      <label><input type="radio" name="interval" value="604800">7d</label>
+    </div>
+
+    <button id="startBtn">Start AutoTrader</button>
+    <button id="stopBtn" disabled>Stop AutoTrader</button>
+
+    <p id="oriMessage" class="notice">Ori Ologo is ready to guide your AutoTrader.</p>
+    <p class="wallet">Wallet Balance: #<span id="walletBalance">0.00</span></p>
   </div>
 
   <div class="panel">
     <h2>System State</h2>
-    <p id="cpilot-status" class="status">
-      Status: Internal test mode — initialization available
-    </p>
-    <button id="initializeBtn">
-      Initialize CPilot
-    </button>
-  </div>
-
-  <div class="panel">
-    <h2>Architect Access</h2>
-    <p>
-      System Architect access bypasses staged restrictions.
-      CPilot intelligence layers remain observable but restrained.
-    </p>
-  </div>
-
-  <div class="panel">
-    <h2>CPilot Advisory</h2>
-    <p class="notice">
-      Guidance emphasizes restraint, probability awareness, and capital protection.
-      No execution, no automation.
-    </p>
+    <p id="cpilot-status" class="status">Status: Internal test mode — initialization available</p>
+    <button id="initializeBtn">Initialize CPilot</button>
   </div>
 
 </main>
@@ -140,21 +168,86 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  // ----------------------
+  // INIT ELEMENTS
+  // ----------------------
   const status = document.getElementById("cpilot-status");
-  const btn = document.getElementById("initializeBtn");
+  const initBtn = document.getElementById("initializeBtn");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const walletSpan = document.getElementById("walletBalance");
+  const oriMessage = document.getElementById("oriMessage");
 
-  btn.addEventListener("click", () => {
-    btn.disabled = true;
+  const tradeCapitalInput = document.getElementById("tradeCapital");
+  const intervalRadios = document.getElementById("intervalRadios");
+
+  let autoTraderInterval = null;
+  let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
+
+  walletSpan.textContent = wallet.toFixed(2);
+
+  // ----------------------
+  // Initialize CPilot
+  // ----------------------
+  initBtn.addEventListener("click", () => {
+    initBtn.disabled = true;
     status.textContent = "Status: Initializing cognitive alignment...";
-
     setTimeout(() => {
       status.textContent = "Status: CPilot online ✔ Guidance layer active";
-
-      // Future hook (not active in Phase 6)
-      // document.dispatchEvent(new Event("CPilotCleared"));
-
-    }, 2500);
+    }, 1500);
   });
+
+  // ----------------------
+  // Start AutoTrader
+  // ----------------------
+  startBtn.addEventListener("click", () => {
+    const capital = parseFloat(tradeCapitalInput.value);
+    const intervalSec = parseFloat(document.querySelector('input[name="interval"]:checked')?.value);
+
+    if(isNaN(capital) || capital <= 0){
+      oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
+      oriMessage.style.color = "#ff4d4d";
+      return;
+    }
+    if(isNaN(intervalSec)){
+      oriMessage.textContent = "Ori Ologo: Select an AutoTrader interval.";
+      oriMessage.style.color = "#ff4d4d";
+      return;
+    }
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    oriMessage.textContent = `Ori Ologo: AutoTrader started. Profit will accrue every ${intervalSec} seconds.`;
+    oriMessage.style.color = "#ffd966";
+
+    // ----------------------
+    // AutoTrader Interval Loop
+    // ----------------------
+    autoTraderInterval = setInterval(() => {
+      // Simulated profit calculation (all gains from capital go to wallet)
+      const profit = Math.random() * (capital * 0.02); // simulate market variation 0-2% per interval
+      wallet += profit;
+      walletSpan.textContent = wallet.toFixed(2);
+      oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet. Next in ${intervalSec} seconds.`;
+      oriMessage.style.color = "#0aff7c";
+
+      // persist wallet
+      localStorage.setItem("QT_WALLET", wallet.toFixed(2));
+    }, intervalSec * 1000);
+  });
+
+  // ----------------------
+  // Stop AutoTrader
+  // ----------------------
+  stopBtn.addEventListener("click", () => {
+    if(autoTraderInterval) clearInterval(autoTraderInterval);
+    autoTraderInterval = null;
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    oriMessage.textContent = "Ori Ologo: AutoTrader stopped by user.";
+    oriMessage.style.color = "#ffcc66";
+  });
+
 });
 </script>
 
