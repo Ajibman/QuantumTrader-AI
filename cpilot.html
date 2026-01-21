@@ -121,7 +121,7 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
       CPilot is a <strong>cognitive companion</strong> that reinforces discipline, probability awareness, and decision restraint.
     </p>
     <p class="notice">
-      It guides auto-trading and ensures your capital is used effectively.
+      It guides AutoTrader and ensures your capital is used effectively.
     </p>
   </div>
 
@@ -152,6 +152,7 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 
     <p id="oriMessage" class="notice">Ori Ologo is ready to guide your AutoTrader.</p>
     <p class="wallet">Wallet Balance: #<span id="walletBalance">0.00</span></p>
+    <button id="withdrawBtn">Withdraw Wallet to Funding Account</button>
   </div>
 
   <div class="panel">
@@ -168,22 +169,18 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // ----------------------
-  // INIT ELEMENTS
-  // ----------------------
   const status = document.getElementById("cpilot-status");
   const initBtn = document.getElementById("initializeBtn");
   const startBtn = document.getElementById("startBtn");
   const stopBtn = document.getElementById("stopBtn");
   const walletSpan = document.getElementById("walletBalance");
   const oriMessage = document.getElementById("oriMessage");
+  const withdrawBtn = document.getElementById("withdrawBtn");
 
   const tradeCapitalInput = document.getElementById("tradeCapital");
-  const intervalRadios = document.getElementById("intervalRadios");
 
   let autoTraderInterval = null;
   let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
-
   walletSpan.textContent = wallet.toFixed(2);
 
   // ----------------------
@@ -220,18 +217,13 @@ document.addEventListener("DOMContentLoaded", () => {
     oriMessage.textContent = `Ori Ologo: AutoTrader started. Profit will accrue every ${intervalSec} seconds.`;
     oriMessage.style.color = "#ffd966";
 
-    // ----------------------
-    // AutoTrader Interval Loop
-    // ----------------------
     autoTraderInterval = setInterval(() => {
-      // Simulated profit calculation (all gains from capital go to wallet)
-      const profit = Math.random() * (capital * 0.02); // simulate market variation 0-2% per interval
+      const profit = Math.random() * (capital * 0.02); // simulate profit (0-2% per interval)
       wallet += profit;
       walletSpan.textContent = wallet.toFixed(2);
       oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet. Next in ${intervalSec} seconds.`;
       oriMessage.style.color = "#0aff7c";
 
-      // persist wallet
       localStorage.setItem("QT_WALLET", wallet.toFixed(2));
     }, intervalSec * 1000);
   });
@@ -246,6 +238,23 @@ document.addEventListener("DOMContentLoaded", () => {
     stopBtn.disabled = true;
     oriMessage.textContent = "Ori Ologo: AutoTrader stopped by user.";
     oriMessage.style.color = "#ffcc66";
+  });
+
+  // ----------------------
+  // Withdraw Wallet
+  // ----------------------
+  withdrawBtn.addEventListener("click", () => {
+    if(wallet <= 0){
+      oriMessage.textContent = "Ori Ologo: Wallet empty — nothing to withdraw.";
+      oriMessage.style.color = "#ff4d4d";
+      return;
+    }
+    oriMessage.textContent = `Ori Ologo: #${wallet.toFixed(2)} withdrawn to funding account.`;
+    oriMessage.style.color = "#7cf3ff";
+
+    wallet = 0;
+    walletSpan.textContent = wallet.toFixed(2);
+    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
   });
 
 });
