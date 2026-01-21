@@ -1,312 +1,194 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI™ — TraderLab</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QuantumTrader AI™ — TraderLab</title>
 
 <style>
-:root {
-  --bg: #050b1f;
-  --card: #0b1736;
-  --accent: #7cf3ff;
-  --text: #ffffff;
-  --success: #0aff7c;
-  --error: #ff3b3b;
-  --hint: #ffd966;
-}
+  :root {
+    --bg: #050b1f;
+    --card: #0b1736;
+    --accent: #7cf3ff;
+    --success: #00ffaa;
+    --danger: #ff4d4d;
+    --muted: #8aa0c8;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-  margin: 0;
-}
+  * {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
 
-header {
-  padding: 20px;
-  text-align: center;
-  background: var(--card);
-}
+  body {
+    background: var(--bg);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+  }
 
-.content {
-  padding: 20px;
-}
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
 
-button {
-  background: #17336d;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  margin: 5px 5px 5px 0;
-  border-radius: 5px;
-  cursor: pointer;
-}
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  }
 
-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+  h1, h2 {
+    color: var(--accent);
+  }
 
-#ori-ologo {
-  background: #08162f;
-  border-left: 4px solid var(--accent);
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-}
+  p {
+    color: var(--muted);
+    line-height: 1.6;
+  }
 
-#ori-title {
-  color: var(--accent);
-  font-weight: bold;
-}
+  button {
+    background: var(--accent);
+    color: #001;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 10px 0 0;
+  }
 
-#assessment-container {
-  background: var(--card);
-  padding: 15px;
-  border-radius: 8px;
-  display: none;
-}
+  button:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
 
-#progress-bar-container {
-  height: 18px;
-  background: #111;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 10px 0;
-}
+  .status {
+    margin-top: 10px;
+    font-weight: bold;
+  }
 
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: var(--accent);
-  transition: width 0.5s;
-}
+  .success {
+    color: var(--success);
+  }
 
-#step-blocks {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
+  .danger {
+    color: var(--danger);
+  }
 
-.step-block {
-  flex: 1;
-  height: 12px;
-  background: #444;
-  border-radius: 3px;
-}
-
-.feedback {
-  font-weight: bold;
-  margin-top: 6px;
-}
+  .orilogo {
+    font-style: italic;
+    margin-top: 15px;
+    color: var(--accent);
+  }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<header>
-  <h1>Quantum Trader AI™ — TraderLab</h1>
-  <p>Peace before Profits</p>
-</header>
-
-<div class="content">
-
-  <!-- Ori Ologo -->
-  <div id="ori-ologo">
-    <div id="ori-title">🧠 Ori Ologo — AI Assistant</div>
-    <div id="ori-speech"></div>
+  <div class="card">
+    <h1>TraderLab™ Certification</h1>
+    <p>
+      TraderLab evaluates readiness — not profit hunger.  
+      Passing this stage confirms your ability to align with <strong>Ori Ologo</strong>.
+    </p>
   </div>
 
-  <!-- Controls -->
-  <button id="start-assessment">Start TraderLab Assessment</button>
-  <button id="reset-subscription">Reset Subscription</button>
-  <p id="status-message"></p>
+  <div class="card">
+    <h2>Assessment</h2>
+    <p>Click below to simulate completion of TraderLab training.</p>
+    <button id="completeLabBtn">Complete TraderLab Assessment</button>
+    <div id="labStatus" class="status danger">Status: Not Certified</div>
+  </div>
 
-  <!-- Assessment -->
-  <div id="assessment-container">
-    <div id="step-blocks"></div>
-    <div id="progress-bar-container">
-      <div id="progress-bar"></div>
+  <div class="card">
+    <h2>Post-Certification Path</h2>
+    <p>
+      Certification grants readiness — not obligation.  
+      Choose your execution path consciously.
+    </p>
+
+    <button id="tradingFloorBtn" disabled>
+      Proceed to TradingFloor (Manual Trading)
+    </button>
+
+    <button id="cpilotBtn" disabled>
+      Proceed to CPilot (AutoTrader)
+    </button>
+
+    <div id="accessMessage" class="status"></div>
+
+    <div class="orilogo">
+      “I do not rush the market. I open the gate when the path is clear.” — Ori Ologo
     </div>
-
-    <p id="assessment-step"></p>
-    <button id="hint-btn">Ask for Hint</button>
-    <p id="feedback" class="feedback"></p>
-    <p id="final-score"></p>
   </div>
 
 </div>
 
 <script>
-/* =========================
-   SUBSCRIPTION GATE
-========================= */
-const SUB_KEY = "qtai_traderlab_subscription";
-const SUB_DURATION = 30 * 24 * 60 * 60 * 1000;
+  // ---- App State ----
+  let traderLabPassed = false;
 
-function initSubscription() {
-  if (!localStorage.getItem(SUB_KEY)) {
-    const expiry = new Date(Date.now() + SUB_DURATION);
-    localStorage.setItem(SUB_KEY, JSON.stringify({ expiry }));
-  }
-}
+  // ---- Elements ----
+  const completeBtn = document.getElementById("completeLabBtn");
+  const statusEl = document.getElementById("labStatus");
+  const tfBtn = document.getElementById("tradingFloorBtn");
+  const cpBtn = document.getElementById("cpilotBtn");
+  const accessMsg = document.getElementById("accessMessage");
 
-function subscriptionActive() {
-  const data = JSON.parse(localStorage.getItem(SUB_KEY));
-  return new Date() < new Date(data.expiry);
-}
+  // ---- TraderLab Completion ----
+  completeBtn.addEventListener("click", () => {
+    traderLabPassed = true;
+    localStorage.setItem("QT_TRADERLAB_PASS", "true");
 
-function updateStatus() {
-  const msg = document.getElementById("status-message");
-  if (subscriptionActive()) {
-    msg.textContent = "TraderLab access active.";
-  } else {
-    msg.textContent = "Subscription inactive.";
-    document.getElementById("start-assessment").disabled = true;
-  }
-}
+    statusEl.textContent = "Status: Certified";
+    statusEl.classList.remove("danger");
+    statusEl.classList.add("success");
 
-/* =========================
-   ORI OLOGO
-========================= */
-const oriSpeech = document.getElementById("ori-speech");
+    tfBtn.disabled = false;
+    cpBtn.disabled = false;
 
-function oriSpeak(text) {
-  oriSpeech.textContent = text;
-}
-
-/* =========================
-   ASSESSMENT LOGIC
-========================= */
-const steps = [
-  "Simulate opening a trade position.",
-  "Analyze market trends.",
-  "Apply stop-loss discipline.",
-  "Execute a mock trade.",
-  "Review performance."
-];
-
-const hints = [
-  "Open trades only with intent.",
-  "Follow trend, not emotion.",
-  "Stop-loss preserves capital.",
-  "Execution must be deliberate.",
-  "Reflection builds mastery."
-];
-
-let currentStep = 0;
-let score = 0;
-
-const container = document.getElementById("assessment-container");
-const stepText = document.getElementById("assessment-step");
-const feedback = document.getElementById("feedback");
-const finalScore = document.getElementById("final-score");
-const progressBar = document.getElementById("progress-bar");
-const blocks = document.getElementById("step-blocks");
-
-function setupBlocks() {
-  blocks.innerHTML = "";
-  steps.forEach(() => {
-    const b = document.createElement("div");
-    b.className = "step-block";
-    blocks.appendChild(b);
+    accessMsg.textContent = "Ori Ologo: Readiness confirmed. Choose your path.";
+    accessMsg.className = "status success";
   });
-}
 
-function updateProgress() {
-  progressBar.style.width = (score / 100) * 100 + "%";
-}
-
-function startAssessment() {
-  if (!subscriptionActive()) return;
-
-  oriSpeak(
-    "Welcome. I am Ori Ologo. This session values discipline over speed. Peace before Profits."
-  );
-
-  container.style.display = "block";
-  currentStep = 0;
-  score = 0;
-  finalScore.textContent = "";
-  feedback.textContent = "";
-  setupBlocks();
-  updateProgress();
-  runStep();
-}
-
-function runStep() {
-  if (currentStep >= steps.length) return endAssessment();
-
-  oriSpeak(`Step ${currentStep + 1}. ${steps[currentStep]}`);
-  stepText.textContent = steps[currentStep];
-  feedback.textContent = "";
-
-  setTimeout(() => {
-    const pass = Math.random() < 0.9;
-    const block = blocks.children[currentStep];
-
-    if (pass) {
-      score += 20;
-      block.style.background = "var(--success)";
-      oriSpeak("Well executed. Control is strength.");
-    } else {
-      block.style.background = "var(--error)";
-      oriSpeak("Pause. Review your discipline.");
+  // ---- TradingFloor Path ----
+  tfBtn.addEventListener("click", () => {
+    if (!traderLabPassed) {
+      denyAccess();
+      return;
     }
+    window.location.href = "tradingfloor.html";
+  });
 
-    updateProgress();
-    currentStep++;
-    setTimeout(runStep, 1400);
-  }, 900);
-}
+  // ---- CPilot Path ----
+  cpBtn.addEventListener("click", () => {
+    if (!traderLabPassed) {
+      denyAccess();
+      return;
+    }
+    window.location.href = "cpilot.html";
+  });
 
-function endAssessment() {
-  stepText.textContent = "Assessment completed.";
-  finalScore.textContent = `Final Score: ${score} / 100`;
-
-  if (score >= 80) {
-    oriSpeak("You demonstrate readiness. Proceed with caution.");
-  } else if (score >= 50) {
-    oriSpeak("Remain in TraderLab. Refinement precedes growth.");
-  } else {
-    oriSpeak("Return to fundamentals. Mastery begins here.");
+  function denyAccess() {
+    accessMsg.textContent =
+      "Ori Ologo: Certification is required before execution.";
+    accessMsg.className = "status danger";
   }
 
-  localStorage.setItem("traderlab_last_score", JSON.stringify({
-    score,
-    date: new Date().toISOString()
-  }));
-}
-
-/* =========================
-   HINT SYSTEM
-========================= */
-document.getElementById("hint-btn").onclick = () => {
-  if (currentStep < steps.length) {
-    oriSpeak(hints[currentStep] + " Assistance aids learning, but independence builds mastery.");
-    score = Math.max(0, score - 5);
-    updateProgress();
+  // ---- Restore State ----
+  if (localStorage.getItem("QT_TRADERLAB_PASS") === "true") {
+    traderLabPassed = true;
+    statusEl.textContent = "Status: Certified";
+    statusEl.classList.remove("danger");
+    statusEl.classList.add("success");
+    tfBtn.disabled = false;
+    cpBtn.disabled = false;
   }
-};
-
-/* =========================
-   CONTROLS
-========================= */
-document.getElementById("start-assessment").onclick = startAssessment;
-document.getElementById("reset-subscription").onclick = () => {
-  const expiry = new Date(Date.now() + SUB_DURATION);
-  localStorage.setItem(SUB_KEY, JSON.stringify({ expiry }));
-  updateStatus();
-  oriSpeak("Subscription refreshed. Use this time wisely.");
-};
-
-/* =========================
-   INIT
-========================= */
-initSubscription();
-updateStatus();
-oriSpeak("TraderLab ready. Begin when you are prepared.");
 </script>
 
 </body>
