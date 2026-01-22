@@ -3,145 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI — TradingFloor</title>
+<title>Quantum Trader AI™ — TraderLab</title>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-  body { background: #050b1f; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
-  header { text-align: center; margin-bottom: 20px; }
-  header h1 { color: #7cf3ff; margin-bottom: 5px; }
-  main { width: 100%; max-width: 500px; }
-  .input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-  .input-group label { margin-bottom: 5px; font-weight: bold; }
-  .input-group input { padding: 10px; border-radius: 6px; border: none; font-size: 16px; }
-  button { padding: 12px; border-radius: 8px; border: none; background: linear-gradient(145deg, #66c0c1, #345f7f); color: white; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; transition: transform 0.2s, box-shadow 0.2s; }
-  button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  #oriMessage { margin-top: 15px; font-weight: bold; color: #ffd966; min-height: 1.2em; text-align: center; }
-  #tradeResult { margin-top: 15px; font-weight: bold; color: #0aff7c; text-align: center; }
+:root {
+  --bg: #050b1f;
+  --card: #0b1736;
+  --accent: #7cf3ff;
+  --text: #ffffff;
+  --success: #0aff7c;
+  --error: #ff3b3b;
+  --hint: #ffd966;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  background: var(--card);
+}
+
+.content {
+  padding: 20px;
+}
+
+button {
+  background: #17336d;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  margin: 5px 5px 5px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#ori-ologo {
+  background: #08162f;
+  border-left: 4px solid var(--accent);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+#ori-title {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+#assessment-container {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 8px;
+  display: none;
+}
+
+#progress-bar-container {
+  height: 18px;
+  background: #111;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.5s;
+}
+
+#step-blocks {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.step-block {
+  flex: 1;
+  height: 12px;
+  background: #444;
+  border-radius: 3px;
+}
+
+.feedback {
+  font-weight: bold;
+  margin-top: 6px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>Quantum Trader AI™ — TradingFloor</h1>
-  <div id="subMessage">Peace before Profits</div>
+  <h1>Quantum Trader AI™ — TraderLab</h1>
+  <p>Peace before Profits</p>
 </header>
 
-<main>
-  <div class="input-group">
-    <label for="tradeCapital">Trade Capital (#)</label>
-    <input type="number" id="tradeCapital" placeholder="Enter amount to trade">
+<div class="content">
+
+  <!-- Ori Ologo -->
+  <div id="ori-ologo">
+    <div id="ori-title">🧠 Ori Ologo — AI Assistant</div>
+    <div id="ori-speech"></div>
   </div>
 
-  <div class="input-group">
-    <label for="profitTarget">Profit Target (%)</label>
-    <input type="number" id="profitTarget" placeholder="Enter desired profit %">
+  <p><strong>Wallet Balance:</strong> #<span id="walletBalance">0.00</span></p>
+  <p id="status-message"></p>
+
+  <button id="start-assessment">Start TraderLab Assessment</button>
+
+  <!-- Assessment -->
+  <div id="assessment-container">
+    <div id="step-blocks"></div>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+
+    <p id="assessment-step"></p>
+    <button id="hint-btn">Ask for Hint</button>
+    <p id="feedback" class="feedback"></p>
+    <p id="final-score"></p>
   </div>
 
-  <button id="executeTradeBtn">Execute Trade</button>
-  <button id="backToGateBtn">Back to Gate</button>
-
-  <div id="oriMessage">Ori Ologo is ready to guide you.</div>
-  <div id="tradeResult"></div>
-</main>
+</div>
 
 <script>
-  // ----------------------
-  // CONFIG
-  // ----------------------
-  const SUB_KEY = "QT_SUB_ACTIVE";
-  const TRADERLAB_KEY = "QT_TRADERLAB_PASS";
+/* =========================
+   CONSTANTS & STORAGE
+========================= */
+const SUB_KEY = "qtai_traderlab_subscription";
+const WALLET_KEY = "QT_WALLET";
+const MIN_CAPITAL = 10000;
 
-  // ----------------------
-  // ELEMENTS
-  // ----------------------
-  const tradeCapitalInput = document.getElementById("tradeCapital");
-  const profitTargetInput = document.getElementById("profitTarget");
-  const executeBtn = document.getElementById("executeTradeBtn");
-  const backBtn = document.getElementById("backToGateBtn");
-  const oriMessage = document.getElementById("oriMessage");
-  const tradeResult = document.getElementById("tradeResult");
-  const subMessage = document.getElementById("subMessage");
+/* =========================
+   ORI OLOGO
+========================= */
+const oriSpeech = document.getElementById("ori-speech");
+function oriSpeak(text) {
+  oriSpeech.textContent = text;
+}
 
-  // ----------------------
-  // STATE CHECKS
-  // ----------------------
-  function hasActiveSubscription() {
-    const sub = JSON.parse(localStorage.getItem(SUB_KEY));
-    return sub && (new Date() < new Date(sub.expiry));
+/* =========================
+   ACCESS + WALLET CHECK
+========================= */
+function subscriptionActive() {
+  const data = JSON.parse(localStorage.getItem(SUB_KEY) || '{}');
+  return data.expiry && Date.now() < new Date(data.expiry).getTime();
+}
+
+function getWallet() {
+  return JSON.parse(localStorage.getItem(WALLET_KEY));
+}
+
+function updateWalletUI() {
+  const wallet = getWallet();
+  document.getElementById("walletBalance").textContent =
+    wallet ? wallet.balance.toFixed(2) : "0.00";
+}
+
+function gateCheck() {
+  const status = document.getElementById("status-message");
+
+  if (!subscriptionActive()) {
+    status.textContent = "Access denied. Payment required.";
+    document.getElementById("start-assessment").disabled = true;
+    oriSpeak("TraderLab is sealed. Payment is required to proceed.");
+    return false;
   }
 
-  function traderLabPassed() {
-    return localStorage.getItem(TRADERLAB_KEY) === "true";
+  const wallet = getWallet();
+  if (!wallet || wallet.balance < MIN_CAPITAL) {
+    status.textContent = "Wallet not ready. Minimum #10,000 required.";
+    document.getElementById("start-assessment").disabled = true;
+    oriSpeak("Your wallet is not ready. Capital must be present before training.");
+    return false;
   }
 
-  function gateCheck() {
-    if(!hasActiveSubscription()) {
-      oriMessage.textContent = "Ori Ologo: Subscription required to access TradingFloor.";
-      oriMessage.style.color = "#ff4d4d";
-      executeBtn.disabled = true;
-      return false;
-    }
-    if(!traderLabPassed()) {
-      oriMessage.textContent = "Ori Ologo: Complete TraderLab to trade here.";
-      oriMessage.style.color = "#ff4d4d";
-      executeBtn.disabled = true;
-      return false;
-    }
-    oriMessage.textContent = "Ori Ologo: Enter capital and profit target to start trading.";
-    oriMessage.style.color = "#ffd966";
-    executeBtn.disabled = false;
-    return true;
-  }
+  status.textContent = "TraderLab access granted.";
+  document.getElementById("start-assessment").disabled = false;
+  updateWalletUI();
+  return true;
+}
 
-  // ----------------------
-  // TRADE LOGIC
-  // ----------------------
-  executeBtn.addEventListener("click", ()=>{
-    if(!gateCheck()) return;
+/* =========================
+   ASSESSMENT LOGIC
+========================= */
+const steps = [
+  "Interpret market alignment under Ori Ologo guidance.",
+  "Confirm discipline before execution.",
+  "Maintain probabilistic awareness.",
+  "Execute trade intent without emotion.",
+  "Evaluate outcome with restraint."
+];
 
-    const capital = parseFloat(tradeCapitalInput.value);
-    const profitPercent = parseFloat(profitTargetInput.value);
+const hints = [
+  "Follow guidance, not impulse.",
+  "Discipline precedes profit.",
+  "Probability is not certainty.",
+  "Execution is obedience.",
+  "Reflection strengthens mastery."
+];
 
-    if(isNaN(capital) || capital <= 0) {
-      oriMessage.textContent = "Ori Ologo: Enter a valid trade capital.";
-      oriMessage.style.color = "#ff4d4d";
-      return;
-    }
-    if(isNaN(profitPercent) || profitPercent <= 0) {
-      oriMessage.textContent = "Ori Ologo: Enter a valid profit target.";
-      oriMessage.style.color = "#ff4d4d";
-      return;
-    }
+let currentStep = 0;
+let score = 0;
 
-    // ----------------------
-    // Simulated trade execution
-    // ----------------------
-    oriMessage.textContent = "Ori Ologo: Monitoring trend alignment... Trading in progress.";
-    oriMessage.style.color = "#ffd966";
-    tradeResult.textContent = "";
+const container = document.getElementById("assessment-container");
+const stepText = document.getElementById("assessment-step");
+const feedback = document.getElementById("feedback");
+const finalScore = document.getElementById("final-score");
+const progressBar = document.getElementById("progress-bar");
+const blocks = document.getElementById("step-blocks");
 
-    setTimeout(()=>{
-      const profit = capital * (profitPercent/100);
-      tradeResult.textContent = `Trade complete! Profit scooped: #${profit.toFixed(2)}`;
-      oriMessage.textContent = "Ori Ologo: Trade completed successfully. Wait for next opportunity.";
-      oriMessage.style.color = "#0aff7c";
-
-      // Optionally store last trade
-      localStorage.setItem("QT_LAST_TRADE", JSON.stringify({
-        capital, profitPercent, profit, date: new Date().toISOString()
-      }));
-    }, 1500); // Simulate trade delay
+function setupBlocks() {
+  blocks.innerHTML = "";
+  steps.forEach(() => {
+    const b = document.createElement("div");
+    b.className = "step-block";
+    blocks.appendChild(b);
   });
+}
 
-  backBtn.addEventListener("click", ()=>{
-    window.location.href = "index.html";
-  });
+function updateProgress() {
+  progressBar.style.width = score + "%";
+}
 
-  // ----------------------
-  // INIT
-  // ----------------------
-  gateCheck();
+function startAssessment() {
+  if (!gateCheck()) return;
+
+  oriSpeak(
+    "TraderLab initiated. This is not practice. This is qualification."
+  );
+
+  container.style.display = "block";
+  currentStep = 0;
+  score = 0;
+  finalScore.textContent = "";
+  feedback.textContent = "";
+  setupBlocks();
+  updateProgress();
+  runStep();
+}
+
+function runStep() {
+  if (currentStep >= steps.length) return endAssessment();
+
+  oriSpeak(`Step ${currentStep + 1}. ${steps[currentStep]}`);
+  stepText.textContent = steps[currentStep];
+  feedback.textContent = "";
+
+  setTimeout(() => {
+    const pass = Math.random() < 0.9;
+    const block = blocks.children[currentStep];
+
+    if (pass) {
+      score += 20;
+      block.style.background = "var(--success)";
+      oriSpeak("Correct. Control confirmed.");
+    } else {
+      block.style.background = "var(--error)";
+      oriSpeak("Pause. Realign with guidance.");
+    }
+
+    updateProgress();
+    currentStep++;
+    setTimeout(runStep, 1300);
+  }, 900);
+}
+
+function endAssessment() {
+  stepText.textContent = "Assessment completed.";
+  finalScore.textContent = `Final Score: ${score} / 100`;
+
+  if (score >= 80) {
+    oriSpeak("You are cleared. TradingFloor and CPilot are now accessible.");
+    localStorage.setItem("QT_TRADERLAB_PASSED", "true");
+  } else {
+    oriSpeak("Remain in TraderLab. Mastery is earned.");
+  }
+}
+
+/* =========================
+   HINT SYSTEM
+========================= */
+document.getElementById("hint-btn").onclick = () => {
+  if (currentStep < steps.length) {
+    oriSpeak(hints[currentStep] + " Assistance reduces score.");
+    score = Math.max(0, score - 5);
+    updateProgress();
+  }
+};
+
+/* =========================
+   INIT
+========================= */
+document.getElementById("start-assessment").onclick = startAssessment;
+gateCheck();
+oriSpeak("TraderLab standing by. Qualification precedes execution.");
 </script>
 
 </body>
