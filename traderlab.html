@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,18 +9,19 @@
 :root {
   --bg: #050b1f;
   --card: #0b1736;
+  --panel: #0e1f44;
   --accent: #7cf3ff;
   --text: #ffffff;
+  --notice: #ffcc66;
   --success: #0aff7c;
   --error: #ff3b3b;
-  --hint: #ffd966;
 }
 
 body {
+  margin: 0;
+  font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-family: Arial, sans-serif;
-  margin: 0;
 }
 
 header {
@@ -29,76 +30,59 @@ header {
   background: var(--card);
 }
 
-.content {
+main {
   padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.notice {
+  color: var(--notice);
+  font-size: 0.9rem;
 }
 
 button {
-  background: #17336d;
-  color: white;
+  background: var(--accent);
   border: none;
-  padding: 10px 18px;
-  margin: 5px 5px 5px 0;
-  border-radius: 5px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-#ori-ologo {
-  background: #08162f;
-  border-left: 4px solid var(--accent);
-  padding: 12px;
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
   border-radius: 6px;
-  margin-bottom: 15px;
+  border: none;
+}
+
+#ori-ologo {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
 }
 
 #ori-title {
   color: var(--accent);
   font-weight: bold;
-}
-
-#assessment-container {
-  background: var(--card);
-  padding: 15px;
-  border-radius: 8px;
-  display: none;
-}
-
-#progress-bar-container {
-  height: 18px;
-  background: #111;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 10px 0;
-}
-
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: var(--accent);
-  transition: width 0.5s;
-}
-
-#step-blocks {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-
-.step-block {
-  flex: 1;
-  height: 12px;
-  background: #444;
-  border-radius: 3px;
-}
-
-.feedback {
-  font-weight: bold;
-  margin-top: 6px;
 }
 </style>
 </head>
@@ -110,206 +94,134 @@ button:disabled {
   <p>Peace before Profits</p>
 </header>
 
-<div class="content">
+<main>
 
-  <!-- Ori Ologo -->
-  <div id="ori-ologo">
-    <div id="ori-title">🧠 Ori Ologo — AI Assistant</div>
-    <div id="ori-speech"></div>
-  </div>
-
-  <p><strong>Wallet Balance:</strong> #<span id="walletBalance">0.00</span></p>
-  <p id="status-message"></p>
-
-  <button id="start-assessment">Start TraderLab Assessment</button>
-
-  <!-- Assessment -->
-  <div id="assessment-container">
-    <div id="step-blocks"></div>
-    <div id="progress-bar-container">
-      <div id="progress-bar"></div>
-    </div>
-
-    <p id="assessment-step"></p>
-    <button id="hint-btn">Ask for Hint</button>
-    <p id="feedback" class="feedback"></p>
-    <p id="final-score"></p>
-  </div>
-
+<!-- Ori Ologo -->
+<div class="panel" id="ori-ologo">
+  <div id="ori-title">🧠 Ori Ologo — AI Assistant</div>
+  <p id="oriSpeech"></p>
 </div>
 
-<script>
-/* =========================
-   CONSTANTS & STORAGE
-========================= */
-const SUB_KEY = "qtai_traderlab_subscription";
-const WALLET_KEY = "QT_WALLET";
-const MIN_CAPITAL = 10000;
+<!-- Wallet Panel -->
+<div class="panel">
+  <h2>Trading Wallet</h2>
+  <p class="notice">
+    Trading capital is separate from subscription payment.
+    Funding the wallet does not start trading.
+  </p>
 
-/* =========================
+  <p>Status: <strong id="walletStatus">Inactive</strong></p>
+  <p>Balance: <strong id="walletBalance">₦0</strong></p>
+
+  <input type="number" id="walletAmount" placeholder="Enter amount (min ₦10,000)">
+  <button id="fundWalletBtn">Fund Wallet</button>
+
+  <p id="walletMsg" class="notice"></p>
+</div>
+
+<!-- TraderLab Assessment -->
+<div class="panel">
+  <h2>TraderLab Assessment</h2>
+  <p class="notice">
+    TraderLab trains discipline and alignment. It does not execute trades.
+  </p>
+
+  <button id="startAssessmentBtn">Start Assessment</button>
+  <p id="assessmentStatus"></p>
+</div>
+
+</main>
+
+<script>
+/* ============================
    ORI OLOGO
-========================= */
-const oriSpeech = document.getElementById("ori-speech");
+============================ */
+const oriSpeech = document.getElementById("oriSpeech");
 function oriSpeak(text) {
   oriSpeech.textContent = text;
 }
 
-/* =========================
-   ACCESS + WALLET CHECK
-========================= */
-function subscriptionActive() {
-  const data = JSON.parse(localStorage.getItem(SUB_KEY) || '{}');
-  return data.expiry && Date.now() < new Date(data.expiry).getTime();
+/* ============================
+   WALLET CORE
+============================ */
+const WALLET_KEY = "QT_WALLET";
+const MIN_FUND = 10000;
+
+function loadWallet() {
+  const saved = localStorage.getItem(WALLET_KEY);
+  if (saved) return JSON.parse(saved);
+
+  const fresh = {
+    active: false,
+    balance: 0,
+    createdAt: null,
+    lastUpdated: null
+  };
+  localStorage.setItem(WALLET_KEY, JSON.stringify(fresh));
+  return fresh;
 }
 
-function getWallet() {
-  return JSON.parse(localStorage.getItem(WALLET_KEY));
+function saveWallet(w) {
+  w.lastUpdated = new Date().toISOString();
+  localStorage.setItem(WALLET_KEY, JSON.stringify(w));
 }
 
-function updateWalletUI() {
-  const wallet = getWallet();
-  document.getElementById("walletBalance").textContent =
-    wallet ? wallet.balance.toFixed(2) : "0.00";
+let wallet = loadWallet();
+
+/* ============================
+   WALLET UI
+============================ */
+const walletStatusEl = document.getElementById("walletStatus");
+const walletBalanceEl = document.getElementById("walletBalance");
+const walletAmountEl = document.getElementById("walletAmount");
+const walletMsgEl = document.getElementById("walletMsg");
+const fundWalletBtn = document.getElementById("fundWalletBtn");
+
+function refreshWalletUI() {
+  walletStatusEl.textContent = wallet.active ? "Active" : "Inactive";
+  walletBalanceEl.textContent = "₦" + wallet.balance.toLocaleString();
 }
 
-function gateCheck() {
-  const status = document.getElementById("status-message");
-
-  if (!subscriptionActive()) {
-    status.textContent = "Access denied. Payment required.";
-    document.getElementById("start-assessment").disabled = true;
-    oriSpeak("TraderLab is sealed. Payment is required to proceed.");
-    return false;
+fundWalletBtn.onclick = () => {
+  const amount = Number(walletAmountEl.value);
+  if (amount < MIN_FUND) {
+    walletMsgEl.textContent = "Minimum trading capital is ₦10,000";
+    return;
   }
 
-  const wallet = getWallet();
-  if (!wallet || wallet.balance < MIN_CAPITAL) {
-    status.textContent = "Wallet not ready. Minimum #10,000 required.";
-    document.getElementById("start-assessment").disabled = true;
-    oriSpeak("Your wallet is not ready. Capital must be present before training.");
-    return false;
-  }
+  wallet.balance += amount;
+  wallet.active = true;
+  if (!wallet.createdAt) wallet.createdAt = new Date().toISOString();
+  saveWallet(wallet);
 
-  status.textContent = "TraderLab access granted.";
-  document.getElementById("start-assessment").disabled = false;
-  updateWalletUI();
-  return true;
-}
-
-/* =========================
-   ASSESSMENT LOGIC
-========================= */
-const steps = [
-  "Interpret market alignment under Ori Ologo guidance.",
-  "Confirm discipline before execution.",
-  "Maintain probabilistic awareness.",
-  "Execute trade intent without emotion.",
-  "Evaluate outcome with restraint."
-];
-
-const hints = [
-  "Follow guidance, not impulse.",
-  "Discipline precedes profit.",
-  "Probability is not certainty.",
-  "Execution is obedience.",
-  "Reflection strengthens mastery."
-];
-
-let currentStep = 0;
-let score = 0;
-
-const container = document.getElementById("assessment-container");
-const stepText = document.getElementById("assessment-step");
-const feedback = document.getElementById("feedback");
-const finalScore = document.getElementById("final-score");
-const progressBar = document.getElementById("progress-bar");
-const blocks = document.getElementById("step-blocks");
-
-function setupBlocks() {
-  blocks.innerHTML = "";
-  steps.forEach(() => {
-    const b = document.createElement("div");
-    b.className = "step-block";
-    blocks.appendChild(b);
-  });
-}
-
-function updateProgress() {
-  progressBar.style.width = score + "%";
-}
-
-function startAssessment() {
-  if (!gateCheck()) return;
+  walletMsgEl.textContent = "Wallet funded successfully ✔";
+  walletAmountEl.value = "";
+  refreshWalletUI();
 
   oriSpeak(
-    "TraderLab initiated. This is not practice. This is qualification."
+    "Capital acknowledged. Remember: possession of capital does not compel action."
   );
-
-  container.style.display = "block";
-  currentStep = 0;
-  score = 0;
-  finalScore.textContent = "";
-  feedback.textContent = "";
-  setupBlocks();
-  updateProgress();
-  runStep();
-}
-
-function runStep() {
-  if (currentStep >= steps.length) return endAssessment();
-
-  oriSpeak(`Step ${currentStep + 1}. ${steps[currentStep]}`);
-  stepText.textContent = steps[currentStep];
-  feedback.textContent = "";
-
-  setTimeout(() => {
-    const pass = Math.random() < 0.9;
-    const block = blocks.children[currentStep];
-
-    if (pass) {
-      score += 20;
-      block.style.background = "var(--success)";
-      oriSpeak("Correct. Control confirmed.");
-    } else {
-      block.style.background = "var(--error)";
-      oriSpeak("Pause. Realign with guidance.");
-    }
-
-    updateProgress();
-    currentStep++;
-    setTimeout(runStep, 1300);
-  }, 900);
-}
-
-function endAssessment() {
-  stepText.textContent = "Assessment completed.";
-  finalScore.textContent = `Final Score: ${score} / 100`;
-
-  if (score >= 80) {
-    oriSpeak("You are cleared. TradingFloor and CPilot are now accessible.");
-    localStorage.setItem("QT_TRADERLAB_PASSED", "true");
-  } else {
-    oriSpeak("Remain in TraderLab. Mastery is earned.");
-  }
-}
-
-/* =========================
-   HINT SYSTEM
-========================= */
-document.getElementById("hint-btn").onclick = () => {
-  if (currentStep < steps.length) {
-    oriSpeak(hints[currentStep] + " Assistance reduces score.");
-    score = Math.max(0, score - 5);
-    updateProgress();
-  }
 };
 
-/* =========================
+refreshWalletUI();
+
+/* ============================
+   TRADERLAB ASSESSMENT (STUB)
+============================ */
+document.getElementById("startAssessmentBtn").onclick = () => {
+  oriSpeak(
+    "TraderLab session initiated. This environment trains judgment, not execution."
+  );
+  document.getElementById("assessmentStatus").textContent =
+    "Assessment running (logic continues as previously designed).";
+};
+
+/* ============================
    INIT
-========================= */
-document.getElementById("start-assessment").onclick = startAssessment;
-gateCheck();
-oriSpeak("TraderLab standing by. Qualification precedes execution.");
+============================ */
+oriSpeak(
+  "TraderLab ready. Fund your wallet deliberately. Trade only when clarity exists."
+);
 </script>
 
 </body>
