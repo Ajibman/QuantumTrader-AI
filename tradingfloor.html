@@ -31,6 +31,7 @@ header {
   padding: 1.2rem 2rem;
   background: var(--card);
   box-shadow: 0 2px 8px rgba(0,0,0,.6);
+  text-align: center;
 }
 
 main {
@@ -49,14 +50,10 @@ main {
 }
 
 h2 { color: var(--accent); margin-top: 0; }
-
 .notice { color: var(--notice); font-size: 0.9rem; }
+.wallet { margin-top: 10px; font-weight: bold; color: var(--success); }
 
-.wallet {
-  margin-top: 10px;
-  font-weight: bold;
-  color: var(--success);
-}
+input[type=number] { padding: 0.6rem; border-radius: 0.5rem; border: none; width: 100%; margin-top: 5px; margin-bottom: 10px; }
 
 button {
   padding: 0.7rem 1.4rem;
@@ -69,55 +66,30 @@ button {
   margin-top: 10px;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-input[type=number] {
-  padding: 0.6rem;
-  border-radius: 0.5rem;
-  border: none;
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
+footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>TradingFloor</h1>
-  <p class="notice">Manual trading guided by Ori Ologo</p>
+  <h1>TradingFloor — Manual Trades</h1>
+  <p class="notice">Guided by Ori Ologo, profit scoops to wallet</p>
 </header>
 
 <main>
-
   <div class="panel">
-    <h2>Manual Trade</h2>
-    <label for="tradeCapital">Trading Capital (#)</label>
-    <input type="number" id="tradeCapital" placeholder="Enter trading capital">
+    <h2>Trading Capital</h2>
+    <label for="tradeAmount">Amount to commit for this trade (#)</label>
+    <input type="number" id="tradeAmount" placeholder="Enter amount to trade">
 
     <button id="executeTradeBtn">Execute Trade</button>
-
     <p id="oriMessage" class="notice">Ori Ologo guidance will appear here.</p>
     <p class="wallet">Wallet Balance: #<span id="walletBalance">0.00</span></p>
     <button id="withdrawBtn">Withdraw Wallet to Funding Account</button>
   </div>
-
-  <div class="panel">
-    <h2>TradingFloor Status</h2>
-    <p id="statusMsg" class="notice">System ready for manual trades.</p>
-  </div>
-
 </main>
 
 <footer>
@@ -126,37 +98,34 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const tradeCapitalInput = document.getElementById("tradeCapital");
-  const executeTradeBtn = document.getElementById("executeTradeBtn");
+  const tradeAmountInput = document.getElementById("tradeAmount");
+  const executeBtn = document.getElementById("executeTradeBtn");
   const walletSpan = document.getElementById("walletBalance");
   const oriMessage = document.getElementById("oriMessage");
   const withdrawBtn = document.getElementById("withdrawBtn");
-  const statusMsg = document.getElementById("statusMsg");
 
-  // Load wallet from localStorage
+  // Shared wallet across CPilot and TradingFloor
   let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
   walletSpan.textContent = wallet.toFixed(2);
 
-  // Execute Manual Trade
-  executeTradeBtn.addEventListener("click", () => {
-    const capital = parseFloat(tradeCapitalInput.value);
+  function executeManualTrade() {
+    const capital = parseFloat(tradeAmountInput.value);
     if(isNaN(capital) || capital <= 0){
       oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
       oriMessage.style.color = "#ff3b3b";
       return;
     }
-
-    // Simulate trade profit — all gains go to wallet
-    const profit = Math.random() * (capital * 0.05); // 0–5% profit per trade
+    // Manual trade profit goes 100% to wallet
+    const profit = Math.random() * (capital * 0.05); // simulate 0–5% per trade
     wallet += profit;
     walletSpan.textContent = wallet.toFixed(2);
     oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet.`;
     oriMessage.style.color = "#0aff7c";
-
     localStorage.setItem("QT_WALLET", wallet.toFixed(2));
-  });
+  }
 
-  // Withdraw Wallet
+  executeBtn.addEventListener("click", executeManualTrade);
+
   withdrawBtn.addEventListener("click", () => {
     if(wallet <= 0){
       oriMessage.textContent = "Ori Ologo: Wallet empty — nothing to withdraw.";
