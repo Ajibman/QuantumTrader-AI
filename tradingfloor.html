@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumTrader AI™ — Trading Floor</title>
+<title>QuantumTrader AI™ — TradingFloor</title>
 
 <style>
 :root {
-  --bg: #030816;
-  --card: #0a1533;
-  --accent: #4dd6ff;
+  --bg: #050b1f;
+  --card: #0b1736;
+  --panel: #0e1f44;
+  --accent: #7cf3ff;
   --text: #ffffff;
-  --warn: #ffb84d;
+  --success: #0aff7c;
+  --error: #ff3b3b;
+  --notice: #ffd966;
 }
 
 body {
@@ -33,31 +36,51 @@ header {
 main {
   flex: 1;
   padding: 2rem;
-  max-width: 1100px;
+  max-width: 800px;
   margin: auto;
 }
 
 .panel {
-  background: #0e1c3f;
+  background: var(--panel);
   border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 1.8rem;
-  box-shadow: 0 0 16px rgba(0,0,0,.55);
+  padding: 1.4rem;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 0 14px rgba(0,0,0,.5);
 }
 
-h2 {
-  color: var(--accent);
-  margin-top: 0;
+h2 { color: var(--accent); margin-top: 0; }
+
+.notice { color: var(--notice); font-size: 0.9rem; }
+
+.wallet {
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--success);
 }
 
-.notice {
-  color: var(--warn);
-  font-size: 0.95rem;
-}
-
-.status {
+button {
+  padding: 0.7rem 1.4rem;
+  border-radius: 0.7rem;
+  border: none;
+  background: var(--accent);
+  color: #001018;
   font-weight: 600;
-  margin-top: 0.6rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type=number] {
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: none;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 footer {
@@ -72,68 +95,80 @@ footer {
 <body>
 
 <header>
-  <h1>Trading Floor</h1>
-  <p class="notice">Execution environment — controlled & supervised</p>
+  <h1>TradingFloor</h1>
+  <p class="notice">Manual trading guided by Ori Ologo</p>
 </header>
 
 <main>
 
   <div class="panel">
-    <h2>Purpose of the Trading Floor</h2>
-    <p>
-      The Trading Floor is the final execution environment of QuantumTrader AI™.
-      It is <strong>not accessible by confidence</strong>, only by qualification.
-    </p>
-    <p class="notice">
-      No live execution is enabled at this stage.
-    </p>
+    <h2>Manual Trade</h2>
+    <label for="tradeCapital">Trading Capital (#)</label>
+    <input type="number" id="tradeCapital" placeholder="Enter trading capital">
+
+    <button id="executeTradeBtn">Execute Trade</button>
+
+    <p id="oriMessage" class="notice">Ori Ologo guidance will appear here.</p>
+    <p class="wallet">Wallet Balance: #<span id="walletBalance">0.00</span></p>
+    <button id="withdrawBtn">Withdraw Wallet to Funding Account</button>
   </div>
 
   <div class="panel">
-    <h2>System Verification State</h2>
-    <p id="floor-status" class="status">
-      Status: Locked — awaiting CPilot clearance
-    </p>
-  </div>
-
-  <div class="panel">
-    <h2>Execution Boundary</h2>
-    <ul>
-      <li>No order routing</li>
-      <li>No broker/API connections</li>
-      <li>No automation</li>
-      <li>Observation only</li>
-    </ul>
-    <p class="notice">
-      This boundary protects capital, system integrity, and trademark intent.
-    </p>
-  </div>
-
-  <div class="panel">
-    <h2>Architect Note</h2>
-    <p>
-      System Architect access supersedes staged locks.
-      Public-facing state remains restricted by design.
-    </p>
+    <h2>TradingFloor Status</h2>
+    <p id="statusMsg" class="notice">System ready for manual trades.</p>
   </div>
 
 </main>
 
 <footer>
-© 2026 QuantumTrader AI™ — Trading Floor
+© 2026 QuantumTrader AI™ — TradingFloor
 </footer>
 
 <script>
-if (INTERNAL_TEST) {
-  window.location.href = "tradingfloor.html";
-}
- 
 document.addEventListener("DOMContentLoaded", () => {
-  const status = document.getElementById("floor-status");
+  const tradeCapitalInput = document.getElementById("tradeCapital");
+  const executeTradeBtn = document.getElementById("executeTradeBtn");
+  const walletSpan = document.getElementById("walletBalance");
+  const oriMessage = document.getElementById("oriMessage");
+  const withdrawBtn = document.getElementById("withdrawBtn");
+  const statusMsg = document.getElementById("statusMsg");
 
-  // Placeholder: CPilot signal
-  document.addEventListener("CPilotCleared", () => {
-    status.textContent = "Status: Verified ✔ Trading Floor observation enabled";
+  // Load wallet from localStorage
+  let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
+  walletSpan.textContent = wallet.toFixed(2);
+
+  // Execute Manual Trade
+  executeTradeBtn.addEventListener("click", () => {
+    const capital = parseFloat(tradeCapitalInput.value);
+    if(isNaN(capital) || capital <= 0){
+      oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
+      oriMessage.style.color = "#ff3b3b";
+      return;
+    }
+
+    // Simulate trade profit — all gains go to wallet
+    const profit = Math.random() * (capital * 0.05); // 0–5% profit per trade
+    wallet += profit;
+    walletSpan.textContent = wallet.toFixed(2);
+    oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet.`;
+    oriMessage.style.color = "#0aff7c";
+
+    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
+  });
+
+  // Withdraw Wallet
+  withdrawBtn.addEventListener("click", () => {
+    if(wallet <= 0){
+      oriMessage.textContent = "Ori Ologo: Wallet empty — nothing to withdraw.";
+      oriMessage.style.color = "#ff3b3b";
+      return;
+    }
+    oriMessage.textContent = `Ori Ologo: #${wallet.toFixed(2)} withdrawn to funding account.`;
+    oriMessage.style.color = "#7cf3ff";
+
+    wallet = 0;
+    walletSpan.textContent = wallet.toFixed(2);
+    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
   });
 });
 </script>
