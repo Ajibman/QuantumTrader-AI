@@ -12,9 +12,8 @@
   --panel: #0e1f44;
   --accent: #7cf3ff;
   --text: #ffffff;
+  --notice: #ffcc66;
   --success: #0aff7c;
-  --error: #ff3b3b;
-  --notice: #ffd966;
 }
 
 body {
@@ -27,22 +26,39 @@ body {
   flex-direction: column;
 }
 
-header { padding: 1.2rem 2rem; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.6); }
+header {
+  padding: 1.2rem 2rem;
+  background: var(--card);
+}
 
-main { flex: 1; padding: 2rem; max-width: 800px; margin: auto; }
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: auto;
+}
 
 .panel {
   background: var(--panel);
   border-radius: 1rem;
   padding: 1.4rem;
   margin-bottom: 1.6rem;
-  box-shadow: 0 0 14px rgba(0,0,0,.5);
 }
 
-h2 { color: var(--accent); margin-top: 0; }
-.notice { color: var(--notice); font-size: 0.9rem; }
-.wallet { margin-top: 10px; font-weight: bold; color: var(--success); }
-input[type=number] { padding: 0.6rem; border-radius: 0.5rem; border: none; width: 100%; margin-top: 5px; margin-bottom: 10px; }
+h2 {
+  color: var(--accent);
+}
+
+.notice {
+  color: var(--notice);
+  font-size: 0.9rem;
+}
+
+.status {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
 button {
   padding: 0.7rem 1.4rem;
   border-radius: 0.7rem;
@@ -51,12 +67,24 @@ button {
   color: #001018;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
 }
-button:disabled { opacity: 0.5; cursor: not-allowed; }
-.radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-.radio-group label { cursor: pointer; }
-footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio-group label {
+  display: block;
+  margin: 6px 0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
 </style>
 </head>
 
@@ -64,38 +92,49 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 
 <header>
   <h1>CPilot — AutoTrader</h1>
-  <p class="notice">Guided automated trading with profit-to-wallet</p>
+  <p class="notice">Time-cycle execution under Ori Ologo guidance</p>
 </header>
 
 <main>
 
+  <!-- Wallet -->
+  <div class="panel">
+    <h2>Wallet</h2>
+    <p>Available Balance: <strong>#<span id="walletBalance">0.00</span></strong></p>
+  </div>
+
+  <!-- Capital Selection -->
   <div class="panel">
     <h2>Trading Capital</h2>
-    <label for="tradeAmount">Amount to trade (#)</label>
-    <input type="number" id="tradeAmount" placeholder="Enter amount to trade">
+    <p class="notice">
+      Select the amount to deploy per cycle. Capital remains intact.
+      All profits accrue to wallet.
+    </p>
+    <input type="number" id="capitalInput" min="10000" step="1000" placeholder="Enter amount (min #10,000)">
+  </div>
 
-    <h2>AutoTrader Interval</h2>
-    <div class="radio-group" id="intervalRadios">
-      <label><input type="radio" name="interval" value="15"> 15s</label>
-      <label><input type="radio" name="interval" value="30"> 30s</label>
-      <label><input type="radio" name="interval" value="60"> 1min</label>
-      <label><input type="radio" name="interval" value="120"> 2min</label>
-      <label><input type="radio" name="interval" value="180"> 3min</label>
-      <label><input type="radio" name="interval" value="300"> 5min</label>
-      <label><input type="radio" name="interval" value="600"> 10min</label>
-      <label><input type="radio" name="interval" value="1800"> 30min</label>
-      <label><input type="radio" name="interval" value="3600"> 1hr</label>
-      <label><input type="radio" name="interval" value="86400"> 24hr</label>
-      <label><input type="radio" name="interval" value="172800"> 48hr</label>
-      <label><input type="radio" name="interval" value="259200"> 72hr</label>
-      <label><input type="radio" name="interval" value="604800"> 7days</label>
+  <!-- Interval Selection -->
+  <div class="panel">
+    <h2>AutoTrader Cycle</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="interval" value="15"> 15 seconds</label>
+      <label><input type="radio" name="interval" value="30"> 30 seconds</label>
+      <label><input type="radio" name="interval" value="60"> 60 seconds</label>
+      <label><input type="radio" name="interval" value="120"> 120 seconds</label>
+      <label><input type="radio" name="interval" value="300"> 300 seconds</label>
+      <label><input type="radio" name="interval" value="600"> 10 minutes</label>
+      <label><input type="radio" name="interval" value="1800"> 30 minutes</label>
+      <label><input type="radio" name="interval" value="3600"> 1 hour</label>
+      <label><input type="radio" name="interval" value="86400"> 24 hours</label>
     </div>
+  </div>
 
+  <!-- Controls -->
+  <div class="panel">
+    <h2>Control</h2>
+    <p id="status" class="status">CPilot idle.</p>
     <button id="startBtn">Start AutoTrader</button>
     <button id="stopBtn" disabled>Stop AutoTrader</button>
-    <p id="oriMessage" class="notice">Ori Ologo guidance will appear here.</p>
-    <p class="wallet">Wallet Balance: #<span id="walletBalance">0.00</span></p>
-    <button id="withdrawBtn">Withdraw Wallet to Funding Account</button>
   </div>
 
 </main>
@@ -105,89 +144,96 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tradeAmountInput = document.getElementById("tradeAmount");
-  const intervalRadios = document.getElementsByName("interval");
-  const startBtn = document.getElementById("startBtn");
-  const stopBtn = document.getElementById("stopBtn");
-  const walletSpan = document.getElementById("walletBalance");
-  const oriMessage = document.getElementById("oriMessage");
-  const withdrawBtn = document.getElementById("withdrawBtn");
+/* =========================
+   STORAGE & CONSTANTS
+========================= */
+const WALLET_KEY = "QT_WALLET";
+const MIN_CAPITAL = 10000;
 
-  let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
-  let autoTraderInterval = null;
+let autoTimer = null;
 
-  walletSpan.textContent = wallet.toFixed(2);
+/* =========================
+   WALLET
+========================= */
+function getWallet() {
+  return JSON.parse(localStorage.getItem(WALLET_KEY));
+}
 
-  function getSelectedInterval(){
-    for(const radio of intervalRadios){
-      if(radio.checked) return parseInt(radio.value);
-    }
-    return null;
+function saveWallet(wallet) {
+  wallet.lastUpdated = Date.now();
+  localStorage.setItem(WALLET_KEY, JSON.stringify(wallet));
+}
+
+function updateWalletUI() {
+  const wallet = getWallet();
+  document.getElementById("walletBalance").textContent =
+    wallet ? wallet.balance.toFixed(2) : "0.00";
+}
+
+/* =========================
+   AUTOTRADER
+========================= */
+function startAutoTrader() {
+  const wallet = getWallet();
+  const capital = Number(document.getElementById("capitalInput").value);
+  const interval = document.querySelector("input[name='interval']:checked")?.value;
+
+  if (!wallet) {
+    alert("Wallet not initialized.");
+    return;
   }
 
-  function executeTrade(){
-    const capital = parseFloat(tradeAmountInput.value);
-    if(isNaN(capital) || capital <= 0){
-      oriMessage.textContent = "Ori Ologo: Enter valid trading capital.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
-    // Simulate profit — all goes to wallet
-    const profit = Math.random() * (capital * 0.05); // 0–5% per interval
-    wallet += profit;
-    walletSpan.textContent = wallet.toFixed(2);
-    oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet.`;
-    oriMessage.style.color = "#0aff7c";
-    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
+  if (capital < MIN_CAPITAL || capital > wallet.balance) {
+    alert("Invalid trading capital.");
+    return;
   }
 
-  startBtn.addEventListener("click", () => {
-    const intervalSec = getSelectedInterval();
-    if(!intervalSec){
-      oriMessage.textContent = "Ori Ologo: Select an AutoTrader interval first.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
-    if(parseFloat(tradeAmountInput.value) <= 0){
-      oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
+  if (!interval) {
+    alert("Select an AutoTrader cycle.");
+    return;
+  }
 
-    oriMessage.textContent = `Ori Ologo: AutoTrader started — profits will go to wallet every ${intervalSec} seconds.`;
-    oriMessage.style.color = "#7cf3ff";
+  document.getElementById("status").textContent =
+    `AutoTrader running every ${interval} seconds under Ori Ologo guidance.`;
 
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("stopBtn").disabled = false;
 
-    autoTraderInterval = setInterval(executeTrade, intervalSec * 1000);
-  });
+  autoTimer = setInterval(() => {
+    // Simulated profit event (not deterministic)
+    const profit = Math.random() * (capital * 0.03);
 
-  stopBtn.addEventListener("click", () => {
-    clearInterval(autoTraderInterval);
-    autoTraderInterval = null;
-    oriMessage.textContent = "Ori Ologo: AutoTrader stopped.";
-    oriMessage.style.color = "#ffd966";
+    wallet.balance += profit;
+    wallet.history.push({
+      type: "autoTrade",
+      capital,
+      profit,
+      interval,
+      time: new Date().toISOString()
+    });
 
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-  });
+    saveWallet(wallet);
+    updateWalletUI();
+  }, interval * 1000);
+}
 
-  withdrawBtn.addEventListener("click", () => {
-    if(wallet <= 0){
-      oriMessage.textContent = "Ori Ologo: Wallet empty — nothing to withdraw.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
-    oriMessage.textContent = `Ori Ologo: #${wallet.toFixed(2)} withdrawn to funding account.`;
-    oriMessage.style.color = "#7cf3ff";
+function stopAutoTrader() {
+  clearInterval(autoTimer);
+  autoTimer = null;
 
-    wallet = 0;
-    walletSpan.textContent = wallet.toFixed(2);
-    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
-  });
-});
+  document.getElementById("status").textContent =
+    "AutoTrader stopped. Wallet preserved.";
+
+  document.getElementById("startBtn").disabled = false;
+  document.getElementById("stopBtn").disabled = true;
+}
+
+/* =========================
+   INIT
+========================= */
+document.getElementById("startBtn").onclick = startAutoTrader;
+document.getElementById("stopBtn").onclick = stopAutoTrader;
+updateWalletUI();
 </script>
 
 </body>
