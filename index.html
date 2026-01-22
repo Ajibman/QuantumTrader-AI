@@ -3,32 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI — Gate</title>
+<title>Quantum Trader AI</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-  body { background-color: #f0f4f8; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+  body { background-color: #f0f4f8; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; padding: 20px; }
   header { width: 100%; text-align: center; margin-bottom: 20px; }
   header img { max-width: 150px; height: auto; }
   main { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 480px; }
-  .image-container { margin-bottom: 20px; position: relative; }
-  .image-container img { width: 100%; max-width: 300px; height: auto; display: block; }
-  .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-  .buttons button {
-    position: relative; background: linear-gradient(145deg, #66c0c1, #345f7f);
-    border: none; color: white; padding: 15px 10px; font-size: 16px;
-    border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
-  }
+  .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 10px; }
+  .buttons button { position: relative; background: linear-gradient(145deg, #66c0c1, #345f7f); border: none; color: white; padding: 15px 10px; font-size: 16px; border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s; }
   .buttons button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .buttons button:disabled, .locked { opacity: 0.5; cursor: not-allowed; }
   .buttons button .icon { position: absolute; right: 10px; top: 10px; font-size: 18px; }
-  .status-bar { width: 100%; margin-top: 15px; text-align: center; font-weight: bold; color: #444; min-height: 1.2em; }
-  .status-bar.success { color: #00ffaa; }
-  .status-bar.warning { color: #ffd966; }
-  .status-bar.danger { color: #ff4d4d; }
   footer { margin-top: auto; text-align: center; padding: 10px 0; }
   footer img { max-width: 100px; height: auto; }
+  #oriMessage { margin-top: 15px; font-weight: bold; color: #7cf3ff; text-align: center; }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -38,21 +30,19 @@
 
 <main>
   <div class="image-container">
-    <img src="qtai_globe.png" alt="Quantum Trader AI Globe">
+    <img src="qtai_globe.png" alt="Quantum Trader AI Globe" style="width:100%; max-width:300px;">
   </div>
 
   <div class="buttons">
     <button id="traderLabBtn">TraderLab <span class="icon" id="traderIcon">🔒</span></button>
-    <button id="tradingFloorBtn" disabled>TradingFloor <span class="icon">🔒</span></button>
-    <button id="cPilotBtn" disabled>CPilot <span class="icon">🔒</span></button>
+    <button id="tradingFloorBtn" class="locked">TradingFloor <span class="icon">🔒</span></button>
+    <button id="cPilotBtn" class="locked">CPilot <span class="icon">🔒</span></button>
     <button id="gamesPavilionBtn">Games Pavilion <span class="icon">ℹ️</span></button>
     <button id="helpBtn">Help <span class="icon">ℹ️</span></button>
-    <button id="settingsBtn" disabled>Settings <span class="icon">🔒</span></button>
+    <button id="settingsBtn" class="locked">Settings <span class="icon">🔒</span></button>
   </div>
 
-  <div id="gateMessage" class="status-bar warning">
-    Welcome. Ori Ologo says: follow the proper flow to access Quantum Trader AI modules.
-  </div>
+  <p id="oriMessage">Ori Ologo ready to guide you.</p>
 </main>
 
 <footer>
@@ -60,107 +50,86 @@
 </footer>
 
 <script>
-  // ----------------------
-  // CONFIG
-  // ----------------------
-  const INTERNAL_TEST = true;
-  const SUB_DURATION = 30*24*60*60*1000; // 30 days
-  const SUB_KEY = "QT_SUB_ACTIVE";
-  const TRADERLAB_KEY = "QT_TRADERLAB_PASS";
+const INTERNAL_TEST = true;
 
-  // ----------------------
-  // ELEMENTS
-  // ----------------------
-  const traderLabBtn = document.getElementById("traderLabBtn");
-  const traderIcon = document.getElementById("traderIcon");
-  const tradingFloorBtn = document.getElementById("tradingFloorBtn");
-  const cPilotBtn = document.getElementById("cPilotBtn");
-  const settingsBtn = document.getElementById("settingsBtn");
-  const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
-  const helpBtn = document.getElementById("helpBtn");
-  const gateMessage = document.getElementById("gateMessage");
+// === Subscription / Completion State ===
+let traderLabCompleted = localStorage.getItem("TRADERLAB_COMPLETED") === "true";
 
-  // ----------------------
-  // STATE FUNCTIONS
-  // ----------------------
-  function hasActiveSubscription() {
-    const sub = JSON.parse(localStorage.getItem(SUB_KEY));
-    return sub && (new Date() < new Date(sub.expiry));
+// Wallet shared across modules
+let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
+
+// Button references
+const traderLabBtn = document.getElementById("traderLabBtn");
+const traderIcon = document.getElementById("traderIcon");
+const tradingFloorBtn = document.getElementById("tradingFloorBtn");
+const cPilotBtn = document.getElementById("cPilotBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+const gamesPavilionBtn = document.getElementById("gamesPavilionBtn");
+const helpBtn = document.getElementById("helpBtn");
+const oriMessage = document.getElementById("oriMessage");
+
+// Update button states
+function updateButtonStates() {
+  if(traderLabCompleted){
+    traderIcon.textContent = "✅";
+    tradingFloorBtn.classList.remove("locked");
+    tradingFloorBtn.disabled = false;
+    cPilotBtn.classList.remove("locked");
+    cPilotBtn.disabled = false;
+    oriMessage.textContent = "Ori Ologo: TraderLab completed — choose your path!";
+  } else {
+    traderIcon.textContent = "🔒";
+    tradingFloorBtn.classList.add("locked");
+    tradingFloorBtn.disabled = true;
+    cPilotBtn.classList.add("locked");
+    cPilotBtn.disabled = true;
+    oriMessage.textContent = "Ori Ologo: Complete TraderLab to unlock TradingFloor and CPilot.";
   }
+}
 
-  function traderLabPassed() {
-    return localStorage.getItem(TRADERLAB_KEY) === "true";
-  }
-
-  function updateButtonStates(messageOverride = null, typeOverride = null) {
-    // TraderLab icon
-    traderIcon.textContent = hasActiveSubscription() ? "✅" : "🔒";
-
-    // Unlock TradingFloor & CPilot only if TraderLab passed
-    const unlocked = traderLabPassed();
-    tradingFloorBtn.disabled = !unlocked;
-    cPilotBtn.disabled = !unlocked;
-
-    // Update gate message
-    if(messageOverride){
-      gateMessage.textContent = messageOverride;
-      gateMessage.className = "status-bar " + (typeOverride || "warning");
-    } else if(!hasActiveSubscription()){
-      gateMessage.textContent = "Ori Ologo: Subscription required to start TraderLab.";
-      gateMessage.className = "status-bar danger";
-    } else if(!traderLabPassed()){
-      gateMessage.textContent = "Ori Ologo: Complete TraderLab to unlock TradingFloor & CPilot.";
-      gateMessage.className = "status-bar warning";
+// === TraderLab Button ===
+traderLabBtn.addEventListener("click", () => {
+  if(!traderLabCompleted && INTERNAL_TEST){
+    const pay = confirm("Simulate NGN 10,000 payment to unlock TraderLab?");
+    if(pay){
+      traderLabCompleted = true;
+      localStorage.setItem("TRADERLAB_COMPLETED", "true");
+      traderIcon.textContent = "✅";
+      oriMessage.textContent = "Payment successful! TraderLab unlocked.";
+      setTimeout(()=> { window.location.href = "traderlab.html"; }, 300);
     } else {
-      gateMessage.textContent = "Ori Ologo: All modules available. Choose your path consciously.";
-      gateMessage.className = "status-bar success";
+      oriMessage.textContent = "Payment not made. Access blocked.";
     }
-  }
-
-  // ----------------------
-  // EVENT LISTENERS
-  // ----------------------
-  traderLabBtn.addEventListener("click", (e)=>{
-    if(!hasActiveSubscription() && INTERNAL_TEST){
-      e.preventDefault();
-      const pay = confirm("Simulate NGN 10,000 payment to unlock TraderLab?");
-      if(pay){
-        const expiry = new Date(Date.now() + SUB_DURATION);
-        localStorage.setItem(SUB_KEY, JSON.stringify({expiry}));
-        updateButtonStates("Ori Ologo: Payment successful! TraderLab unlocked.", "success");
-      } else {
-        updateButtonStates("Ori Ologo: Payment not made. Access blocked.", "danger");
-        return;
-      }
-    }
+  } else {
     window.location.href = "traderlab.html";
-  });
+  }
+});
 
-  tradingFloorBtn.addEventListener("click", ()=>{
-    if(!traderLabPassed()){
-      updateButtonStates("Ori Ologo: TraderLab certification required.", "danger");
-      return;
-    }
+// === TradingFloor Button ===
+tradingFloorBtn.onclick = () => {
+  if(traderLabCompleted){
     window.location.href = "tradingfloor.html";
-  });
+  } else {
+    oriMessage.textContent = "Ori Ologo: Complete TraderLab first.";
+  }
+};
 
-  cPilotBtn.addEventListener("click", ()=>{
-    if(!traderLabPassed()){
-      updateButtonStates("Ori Ologo: TraderLab certification required.", "danger");
-      return;
-    }
+// === CPilot Button ===
+cPilotBtn.onclick = () => {
+  if(traderLabCompleted){
     window.location.href = "cpilot.html";
-  });
+  } else {
+    oriMessage.textContent = "Ori Ologo: Complete TraderLab first.";
+  }
+};
 
-  gamesPavilionBtn.addEventListener("click", ()=>updateButtonStates("Games Pavilion is informational.", "warning"));
-  helpBtn.addEventListener("click", ()=>updateButtonStates("Help module coming soon.", "warning"));
-  settingsBtn.addEventListener("click", ()=>updateButtonStates("Settings are locked.", "danger"));
+// === Other Buttons ===
+settingsBtn.onclick = () => oriMessage.textContent = "Settings is locked for now.";
+gamesPavilionBtn.onclick = () => oriMessage.textContent = "Games Pavilion is informational.";
+helpBtn.onclick = () => oriMessage.textContent = "Help module coming soon.";
 
-  // ----------------------
-  // INIT STATE
-  // ----------------------
-  updateButtonStates();
+// Initial setup
+updateButtonStates();
 </script>
-
 </body>
 </html>
