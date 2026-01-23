@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -111,7 +111,7 @@ input {
   </p>
 
   <p>Status: <strong id="walletStatus">Inactive</strong></p>
-  <p>Balance: <strong id="walletBalance">₦0</strong></p>
+  <p>Balance: <strong id="wallet-balance">₦0</strong></p>
 
   <input type="number" id="walletAmount" placeholder="Enter amount (min ₦10,000)">
   <button id="fundWalletBtn">Fund Wallet</button>
@@ -132,68 +132,46 @@ input {
 
 </main>
 
-<script>
+<script type="module">
 /* ============================
-   ORI OLOGO
+   IMPORT WALLET UTILITY
 ============================ */
+import Wallet, { checkWallet } from './wallet.js';
+
+/* ============================
+   USER & ORI OLOGO
+============================ */
+const currentUserId = localStorage.getItem('qtai_userId') || 'guest';
+
 const oriSpeech = document.getElementById("oriSpeech");
 function oriSpeak(text) {
   oriSpeech.textContent = text;
 }
 
 /* ============================
-   WALLET CORE
-============================ */
-const WALLET_KEY = "QT_WALLET";
-const MIN_FUND = 10000;
-
-function loadWallet() {
-  const saved = localStorage.getItem(WALLET_KEY);
-  if (saved) return JSON.parse(saved);
-
-  const fresh = {
-    active: false,
-    balance: 0,
-    createdAt: null,
-    lastUpdated: null
-  };
-  localStorage.setItem(WALLET_KEY, JSON.stringify(fresh));
-  return fresh;
-}
-
-function saveWallet(w) {
-  w.lastUpdated = new Date().toISOString();
-  localStorage.setItem(WALLET_KEY, JSON.stringify(w));
-}
-
-let wallet = loadWallet();
-
-/* ============================
    WALLET UI
 ============================ */
 const walletStatusEl = document.getElementById("walletStatus");
-const walletBalanceEl = document.getElementById("walletBalance");
 const walletAmountEl = document.getElementById("walletAmount");
 const walletMsgEl = document.getElementById("walletMsg");
 const fundWalletBtn = document.getElementById("fundWalletBtn");
+const MIN_FUND = 10000;
 
 function refreshWalletUI() {
-  walletStatusEl.textContent = wallet.active ? "Active" : "Inactive";
-  walletBalanceEl.textContent = "₦" + wallet.balance.toLocaleString();
+  const balance = Wallet.getBalance(currentUserId);
+  walletStatusEl.textContent = balance > 0 ? "Active" : "Inactive";
+  checkWallet(currentUserId);
 }
 
-fundWalletBtn.onclick = () => {
+/* FUND WALLET */
+fundWalletBtn.addEventListener("click", () => {
   const amount = Number(walletAmountEl.value);
   if (amount < MIN_FUND) {
-    walletMsgEl.textContent = "Minimum trading capital is ₦10,000";
+    walletMsgEl.textContent = `Minimum trading capital is ₦${MIN_FUND.toLocaleString()}`;
     return;
   }
 
-  wallet.balance += amount;
-  wallet.active = true;
-  if (!wallet.createdAt) wallet.createdAt = new Date().toISOString();
-  saveWallet(wallet);
-
+  Wallet.deposit(currentUserId, amount);
   walletMsgEl.textContent = "Wallet funded successfully ✔";
   walletAmountEl.value = "";
   refreshWalletUI();
@@ -201,23 +179,24 @@ fundWalletBtn.onclick = () => {
   oriSpeak(
     "Capital acknowledged. Remember: possession of capital does not compel action."
   );
-};
+});
 
+/* INITIAL UI REFRESH */
 refreshWalletUI();
 
 /* ============================
-   TRADERLAB ASSESSMENT (STUB)
+   TRADERLAB ASSESSMENT
 ============================ */
-document.getElementById("startAssessmentBtn").onclick = () => {
+document.getElementById("startAssessmentBtn").addEventListener("click", () => {
   oriSpeak(
     "TraderLab session initiated. This environment trains judgment, not execution."
   );
   document.getElementById("assessmentStatus").textContent =
     "Assessment running (logic continues as previously designed).";
-};
+});
 
 /* ============================
-   INIT
+   INIT SPEECH
 ============================ */
 oriSpeak(
   "TraderLab ready. Fund your wallet deliberately. Trade only when clarity exists."
