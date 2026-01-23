@@ -96,50 +96,55 @@ footer { text-align: center; padding: 1rem; font-size: 0.8rem; opacity: 0.7; }
 © 2026 QuantumTrader AI™ — TradingFloor
 </footer>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tradeAmountInput = document.getElementById("tradeAmount");
-  const executeBtn = document.getElementById("executeTradeBtn");
-  const walletSpan = document.getElementById("walletBalance");
-  const oriMessage = document.getElementById("oriMessage");
-  const withdrawBtn = document.getElementById("withdrawBtn");
+<script type="module">
+import Wallet, { checkWallet } from './wallet.js';
 
-  // Shared wallet across CPilot and TradingFloor
-  let wallet = parseFloat(localStorage.getItem("QT_WALLET") || "0");
-  walletSpan.textContent = wallet.toFixed(2);
+const currentUserId = localStorage.getItem('qtai_userId') || 'guest';
+const tradeAmountInput = document.getElementById("tradeAmount");
+const executeBtn = document.getElementById("executeTradeBtn");
+const walletSpan = document.getElementById("walletBalance");
+const oriMessage = document.getElementById("oriMessage");
+const withdrawBtn = document.getElementById("withdrawBtn");
 
-  function executeManualTrade() {
-    const capital = parseFloat(tradeAmountInput.value);
-    if(isNaN(capital) || capital <= 0){
-      oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
-    // Manual trade profit goes 100% to wallet
-    const profit = Math.random() * (capital * 0.05); // simulate 0–5% per trade
-    wallet += profit;
-    walletSpan.textContent = wallet.toFixed(2);
-    oriMessage.textContent = `Ori Ologo: Profit #${profit.toFixed(2)} added to wallet.`;
-    oriMessage.style.color = "#0aff7c";
-    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
+/* ============================
+   UI UPDATE
+============================ */
+function refreshWalletUI() {
+  checkWallet(currentUserId);
+}
+
+/* ============================
+   MANUAL TRADE
+============================ */
+executeBtn.addEventListener("click", () => {
+  const capital = parseFloat(tradeAmountInput.value);
+  if(isNaN(capital) || capital <= 0){
+    oriMessage.textContent = "Ori Ologo: Enter a valid trading capital.";
+    oriMessage.style.color = "#ff3b3b";
+    return;
   }
-
-  executeBtn.addEventListener("click", executeManualTrade);
-
-  withdrawBtn.addEventListener("click", () => {
-    if(wallet <= 0){
-      oriMessage.textContent = "Ori Ologo: Wallet empty — nothing to withdraw.";
-      oriMessage.style.color = "#ff3b3b";
-      return;
-    }
-    oriMessage.textContent = `Ori Ologo: #${wallet.toFixed(2)} withdrawn to funding account.`;
-    oriMessage.style.color = "#7cf3ff";
-
-    wallet = 0;
-    walletSpan.textContent = wallet.toFixed(2);
-    localStorage.setItem("QT_WALLET", wallet.toFixed(2));
-  });
+  // Manual trade profit goes 100% to wallet
+  const profit = Math.random() * (capital * 0.05); // simulate 0–5% profit
+  Wallet.deposit(currentUserId, profit);
+  refreshWalletUI();
+  oriMessage.textContent = `Ori Ologo: Profit ₦${profit.toFixed(2)} added to wallet.`;
+  oriMessage.style.color = "#0aff7c";
 });
+
+/* ============================
+   WITHDRAW TO FUNDING ACCOUNT
+============================ */
+withdrawBtn.addEventListener("click", () => {
+  const result = Wallet.transferToBank(currentUserId);
+  refreshWalletUI();
+  oriMessage.textContent = `Ori Ologo: ${result}`;
+  oriMessage.style.color = result.includes("No funds") ? "#ff3b3b" : "#7cf3ff";
+});
+
+/* ============================
+   INITIALIZE WALLET UI
+============================ */
+refreshWalletUI();
 </script>
 
 </body>
