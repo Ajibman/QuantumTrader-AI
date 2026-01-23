@@ -1,184 +1,158 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI</title>
 
-  body {
-    background-color: #f0f4f8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    padding: 20px;
-  }
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #050b1f;
+      color: #ffffff;
+      text-align: center;
+    }
 
-  header {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 20px;
-  }
+    header {
+      padding: 24px 12px;
+    }
 
-  header img { max-width: 150px; height: auto; }
+    h1 {
+      margin-bottom: 6px;
+    }
 
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 480px;
-  }
+    .subtitle {
+      color: #7cf3ff;
+      font-size: 14px;
+    }
 
-  .image-container { margin-bottom: 20px; position: relative; }
+    .btn {
+      padding: 12px 20px;
+      margin: 8px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-  .image-container img { width: 100%; max-width: 300px; height: auto; display: block; }
+    .btn-primary {
+      background: #7cf3ff;
+      color: #050b1f;
+    }
 
-  .buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    width: 100%;
-  }
+    .btn-secondary {
+      background: #1a2b5f;
+      color: #ffffff;
+    }
 
-  .buttons button {
-    position: relative;
-    background: linear-gradient(145deg, #66c0c1, #345f7f);
-    border: none;
-    color: white;
-    padding: 15px 10px;
-    font-size: 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
-  }
-
-  .buttons button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-
-  .buttons button:disabled, .locked { opacity: 0.5; cursor: not-allowed; }
-
-  .buttons button .icon { position: absolute; right: 10px; top: 10px; font-size: 18px; }
-
-  footer { margin-top: auto; text-align: center; padding: 10px 0; }
-  footer img { max-width: 100px; height: auto; }
-</style>
+    .section {
+      margin: 28px auto;
+      max-width: 420px;
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <img src="peace_index_logo.png" alt="Peace Index Logo">
-  <div class="peace-caption">Peace before Profits</div>
-</header>
+  <!-- ================= HEADER ================= -->
+  <header>
+    <h1>QuantumTrader AI™</h1>
+    <div class="subtitle">Peace before Profits</div>
+  </header>
 
-<main>
-  <div class="image-container">
-    <img src="qtai_globe.png" alt="Quantum Trader AI Globe">
+  <!-- ================= NAVIGATION ================= -->
+  <div class="section">
+    <button id="traderLabBtn" class="btn btn-primary">TraderLab</button>
+    <button id="tradingFloorBtn" class="btn btn-secondary">Trading Floor</button>
+    <button id="cpilotBtn" class="btn btn-secondary">CPilot</button>
   </div>
 
-  <div class="buttons">
-    <button id="traderLabBtn">Trader Lab <span class="icon" id="traderIcon">🔒</span></button>
-    <button id="tradingFloorBtn" class="locked">Trading Floor <span class="icon">🔒</span></button>
-    <button id="cPilotBtn" class="locked">CPilot <span class="icon">🔒</span></button>
-    <button id="gamesPavilionBtn">Games Pavilion <span class="icon">ℹ️</span></button>
-    <button id="helpBtn">Help <span class="icon">ℹ️</span></button>
-    <button id="settingsBtn" class="locked">Settings <span class="icon">🔒</span></button>
+  <!-- ================= WALLET PANEL ================= -->
+  <div class="section" style="
+    background:#0b1736;
+    padding:18px;
+    border-radius:10px;
+  ">
+    <h3 style="color:#7cf3ff;">Wallet Balance</h3>
+
+    <div style="font-size:22px; font-weight:bold; margin:10px 0;">
+      <span class="wallet-balance">₦0</span>
+    </div>
+
+    <input
+      id="walletAmountInput"
+      type="number"
+      min="1"
+      placeholder="Enter amount"
+      style="
+        width:80%;
+        padding:10px;
+        border-radius:6px;
+        border:none;
+        margin-bottom:12px;
+      "
+    />
+
+    <br/>
+
+    <button
+      id="fundWalletBtn"
+      class="btn btn-primary"
+    >
+      Fund Wallet
+    </button>
   </div>
 
-  <p class="wallet" style="margin-top:15px;">Wallet Balance: #<span id="walletBalance">0.00</span></p>
+  <!-- ================= RESET PAYMENT ================= -->
+  <div class="section">
+    <button
+      id="paymentResetButton"
+      style="
+        background-color:#6a0dad;
+        color:white;
+        font-weight:bold;
+        padding:12px 24px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+      "
+    >
+      Reset Payment
+    </button>
+  </div>
 
-</main>
+  <!-- ================= ORI OLOGO ================= -->
+  <div class="section">
+    <img src="ori-ologo.png" alt="Ori Ologo" style="max-width:120px; opacity:0.9;">
+  </div>
 
-<footer>
-  <img src="qtai_ori_olokun.png" alt="Ori Ologo">
-</footer>
+  <!-- ================= SCRIPTS ================= -->
 
-<script>
-const SUB_KEY = "qtai_traderlab_subscription";
-const WALLET_KEY = "QT_WALLET";
-const MIN_CAPITAL = 10000; // minimum capital to trade
+  <!-- Wallet wiring (safe even before wallet.js exists) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const fundBtn = document.getElementById("fundWalletBtn");
 
-let paymentStatus = false;
+      if (fundBtn) {
+        fundBtn.addEventListener("click", () => {
+          const input = document.getElementById("walletAmountInput");
+          const amount = Number(input.value);
 
-function initWallet() {
-  if (!localStorage.getItem(WALLET_KEY)) {
-    localStorage.setItem(WALLET_KEY, JSON.stringify({
-      balance: MIN_CAPITAL,
-      history: [],
-      lastUpdated: Date.now()
-    }));
-  }
-  updateWalletUI();
-}
+          if (typeof fundWallet !== "function") {
+            alert("Wallet system not yet initialized.");
+            return;
+          }
 
-function updateWalletUI() {
-  const wallet = JSON.parse(localStorage.getItem(WALLET_KEY));
-  const walletSpan = document.getElementById("walletBalance");
-  walletSpan.textContent = wallet.balance.toFixed(2);
-}
+          fundWallet(amount);
+          input.value = "";
+        });
+      }
+    });
+  </script>
 
-function paymentFlow() {
-  const pay = confirm("Pay NGN 10,000 to activate TraderLab & initialize wallet?");
-  if(pay){
-    localStorage.setItem(SUB_KEY, JSON.stringify({expiry: Date.now() + 30*24*60*60*1000}));
-    initWallet();
-    alert(`Payment successful! Wallet initialized with #${MIN_CAPITAL}`);
-    paymentStatus = true;
-    unlockModules();
-    return true;
-  } else {
-    alert("Payment required to proceed.");
-    return false;
-  }
-}
-
-function subscriptionActive() {
-  const data = JSON.parse(localStorage.getItem(SUB_KEY) || '{}');
-  return data.expiry && new Date().getTime() < new Date(data.expiry).getTime();
-}
-
-function unlockModules(){
-  document.getElementById("traderLabBtn").querySelector(".icon").textContent = "✅";
-  document.getElementById("tradingFloorBtn").classList.remove("locked");
-  document.getElementById("cPilotBtn").classList.remove("locked");
-  document.getElementById("settingsBtn").classList.remove("locked");
-}
-
-document.getElementById("traderLabBtn").addEventListener("click", (e)=>{
-  if(!subscriptionActive() && !paymentStatus){
-    e.preventDefault();
-    paymentFlow();
-  } else {
-    window.location.href = "traderlab.html";
-  }
-});
-
-document.getElementById("tradingFloorBtn").onclick = () => {
-  if(subscriptionActive()) window.location.href = "tradingfloor.html";
-  else alert("Trading Floor locked. Complete payment first.");
-};
-
-document.getElementById("cPilotBtn").onclick = () => {
-  if(subscriptionActive()) window.location.href = "cpilot.html";
-  else alert("CPilot locked. Complete payment first.");
-};
-
-document.getElementById("gamesPavilionBtn").onclick = () => alert("Games Pavilion is informational.");
-document.getElementById("helpBtn").onclick = () => alert("Help module coming soon.");
-document.getElementById("settingsBtn").onclick = () => alert("Settings locked. Complete payment first.");
-
-// Initialize wallet UI on load if subscription already exists
-if(subscriptionActive()) {
-  paymentStatus = true;
-  initWallet();
-  unlockModules();
-} else {
-  document.getElementById("walletBalance").textContent = "0.00";
-}
-</script>
+  <!-- Core app logic -->
+  <script src="app.js"></script>
 
 </body>
 </html>
