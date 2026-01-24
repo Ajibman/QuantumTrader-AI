@@ -1,9 +1,8 @@
-
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Quantum Trader AI™ — TraderLab</title>
 
 <style>
@@ -18,18 +17,65 @@
   --error: #ff3b3b;
 }
 
-body { margin:0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
-header { padding:20px; text-align:center; background: var(--card); }
-main { padding:20px; max-width:900px; margin:auto; }
-.panel { background: var(--panel); border-radius:12px; padding:16px; margin-bottom:20px; }
-h2 { color: var(--accent); margin-top:0; }
-.notice { color: var(--notice); font-size:0.9rem; }
-button { background: var(--accent); border:none; padding:10px 16px; border-radius:8px; font-weight:bold; cursor:pointer; }
-button:disabled { opacity:0.5; cursor:not-allowed; }
-input { width:100%; padding:10px; margin:10px 0; border-radius:6px; border:none; }
-#walletHistory { max-height:200px; overflow-y:auto; padding-left:20px; }
-#ori-ologo { border-left:4px solid var(--accent); padding-left:12px; }
-#ori-title { color: var(--accent); font-weight:bold; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  background: var(--card);
+}
+
+main {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+h2 { color: var(--accent); }
+.notice { color: var(--notice); font-size: 0.9rem; }
+
+button {
+  background: var(--accent);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: none;
+}
+
+#ori-ologo {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+#ori-title {
+  color: var(--accent);
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -48,103 +94,91 @@ input { width:100%; padding:10px; margin:10px 0; border-radius:6px; border:none;
   <p id="oriSpeech"></p>
 </div>
 
-<!-- Wallet Panel -->
+<!-- Wallet Status -->
 <div class="panel">
-  <h2>Trading Wallet</h2>
-  <p class="notice">Trading capital is separate from subscription payment. Funding the wallet does not start trading.</p>
-  <p>Status: <strong id="walletStatus">Inactive</strong></p>
-  <p>Balance: <strong id="walletBalance">₦0</strong></p>
-  <input type="number" id="walletAmount" placeholder="Enter amount (min ₦10,000)">
-  <button id="fundWalletBtn">Fund Wallet</button>
-  <p id="walletMsg" class="notice"></p>
-</div>
-
-<!-- Wallet History -->
-<div class="panel">
-  <h2>Wallet History</h2>
-  <ul id="walletHistory"><li>No transactions yet.</li></ul>
+  <h2>Wallet Status</h2>
+  <p>Status: <strong id="walletStatus">—</strong></p>
+  <p>Balance: <strong>₦<span id="walletBalance">0.00</span></strong></p>
+  <p class="notice">
+    Trading capital is separate from subscription payment.
+    Funding wallet does not trigger trading.
+  </p>
 </div>
 
 <!-- TraderLab Assessment -->
 <div class="panel">
   <h2>TraderLab Assessment</h2>
-  <p class="notice">TraderLab trains discipline and alignment. It does not execute trades.</p>
+  <p class="notice">
+    TraderLab trains discipline and alignment.
+    No capital is deployed here.
+  </p>
+
   <button id="startAssessmentBtn">Start Assessment</button>
   <p id="assessmentStatus"></p>
 </div>
 
 </main>
 
-<script type="module">
-import Wallet, { checkWallet } from './wallet.js';
+<!-- ✅ WALLET UTILITY -->
+<script src="core/js/utils/wallet.js"></script>
 
-const currentUserId = localStorage.getItem('qtai_userId') || 'guest';
-
+<script>
 /* ============================
    ORI OLOGO
 ============================ */
 const oriSpeech = document.getElementById("oriSpeech");
-function oriSpeak(text) { oriSpeech.textContent = text; }
+function oriSpeak(text) {
+  oriSpeech.textContent = text;
+}
 
 /* ============================
-   WALLET UI & HISTORY
+   WALLET (READ-ONLY CONSUMER)
 ============================ */
 const walletStatusEl = document.getElementById("walletStatus");
 const walletBalanceEl = document.getElementById("walletBalance");
-const walletAmountEl = document.getElementById("walletAmount");
-const walletMsgEl = document.getElementById("walletMsg");
-const fundWalletBtn = document.getElementById("fundWalletBtn");
-const walletHistoryEl = document.getElementById("walletHistory");
 
-function refreshWalletUI() {
-  const balance = Wallet.getBalance(currentUserId);
-  walletStatusEl.textContent = balance > 0 ? "Active" : "Inactive";
-  walletBalanceEl.textContent = "₦" + balance.toLocaleString();
-  refreshWalletHistory();
+function refreshWallet() {
+  const wallet = Wallet.get();
+  walletStatusEl.textContent =
+    wallet.balance > 0 ? "Active" : "Inactive";
+  walletBalanceEl.textContent = wallet.balance.toFixed(2);
 }
-
-function refreshWalletHistory() {
-  const history = Wallet.getHistory(currentUserId);
-  if (!history || history.length === 0) {
-    walletHistoryEl.innerHTML = "<li>No transactions yet.</li>";
-    return;
-  }
-  walletHistoryEl.innerHTML = history.slice().reverse().map(h =>
-    `<li>[${new Date(h.time).toLocaleString()}] <strong>${h.type.toUpperCase()}</strong>: ₦${h.amount.toFixed(2)} ${h.note ? `(${h.note})` : ""}</li>`
-  ).join("");
-}
-
-/* ============================
-   FUND WALLET
-============================ */
-const MIN_FUND = 10000;
-
-fundWalletBtn.onclick = () => {
-  const amount = Number(walletAmountEl.value);
-  if (amount < MIN_FUND) {
-    walletMsgEl.textContent = `Minimum trading capital is ₦${MIN_FUND}`;
-    return;
-  }
-  Wallet.deposit(currentUserId, amount, "TraderLab funding");
-  walletMsgEl.textContent = "Wallet funded successfully ✔";
-  walletAmountEl.value = "";
-  refreshWalletUI();
-  oriSpeak("Capital acknowledged. Remember: possession of capital does not compel action.");
-};
 
 /* ============================
    TRADERLAB ASSESSMENT
 ============================ */
-document.getElementById("startAssessmentBtn").onclick = () => {
-  oriSpeak("TraderLab session initiated. This environment trains judgment, not execution.");
-  document.getElementById("assessmentStatus").textContent = "Assessment running (logic continues as previously designed).";
+const startAssessmentBtn =
+  document.getElementById("startAssessmentBtn");
+const assessmentStatusEl =
+  document.getElementById("assessmentStatus");
+
+startAssessmentBtn.onclick = () => {
+  const wallet = Wallet.get();
+
+  // TraderLab allowed even with zero balance
+  Wallet.record({
+    source: "TraderLab",
+    type: "assessmentStart",
+    time: new Date().toISOString()
+  });
+
+  oriSpeak(
+    "TraderLab session initiated. Capital is irrelevant here. Judgment is everything."
+  );
+
+  assessmentStatusEl.textContent =
+    "Assessment running. Decisions are being observed.";
+
+  startAssessmentBtn.disabled = true;
 };
 
 /* ============================
    INIT
 ============================ */
-refreshWalletUI();
-oriSpeak("TraderLab ready. Fund your wallet deliberately. Trade only when clarity exists.");
+oriSpeak(
+  "TraderLab ready. Train your judgment. Capital waits."
+);
+refreshWallet();
 </script>
 
 </body>
