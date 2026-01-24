@@ -2,222 +2,158 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>QuantumTrader AI™ — Trading Floor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-:root {
-  --bg: #050b1f;
-  --card: #0b1736;
-  --panel: #0e1f44;
-  --accent: #7cf3ff;
-  --text: #ffffff;
-  --notice: #ffcc66;
-  --success: #0aff7c;
-}
+  body {
+    background: #050b1f;
+    color: #e8f1ff;
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 24px;
+  }
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
+  .card {
+    background: #0b1736;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
 
-header {
-  background: var(--card);
-  padding: 1.4rem 2rem;
-}
+  .locked {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 
-main {
-  max-width: 1000px;
-  margin: auto;
-  padding: 2rem;
-}
+  .warning {
+    color: #ffb347;
+    font-weight: 600;
+  }
 
-.panel {
-  background: var(--panel);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 1.6rem;
-}
-
-h2 {
-  color: var(--accent);
-}
-
-.notice {
-  font-size: 0.9rem;
-  color: var(--notice);
-}
-
-button {
-  padding: 0.7rem 1.5rem;
-  border-radius: 0.7rem;
-  border: none;
-  background: var(--accent);
-  color: #001018;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button.secondary {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-}
-
-input {
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 0.5rem;
-  border: none;
-  margin-top: 0.6rem;
-}
-
-.status {
-  margin-top: 0.8rem;
-  font-weight: 600;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
+  button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #7cf3ff;
+    color: #000;
+    font-weight: 600;
+  }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Trading Floor</h1>
-  <p class="notice">Manual execution under Ori Ologo supervision</p>
-</header>
+<h1>📈 Trading Floor</h1>
 
-<main>
+<div id="gateMessage" class="card warning" style="display:none;"></div>
 
-  <!-- WALLET -->
-  <div class="panel">
-    <h2>Wallet</h2>
-    <p>
-      Available Balance:
-      <strong>₦<span id="walletBalance">0.00</span></strong>
-    </p>
-  </div>
+<div id="tradingApp" class="card">
+  <h3>Wallet Balance</h3>
+  <p id="walletBalance">₦0.00</p>
 
-  <!-- MANUAL TRADE -->
-  <div class="panel">
-    <h2>Manual Trade</h2>
-    <p class="notice">
-      Capital is simulated. Only profits are credited to wallet.
-    </p>
-    <input
-      type="number"
-      id="tradeAmount"
-      min="1000"
-      step="500"
-      placeholder="Enter trade capital"
-    />
-    <br /><br />
-    <button id="executeTradeBtn">Execute Trade</button>
-    <p id="oriMessage" class="status"></p>
-  </div>
+  <button onclick="executeTrade()">Execute Trade</button>
 
-  <!-- WITHDRAW -->
-  <div class="panel">
-    <h2>Withdrawal</h2>
-    <p class="notice">
-      Withdraws entire wallet balance to funding account.
-    </p>
-    <button id="withdrawBtn" class="secondary">Withdraw All</button>
-  </div>
+  <h4 style="margin-top:20px;">Recent Wallet Activity</h4>
+  <ul id="walletHistory"></ul>
+</div>
 
-</main>
-
-<footer>
-© 2026 QuantumTrader AI™ — Trading Floor
-</footer>
-
-<!-- =========================
-     APP LOGIC
-========================= -->
 <script type="module">
 import Wallet from "./wallet.js";
+import State from "./state.js";
 
-const USER_ID = "guest";
+/* ---------------------------
+   PERMISSION GATING
+---------------------------- */
+const gateMessage = document.getElementById("gateMessage");
+const tradingApp = document.getElementById("tradingApp");
 
-/* =========================
-   UI HELPERS
-========================= */
-function refreshWalletUI() {
-  document.getElementById("walletBalance").textContent =
-    Wallet.getBalance(USER_ID).toFixed(2);
+const user = State.getCurrentUser();
+
+if (!user) {
+  lock("User session not found.");
+}
+else if (!State.hasActiveSubscription(user.id)) {
+  lock("Subscription expired. Trading Floor locked.");
+}
+else if (!State.hasPassedTraderLab(user.id)) {
+  lock("TraderLab not completed. Access denied.");
+}
+else {
+  unlock();
+  initTradingFloor(user.id);
 }
 
-/* =========================
-   MANUAL TRADE
-========================= */
-document.getElementById("executeTradeBtn").onclick = () => {
-  const capital = Number(
-    document.getElementById("tradeAmount").value
-  );
-  const oriMessage = document.getElementById("oriMessage");
+function lock(message) {
+  tradingApp.classList.add("locked");
+  gateMessage.textContent = message;
+  gateMessage.style.display = "block";
+}
 
-  if (!capital || capital <= 0) {
-    oriMessage.textContent =
-      "Ori Ologo: Invalid trade capital.";
+function unlock() {
+  gateMessage.style.display = "none";
+  tradingApp.classList.remove("locked");
+}
+
+/* ---------------------------
+   INIT FLOOR
+---------------------------- */
+function initTradingFloor(userId) {
+  Wallet.ensureWallet(userId);
+  renderBalance(userId);
+  renderHistory(userId);
+}
+
+/* ---------------------------
+   UI RENDERERS
+---------------------------- */
+function renderBalance(userId) {
+  const bal = Wallet.getBalance(userId);
+  document.getElementById("walletBalance").textContent =
+    `₦${bal.toFixed(2)}`;
+}
+
+function renderHistory(userId) {
+  const history = Wallet.getHistory(userId).slice(-5).reverse();
+  const ul = document.getElementById("walletHistory");
+  ul.innerHTML = "";
+
+  history.forEach(h => {
+    const li = document.createElement("li");
+    li.textContent = `${h.type.toUpperCase()} — ₦${h.amount} (${h.source})`;
+    ul.appendChild(li);
+  });
+}
+
+/* ---------------------------
+   TRADE EXECUTION
+---------------------------- */
+window.executeTrade = function () {
+  const userId = State.getCurrentUser().id;
+
+  const stake = 1000;
+  if (Wallet.getBalance(userId) < stake) {
+    alert("Insufficient wallet balance.");
     return;
   }
 
-  const profit = Number(
-    (Math.random() * capital * 0.05).toFixed(2)
-  );
-
-  Wallet.deposit(USER_ID, profit, "manual-trade");
-
-  Wallet.recordHistory(USER_ID, {
-    type: "manualTrade",
-    engine: "TradingFloor",
-    capital,
-    profit,
-    time: new Date().toISOString()
+  // Capital is referenced, NOT destroyed
+  Wallet.recordHistory(userId, {
+    type: "trade",
+    amount: stake,
+    source: "TradingFloor",
+    note: "Capital deployed to market"
   });
 
-  oriMessage.textContent =
-    `Ori Ologo: ₦${profit} credited to wallet.`;
+  // Simulated profit
+  const profit = Math.floor(Math.random() * 1500);
 
-  refreshWalletUI();
+  Wallet.deposit(userId, profit, "TradingFloor Profit");
+
+  renderBalance(userId);
+  renderHistory(userId);
 };
-
-/* =========================
-   WITHDRAWAL
-========================= */
-document.getElementById("withdrawBtn").onclick = () => {
-  const oriMessage = document.getElementById("oriMessage");
-
-  const amount = Wallet.withdrawAll(
-    USER_ID,
-    "funding-account"
-  );
-
-  if (!amount) {
-    oriMessage.textContent =
-      "Ori Ologo: Wallet empty. Nothing to withdraw.";
-    return;
-  }
-
-  oriMessage.textContent =
-    `Ori Ologo: ₦${amount} withdrawn successfully.`;
-
-  refreshWalletUI();
-};
-
-/* =========================
-   INIT
-========================= */
-Wallet.init(USER_ID);
-refreshWalletUI();
 </script>
 
 </body>
