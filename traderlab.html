@@ -181,5 +181,55 @@ oriSpeak(
 refreshWallet();
 </script>
 
+<script>
+/* ============================
+   WALLET HISTORY VIEW (READ ONLY)
+============================ */
+
+(function renderWalletHistory() {
+  if (!window.QTWallet) return;
+
+  // Permission safety (TraderLab is authority anyway)
+  if (!QTWallet.canAccess("traderlab")) return;
+
+  const container = document.getElementById("walletHistory");
+  const history = QTWallet.getHistory();
+
+  if (!history.length) {
+    container.innerHTML =
+      "<p class='notice'>No wallet activity recorded yet.</p>";
+    return;
+  }
+
+  const rows = history
+    .slice()
+    .reverse() // newest first
+    .map(evt => {
+      return `
+        <div style="
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding: 8px 0;
+          font-size: 0.85rem;
+        ">
+          <div>
+            <strong>${evt.type.toUpperCase()}</strong>
+            via <em>${evt.source}</em>
+          </div>
+          <div>
+            Amount: ₦${evt.amount.toLocaleString()}
+            • Balance: ₦${evt.balanceAfter.toLocaleString()}
+          </div>
+          <div style="opacity:0.7">
+            ${new Date(evt.timestamp).toLocaleString()}
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  container.innerHTML = rows;
+})();
+</script>
+ 
 </body>
 </html>
