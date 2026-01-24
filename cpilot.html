@@ -1,8 +1,8 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>QuantumTrader AI™ — CPilot</title>
 
 <style>
@@ -14,11 +14,12 @@
   --text: #ffffff;
   --notice: #ffcc66;
   --success: #0aff7c;
+  --error: #ff3b3b;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -46,16 +47,8 @@ main {
 }
 
 h2 { color: var(--accent); }
-
-.notice {
-  color: var(--notice);
-  font-size: 0.9rem;
-}
-
-.status {
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
+.notice { color: var(--notice); font-size: 0.9rem; }
+.status { font-weight: 600; margin-top: 0.5rem; }
 
 button {
   padding: 0.7rem 1.4rem;
@@ -98,18 +91,25 @@ footer {
   <!-- Wallet -->
   <div class="panel">
     <h2>Wallet</h2>
-    <p>Available Balance: <strong>₦<span id="walletBalance">0.00</span></strong></p>
+    <p>
+      Available Balance:
+      <strong>₦<span id="walletBalance">0.00</span></strong>
+    </p>
   </div>
 
   <!-- Capital -->
   <div class="panel">
     <h2>Trading Capital</h2>
     <p class="notice">
-      Capital is referenced, not consumed.  
-      Profits accrue directly to wallet.
+      Capital remains intact. Profits accrue to wallet.
     </p>
-    <input type="number" id="capitalInput" min="10000" step="1000"
-           placeholder="Enter amount (min ₦10,000)">
+    <input
+      type="number"
+      id="capitalInput"
+      min="10000"
+      step="1000"
+      placeholder="Enter amount (min ₦10,000)"
+    />
   </div>
 
   <!-- Interval -->
@@ -120,7 +120,7 @@ footer {
       <label><input type="radio" name="interval" value="30"> 30 seconds</label>
       <label><input type="radio" name="interval" value="60"> 60 seconds</label>
       <label><input type="radio" name="interval" value="120"> 120 seconds</label>
-      <label><input type="radio" name="interval" value="300"> 5 minutes</label>
+      <label><input type="radio" name="interval" value="300"> 300 seconds</label>
       <label><input type="radio" name="interval" value="600"> 10 minutes</label>
       <label><input type="radio" name="interval" value="1800"> 30 minutes</label>
       <label><input type="radio" name="interval" value="3600"> 1 hour</label>
@@ -128,7 +128,7 @@ footer {
     </div>
   </div>
 
-  <!-- Controls -->
+  <!-- Control -->
   <div class="panel">
     <h2>Control</h2>
     <p id="status" class="status">CPilot idle.</p>
@@ -142,65 +142,67 @@ footer {
 © 2026 QuantumTrader AI™ — CPilot
 </footer>
 
-<script type="module">
-import Wallet from "./wallet.js";
+<!-- ✅ WALLET UTILITY -->
+<script src="core/js/utils/wallet.js"></script>
 
-/* =========================
-   CONSTANTS
-========================= */
-const USER_ID = "guest";
+<script>
+/* ============================
+   CPILOT — PHASE 2
+   Wallet is external authority
+============================ */
+
 const MIN_CAPITAL = 10000;
-
 let autoTimer = null;
 
-/* =========================
-   UI
-========================= */
-function updateWalletUI() {
-  document.getElementById("walletBalance").textContent =
-    Wallet.getBalance(USER_ID).toFixed(2);
+const walletBalanceEl = document.getElementById("walletBalance");
+const statusEl = document.getElementById("status");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+
+function refreshWallet() {
+  const wallet = Wallet.get();
+  walletBalanceEl.textContent = wallet.balance.toFixed(2);
 }
 
-/* =========================
-   AUTOTRADER
-========================= */
 function startAutoTrader() {
+  const wallet = Wallet.get();
   const capital = Number(document.getElementById("capitalInput").value);
-  const interval = Number(
-    document.querySelector("input[name='interval']:checked")?.value
-  );
+  const interval =
+    document.querySelector("input[name='interval']:checked")?.value;
 
-  if (capital < MIN_CAPITAL) {
-    alert("Minimum capital is ₦10,000");
+  if (!wallet || wallet.balance <= 0) {
+    alert("Wallet not funded.");
+    return;
+  }
+
+  if (capital < MIN_CAPITAL || capital > wallet.balance) {
+    alert("Invalid trading capital.");
     return;
   }
 
   if (!interval) {
-    alert("Select a trading cycle.");
+    alert("Select an AutoTrader cycle.");
     return;
   }
 
-  document.getElementById("status").textContent =
-    `CPilot running every ${interval} seconds under Ori Ologo supervision.`;
+  statusEl.textContent =
+    `AutoTrader running every ${interval}s under Ori Ologo guidance.`;
 
-  document.getElementById("startBtn").disabled = true;
-  document.getElementById("stopBtn").disabled = false;
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
 
   autoTimer = setInterval(() => {
-    const profit = Number((Math.random() * capital * 0.03).toFixed(2));
+    const profit = Math.random() * (capital * 0.03);
 
-    Wallet.deposit(USER_ID, profit, "cpilot-cycle");
-
-    Wallet.recordHistory(USER_ID, {
-      type: "cpilotTrade",
-      engine: "CPilot",
+    Wallet.credit(profit, {
+      source: "CPilot",
+      type: "autoTrade",
       capital,
       profit,
-      interval,
-      note: "Automated cycle profit"
+      interval
     });
 
-    updateWalletUI();
+    refreshWallet();
   }, interval * 1000);
 }
 
@@ -208,27 +210,15 @@ function stopAutoTrader() {
   clearInterval(autoTimer);
   autoTimer = null;
 
-  document.getElementById("status").textContent =
-    "CPilot stopped. Wallet preserved.";
-
-  document.getElementById("startBtn").disabled = false;
-  document.getElementById("stopBtn").disabled = true;
-
-  Wallet.recordHistory(USER_ID, {
-    type: "cpilotStop",
-    engine: "CPilot",
-    note: "AutoTrader stopped by user"
-  });
+  statusEl.textContent = "AutoTrader stopped. Wallet preserved.";
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
 }
 
-/* =========================
-   INIT
-========================= */
-Wallet.init(USER_ID);
-updateWalletUI();
+startBtn.onclick = startAutoTrader;
+stopBtn.onclick = stopAutoTrader;
 
-document.getElementById("startBtn").onclick = startAutoTrader;
-document.getElementById("stopBtn").onclick = stopAutoTrader;
+refreshWallet();
 </script>
 
 </body>
