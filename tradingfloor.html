@@ -1,198 +1,200 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QuantumTrader AI™ — TradingFloor</title>
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI — Trading Floor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root {
-  --bg: #050b1f;
-  --card: #0b1736;
-  --panel: #0e1f44;
-  --accent: #7cf3ff;
-  --text: #ffffff;
-  --success: #0aff7c;
-  --error: #ff3b3b;
-  --notice: #ffd966;
-}
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="core/css/main.css" />
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  <style>
+    :root {
+      --qt-primary: #1f7f8c;        /* Aquamarine */
+      --qt-primary-hover: #165f69;
 
-header {
-  padding: 1.2rem 2rem;
-  background: var(--card);
-  text-align: center;
-}
+      --qt-secondary: #0b3442;      /* Navy blue */
+      --qt-secondary-hover: #07262f;
 
-main {
-  flex: 1;
-  padding: 2rem;
-  max-width: 800px;
-  margin: auto;
-}
+      --qt-neutral: #e7f2f4;
+      --qt-neutral-text: #102a33;
 
-.panel {
-  background: var(--panel);
-  border-radius: 1rem;
-  padding: 1.4rem;
-  margin-bottom: 1.6rem;
-}
+      --qt-locked-bg: #f1f4f6;
+      --qt-locked-text: #9aa6ad;
+    }
 
-h2 { color: var(--accent); }
-.notice { color: var(--notice); font-size: 0.9rem; }
-.wallet { margin-top: 10px; font-weight: bold; color: var(--success); }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f7fbfc;
+      color: #102a33;
+    }
 
-input[type=number] {
-  padding: 0.6rem;
-  border-radius: 0.5rem;
-  border: none;
-  width: 100%;
-  margin: 8px 0;
-}
+    header {
+      padding: 1.5rem;
+      background: var(--qt-secondary);
+      color: #ffffff;
+      text-align: center;
+    }
 
-button {
-  padding: 0.7rem 1.4rem;
-  border-radius: 0.7rem;
-  border: none;
-  background: var(--accent);
-  color: #001018;
-  font-weight: 600;
-  cursor: pointer;
-}
+    main {
+      padding: 2rem;
+      max-width: 1100px;
+      margin: auto;
+    }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    .section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-</style>
+    .section h2 {
+      margin-top: 0;
+      color: var(--qt-secondary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+
+    button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--qt-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--qt-primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--qt-secondary);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--qt-secondary-hover);
+    }
+
+    .btn-locked,
+    button:disabled {
+      background-color: var(--qt-locked-bg);
+      color: var(--qt-locked-text);
+      cursor: not-allowed;
+    }
+
+    /* Trade panels */
+    .panel {
+      padding: 1rem;
+      background: var(--qt-neutral);
+      border-radius: 4px;
+    }
+
+    .panel p {
+      margin: 0.4rem 0;
+    }
+
+    /* Ori Ologo */
+    #ori-ologo-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 110px;
+      opacity: 0.85;
+      z-index: 999;
+    }
+
+    #ori-ologo-container img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>TradingFloor — Manual Trades</h1>
-  <p class="notice">Guided execution. Profits accrue to wallet.</p>
+  <h1>Trading Floor</h1>
+  <p>Live Trading Environment — Access Controlled</p>
 </header>
 
 <main>
 
-  <div class="panel">
-    <h2>Manual Trade</h2>
-
-    <label for="tradeAmount">Capital to deploy for this trade (₦)</label>
-    <input type="number" id="tradeAmount" placeholder="Enter trade capital" />
-
-    <button id="executeTradeBtn">Execute Trade</button>
-
-    <p id="oriMessage" class="notice">
-      Ori Ologo guidance will appear here.
-    </p>
-
-    <p class="wallet">
-      Wallet Balance: ₦<span id="walletBalance">0.00</span>
-    </p>
-
-    <button id="withdrawBtn">Withdraw Wallet to Funding Account</button>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img
+      src="assets/images/qtai_ori_olokun.png"
+      alt="Ori Ologo — Silent Observer"
+    />
   </div>
+
+  <!-- Access Gate -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">
+      Verifying TraderLab completion and subscription status…
+    </p>
+  </section>
+
+  <!-- Wallet Snapshot -->
+  <section class="section">
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
+
+  <!-- Trading Controls -->
+  <section class="section">
+    <h2>Trading Controls</h2>
+    <div class="grid">
+      <button class="btn-primary" id="manual-trade-btn" disabled>
+        Manual Trading
+      </button>
+
+      <button class="btn-secondary" id="autotrade-btn" disabled>
+        Auto Trading
+      </button>
+
+      <button class="btn-secondary" id="risk-settings-btn">
+        Risk Settings
+      </button>
+
+      <button class="btn-secondary" id="trade-history-btn">
+        Trade History
+      </button>
+    </div>
+  </section>
+
+  <!-- Market Monitor -->
+  <section class="section">
+    <h2>Market Monitor</h2>
+    <div class="panel">
+      <p>Market feeds will appear here once trading is enabled.</p>
+      <p>No execution occurs without explicit authorization.</p>
+    </div>
+  </section>
 
 </main>
 
-<footer>
-© 2026 QuantumTrader AI™ — TradingFloor
-</footer>
-
-<!-- ✅ WALLET UTILITY (AUTHORITATIVE) -->
-<script src="core/js/utils/wallet.js"></script>
-
-<script>
-/* ============================
-   TRADING FLOOR — PHASE 2
-   Wallet is a dependency, not owned here
-============================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-  const tradeAmountInput = document.getElementById("tradeAmount");
-  const executeBtn = document.getElementById("executeTradeBtn");
-  const walletSpan = document.getElementById("walletBalance");
-  const oriMessage = document.getElementById("oriMessage");
-  const withdrawBtn = document.getElementById("withdrawBtn");
-
-  function refreshWallet() {
-    const wallet = Wallet.get();
-    walletSpan.textContent = wallet.balance.toFixed(2);
-  }
-
-  executeBtn.onclick = () => {
-    const capital = Number(tradeAmountInput.value);
-
-    if (!capital || capital <= 0) {
-      oriMessage.textContent =
-        "Ori Ologo: Enter a valid capital amount.";
-      oriMessage.style.color = "var(--error)";
-      return;
-    }
-
-    // Simulated manual trade profit (0–5%)
-    const profit = Math.random() * (capital * 0.05);
-
-    Wallet.credit(profit, {
-      source: "TradingFloor",
-      type: "manualTrade",
-      capital,
-      profit
-    });
-
-    oriMessage.textContent =
-      `Ori Ologo: Trade complete. ₦${profit.toFixed(2)} credited to wallet.`;
-    oriMessage.style.color = "var(--success)";
-
-    tradeAmountInput.value = "";
-    refreshWallet();
-  };
-
-  withdrawBtn.onclick = () => {
-    const wallet = Wallet.get();
-
-    if (wallet.balance <= 0) {
-      oriMessage.textContent =
-        "Ori Ologo: Wallet empty. Nothing to withdraw.";
-      oriMessage.style.color = "var(--error)";
-      return;
-    }
-
-    const amount = wallet.balance;
-
-    Wallet.debit(amount, {
-      source: "TradingFloor",
-      type: "withdrawal"
-    });
-
-    oriMessage.textContent =
-      `Ori Ologo: ₦${amount.toFixed(2)} withdrawn to funding account.`;
-    oriMessage.style.color = "var(--accent)";
-
-    refreshWallet();
-  };
-
-  refreshWallet();
-});
-</script>
+<!-- Core Logic -->
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/tradingfloor.js"></script>
 
 </body>
 </html>
