@@ -1,235 +1,171 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quantum Trader AI™ — TraderLab</title>
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI — TraderLab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root {
-  --bg: #050b1f;
-  --card: #0b1736;
-  --panel: #0e1f44;
-  --accent: #7cf3ff;
-  --text: #ffffff;
-  --notice: #ffcc66;
-  --success: #0aff7c;
-  --error: #ff3b3b;
-}
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="core/css/main.css" />
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
+  <!-- QT Calm Palette -->
+  <style>
+    :root {
+      --qt-primary: #1f7f8c;        /* Aquamarine */
+      --qt-primary-hover: #165f69;
 
-header {
-  padding: 20px;
-  text-align: center;
-  background: var(--card);
-}
+      --qt-secondary: #0b3442;      /* Navy blue */
+      --qt-secondary-hover: #07262f;
 
-main {
-  padding: 20px;
-  max-width: 900px;
-  margin: auto;
-}
+      --qt-neutral: #e7f2f4;
+      --qt-neutral-text: #102a33;
 
-.panel {
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-}
+      --qt-locked-bg: #f1f4f6;
+      --qt-locked-text: #9aa6ad;
+    }
 
-h2 { color: var(--accent); }
-.notice { color: var(--notice); font-size: 0.9rem; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f7fbfc;
+      color: #102a33;
+    }
 
-button {
-  background: var(--accent);
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    header {
+      padding: 1rem;
+      background: var(--qt-secondary);
+      color: #ffffff;
+      text-align: center;
+    }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    main {
+      padding: 2rem;
+      max-width: 960px;
+      margin: auto;
+    }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: none;
-}
+    .section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
 
-#ori-ologo {
-  border-left: 4px solid var(--accent);
-  padding-left: 12px;
-}
-#ori-title {
-  color: var(--accent);
-  font-weight: bold;
-}
-</style>
+    .section h2 {
+      margin-top: 0;
+      color: var(--qt-secondary);
+    }
+
+    button {
+      padding: 0.75rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--qt-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--qt-primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--qt-secondary);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--qt-secondary-hover);
+    }
+
+    .btn-locked,
+    button:disabled {
+      background-color: var(--qt-locked-bg);
+      color: var(--qt-locked-text);
+      cursor: not-allowed;
+    }
+
+    /* Ori Ologo */
+    #ori-ologo-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 110px;
+      opacity: 0.85;
+      z-index: 999;
+    }
+
+    #ori-ologo-container img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>Quantum Trader AI™ — TraderLab</h1>
-  <p>Peace before Profits</p>
+  <h1>TraderLab</h1>
+  <p>Training & Capability Assessment</p>
 </header>
 
 <main>
 
-<!-- Ori Ologo -->
-<div class="panel" id="ori-ologo">
-  <div id="ori-title">🧠 Ori Ologo — AI Assistant</div>
-  <p id="oriSpeech"></p>
-</div>
+  <!-- Ori Ologo Presence -->
+  <div id="ori-ologo-container">
+    <img
+      src="assets/images/qtai_ori_olokun.png"
+      alt="Ori Ologo — Silent Guide"
+    />
+  </div>
 
-<!-- Wallet Status -->
-<div class="panel">
-  <h2>Wallet Status</h2>
-  <p>Status: <strong id="walletStatus">—</strong></p>
-  <p>Balance: <strong>₦<span id="walletBalance">0.00</span></strong></p>
-  <p class="notice">
-    Trading capital is separate from subscription payment.
-    Funding wallet does not trigger trading.
-  </p>
-</div>
+  <!-- Wallet Status -->
+  <section class="section" id="wallet-status">
+    <h2>Wallet Status</h2>
+    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+    <button class="btn-secondary" id="fund-wallet-btn">
+      Fund Wallet
+    </button>
+  </section>
 
-<!-- TraderLab Assessment -->
-<div class="panel">
-  <h2>TraderLab Assessment</h2>
-  <p class="notice">
-    TraderLab trains discipline and alignment.
-    No capital is deployed here.
-  </p>
+  <!-- TraderLab Assessment -->
+  <section class="section" id="traderlab-assessment">
+    <h2>TraderLab Assessment</h2>
+    <p>
+      Complete this assessment to unlock the Trading Floor and CPilot.
+      Ori Ologo observes silently.
+    </p>
 
-  <button id="startAssessmentBtn">Start Assessment</button>
-  <p id="assessmentStatus"></p>
-</div>
+    <!-- Placeholder for dynamic questions -->
+    <div id="assessment-container">
+      <!-- Injected by JS -->
+    </div>
+
+    <button class="btn-primary" id="start-assessment-btn">
+      Start Assessment
+    </button>
+  </section>
+
+  <!-- Progress / Status -->
+  <section class="section" id="assessment-status">
+    <h2>Status</h2>
+    <p id="assessment-result">
+      Assessment not yet started.
+    </p>
+  </section>
 
 </main>
 
-<!-- ✅ WALLET UTILITY -->
-<script src="core/js/utils/wallet.js"></script>
+<!-- Core Logic -->
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/traderlab.js"></script>
 
-<script>
-/* ============================
-   ORI OLOGO
-============================ */
-const oriSpeech = document.getElementById("oriSpeech");
-function oriSpeak(text) {
-  oriSpeech.textContent = text;
-}
-
-/* ============================
-   WALLET (READ-ONLY CONSUMER)
-============================ */
-const walletStatusEl = document.getElementById("walletStatus");
-const walletBalanceEl = document.getElementById("walletBalance");
-
-function refreshWallet() {
-  const wallet = Wallet.get();
-  walletStatusEl.textContent =
-    wallet.balance > 0 ? "Active" : "Inactive";
-  walletBalanceEl.textContent = wallet.balance.toFixed(2);
-}
-
-/* ============================
-   TRADERLAB ASSESSMENT
-============================ */
-const startAssessmentBtn =
-  document.getElementById("startAssessmentBtn");
-const assessmentStatusEl =
-  document.getElementById("assessmentStatus");
-
-startAssessmentBtn.onclick = () => {
-  const wallet = Wallet.get();
-
-  // TraderLab allowed even with zero balance
-  Wallet.record({
-    source: "TraderLab",
-    type: "assessmentStart",
-    time: new Date().toISOString()
-  });
-
-  oriSpeak(
-    "TraderLab session initiated. Capital is irrelevant here. Judgment is everything."
-  );
-
-  assessmentStatusEl.textContent =
-    "Assessment running. Decisions are being observed.";
-
-  startAssessmentBtn.disabled = true;
-};
-
-/* ============================
-   INIT
-============================ */
-oriSpeak(
-  "TraderLab ready. Train your judgment. Capital waits."
-);
-refreshWallet();
-</script>
-
-<script>
-/* ============================
-   WALLET HISTORY VIEW (READ ONLY)
-============================ */
-
-(function renderWalletHistory() {
-  if (!window.QTWallet) return;
-
-  // Permission safety (TraderLab is authority anyway)
-  if (!QTWallet.canAccess("traderlab")) return;
-
-  const container = document.getElementById("walletHistory");
-  const history = QTWallet.getHistory();
-
-  if (!history.length) {
-    container.innerHTML =
-      "<p class='notice'>No wallet activity recorded yet.</p>";
-    return;
-  }
-
-  const rows = history
-    .slice()
-    .reverse() // newest first
-    .map(evt => {
-      return `
-        <div style="
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          padding: 8px 0;
-          font-size: 0.85rem;
-        ">
-          <div>
-            <strong>${evt.type.toUpperCase()}</strong>
-            via <em>${evt.source}</em>
-          </div>
-          <div>
-            Amount: ₦${evt.amount.toLocaleString()}
-            • Balance: ₦${evt.balanceAfter.toLocaleString()}
-          </div>
-          <div style="opacity:0.7">
-            ${new Date(evt.timestamp).toLocaleString()}
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-
-  container.innerHTML = rows;
-})();
-</script>
- 
 </body>
 </html>
