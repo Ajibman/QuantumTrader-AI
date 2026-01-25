@@ -9,14 +9,18 @@
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 
   /* Peace Index Logo */
   .peace-logo img {
     height: 50px;
     width: auto;
+    margin: 20px auto 10px auto;
     transition: transform 0.3s ease;
     cursor: pointer;
   }
@@ -24,7 +28,59 @@
     transform: scale(1.05);
   }
 
-  /* Ori Ologo Vignette */
+  /* Globe */
+  .globe-container {
+    width: 400px;
+    height: 400px;
+    margin: 10px auto;
+  }
+  #globe {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* Trader Instructions */
+  .instructions {
+    margin: 20px auto;
+    font-size: 18px;
+    color: #333;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  /* Buttons */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 15px auto;
+  }
+  .button-group button {
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    transition: transform 0.2s;
+  }
+  .button-group button:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+  .start { background-color: #4CAF50; }
+  .traderlab { background-color: #2196F3; }
+  .floor { background-color: #FF9800; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Ori Ologo Footer */
+  footer {
+    margin-top: auto;
+    padding: 20px 0;
+    position: relative;
+  }
   .vignette {
     background: radial-gradient(circle at center, #3a6ea5 0%, #1a2a4f 60%, #4b0f5b 100%);
     border-radius: 50%;
@@ -33,10 +89,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 20px auto;
+    margin: 0 auto;
     box-shadow: 0 0 30px rgba(0,0,0,0.3);
-    position: relative;
     animation: vignettePulse 10s infinite alternate;
+    position: relative;
   }
 
   @keyframes vignettePulse {
@@ -75,46 +131,10 @@
     pointer-events: none;
   }
 
-  /* Buttons */
-  .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-  }
-  .button-group button {
-    padding: 12px 25px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: none;
-    color: white;
-    transition: transform 0.2s;
-  }
-  .button-group button:hover:not(:disabled) {
-    transform: scale(1.05);
-  }
-  .start { background-color: #4CAF50; }
-  .traderlab { background-color: #2196F3; }
-  .floor { background-color: #FF9800; }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Trader instructions */
-  .instructions {
-    margin-top: 30px;
-    font-size: 18px;
-    color: #333;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.5;
-    text-align: center;
-  }
-
   @media (max-width: 600px) {
-    .button-group { flex-direction: column; }
     .instructions { font-size: 16px; }
+    .globe-container { width: 300px; height: 300px; }
+    .vignette { width: 180px; height: 180px; }
   }
 </style>
 </head>
@@ -127,15 +147,14 @@
   </a>
 </div>
 
-<!-- Ori Ologo with vignette and voice blob -->
-<div class="vignette" id="oriOlogoContainer">
-  <img src="assets/images/ori_ologo.png" alt="Ori Ologo AI Assistant" class="ori-ologo" id="oriOlogo">
-  <div id="voiceBlob"></div>
+<!-- Globe -->
+<div class="globe-container">
+  <img src="assets/images/globe.png" alt="Globe" id="globe">
 </div>
 
-<!-- Trader instructions -->
+<!-- Trader Guidance -->
 <div class="instructions">
-  <strong>Trader Guidance:</strong> Focus on regional peace indexes to analyze trends and insights. Use Ori Ologo above for hints or clarifications while navigating the content.
+  <strong>Trader Guidance:</strong> Focus on regional peace indexes to analyze trends and insights. Use Ori Ologo below for hints or clarifications while navigating the content.
 </div>
 
 <!-- Buttons -->
@@ -145,7 +164,15 @@
   <button id="tradingFloor" class="floor">Access Trading Floor</button>
 </div>
 
-<!-- Your voice sample as audio -->
+<!-- Footer with Ori Ologo -->
+<footer>
+  <div class="vignette" id="oriOlogoContainer">
+    <img src="assets/images/ori_ologo.png" alt="Ori Ologo AI Assistant" class="ori-ologo" id="oriOlogo">
+    <div id="voiceBlob"></div>
+  </div>
+</footer>
+
+<!-- Voice sample -->
 <audio id="oriGreeting" src="assets/audio/your_voice_greeting.mp3"></audio>
 <audio id="oriReminder" src="assets/audio/your_voice_reminder.mp3"></audio>
 
@@ -161,10 +188,6 @@
     floorBtn.disabled = true;
     startBtn.title = "Only accessible to authorized users";
     floorBtn.title = "Only accessible to authorized users";
-  } else {
-    startBtn.disabled = false;
-    traderLabBtn.disabled = false;
-    floorBtn.disabled = false;
   }
 
   traderLabBtn.addEventListener('click', () => alert("Opening TraderLab..."));
