@@ -1,120 +1,28 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>QuantumTrader AI — CPilot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="core/css/main.css" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
   <style>
-    :root {
-      --qt-primary: #1f7f8c;        /* Aquamarine */
-      --qt-primary-hover: #165f69;
-
-      --qt-secondary: #0b3442;      /* Navy blue */
-      --qt-secondary-hover: #07262f;
-
-      --qt-neutral: #e7f2f4;
-      --qt-neutral-text: #102a33;
-
-      --qt-locked-bg: #f1f4f6;
-      --qt-locked-text: #9aa6ad;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #f7fbfc;
-      color: #102a33;
-    }
-
-    header {
-      padding: 1.5rem;
-      background: var(--qt-secondary);
-      color: #ffffff;
-      text-align: center;
-    }
-
-    main {
-      padding: 2rem;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    .section h2 {
-      margin-top: 0;
-      color: var(--qt-secondary);
-    }
-
-    button {
-      padding: 0.8rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      margin: 0.5rem 0;
-      width: 100%;
-    }
-
-    .btn-primary {
-      background-color: var(--qt-primary);
-      color: #ffffff;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--qt-primary-hover);
-    }
-
-    .btn-secondary {
-      background-color: var(--qt-secondary);
-      color: #ffffff;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--qt-secondary-hover);
-    }
-
-    .btn-locked,
-    button:disabled {
-      background-color: var(--qt-locked-bg);
-      color: var(--qt-locked-text);
-      cursor: not-allowed;
-    }
-
-    .panel {
-      padding: 1rem;
-      background: var(--qt-neutral);
-      border-radius: 4px;
-    }
-
-    /* Ori Ologo */
-    #ori-ologo-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 110px;
-      opacity: 0.85;
-      z-index: 999;
-    }
-
-    #ori-ologo-container img {
-      width: 100%;
-      border-radius: 50%;
-    }
+    :root{--qt-primary:#1f7f8c;--qt-primary-hover:#165f69;--qt-secondary:#0b3442;--qt-secondary-hover:#07262f;--qt-neutral:#e7f2f4;--qt-neutral-text:#102a33;--qt-locked-bg:#f1f4f6;--qt-locked-text:#9aa6ad;}
+    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+    main{padding:2rem;max-width:1100px;margin:auto;}
+    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .section h2{margin-top:0;color:var(--qt-secondary);}
+    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
+    .btn-primary{background:var(--qt-primary);color:#fff;}
+    .btn-primary:hover{background:var(--qt-primary-hover);}
+    .btn-secondary{background:var(--qt-secondary);color:#fff;}
+    .btn-secondary:hover{background:var(--qt-secondary-hover);}
+    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;}
+    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+    #ori-ologo-container img{width:100%;border-radius:50%;}
   </style>
 </head>
-
 <body>
 
 <header>
@@ -123,24 +31,15 @@
 </header>
 
 <main>
-
-  <!-- Ori Ologo -->
   <div id="ori-ologo-container">
-    <img
-      src="assets/images/qtai_ori_olokun.png"
-      alt="Ori Ologo — Silent Guide"
-    />
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
 
-  <!-- Access Verification -->
   <section class="section" id="access-gate">
     <h2>Access Status</h2>
-    <p id="access-message">
-      Verifying TraderLab completion and subscription status…
-    </p>
+    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
   </section>
 
-  <!-- Wallet Snapshot -->
   <section class="section">
     <h2>Wallet Snapshot</h2>
     <div class="panel">
@@ -149,24 +48,14 @@
     </div>
   </section>
 
-  <!-- CPilot Controls -->
   <section class="section">
     <h2>CPilot Controls</h2>
-    <button class="btn-primary" id="start-autotrade-btn" disabled>
-      Start Auto Trading
-    </button>
-    <button class="btn-secondary" id="stop-autotrade-btn" disabled>
-      Stop Auto Trading
-    </button>
-    <button class="btn-secondary" id="strategy-settings-btn">
-      Strategy Settings
-    </button>
-    <button class="btn-secondary" id="trade-report-btn">
-      Trade Report
-    </button>
+    <button class="btn-primary" id="start-autotrade-btn" disabled>Start Auto Trading</button>
+    <button class="btn-secondary" id="stop-autotrade-btn" disabled>Stop Auto Trading</button>
+    <button class="btn-secondary" id="strategy-settings-btn">Strategy Settings</button>
+    <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
   </section>
 
-  <!-- Simulation Monitor -->
   <section class="section">
     <h2>Simulation Monitor</h2>
     <div class="panel">
@@ -174,13 +63,12 @@
       <p>No real trading occurs unless explicitly authorized.</p>
     </div>
   </section>
-
 </main>
 
-<!-- Core Logic -->
 <script src="core/js/state.js"></script>
 <script src="core/js/wallet.js"></script>
 <script src="core/js/cpilot.js"></script>
+<script src="core/js/ori_ologo.js"></script>
 
 </body>
 </html>
