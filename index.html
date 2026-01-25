@@ -1,225 +1,189 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Trader AI - Home</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  /* Peace Index Logo */
-  .peace-logo img {
-    height: 50px;
-    width: auto;
-    margin: 20px auto 10px auto;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-  }
-  .peace-logo img:hover {
-    transform: scale(1.05);
-  }
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="core/css/main.css" />
 
-  /* Globe */
-  .globe-container {
-    width: 400px;
-    height: 400px;
-    margin: 10px auto;
-  }
-  #globe {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+  <!-- QT Calm Palette -->
+  <style>
+    :root {
+      --qt-primary: #1f7f8c;        /* Aquamarine */
+      --qt-primary-hover: #165f69;
 
-  /* Trader Instructions */
-  .instructions {
-    margin: 20px auto;
-    font-size: 18px;
-    color: #333;
-    max-width: 600px;
-    line-height: 1.5;
-  }
+      --qt-secondary: #0b3442;      /* Navy blue */
+      --qt-secondary-hover: #07262f;
 
-  /* Buttons */
-  .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin: 15px auto;
-  }
-  .button-group button {
-    padding: 12px 25px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: none;
-    color: white;
-    transition: transform 0.2s;
-  }
-  .button-group button:hover:not(:disabled) {
-    transform: scale(1.05);
-  }
-  .start { background-color: #4CAF50; }
-  .traderlab { background-color: #2196F3; }
-  .floor { background-color: #FF9800; }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
+      --qt-neutral: #e7f2f4;
+      --qt-neutral-text: #102a33;
 
-  /* Ori Ologo Footer */
-  footer {
-    margin-top: auto;
-    padding: 20px 0;
-    position: relative;
-  }
-  .vignette {
-    background: radial-gradient(circle at center, #3a6ea5 0%, #1a2a4f 60%, #4b0f5b 100%);
-    border-radius: 50%;
-    width: 220px;
-    height: 220px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    box-shadow: 0 0 30px rgba(0,0,0,0.3);
-    animation: vignettePulse 10s infinite alternate;
-    position: relative;
-  }
+      --qt-locked-bg: #f1f4f6;
+      --qt-locked-text: #9aa6ad;
+    }
 
-  @keyframes vignettePulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-  }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f7fbfc;
+      color: #102a33;
+      text-align: center;
+    }
 
-  .ori-ologo {
-    height: 140px;
-    width: auto;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    animation: pulse 2s infinite;
-    cursor: pointer;
-  }
+    header {
+      padding: 2rem 1rem 1rem;
+      background: var(--qt-secondary);
+      color: #ffffff;
+    }
 
-  @keyframes pulse {
-    0% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
-    50% { box-shadow: 0 0 18px rgba(255,215,0,0.7); }
-    100% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
-  }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
 
-  /* Voice Blob */
-  #voiceBlob {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #FFD700;
-    opacity: 0;
-    box-shadow: 0 0 12px rgba(255,215,0,0.7);
-    pointer-events: none;
-  }
+    header p {
+      margin-top: 0.5rem;
+      opacity: 0.9;
+    }
 
-  @media (max-width: 600px) {
-    .instructions { font-size: 16px; }
-    .globe-container { width: 300px; height: 300px; }
-    .vignette { width: 180px; height: 180px; }
-  }
-</style>
+    main {
+      padding: 2rem 1rem 3rem;
+      max-width: 960px;
+      margin: auto;
+    }
+
+    /* Peace Index */
+    .peace-index {
+      margin: 2.5rem auto;
+      max-width: 320px; /* not tiny, not dominant */
+      opacity: 0.95;
+    }
+
+    .peace-index img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    /* Buttons */
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    button {
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--qt-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--qt-primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--qt-secondary);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--qt-secondary-hover);
+    }
+
+    .btn-locked,
+    button:disabled {
+      background-color: var(--qt-locked-bg);
+      color: var(--qt-locked-text);
+      cursor: not-allowed;
+    }
+
+    /* Ori Ologo */
+    #ori-ologo-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 110px;
+      opacity: 0.85;
+      z-index: 999;
+    }
+
+    #ori-ologo-container img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Peace Index Logo -->
-<div class="peace-logo">
-  <a href="https://www.peaceindex.org" target="_blank" rel="noopener">
-    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo">
-  </a>
-</div>
+<header>
+  <h1>QuantumTrader AI</h1>
+  <p>Calm Intelligence for Serious Trading</p>
+</header>
 
-<!-- Globe -->
-<div class="globe-container">
-  <img src="assets/images/qtai_globe.png" alt="Globe" id="globe">
-</div>
+<main>
 
-<!-- Trader Guidance -->
-<div class="instructions">
-  <strong>Trader Guidance:</strong> Focus on regional peace indexes to analyze trends and insights. Use Ori Ologo below for hints or clarifications while navigating the content.
-</div>
-
-<!-- Buttons -->
-<div class="button-group">
-  <button id="startTraining" class="start">Start Training</button>
-  <button id="traderLab" class="traderlab">Open TraderLab</button>
-  <button id="tradingFloor" class="floor">Access Trading Floor</button>
-</div>
-
-<!-- Footer with Ori Ologo -->
-<footer>
-  <div class="vignette" id="oriOlogoContainer">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo AI Assistant" class="ori-ologo" id="oriOlogo">
-    <div id="voiceBlob"></div>
+  <!-- Peace Index -->
+  <div class="peace-index">
+    <img
+      src="assets/images/qtai_peace_index.png"
+      alt="Peace Index"
+    />
   </div>
-</footer>
 
-<!-- Voice sample -->
-<audio id="oriGreeting" src="assets/audio/your_voice_greeting.mp3"></audio>
-<audio id="oriReminder" src="assets/audio/your_voice_reminder.mp3"></audio>
+  <!-- Primary Actions -->
+  <div class="actions">
+    <button class="btn-primary" id="enter-traderlab-btn">
+      Enter TraderLab
+    </button>
 
-<script>
-  // Role: admin = you, visitor = general users
-  const userRole = "visitor"; // change to "admin" for full access
-  const startBtn = document.getElementById('startTraining');
-  const traderLabBtn = document.getElementById('traderLab');
-  const floorBtn = document.getElementById('tradingFloor');
+    <button class="btn-secondary" id="fund-wallet-btn">
+      Fund Wallet
+    </button>
 
-  if (userRole === "visitor") {
-    startBtn.disabled = true;
-    floorBtn.disabled = true;
-    startBtn.title = "Only accessible to authorized users";
-    floorBtn.title = "Only accessible to authorized users";
-  }
+    <button class="btn-locked" disabled>
+      Trading Floor (Locked)
+    </button>
 
-  traderLabBtn.addEventListener('click', () => alert("Opening TraderLab..."));
-  startBtn.addEventListener('click', () => { if(!startBtn.disabled) alert("Starting training..."); });
-  floorBtn.addEventListener('click', () => { if(!floorBtn.disabled) alert("Accessing Trading Floor..."); });
+    <button class="btn-locked" disabled>
+      CPilot (Locked)
+    </button>
 
-  // Ori Ologo speech with voice blob
-  const oriOlogo = document.getElementById('oriOlogo');
-  const voiceBlob = document.getElementById('voiceBlob');
-  const greetingAudio = document.getElementById('oriGreeting');
-  const reminderAudio = document.getElementById('oriReminder');
+    <button class="btn-secondary" id="games-btn">
+      Games Pavilion
+    </button>
 
-  function playAudio(audioEl) {
-    voiceBlob.style.opacity = 1;
-    let pulseInterval = setInterval(() => {
-      voiceBlob.style.transform = `translateX(-50%) scale(${1 + Math.random()*0.3})`;
-    }, 200);
+    <button class="btn-secondary" id="reset-wallet-btn">
+      Reset Wallet
+    </button>
+  </div>
 
-    audioEl.play();
-    audioEl.onended = () => {
-      clearInterval(pulseInterval);
-      voiceBlob.style.opacity = 0;
-      voiceBlob.style.transform = 'translateX(-50%) scale(1)';
-    };
-  }
+</main>
 
-  // Auto greeting on load
-  window.addEventListener('load', () => playAudio(greetingAudio));
+<!-- Ori Ologo Presence -->
+<div id="ori-ologo-container">
+  <img
+    src="assets/images/qtai_ori_olokun.png"
+    alt="Ori Ologo — Silent Guide"
+  />
+</div>
 
-  // Click Ori Ologo to replay guidance
-  oriOlogo.addEventListener('click', () => playAudio(reminderAudio));
-</script>
+<!-- Core Logic -->
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/index.js"></script>
 
 </body>
 </html>
