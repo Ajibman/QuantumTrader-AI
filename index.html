@@ -1,190 +1,62 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>QuantumTrader AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="core/css/main.css" />
-
-  <!-- QT Calm Palette -->
-  <style>
-    :root {
-      --qt-primary: #1f7f8c;        /* Aquamarine */
-      --qt-primary-hover: #165f69;
-
-      --qt-secondary: #0b3442;      /* Navy blue */
-      --qt-secondary-hover: #07262f;
-
-      --qt-neutral: #e7f2f4;
-      --qt-neutral-text: #102a33;
-
-      --qt-locked-bg: #f1f4f6;
-      --qt-locked-text: #9aa6ad;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #f7fbfc;
-      color: #102a33;
-      text-align: center;
-    }
-
-    header {
-      padding: 2rem 1rem 1rem;
-      background: var(--qt-secondary);
-      color: #ffffff;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    header p {
-      margin-top: 0.5rem;
-      opacity: 0.9;
-    }
-
-    main {
-      padding: 2rem 1rem 3rem;
-      max-width: 960px;
-      margin: auto;
-    }
-
-    /* Peace Index */
-    .peace-index {
-      margin: 2.5rem auto;
-      max-width: 320px; /* not tiny, not dominant */
-      opacity: 0.95;
-    }
-
-    .peace-index img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
-
-    /* Buttons */
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2.5rem;
-    }
-
-    button {
-      padding: 0.9rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .btn-primary {
-      background-color: var(--qt-primary);
-      color: #ffffff;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--qt-primary-hover);
-    }
-
-    .btn-secondary {
-      background-color: var(--qt-secondary);
-      color: #ffffff;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--qt-secondary-hover);
-    }
-
-    .btn-locked,
-    button:disabled {
-      background-color: var(--qt-locked-bg);
-      color: var(--qt-locked-text);
-      cursor: not-allowed;
-    }
-
-    /* Ori Ologo */
-    #ori-ologo-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 110px;
-      opacity: 0.85;
-      z-index: 999;
-    }
-
-    #ori-ologo-container img {
-      width: 100%;
-      border-radius: 50%;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<title>QuantumTrader AI — Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="core/css/main.css"/>
+<style>
+  :root{
+    --qt-primary:#1f7f8c;
+    --qt-primary-hover:#165f69;
+    --qt-secondary:#0b3442;
+    --qt-secondary-hover:#07262f;
+    --qt-neutral:#e7f2f4;
+    --qt-neutral-text:#102a33;
+  }
+  body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+  header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+  main{padding:2rem;max-width:1100px;margin:auto;}
+  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;}
+  #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+  #ori-ologo-container img{width:100%;border-radius:50%;}
+</style>
 </head>
-
 <body>
 
 <header>
   <h1>QuantumTrader AI</h1>
-  <p>Calm Intelligence for Serious Trading</p>
-  <p>Peace before Profits</p>
+  <p>Dashboard & Overview</p>
 </header>
 
 <main>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
+  </div>
+
+  <!-- Wallet Snapshot -->
+  <section class="panel">
+    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+    <p>Status: <span id="wallet-status">Active</span></p>
+  </section>
 
   <!-- Peace Index -->
-  <div class="peace-index">
-    <img
-      src="assets/images/peace_index_logo.png"
-      alt="Peace Index"
-    />
-  </div>
+  <section class="panel">
+    <img src="assets/images/peace_index_logo.png" alt="QT Peace Index" style="width:150px;"/>
+  </section>
 
-  <!-- Primary Actions -->
-  <div class="actions">
-    <button class="btn-primary" id="enter-traderlab-btn">
-      Enter TraderLab
-    </button>
-
-    <button class="btn-secondary" id="fund-wallet-btn">
-      Fund Wallet
-    </button>
-
-    <button class="btn-locked" disabled>
-      Trading Floor (Locked)
-    </button>
-
-    <button class="btn-locked" disabled>
-      CPilot (Locked)
-    </button>
-
-    <button class="btn-secondary" id="games-btn">
-      Games Pavilion
-    </button>
-
-    <button class="btn-secondary" id="reset-wallet-btn">
-      Reset Wallet
-    </button>
-  </div>
-
+  <!-- Navigation buttons -->
+  <section class="panel">
+    <button onclick="location.href='traderlab.html'">Go to TraderLab</button>
+    <button onclick="location.href='cpilot.html'">Go to CPilot</button>
+    <button onclick="location.href='tradingfloor.html'">Go to TradingFloor</button>
+  </section>
 </main>
 
-<!-- Ori Ologo Presence -->
-<div id="ori-ologo-container">
-  <img
-    src="assets/images/qtai_ori_olokun.png"
-    alt="Ori Ologo — Silent Guide"
-  />
-</div>
-
-<!-- Core Logic -->
 <script src="core/js/state.js"></script>
 <script src="core/js/wallet.js"></script>
-<script src="core/js/index.js"></script>
+<script src="core/js/ori_ologo.js"></script>
 
 </body>
 </html>
