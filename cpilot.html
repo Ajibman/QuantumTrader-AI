@@ -1,225 +1,186 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QuantumTrader AI™ — CPilot</title>
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI — CPilot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root {
-  --bg: #050b1f;
-  --card: #0b1736;
-  --panel: #0e1f44;
-  --accent: #7cf3ff;
-  --text: #ffffff;
-  --notice: #ffcc66;
-  --success: #0aff7c;
-  --error: #ff3b3b;
-}
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="core/css/main.css" />
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  <style>
+    :root {
+      --qt-primary: #1f7f8c;        /* Aquamarine */
+      --qt-primary-hover: #165f69;
 
-header {
-  padding: 1.2rem 2rem;
-  background: var(--card);
-}
+      --qt-secondary: #0b3442;      /* Navy blue */
+      --qt-secondary-hover: #07262f;
 
-main {
-  flex: 1;
-  padding: 2rem;
-  max-width: 1000px;
-  margin: auto;
-}
+      --qt-neutral: #e7f2f4;
+      --qt-neutral-text: #102a33;
 
-.panel {
-  background: var(--panel);
-  border-radius: 1rem;
-  padding: 1.4rem;
-  margin-bottom: 1.6rem;
-}
+      --qt-locked-bg: #f1f4f6;
+      --qt-locked-text: #9aa6ad;
+    }
 
-h2 { color: var(--accent); }
-.notice { color: var(--notice); font-size: 0.9rem; }
-.status { font-weight: 600; margin-top: 0.5rem; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f7fbfc;
+      color: #102a33;
+    }
 
-button {
-  padding: 0.7rem 1.4rem;
-  border-radius: 0.7rem;
-  border: none;
-  background: var(--accent);
-  color: #001018;
-  font-weight: 600;
-  cursor: pointer;
-}
+    header {
+      padding: 1.5rem;
+      background: var(--qt-secondary);
+      color: #ffffff;
+      text-align: center;
+    }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    main {
+      padding: 2rem;
+      max-width: 1100px;
+      margin: auto;
+    }
 
-.radio-group label {
-  display: block;
-  margin: 6px 0;
-}
+    .section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-</style>
+    .section h2 {
+      margin-top: 0;
+      color: var(--qt-secondary);
+    }
+
+    button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--qt-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--qt-primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--qt-secondary);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--qt-secondary-hover);
+    }
+
+    .btn-locked,
+    button:disabled {
+      background-color: var(--qt-locked-bg);
+      color: var(--qt-locked-text);
+      cursor: not-allowed;
+    }
+
+    .panel {
+      padding: 1rem;
+      background: var(--qt-neutral);
+      border-radius: 4px;
+    }
+
+    /* Ori Ologo */
+    #ori-ologo-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 110px;
+      opacity: 0.85;
+      z-index: 999;
+    }
+
+    #ori-ologo-container img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>CPilot — AutoTrader</h1>
-  <p class="notice">Time-cycle execution under Ori Ologo guidance</p>
+  <h1>CPilot</h1>
+  <p>Automated Trading Simulation — Access Controlled</p>
 </header>
 
 <main>
 
-  <!-- Wallet -->
-  <div class="panel">
-    <h2>Wallet</h2>
-    <p>
-      Available Balance:
-      <strong>₦<span id="walletBalance">0.00</span></strong>
-    </p>
-  </div>
-
-  <!-- Capital -->
-  <div class="panel">
-    <h2>Trading Capital</h2>
-    <p class="notice">
-      Capital remains intact. Profits accrue to wallet.
-    </p>
-    <input
-      type="number"
-      id="capitalInput"
-      min="10000"
-      step="1000"
-      placeholder="Enter amount (min ₦10,000)"
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img
+      src="assets/images/qtai_ori_olokun.png"
+      alt="Ori Ologo — Silent Guide"
     />
   </div>
 
-  <!-- Interval -->
-  <div class="panel">
-    <h2>AutoTrader Cycle</h2>
-    <div class="radio-group">
-      <label><input type="radio" name="interval" value="15"> 15 seconds</label>
-      <label><input type="radio" name="interval" value="30"> 30 seconds</label>
-      <label><input type="radio" name="interval" value="60"> 60 seconds</label>
-      <label><input type="radio" name="interval" value="120"> 120 seconds</label>
-      <label><input type="radio" name="interval" value="300"> 300 seconds</label>
-      <label><input type="radio" name="interval" value="600"> 10 minutes</label>
-      <label><input type="radio" name="interval" value="1800"> 30 minutes</label>
-      <label><input type="radio" name="interval" value="3600"> 1 hour</label>
-      <label><input type="radio" name="interval" value="86400"> 24 hours</label>
-    </div>
-  </div>
+  <!-- Access Verification -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">
+      Verifying TraderLab completion and subscription status…
+    </p>
+  </section>
 
-  <!-- Control -->
-  <div class="panel">
-    <h2>Control</h2>
-    <p id="status" class="status">CPilot idle.</p>
-    <button id="startBtn">Start AutoTrader</button>
-    <button id="stopBtn" disabled>Stop AutoTrader</button>
-  </div>
+  <!-- Wallet Snapshot -->
+  <section class="section">
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
+
+  <!-- CPilot Controls -->
+  <section class="section">
+    <h2>CPilot Controls</h2>
+    <button class="btn-primary" id="start-autotrade-btn" disabled>
+      Start Auto Trading
+    </button>
+    <button class="btn-secondary" id="stop-autotrade-btn" disabled>
+      Stop Auto Trading
+    </button>
+    <button class="btn-secondary" id="strategy-settings-btn">
+      Strategy Settings
+    </button>
+    <button class="btn-secondary" id="trade-report-btn">
+      Trade Report
+    </button>
+  </section>
+
+  <!-- Simulation Monitor -->
+  <section class="section">
+    <h2>Simulation Monitor</h2>
+    <div class="panel">
+      <p>Live simulation data will appear here once Auto Trading is activated.</p>
+      <p>No real trading occurs unless explicitly authorized.</p>
+    </div>
+  </section>
 
 </main>
 
-<footer>
-© 2026 QuantumTrader AI™ — CPilot
-</footer>
-
-<!-- ✅ WALLET UTILITY -->
-<script src="core/js/utils/wallet.js"></script>
-
-<script>
-/* ============================
-   CPILOT — PHASE 2
-   Wallet is external authority
-============================ */
-
-const MIN_CAPITAL = 10000;
-let autoTimer = null;
-
-const walletBalanceEl = document.getElementById("walletBalance");
-const statusEl = document.getElementById("status");
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-
-function refreshWallet() {
-  const wallet = Wallet.get();
-  walletBalanceEl.textContent = wallet.balance.toFixed(2);
-}
-
-function startAutoTrader() {
-  const wallet = Wallet.get();
-  const capital = Number(document.getElementById("capitalInput").value);
-  const interval =
-    document.querySelector("input[name='interval']:checked")?.value;
-
-  if (!wallet || wallet.balance <= 0) {
-    alert("Wallet not funded.");
-    return;
-  }
-
-  if (capital < MIN_CAPITAL || capital > wallet.balance) {
-    alert("Invalid trading capital.");
-    return;
-  }
-
-  if (!interval) {
-    alert("Select an AutoTrader cycle.");
-    return;
-  }
-
-  statusEl.textContent =
-    `AutoTrader running every ${interval}s under Ori Ologo guidance.`;
-
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
-
-  autoTimer = setInterval(() => {
-    const profit = Math.random() * (capital * 0.03);
-
-    Wallet.credit(profit, {
-      source: "CPilot",
-      type: "autoTrade",
-      capital,
-      profit,
-      interval
-    });
-
-    refreshWallet();
-  }, interval * 1000);
-}
-
-function stopAutoTrader() {
-  clearInterval(autoTimer);
-  autoTimer = null;
-
-  statusEl.textContent = "AutoTrader stopped. Wallet preserved.";
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
-}
-
-startBtn.onclick = startAutoTrader;
-stopBtn.onclick = stopAutoTrader;
-
-refreshWallet();
-</script>
+<!-- Core Logic -->
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/cpilot.js"></script>
 
 </body>
 </html>
