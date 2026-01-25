@@ -1,200 +1,143 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>QuantumTrader AI — Trading Floor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="core/css/main.css" />
-
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — TradingFloor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
   <style>
-    :root {
-      --qt-primary: #1f7f8c;        /* Aquamarine */
-      --qt-primary-hover: #165f69;
-
-      --qt-secondary: #0b3442;      /* Navy blue */
-      --qt-secondary-hover: #07262f;
-
-      --qt-neutral: #e7f2f4;
-      --qt-neutral-text: #102a33;
-
-      --qt-locked-bg: #f1f4f6;
-      --qt-locked-text: #9aa6ad;
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-primary-hover:#165f69;
+      --qt-secondary:#0b3442;
+      --qt-secondary-hover:#07262f;
+      --qt-neutral:#e7f2f4;
+      --qt-neutral-text:#102a33;
+      --qt-locked-bg:#f1f4f6;
+      --qt-locked-text:#9aa6ad;
     }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #f7fbfc;
-      color: #102a33;
+    body{
+      margin:0;
+      font-family:system-ui,sans-serif;
+      background:#f7fbfc;
+      color:#102a33;
     }
-
-    header {
-      padding: 1.5rem;
-      background: var(--qt-secondary);
-      color: #ffffff;
-      text-align: center;
+    header{
+      padding:1.5rem;
+      background:var(--qt-secondary);
+      color:#fff;
+      text-align:center;
     }
-
-    main {
-      padding: 2rem;
-      max-width: 1100px;
-      margin: auto;
+    main{
+      padding:2rem;
+      max-width:1200px;
+      margin:auto;
     }
-
-    .section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    .section{
+      margin-bottom:2rem;
+      padding:1.5rem;
+      background:#fff;
+      border-radius:6px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05);
     }
-
-    .section h2 {
-      margin-top: 0;
-      color: var(--qt-secondary);
+    .section h2{
+      margin-top:0;
+      color:var(--qt-secondary);
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.2rem;
+    .panel{
+      padding:1rem;
+      background:var(--qt-neutral);
+      border-radius:4px;
     }
-
-    button {
-      padding: 0.8rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
+    #ori-ologo-container{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:110px;
+      opacity:.85;
+      z-index:999;
     }
-
-    .btn-primary {
-      background-color: var(--qt-primary);
-      color: #ffffff;
+    #ori-ologo-container img{
+      width:100%;
+      border-radius:50%;
     }
-
-    .btn-primary:hover {
-      background-color: var(--qt-primary-hover);
+    .status-item{
+      margin:0.5rem 0;
+      font-weight:500;
     }
-
-    .btn-secondary {
-      background-color: var(--qt-secondary);
-      color: #ffffff;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--qt-secondary-hover);
-    }
-
-    .btn-locked,
-    button:disabled {
-      background-color: var(--qt-locked-bg);
-      color: var(--qt-locked-text);
-      cursor: not-allowed;
-    }
-
-    /* Trade panels */
-    .panel {
-      padding: 1rem;
-      background: var(--qt-neutral);
-      border-radius: 4px;
-    }
-
-    .panel p {
-      margin: 0.4rem 0;
-    }
-
-    /* Ori Ologo */
-    #ori-ologo-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 110px;
-      opacity: 0.85;
-      z-index: 999;
-    }
-
-    #ori-ologo-container img {
-      width: 100%;
-      border-radius: 50%;
+    .live-feed{
+      max-height:400px;
+      overflow-y:auto;
+      font-size:0.95rem;
+      line-height:1.4rem;
     }
   </style>
 </head>
-
 <body>
 
 <header>
-  <h1>Trading Floor</h1>
-  <p>Live Trading Environment — Access Controlled</p>
+  <h1>TradingFloor</h1>
+  <p>Live Simulation & Monitoring Hub</p>
 </header>
 
 <main>
-
   <!-- Ori Ologo -->
   <div id="ori-ologo-container">
-    <img
-      src="assets/images/qtai_ori_olokun.png"
-      alt="Ori Ologo — Silent Observer"
-    />
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
 
-  <!-- Access Gate -->
+  <!-- Access Status -->
   <section class="section" id="access-gate">
     <h2>Access Status</h2>
-    <p id="access-message">
-      Verifying TraderLab completion and subscription status…
-    </p>
+    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
   </section>
 
   <!-- Wallet Snapshot -->
   <section class="section">
     <h2>Wallet Snapshot</h2>
     <div class="panel">
-      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
-      <p>Status: <span id="wallet-status">Active</span></p>
+      <p class="status-item">Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p class="status-item">Status: <span id="wallet-status">Active</span></p>
     </div>
   </section>
 
-  <!-- Trading Controls -->
+  <!-- AutoTrader Summary -->
   <section class="section">
-    <h2>Trading Controls</h2>
-    <div class="grid">
-      <button class="btn-primary" id="manual-trade-btn" disabled>
-        Manual Trading
-      </button>
-
-      <button class="btn-secondary" id="autotrade-btn" disabled>
-        Auto Trading
-      </button>
-
-      <button class="btn-secondary" id="risk-settings-btn">
-        Risk Settings
-      </button>
-
-      <button class="btn-secondary" id="trade-history-btn">
-        Trade History
-      </button>
-    </div>
-  </section>
-
-  <!-- Market Monitor -->
-  <section class="section">
-    <h2>Market Monitor</h2>
+    <h2>AutoTrader Status</h2>
     <div class="panel">
-      <p>Market feeds will appear here once trading is enabled.</p>
-      <p>No execution occurs without explicit authorization.</p>
+      <p class="status-item">Current Mode: <span id="trademode">Manual</span></p>
+      <p class="status-item">Take-Profit Timing: <span id="tp-timing">15s</span></p>
+    </div>
+  </section>
+
+  <!-- Live Simulation Feed -->
+  <section class="section">
+    <h2>Live Simulation Feed</h2>
+    <div class="panel live-feed" id="simulation-feed">
+      <p>No simulation running yet. Activate AutoTrader in CPilot to see live data.</p>
     </div>
   </section>
 
 </main>
 
-<!-- Core Logic -->
 <script src="core/js/state.js"></script>
 <script src="core/js/wallet.js"></script>
-<script src="core/js/tradingfloor.js"></script>
+<script src="core/js/cpilot.js"></script>
+<script src="core/js/ori_ologo.js"></script>
+<script>
+  // Example: Updating TradingFloor display from CPilot selections
+  function updateTradingFloorStatus(mode, timing) {
+    document.getElementById('trademode').textContent = mode;
+    document.getElementById('tp-timing').textContent = timing;
+    const feed = document.getElementById('simulation-feed');
+    feed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] AutoTrader mode set to ${mode} with TP ${timing}</p>`;
+    feed.scrollTop = feed.scrollHeight;
+  }
+
+  // This can be called from CPilot JS when settings change
+  // Example:
+  // updateTradingFloorStatus('Auto', '30s');
+</script>
 
 </body>
 </html>
