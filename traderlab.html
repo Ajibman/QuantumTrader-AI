@@ -1,157 +1,62 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title>QuantumTrader AI — TradingFloor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="core/css/main.css"/>
-  <style>
-    :root{
-      --qt-primary:#1f7f8c;
-      --qt-primary-hover:#165f69;
-      --qt-secondary:#0b3442;
-      --qt-secondary-hover:#07262f;
-      --qt-neutral:#e7f2f4;
-      --qt-neutral-text:#102a33;
-      --qt-locked-bg:#f1f4f6;
-      --qt-locked-text:#9aa6ad;
-    }
-    body{
-      margin:0;
-      font-family:system-ui,sans-serif;
-      background:#f7fbfc;
-      color:#102a33;
-    }
-    header{
-      padding:1.5rem;
-      background:var(--qt-secondary);
-      color:#fff;
-      text-align:center;
-    }
-    main{
-      padding:2rem;
-      max-width:1200px;
-      margin:auto;
-    }
-    .section{
-      margin-bottom:2rem;
-      padding:1.5rem;
-      background:#fff;
-      border-radius:6px;
-      box-shadow:0 2px 6px rgba(0,0,0,.05);
-    }
-    .section h2{
-      margin-top:0;
-      color:var(--qt-secondary);
-    }
-    .panel{
-      padding:1rem;
-      background:var(--qt-neutral);
-      border-radius:4px;
-    }
-    #ori-ologo-container{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      width:110px;
-      opacity:.85;
-      z-index:999;
-    }
-    #ori-ologo-container img{
-      width:100%;
-      border-radius:50%;
-    }
-    .status-item{
-      margin:0.5rem 0;
-      font-weight:500;
-    }
-    .live-feed{
-      max-height:400px;
-      overflow-y:auto;
-      font-size:0.95rem;
-      line-height:1.4rem;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<title>QuantumTrader AI — TraderLab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="core/css/main.css"/>
+<style>
+  :root{
+    --qt-primary:#1f7f8c;
+    --qt-primary-hover:#165f69;
+    --qt-secondary:#0b3442;
+    --qt-secondary-hover:#07262f;
+    --qt-neutral:#e7f2f4;
+    --qt-neutral-text:#102a33;
+  }
+  body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+  header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+  main{padding:2rem;max-width:1100px;margin:auto;}
+  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;}
+  #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+  #ori-ologo-container img{width:100%;border-radius:50%;}
+  button{padding:.8rem 1.2rem;margin:.5rem 0;width:100%;}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>TradingFloor</h1>
-  <p>Live Simulation & Monitoring Hub</p>
+  <h1>TraderLab</h1>
+  <p>Training & Assessment</p>
 </header>
 
 <main>
   <!-- Ori Ologo -->
   <div id="ori-ologo-container">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
   </div>
 
-  <!-- Access Status -->
-  <section class="section" id="access-gate">
-    <h2>Access Status</h2>
-    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
+  <!-- Wallet -->
+  <section class="panel">
+    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+    <p>Status: <span id="wallet-status">Active</span></p>
+    <button id="reset-wallet-btn">Reset Wallet</button>
   </section>
 
-  <!-- Wallet Snapshot -->
-  <section class="section">
-    <h2>Wallet Snapshot</h2>
-    <div class="panel">
-      <p class="status-item">Balance: <strong id="wallet-balance">₦0.00</strong></p>
-      <p class="status-item">Status: <span id="wallet-status">Active</span></p>
-    </div>
+  <!-- Assessment -->
+  <section class="panel">
+    <p id="assessment-feedback">Complete tasks to see your score.</p>
   </section>
 
-  <!-- AutoTrader Summary -->
-  <section class="section">
-    <h2>AutoTrader Status</h2>
-    <div class="panel">
-      <p class="status-item">Current Mode: <span id="trademode">Manual</span></p>
-      <p class="status-item">Take-Profit Timing: <span id="tp-timing">15s</span></p>
-    </div>
+  <!-- Hints / Help -->
+  <section class="panel">
+    <button id="request-hint-btn">Request Hint</button>
   </section>
-
-  <!-- Live Simulation Feed -->
-  <section class="section">
-    <h2>Live Simulation Feed</h2>
-    <div class="panel live-feed" id="simulation-feed">
-      <p>No simulation running yet. Activate AutoTrader in CPilot to see live data.</p>
-    </div>
-  </section>
-
 </main>
 
 <script src="core/js/state.js"></script>
 <script src="core/js/wallet.js"></script>
-<script src="core/js/cpilot.js"></script>
 <script src="core/js/ori_ologo.js"></script>
-<script>
-  // --- TradingFloor Real-Time Wiring ---
-
-  const tradeModeEl = document.getElementById('trademode');
-  const tpTimingEl = document.getElementById('tp-timing');
-  const simulationFeed = document.getElementById('simulation-feed');
-
-  // Refresh display from shared state
-  function refreshTradingFloor() {
-    const mode = state.currentTradeMode || 'Manual';
-    const timing = state.currentTpTiming || '15s';
-
-    // Only update if changed to reduce flicker
-    if(tradeModeEl.textContent !== mode) tradeModeEl.textContent = mode;
-    if(tpTimingEl.textContent !== timing) tpTimingEl.textContent = timing;
-
-    // Add a live feed log
-    simulationFeed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] Mode: ${mode}, TP: ${timing}</p>`;
-    simulationFeed.scrollTop = simulationFeed.scrollHeight;
-  }
-
-  // Poll every 1 second
-  setInterval(refreshTradingFloor, 1000);
-
-  // Example: CPilot would update state like this
-  // state.currentTradeMode = 'Auto';
-  // state.currentTpTiming = '30s';
-</script>
 
 </body>
 </html>
