@@ -1,158 +1,202 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumTrader AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Trader AI - Home</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #050b1f;
-      color: #ffffff;
-      text-align: center;
-    }
+  /* Peace Index Logo */
+  .peace-logo img {
+    height: 50px;
+    width: auto;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  .peace-logo img:hover {
+    transform: scale(1.05);
+  }
 
-    header {
-      padding: 24px 12px;
-    }
+  /* Ori Ologo Vignette */
+  .vignette {
+    background: radial-gradient(circle at center, #3a6ea5 0%, #1a2a4f 60%, #4b0f5b 100%);
+    border-radius: 50%;
+    width: 220px;
+    height: 220px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    position: relative;
+    animation: vignettePulse 10s infinite alternate;
+  }
 
-    h1 {
-      margin-bottom: 6px;
-    }
+  @keyframes vignettePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
 
-    .subtitle {
-      color: #7cf3ff;
-      font-size: 14px;
-    }
+  .ori-ologo {
+    height: 140px;
+    width: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
+    cursor: pointer;
+  }
 
-    .btn {
-      padding: 12px 20px;
-      margin: 8px;
-      border-radius: 8px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
+    50% { box-shadow: 0 0 18px rgba(255,215,0,0.7); }
+    100% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
+  }
 
-    .btn-primary {
-      background: #7cf3ff;
-      color: #050b1f;
-    }
+  /* Voice Blob */
+  #voiceBlob {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #FFD700;
+    opacity: 0;
+    box-shadow: 0 0 12px rgba(255,215,0,0.7);
+    pointer-events: none;
+  }
 
-    .btn-secondary {
-      background: #1a2b5f;
-      color: #ffffff;
-    }
+  /* Buttons */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .button-group button {
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    transition: transform 0.2s;
+  }
+  .button-group button:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+  .start { background-color: #4CAF50; }
+  .traderlab { background-color: #2196F3; }
+  .floor { background-color: #FF9800; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .section {
-      margin: 28px auto;
-      max-width: 420px;
-    }
-  </style>
+  /* Trader instructions */
+  .instructions {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #333;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .button-group { flex-direction: column; }
+    .instructions { font-size: 16px; }
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header>
-    <h1>QuantumTrader AI™</h1>
-    <div class="subtitle">Peace before Profits</div>
-  </header>
+<!-- Peace Index Logo -->
+<div class="peace-logo">
+  <a href="https://www.peaceindex.org" target="_blank" rel="noopener">
+    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo">
+  </a>
+</div>
 
-  <!-- ================= NAVIGATION ================= -->
-  <div class="section">
-    <button id="traderLabBtn" class="btn btn-primary">TraderLab</button>
-    <button id="tradingFloorBtn" class="btn btn-secondary">Trading Floor</button>
-    <button id="cpilotBtn" class="btn btn-secondary">CPilot</button>
-  </div>
+<!-- Ori Ologo with vignette and voice blob -->
+<div class="vignette" id="oriOlogoContainer">
+  <img src="assets/images/ori_ologo.png" alt="Ori Ologo AI Assistant" class="ori-ologo" id="oriOlogo">
+  <div id="voiceBlob"></div>
+</div>
 
-  <!-- ================= WALLET PANEL ================= -->
-  <div class="section" style="
-    background:#0b1736;
-    padding:18px;
-    border-radius:10px;
-  ">
-    <h3 style="color:#7cf3ff;">Wallet Balance</h3>
+<!-- Trader instructions -->
+<div class="instructions">
+  <strong>Trader Guidance:</strong> Focus on regional peace indexes to analyze trends and insights. Use Ori Ologo above for hints or clarifications while navigating the content.
+</div>
 
-    <div style="font-size:22px; font-weight:bold; margin:10px 0;">
-      <span class="wallet-balance">₦0</span>
-    </div>
+<!-- Buttons -->
+<div class="button-group">
+  <button id="startTraining" class="start">Start Training</button>
+  <button id="traderLab" class="traderlab">Open TraderLab</button>
+  <button id="tradingFloor" class="floor">Access Trading Floor</button>
+</div>
 
-    <input
-      id="walletAmountInput"
-      type="number"
-      min="1"
-      placeholder="Enter amount"
-      style="
-        width:80%;
-        padding:10px;
-        border-radius:6px;
-        border:none;
-        margin-bottom:12px;
-      "
-    />
+<!-- Your voice sample as audio -->
+<audio id="oriGreeting" src="assets/audio/your_voice_greeting.mp3"></audio>
+<audio id="oriReminder" src="assets/audio/your_voice_reminder.mp3"></audio>
 
-    <br/>
+<script>
+  // Role: admin = you, visitor = general users
+  const userRole = "visitor"; // change to "admin" for full access
+  const startBtn = document.getElementById('startTraining');
+  const traderLabBtn = document.getElementById('traderLab');
+  const floorBtn = document.getElementById('tradingFloor');
 
-    <button
-      id="fundWalletBtn"
-      class="btn btn-primary"
-    >
-      Fund Wallet
-    </button>
-  </div>
+  if (userRole === "visitor") {
+    startBtn.disabled = true;
+    floorBtn.disabled = true;
+    startBtn.title = "Only accessible to authorized users";
+    floorBtn.title = "Only accessible to authorized users";
+  } else {
+    startBtn.disabled = false;
+    traderLabBtn.disabled = false;
+    floorBtn.disabled = false;
+  }
 
-  <!-- ================= RESET PAYMENT ================= -->
-  <div class="section">
-    <button
-      id="paymentResetButton"
-      style="
-        background-color:#6a0dad;
-        color:white;
-        font-weight:bold;
-        padding:12px 24px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-      "
-    >
-      Reset Payment
-    </button>
-  </div>
+  traderLabBtn.addEventListener('click', () => alert("Opening TraderLab..."));
+  startBtn.addEventListener('click', () => { if(!startBtn.disabled) alert("Starting training..."); });
+  floorBtn.addEventListener('click', () => { if(!floorBtn.disabled) alert("Accessing Trading Floor..."); });
 
-  <!-- ================= ORI OLOGO ================= -->
-  <div class="section">
-    <img src="qtai_ori_olokun.png" alt="Ori Ologo" style="max-width:120px; opacity:0.9;">
-  </div>
+  // Ori Ologo speech with voice blob
+  const oriOlogo = document.getElementById('oriOlogo');
+  const voiceBlob = document.getElementById('voiceBlob');
+  const greetingAudio = document.getElementById('oriGreeting');
+  const reminderAudio = document.getElementById('oriReminder');
 
-  <!-- ================= SCRIPTS ================= -->
+  function playAudio(audioEl) {
+    voiceBlob.style.opacity = 1;
+    let pulseInterval = setInterval(() => {
+      voiceBlob.style.transform = `translateX(-50%) scale(${1 + Math.random()*0.3})`;
+    }, 200);
 
-  <!-- Wallet wiring (safe even before wallet.js exists) -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const fundBtn = document.getElementById("fundWalletBtn");
+    audioEl.play();
+    audioEl.onended = () => {
+      clearInterval(pulseInterval);
+      voiceBlob.style.opacity = 0;
+      voiceBlob.style.transform = 'translateX(-50%) scale(1)';
+    };
+  }
 
-      if (fundBtn) {
-        fundBtn.addEventListener("click", () => {
-          const input = document.getElementById("walletAmountInput");
-          const amount = Number(input.value);
+  // Auto greeting on load
+  window.addEventListener('load', () => playAudio(greetingAudio));
 
-          if (typeof fundWallet !== "function") {
-            alert("Wallet system not yet initialized.");
-            return;
-          }
-
-          fundWallet(amount);
-          input.value = "";
-        });
-      }
-    });
-  </script>
-
-  <!-- Core app logic -->
-  <script src="app.js"></script>
+  // Click Ori Ologo to replay guidance
+  oriOlogo.addEventListener('click', () => playAudio(reminderAudio));
+</script>
 
 </body>
 </html>
