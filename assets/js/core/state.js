@@ -53,3 +53,21 @@ window.forceExpire = () => {
   saveState();
   alert("Subscription forcibly expired for test.");
 };
+
+// core/js/state.js
+
+const AppState = {
+  user: {
+    id: "primary_user",
+    traderLab: {
+      paid: false,
+      expiresAt: null,
+      passed: false
+    }
+  },
+
+  hasValidTraderLabAccess() {
+    const exp = this.user.traderLab.expiresAt;
+    return exp && Date.now() < exp;
+  }
+};
