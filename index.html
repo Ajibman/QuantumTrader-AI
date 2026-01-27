@@ -14,16 +14,35 @@
     --qt-neutral:#e7f2f4;
     --qt-neutral-text:#102a33;
   }
+
   body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
   header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+
+  /* Top Icons */
+  #top-icons{ text-align:center; margin:1rem 0; }
+  #top-icons img{
+    height:60px;       /* proportionate size */
+    width:auto;        /* keep aspect ratio */
+    margin:0 10px;     /* spacing */
+    vertical-align: middle;
+    cursor:pointer;
+  }
+  @media(max-width:600px){
+    #top-icons img{ height:40px; margin:0 5px; }
+  }
+
+  /* Navigation */
   #navbar{display:flex;gap:1rem;justify-content:center;padding:1rem;background:#e7f2f4;}
   #navbar button{padding:.8rem 1.2rem;border:none;border-radius:4px;background:var(--qt-primary);color:#fff;cursor:pointer;}
   #navbar button:hover{background:var(--qt-primary-hover);}
+
+  /* Dynamic Content */
   #app-container{padding:2rem;max-width:1100px;margin:auto;min-height:500px;}
+  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;margin-bottom:1rem;}
+
+  /* Ori Ologo */
   #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
   #ori-ologo-container img{width:100%;border-radius:50%;}
-  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;margin-bottom:1rem;}
-  button{padding:.6rem 1rem;margin:.3rem 0;}
 </style>
 </head>
 <body>
@@ -32,8 +51,11 @@
   <h1>QuantumTrader AI — Super App</h1>
 </header>
 
-<img id="qtai-globe" src="assets/images/qtai_globe.png" alt="QT AI Globe">
-<img id="peace-index-logo" src="assets/images/peace_index_logo.png" alt="Peace Index" onclick="window.open('https://peaceindex.org','_blank')">
+<!-- Top Icons -->
+<div id="top-icons">
+  <img id="qtai-globe" src="assets/images/qtai_globe.png" alt="QT AI Globe">
+  <img id="peace-index-logo" src="assets/images/peace_index_logo.png" alt="Peace Index" onclick="window.open('https://peaceindex.org','_blank')">
+</div>
 
 <!-- Navigation -->
 <div id="navbar">
@@ -57,17 +79,29 @@
   <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
 </div>
 
+<!-- Scripts -->
 <script src="core/js/state.js"></script>
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
 
 <script>
-  // Load dynamic content for SPA
+  // Initialize Ori Ologo Super AI
+  if(window.OriOlogo){
+    OriOlogo.init();
+  }
+
+  // Load SPA content dynamically
   async function loadSection(page){
     try{
-      const res = await fetch(page);
+      const res = await fetch('views/' + page);
       const html = await res.text();
       document.getElementById('app-container').innerHTML = html;
+
+      // Post-load init
+      if(page.includes('traderlab.html') && window.initTraderLab) initTraderLab();
+      if(page.includes('cpilot.html') && window.initCPilot) initCPilot();
+      if(page.includes('tradingfloor.html') && window.initTradingFloor) initTradingFloor();
+
     } catch(e){
       document.getElementById('app-container').innerHTML = `<p style="color:red;">Failed to load ${page}</p>`;
       console.error(e);
@@ -79,7 +113,7 @@
   document.getElementById('btn-cpilot').addEventListener('click', ()=>loadSection('cpilot.html'));
   document.getElementById('btn-tradingfloor').addEventListener('click', ()=>loadSection('tradingfloor.html'));
 
-  // Initial wallet & Ori Ologo setup
+  // Initialize wallet & state
   state.currentTradeMode = 'Manual';
   state.currentTpTiming = '15s';
 </script>
