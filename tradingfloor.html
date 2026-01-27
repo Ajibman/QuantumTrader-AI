@@ -83,7 +83,7 @@
 <main>
   <!-- Ori Ologo -->
   <div id="ori-ologo-container">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Super AI Assistant"/>
   </div>
 
   <!-- Access Status -->
@@ -107,6 +107,11 @@
     <div class="panel">
       <p class="status-item">Current Mode: <span id="trademode">Manual</span></p>
       <p class="status-item">Take-Profit Timing: <span id="tp-timing">15s</span></p>
+      <p class="status-item">
+        Market Guidance:
+        <span id="market-light" style="display:inline-block;width:15px;height:15px;border-radius:50%;margin-right:5px;background:gray;"></span>
+        <span id="market-label">Awaiting guidance…</span>
+      </p>
     </div>
   </section>
 
@@ -124,19 +129,54 @@
 <script src="core/js/wallet.js"></script>
 <script src="core/js/cpilot.js"></script>
 <script src="core/js/ori_ologo.js"></script>
+
 <script>
-  // Example: Updating TradingFloor display from CPilot selections
-  function updateTradingFloorStatus(mode, timing) {
-    document.getElementById('trademode').textContent = mode;
-    document.getElementById('tp-timing').textContent = timing;
-    const feed = document.getElementById('simulation-feed');
-    feed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] AutoTrader mode set to ${mode} with TP ${timing}</p>`;
-    feed.scrollTop = feed.scrollHeight;
+  // Initialize Ori Ologo as Super AI Assistant
+  if(window.OriOlogo){
+    OriOlogo.init();
   }
 
-  // This can be called from CPilot JS when settings change
-  // Example:
-  // updateTradingFloorStatus('Auto', '30s');
+  // TradingFloor status update with guidance
+  function updateTradingFloorStatus(mode, timing, guidance){
+    // Update mode and TP
+    document.getElementById('trademode').textContent = mode;
+    document.getElementById('tp-timing').textContent = timing;
+
+    // Update market guidance light & label
+    const light = document.getElementById('market-light');
+    const label = document.getElementById('market-label');
+
+    switch(guidance){
+      case 'favorable':
+        light.style.backgroundColor = 'green';
+        label.textContent = 'Proceed consciously';
+        break;
+      case 'caution':
+        light.style.backgroundColor = 'yellow';
+        label.textContent = 'Caution advised';
+        break;
+      case 'unfavorable':
+        light.style.backgroundColor = 'red';
+        label.textContent = 'Wait is recommended';
+        break;
+      default:
+        light.style.backgroundColor = 'gray';
+        label.textContent = 'Awaiting guidance…';
+    }
+
+    // Update live feed
+    const feed = document.getElementById('simulation-feed');
+    feed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] Mode: ${mode}, TP: ${timing}, Guidance: ${label.textContent}</p>`;
+    feed.scrollTop = feed.scrollHeight;
+
+    // Trigger Ori Ologo voice
+    if(window.OriOlogo){
+      OriOlogo.speak(label.textContent);
+    }
+  }
+
+  // Example call from CPilot:
+  // updateTradingFloorStatus('Auto','30s','favorable');
 </script>
 
 </body>
