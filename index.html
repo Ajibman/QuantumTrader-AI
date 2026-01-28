@@ -1,122 +1,185 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<title>QuantumTrader AI™ — Super App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="core/css/main.css"/>
-<style>
-  :root{
-    --qt-primary:#1f7f8c;
-    --qt-primary-hover:#165f69;
-    --qt-secondary:#0b3442;
-    --qt-secondary-hover:#07262f;
-    --qt-neutral:#e7f2f4;
-    --qt-neutral-text:#102a33;
-  }
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
-  header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+  <style>
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-secondary:#0b3442;
+      --qt-muted:#e7f2f4;
+      --qt-text:#102a33;
+      --qt-lock:#9aa6ad;
+      --qt-danger:#8c1f1f;
+    }
 
-  /* Top Icons */
-  #top-icons{ text-align:center; margin:1rem 0; }
-  #top-icons img{
-    height:60px;       /* proportionate size */
-    width:auto;        /* keep aspect ratio */
-    margin:0 10px;     /* spacing */
-    vertical-align: middle;
-    cursor:pointer;
-  }
-  @media(max-width:600px){
-    #top-icons img{ height:40px; margin:0 5px; }
-  }
+    body{
+      margin:0;
+      font-family:system-ui, sans-serif;
+      background:#f7fbfc;
+      color:var(--qt-text);
+    }
 
-  /* Navigation */
-  #navbar{display:flex;gap:1rem;justify-content:center;padding:1rem;background:#e7f2f4;}
-  #navbar button{padding:.8rem 1.2rem;border:none;border-radius:4px;background:var(--qt-primary);color:#fff;cursor:pointer;}
-  #navbar button:hover{background:var(--qt-primary-hover);}
+    header{
+      padding:2.5rem 1.5rem;
+      text-align:center;
+      background:var(--qt-secondary);
+      color:#fff;
+    }
 
-  /* Dynamic Content */
-  #app-container{padding:2rem;max-width:1100px;margin:auto;min-height:500px;}
-  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;margin-bottom:1rem;}
+    header h1{
+      margin:0;
+      font-size:2.2rem;
+      letter-spacing:.5px;
+    }
 
-  /* Ori Ologo */
-  #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
-  #ori-ologo-container img{width:100%;border-radius:50%;}
-</style>
+    header p{
+      margin:.6rem 0 0;
+      font-size:1rem;
+      opacity:.9;
+    }
+
+    main{
+      max-width:1100px;
+      margin:auto;
+      padding:2.5rem 1.5rem;
+    }
+
+    .intro{
+      text-align:center;
+      margin-bottom:3rem;
+      color:#35555f;
+      font-size:.95rem;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:2rem;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:8px;
+      padding:2rem;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .card h2{
+      margin-top:0;
+      color:var(--qt-secondary);
+    }
+
+    .status{
+      display:inline-block;
+      font-size:.75rem;
+      font-weight:600;
+      margin-bottom:.8rem;
+      letter-spacing:.4px;
+    }
+
+    .available{ color:#1a7f3c; }
+    .locked{ color:var(--qt-lock); }
+    .restricted{ color:var(--qt-danger); }
+
+    .card p{
+      font-size:.95rem;
+      line-height:1.5;
+      color:#4a646d;
+    }
+
+    button{
+      margin-top:1.5rem;
+      padding:.9rem 1.2rem;
+      border:none;
+      border-radius:4px;
+      font-size:1rem;
+      cursor:not-allowed;
+      background:var(--qt-muted);
+      color:var(--qt-lock);
+    }
+
+    .card.primary button{
+      background:var(--qt-primary);
+      color:#fff;
+      cursor:pointer;
+    }
+
+    footer{
+      margin-top:4rem;
+      padding:2rem 1.5rem;
+      text-align:center;
+      font-size:.8rem;
+      color:#6b848d;
+    }
+  </style>
 </head>
 <body>
 
 <header>
-  <h1>QuantumTrader AI — Super App</h1>
+  <h1>QuantumTrader AI</h1>
+  <p>A staged, access-controlled trading intelligence system</p>
 </header>
 
-<!-- Top Icons -->
-<div id="top-icons">
-  <img id="qtai-globe" src="assets/images/qtai_globe.png" alt="QT AI Globe">
-  <img id="peace-index-logo" src="assets/images/peace_index_logo.png" alt="Peace Index" onclick="window.open('https://peaceindex.org','_blank')">
-</div>
-
-<!-- Navigation -->
-<div id="navbar">
-  <button id="btn-traderlab">TraderLab</button>
-  <button id="btn-cpilot">CPilot</button>
-  <button id="btn-tradingfloor">TradingFloor</button>
-</div>
-
-<!-- Dynamic Content Area -->
-<div id="app-container">
-  <!-- Default view -->
-  <div class="panel">
-    <h2>Welcome to QuantumTrader AI</h2>
-    <p>Select a section/button above to begin.</p>
-    <img src="assets/images/peace_index_logo.png" alt="QT Peace Index" style="width:50px;">
+<main>
+  <div class="intro">
+    Public preview · Controlled rollout · No live trading access
   </div>
-</div>
 
-<!-- Persistent Ori Ologo -->
-<div id="ori-ologo-container">
-  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
-</div>
+  <section class="cards">
 
-<!-- Scripts -->
-<script src="core/js/state.js"></script>
-<script src="core/js/wallet.js"></script>
-<script src="core/js/ori_ologo.js"></script>
+    <!-- TraderLab -->
+    <div class="card primary">
+      <div>
+        <span class="status available">🟢 AVAILABLE</span>
+        <h2>TraderLab</h2>
+        <p>
+          Training, evaluation, and qualification environment.
+          All system access begins here.
+        </p>
+      </div>
+      <button>Enter TraderLab</button>
+    </div>
 
-<script>
-  // Initialize Ori Ologo Super AI
-  if(window.OriOlogo){
-    OriOlogo.init();
-  }
+    <!-- CPilot -->
+    <div class="card">
+      <div>
+        <span class="status locked">🔒 LOCKED</span>
+        <h2>CPilot</h2>
+        <p>
+          Automated trading simulation and strategy execution layer.
+        </p>
+        <p><em>Unlocks after successful TraderLab completion.</em></p>
+      </div>
+      <button>CPilot (Locked)</button>
+    </div>
 
-  // Load SPA content dynamically
-  async function loadSection(page){
-    try{
-      const res = await fetch('views/' + page);
-      const html = await res.text();
-      document.getElementById('app-container').innerHTML = html;
+    <!-- Trading Floor -->
+    <div class="card">
+      <div>
+        <span class="status restricted">⛔ RESTRICTED</span>
+        <h2>Trading Floor</h2>
+        <p>
+          Live trading environment with real capital exposure.
+        </p>
+        <p><em>Invitation-only. Requires CPilot qualification.</em></p>
+      </div>
+      <button>Trading Floor (Restricted)</button>
+    </div>
 
-      // Post-load init
-      if(page.includes('traderlab.html') && window.initTraderLab) initTraderLab();
-      if(page.includes('cpilot.html') && window.initCPilot) initCPilot();
-      if(page.includes('tradingfloor.html') && window.initTradingFloor) initTradingFloor();
+  </section>
+</main>
 
-    } catch(e){
-      document.getElementById('app-container').innerHTML = `<p style="color:red;">Failed to load ${page}</p>`;
-      console.error(e);
-    }
-  }
-
-  // Navigation buttons
-  document.getElementById('btn-traderlab').addEventListener('click', ()=>loadSection('traderlab.html'));
-  document.getElementById('btn-cpilot').addEventListener('click', ()=>loadSection('cpilot.html'));
-  document.getElementById('btn-tradingfloor').addEventListener('click', ()=>loadSection('tradingfloor.html'));
-
-  // Initialize wallet & state
-  state.currentTradeMode = 'Manual';
-  state.currentTpTiming = '15s';
-</script>
+<footer>
+  QuantumTrader AI operates under staged deployment and access-control principles.
+  <br />
+  No live trading occurs without explicit authorization.
+</footer>
 
 </body>
 </html>
