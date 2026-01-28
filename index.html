@@ -23,7 +23,7 @@
     }
 
     header{
-      padding:2.5rem 1.5rem;
+      padding:2rem 1.5rem;
       text-align:center;
       background:var(--qt-secondary);
       color:#fff;
@@ -44,12 +44,12 @@
     main{
       max-width:1100px;
       margin:auto;
-      padding:2.5rem 1.5rem;
+      padding:2rem 1.5rem;
     }
 
     .intro{
       text-align:center;
-      margin-bottom:3rem;
+      margin-bottom:2.5rem;
       color:#35555f;
       font-size:.95rem;
     }
@@ -117,11 +117,42 @@
       font-size:.8rem;
       color:#6b848d;
     }
+
+    /* Identity assets */
+    #qtai-globe{
+      display:block;
+      margin:0 auto 1rem;
+      width:70px;
+      opacity:.85;
+    }
+
+    #peace-index-logo{
+      display:block;
+      margin:0 auto .6rem;
+      width:80px;
+      opacity:.75;
+    }
+
+    #ori-ologo-container{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:100px;
+      opacity:.85;
+      z-index:999;
+    }
+
+    #ori-ologo-container img{
+      width:100%;
+      border-radius:50%;
+    }
+
   </style>
 </head>
 <body>
 
 <header>
+  <img id="qtai-globe" src="assets/images/qtai_globe.png" alt="QuantumTrader AI Global Scope"/>
   <h1>QuantumTrader AI</h1>
   <p>A staged, access-controlled trading intelligence system</p>
 </header>
@@ -136,50 +167,58 @@
     <!-- TraderLab -->
     <div class="card primary">
       <div>
-        <span class="status available">🟢 AVAILABLE</span>
+        <span class="status available" data-status="traderlab">🟢 AVAILABLE</span>
         <h2>TraderLab</h2>
         <p>
           Training, evaluation, and qualification environment.
           All system access begins here.
         </p>
       </div>
-      <button>Enter TraderLab</button>
+      <button data-entry="traderlab">Enter TraderLab</button>
     </div>
 
     <!-- CPilot -->
     <div class="card">
       <div>
-        <span class="status locked">🔒 LOCKED</span>
+        <span class="status locked" data-status="cpilot">🔒 LOCKED</span>
         <h2>CPilot</h2>
         <p>
           Automated trading simulation and strategy execution layer.
         </p>
         <p><em>Unlocks after successful TraderLab completion.</em></p>
       </div>
-      <button>CPilot (Locked)</button>
+      <button data-entry="cpilot" disabled>CPilot (Locked)</button>
     </div>
 
     <!-- Trading Floor -->
     <div class="card">
       <div>
-        <span class="status restricted">⛔ RESTRICTED</span>
+        <span class="status restricted" data-status="tradingfloor">⛔ RESTRICTED</span>
         <h2>Trading Floor</h2>
         <p>
           Live trading environment with real capital exposure.
         </p>
         <p><em>Invitation-only. Requires CPilot qualification.</em></p>
       </div>
-      <button>Trading Floor (Restricted)</button>
+      <button data-entry="tradingfloor" disabled>Trading Floor (Restricted)</button>
     </div>
 
   </section>
 </main>
 
 <footer>
+  <img id="peace-index-logo" src="assets/images/peace_index_logo.png" alt="Peace Index"/>
   QuantumTrader AI operates under staged deployment and access-control principles.
   <br />
   No live trading occurs without explicit authorization.
 </footer>
+
+<!-- Ori Olokun -->
+<div id="ori-ologo-container">
+  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Olokun — Silent Guide"/>
+</div>
+
+<script src="core/js/index.js"></script>
 
 </body>
 </html>
