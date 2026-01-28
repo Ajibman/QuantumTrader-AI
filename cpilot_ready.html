@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — CPilot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body{font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;margin:0;padding:0;}
+    header{background:#0b3442;color:#fff;text-align:center;padding:1.5rem;}
+    main{max-width:900px;margin:auto;padding:2rem;}
+    .section{background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);padding:1.5rem;margin-bottom:2rem;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    button{padding:.8rem 1.2rem;margin:.5rem 0;width:100%;border:none;border-radius:4px;cursor:pointer;}
+    .btn-primary{background:#1f7f8c;color:#fff;}
+    .btn-secondary{background:#0b3442;color:#fff;}
+    .btn-locked,button:disabled{background:#f1f4f6;color:#9aa6ad;cursor:not-allowed;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CPilot</h1>
+  <p>Automated Trading Simulation</p>
+</header>
+
+<main>
+  <section class="section">
+    <h2>Trade Mode</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
+      <label><input type="radio" name="trade-type" value="autotrade"> Auto Trade</label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Auto Take-Profit Timing</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
+      <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
+      <label><input type="radio" name="tp-time" value="60s"> 60 Seconds</label>
+      <label><input type="radio" name="tp-time" value="120s"> 120 Seconds</label>
+      <label><input type="radio" name="tp-time" value="180s"> 180 Seconds</label>
+      <label><input type="radio" name="tp-time" value="240s"> 240 Seconds</label>
+      <label><input type="radio" name="tp-time" value="300s"> 300 Seconds</label>
+      <label><input type="radio" name="tp-time" value="10m"> 10 Minutes</label>
+      <label><input type="radio" name="tp-time" value="15m"> 15 Minutes</label>
+      <label><input type="radio" name="tp-time" value="20m"> 20 Minutes</label>
+      <label><input type="radio" name="tp-time" value="30m"> 30 Minutes</label>
+      <label><input type="radio" name="tp-time" value="1h"> 1 Hour</label>
+      <label><input type="radio" name="tp-time" value="12h"> 12 Hours</label>
+      <label><input type="radio" name="tp-time" value="24h"> 24 Hours</label>
+      <label><input type="radio" name="tp-time" value="48h"> 48 Hours</label>
+      <label><input type="radio" name="tp-time" value="72h"> 72 Hours</label>
+      <label><input type="radio" name="tp-time" value="5d"> 5 Days</label>
+      <label><input type="radio" name="tp-time" value="7d"> 7 Days</label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>CPilot Controls</h2>
+    <button class="btn-primary" id="start-autotrade-btn">Start Auto Trading</button>
+    <button class="btn-secondary" id="stop-autotrade-btn" disabled>Stop Auto Trading</button>
+  </section>
+</main>
+
+<script>
+/* =========================
+   CPilot Full 4-Step JS
+   ========================= */
+(function(){
+  // --- STEP 1: Signal Definition ---
+  function mapToSeconds(value){
+    const num=parseInt(value,10);
+    if(value.endsWith('s')) return num;
+    if(value.endsWith('m')) return num*60;
+    if(value.endsWith('h')) return num*3600;
+    if(value.endsWith('d')) return num*86400;
+    return null;
+  }
+
+  function buildSignalFromUI(){
+    const tpRadio=document.querySelector('input[name="tp-time"]:checked');
+    const modeRadio=document.querySelector('input[name="trade-type"]:checked');
+    return {
+      mode: modeRadio.value,
+      tp:{ duration: mapToSeconds(tpRadio.value), label: tpRadio.value },
+      strategy:"default",
+      source:"cpilot",
+      issuedAt:Date.now()
+    };
+  }
+
+  // --- STEP 2: Execution Gate ---
+  const ExecutionGate={
+    evaluate:function(context){
+      if(!context.system.cpilotReady) return {allowed:false,reason:"CPilot not ready"};
+      if(context.access.locked) return {allowed:false,reason:"Access locked"};
+      if(!context.mode.autotrade) return {allowed:false,reason:"Auto Trade not selected"};
+      if(!context.signal.valid) return {allowed:false,reason:"Take-profit interval not selected"};
+      if(!context.traderLab.autotradeAllowed) return {allowed:false,reason:"TraderLab permission denied"};
+      if(context.traderLab.expiry && context.traderLab.expiry<Date.now()) return {allowed:false,reason:"TraderLab access expired"};
+      return {allowed:true};
+    }
+  };
+
+  // --- STEP 3: Controller ---
+  const startBtn=document.getElementById('start-autotrade-btn');
+  const stopBtn=document.getElementById('stop-autotrade-btn');
+  const tpRadios=document.querySelectorAll('input[name="tp-time"]');
+
+  const CPilotController={
+    access:{locked:false,runEnabled:true,running:false},
+    lock:function(){
+      tpRadios.forEach(r=>r.disabled=true);
+      this.access.locked=true; this.access.running=true;
+      startBtn.disabled=true; stopBtn.disabled=false;
+      console.log("[Controller] Locked");
+    },
+    unlock:function(){
+      tpRadios.forEach(r=>r.disabled=false);
+      this.access.locked=false; this.access.running=false;
+      startBtn.disabled=false; stopBtn.disabled=true;
+      console.log("[Controller] Unlocked");
+    }
+  };
+
+  // --- STEP 4: Autotrader ---
+  window.Autotrader={
+    activeSignal:null,
+    timer:null,
+    start:function(signal){
+      this.activeSignal=signal;
+      console.log("[Autotrader] RUNNING with signal:",signal);
+      this.timer=setTimeout(()=>{
+        console.log("[Autotrader] COMPLETED signal:",signal.tp.label);
+        CPilotController.unlock();
+      },signal.tp.duration*1000);
+    },
+    stop:function(){
+      clearTimeout(this.timer);
+      console.log("[Autotrader] STOPPED manually");
+      this.activeSignal=null;
+      CPilotController.unlock();
+    }
+  };
+
+  // --- STEP 3 Event Wiring ---
+  startBtn.addEventListener('click',()=>{
+    const signal=buildSignalFromUI();
+    const context={
+      mode:{autotrade:signal.mode==="auto",manual:signal.mode==="manual"},
+      signal:{...signal,valid:!!signal.tp.duration},
+      traderLab:window.TraderLab||{passed:true,autotradeAllowed:true,expiry:null},
+      access:CPilotController.access,
+      system:{cpilotReady:true,environment:"production"}
+    };
+    const verdict=ExecutionGate.evaluate(context);
+    if(!verdict.allowed) return alert(verdict.reason);
+    CPilotController.lock();
+    window.Autotrader.start(signal);
+  });
+
+  stopBtn.addEventListener('click',()=>window.Autotrader.stop());
+})();
+</script>
+
+</body>
+</html>
