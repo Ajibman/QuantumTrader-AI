@@ -40,3 +40,62 @@
     });
 
 })();
+
+(function () {
+
+  const startBtn = document.getElementById('start-autotrade-btn');
+  const stopBtn  = document.getElementById('stop-autotrade-btn');
+
+  function autoTradeSelected() {
+    const sel = document.querySelector('input[name="trade-type"]:checked');
+    return sel && sel.value === 'autotrade';
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (!autoTradeSelected()) {
+      alert('Auto Trade must be selected.');
+      return;
+    }
+
+    if (!window.CPilot || !window.CPilot.takeProfitSeconds) {
+      alert('Select a take-profit interval.');
+      return;
+    }
+
+    if (!window.Autotrader || typeof window.Autotrader.start !== 'function') {
+      console.warn('Autotrader not ready.');
+      return;
+    }
+
+    // LOCK interval
+    document
+      .querySelectorAll('input[name="tp-time"]')
+      .forEach(r => r.disabled = true);
+
+    startBtn.disabled = true;
+    stopBtn.disabled  = false;
+
+    window.Autotrader.start({
+      takeProfitSeconds: window.CPilot.takeProfitSeconds
+    });
+
+    console.log('[CPilot] AutoTrader started');
+  });
+
+  stopBtn.addEventListener('click', () => {
+    if (window.Autotrader && typeof window.Autotrader.stop === 'function') {
+      window.Autotrader.stop();
+    }
+
+    // UNLOCK interval
+    document
+      .querySelectorAll('input[name="tp-time"]')
+      .forEach(r => r.disabled = false);
+
+    startBtn.disabled = false;
+    stopBtn.disabled  = true;
+
+    console.log('[CPilot] AutoTrader stopped');
+  });
+
+})();
