@@ -39,7 +39,6 @@
 <body>
 
 <header>
-  <!-- Globe -->
   <img id="qtai-globe" src="./assets/images/qtai_globe.png" alt="QuantumTrader AI Global Scope"/>
   <h1>QuantumTrader AI™</h1>
   <p>A staged, access-controlled trading intelligence system</p>
@@ -60,43 +59,6 @@
         <p>Training, evaluation and qualification environment. All system access begins here.</p>
       </div>
       <button id="traderlab-btn">Enter TraderLab</button>
-
-      <script>
-        const traderLabBtn = document.getElementById('traderlab-btn');
-        const traderLabStatus = document.getElementById('traderlab-status');
-
-        // Dummy toggle state: true = AVAILABLE, false = LOCKED
-        let isAvailable = true;
-
-        function updateTraderLabDemo() {
-          if (isAvailable) {
-            traderLabStatus.textContent = "🟢 AVAILABLE";
-            traderLabStatus.className = "status available";
-            traderLabBtn.disabled = false;
-            traderLabBtn.style.cursor = "pointer";
-          } else {
-            traderLabStatus.textContent = "🔒 LOCKED";
-            traderLabStatus.className = "status locked";
-            traderLabBtn.disabled = true;
-            traderLabBtn.style.cursor = "not-allowed";
-          }
-        }
-
-        // Initial render
-        updateTraderLabDemo();
-
-        // Toggle every 5 seconds for demo effect
-        setInterval(() => {
-          isAvailable = !isAvailable;
-          updateTraderLabDemo();
-        }, 5000);
-
-        // Demo click behavior
-        traderLabBtn.addEventListener('click', () => {
-          if (!isAvailable) return;
-          alert("TraderLab placeholder clicked!");
-        });
-      </script>
     </div>
 
     <!-- CPilot Card -->
@@ -130,10 +92,48 @@
   <br />No live trading occurs without explicit authorization.
 </footer>
 
-<!-- Ori Olokun -->
 <div id="ori-ologo-container">
   <img src="./assets/images/qtai_ori_olokun.png" alt="Ori Olokun — Silent Guide"/>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const traderLabBtn = document.getElementById('traderlab-btn');
+  const traderLabStatus = document.getElementById('traderlab-status');
+
+  // Demo toggle: true = AVAILABLE, false = LOCKED
+  let isAvailable = true;
+
+  function updateTraderLabDemo() {
+    if (isAvailable) {
+      traderLabStatus.textContent = "🟢 AVAILABLE";
+      traderLabStatus.className = "status available";
+      traderLabBtn.disabled = false;
+      traderLabBtn.style.cursor = "pointer";
+    } else {
+      traderLabStatus.textContent = "🔒 LOCKED";
+      traderLabStatus.className = "status locked";
+      traderLabBtn.disabled = true;
+      traderLabBtn.style.cursor = "not-allowed";
+    }
+  }
+
+  // Initial render
+  updateTraderLabDemo();
+
+  // Toggle every 5 seconds for demo effect
+  setInterval(() => {
+    isAvailable = !isAvailable;
+    updateTraderLabDemo();
+  }, 5000);
+
+  // Demo click behavior
+  traderLabBtn.addEventListener('click', () => {
+    if (!isAvailable) return;
+    alert("TraderLab placeholder clicked!");
+  });
+});
+</script>
 
 </body>
 </html>
