@@ -89,3 +89,102 @@
   }
 
 })();
+
+// core/js/cpilot_ready.js
+
+import SignalObject from './signalObject.js';
+
+/**
+ * CPilot Core Controller
+ * Builds, evaluates, and monitors trading signals
+ */
+
+const CPilot = {
+
+  signal: SignalObject,
+
+  init(config = {}) {
+    this.signal.reset();
+    this.signal.generateId();
+
+    if (config.mode) this.signal.mode = config.mode;
+    if (config.tpTiming) this.signal.tpTiming = config.tpTiming;
+    if (config.marketGuidance) this.signal.marketGuidance = config.marketGuidance;
+
+    return this.signal.snapshot();
+  },
+
+  ingestMarketData(marketData = {}) {
+    const {
+      rsi,
+      macd,
+      emaTrend,
+      liquidity,
+      volatility,
+      momentum
+    } = marketData;
+
+    this.signal.updateIndicators({
+      rsi,
+      macd,
+      emaTrend,
+      liquidity
+    });
+
+    if (volatility !== undefined) this.signal.volatility = volatility;
+    if (momentum !== undefined) this.signal.momentum = momentum;
+
+    this.deriveDirection();
+    this.deriveConfidence();
+    this.signal.evaluateRisk();
+
+    return this.signal.snapshot();
+  },
+
+  deriveDirection() {
+    const { rsi, macd, emaTrend } = this.signal.indicators;
+
+    if (rsi > 55 && macd === 'bullish' && emaTrend === 'up') {
+      this.signal.setDirection('BUY');
+    } 
+    else if (rsi < 45 && macd === 'bearish' && emaTrend === 'down') {
+      this.signal.setDirection('SELL');
+    } 
+    else {
+      this.signal.direction = null;
+    }
+  },
+
+  deriveConfidence() {
+    let score = 0;
+
+    const { rsi, macd, emaTrend, liquidity } = this.signal.indicators;
+
+    if (macd === 'bullish' || macd === 'bearish') score += 25;
+    if (emaTrend === 'up' || emaTrend === 'down') score += 25;
+    if (liquidity === 'high') score += 20;
+
+    if (rsi >= 50 && rsi <= 60) score += 15;
+    if (this.signal.volatility < 40) score += 15;
+
+    this.signal.setConfidence(score);
+  },
+
+  armSignalMonitoring() {
+    if (!this.signal.direction) return null;
+
+    this.signal.armMonitor();
+    return this.signal.snapshot();
+  },
+
+  getSignal() {
+    return this.signal.snapshot();
+  },
+
+  resetSignal() {
+    this.signal.reset();
+    return true;
+  }
+};
+
+export default CPilot;
