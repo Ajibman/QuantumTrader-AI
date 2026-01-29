@@ -58,3 +58,47 @@ export const CPilotEngine = {
     return value * multipliers[unit];
   }
 };
+
+// core/js/cpilot/cpilot_engine.js
+
+import { SimulationFeed } from "../simulation/simulation_feed.js";
+
+let activeSignal = null;
+let running = false;
+
+export const CPilotEngine = {
+
+  loadSignal(signal) {
+    activeSignal = signal;
+  },
+
+  start() {
+    if (!activeSignal) throw new Error("No signal loaded");
+    running = true;
+
+    SimulationFeed.subscribe(this.onTick.bind(this));
+    SimulationFeed.start();
+  },
+
+  stop() {
+    running = false;
+    SimulationFeed.stop();
+  },
+
+  onTick(tick) {
+    if (!running) return;
+
+    console.log("CPilot observing tick:", tick);
+    this.emitToMonitor(tick);
+  },
+
+  emitToMonitor(tick) {
+    const monitor = document.getElementById("cpilot-monitor");
+    if (!monitor) return;
+
+    monitor.textContent =
+      `[${tick.timestamp}]
+Price: ${tick.price}
+Volume: ${tick.volume}\n\n` + monitor.textContent;
+  }
+};
