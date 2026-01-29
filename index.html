@@ -13,23 +13,89 @@
       --qt-lock:#9aa6ad;
       --qt-danger:#8c1f1f;
     }
-    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);}
-    header{text-align:center;padding:2rem 1.5rem;background:var(--qt-secondary);color:#fff;}
+
+    body{
+      margin:0;
+      font-family:system-ui,sans-serif;
+      background:#f7fbfc;
+      color:var(--qt-text);
+    }
+
+    header{
+      text-align:center;
+      padding:2rem 1.5rem;
+      background:var(--qt-secondary);
+      color:#fff;
+    }
+
     header h1{margin:0;font-size:2.2rem;letter-spacing:.5px;}
     header p{margin:.6rem 0 0;font-size:1rem;opacity:.9;}
+
     main{max-width:1100px;margin:auto;padding:2rem 1.5rem;}
     .intro{text-align:center;margin-bottom:2.5rem;color:#35555f;font-size:.95rem;}
+
     .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;}
-    .card{background:#fff;border-radius:8px;padding:2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;justify-content:space-between;}
+    .card{
+      background:#fff;
+      border-radius:8px;
+      padding:2rem;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
     .card h2{margin-top:0;color:var(--qt-secondary);}
-    .status{display:inline-block;font-size:.85rem;font-weight:600;margin-bottom:.8rem;letter-spacing:.4px;padding:6px 12px;border-radius:6px;font-weight:bold;}
+    .status{
+      display:inline-block;
+      font-size:.85rem;
+      font-weight:600;
+      margin-bottom:.8rem;
+      letter-spacing:.4px;
+      padding:6px 12px;
+      border-radius:6px;
+      font-weight:bold;
+    }
+
     .available{background:#e6f7e6;color:#1a7f3c;}
     .locked{background:#f2f2f2;color:#9aa6ad;}
     .restricted{background:#fdd;color:#8c1f1f;}
+
     .card p{font-size:.95rem;line-height:1.5;color:#4a646d;}
-    button{margin-top:1.5rem;padding:.9rem 1.2rem;border:none;border-radius:4px;font-size:1rem;cursor:not-allowed;background:var(--qt-muted);color:var(--qt-lock);}
-    .card.primary button{background:var(--qt-primary);color:#fff;cursor:pointer;}
-    footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:#6b848d;}
+
+    button{
+      margin-top:1.5rem;
+      padding:.9rem 1.2rem;
+      border:none;
+      border-radius:4px;
+      font-size:1rem;
+      cursor:pointer;
+      background:var(--qt-primary);
+      color:#fff;
+      transition:0.2s all;
+    }
+
+    button:hover{
+      opacity:0.85;
+      transform:translateY(-1px);
+    }
+
+    button:disabled{
+      background:var(--qt-muted);
+      color:var(--qt-lock);
+      cursor:not-allowed;
+      transform:none;
+      opacity:0.7;
+    }
+
+    footer{
+      margin-top:4rem;
+      padding:2rem 1.5rem;
+      text-align:center;
+      font-size:.8rem;
+      color:#6b848d;
+    }
+
     #qtai-globe{display:block;margin:0 auto 1rem;width:70px;opacity:.85;}
     #peace-index-logo{display:block;margin:0 auto .6rem;width:80px;opacity:.75;}
     #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:100px;opacity:.85;z-index:999;}
@@ -54,11 +120,11 @@
     <!-- TraderLab Card -->
     <div class="card primary">
       <div>
-        <span id="traderlab-status" class="status available">🟢 AVAILABLE</span>
+        <span class="status available">🟢 AVAILABLE</span>
         <h2>TraderLab</h2>
         <p>Training, evaluation and qualification environment. All system access begins here.</p>
       </div>
-      <button id="traderlab-btn">Enter TraderLab</button>
+      <button>Enter TraderLab</button>
     </div>
 
     <!-- CPilot Card -->
@@ -95,45 +161,6 @@
 <div id="ori-ologo-container">
   <img src="./assets/images/qtai_ori_olokun.png" alt="Ori Olokun — Silent Guide"/>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const traderLabBtn = document.getElementById('traderlab-btn');
-  const traderLabStatus = document.getElementById('traderlab-status');
-
-  // Demo toggle: true = AVAILABLE, false = LOCKED
-  let isAvailable = true;
-
-  function updateTraderLabDemo() {
-    if (isAvailable) {
-      traderLabStatus.textContent = "🟢 AVAILABLE";
-      traderLabStatus.className = "status available";
-      traderLabBtn.disabled = false;
-      traderLabBtn.style.cursor = "pointer";
-    } else {
-      traderLabStatus.textContent = "🔒 LOCKED";
-      traderLabStatus.className = "status locked";
-      traderLabBtn.disabled = true;
-      traderLabBtn.style.cursor = "not-allowed";
-    }
-  }
-
-  // Initial render
-  updateTraderLabDemo();
-
-  // Toggle every 5 seconds for demo effect
-  setInterval(() => {
-    isAvailable = !isAvailable;
-    updateTraderLabDemo();
-  }, 5000);
-
-  // Demo click behavior
-  traderLabBtn.addEventListener('click', () => {
-    if (!isAvailable) return;
-    alert("TraderLab placeholder clicked!");
-  });
-});
-</script>
 
 </body>
 </html>
