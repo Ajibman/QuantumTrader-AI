@@ -21,3 +21,54 @@
     intervalId = null;
   }
 };
+
+// core/simulation/simulation_feed.js
+
+class SimulationFeed {
+  constructor() {
+    this.interval = null;
+    this.subscribers = [];
+  }
+
+  start(timing, onTick) {
+    const intervalMs = this.resolveTiming(timing);
+
+    this.interval = setInterval(() => {
+      const tick = this.generateTick();
+      onTick(tick);
+      this.notify(tick);
+    }, intervalMs);
+  }
+
+  stop() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  }
+
+  subscribe(fn) {
+    this.subscribers.push(fn);
+  }
+
+  notify(tick) {
+    this.subscribers.forEach(fn => fn(tick));
+  }
+
+  generateTick() {
+    return {
+      price: +(Math.random() * 100 + 1000).toFixed(2),
+      volume: Math.floor(Math.random() * 10 + 1),
+      timestamp: Date.now()
+    };
+  }
+
+  resolveTiming(timing) {
+    if (!timing) return 15000;
+    if (timing.unit === "seconds") return timing.value * 1000;
+    if (timing.unit === "minutes") return timing.value * 60000;
+    return 15000;
+  }
+}
+
+export const simulationFeed = new SimulationFeed();
