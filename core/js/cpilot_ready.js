@@ -188,3 +188,31 @@ const CPilot = {
 };
 
 export default CPilot;
+
+// inside cpilot_ready.js
+
+function ingestMarketTick(tick) {
+  if (!currentSignal) return;
+
+  // example logic — transparent & explainable
+  if (tick.momentum > 0.5) {
+    currentSignal.direction = 'BUY';
+    currentSignal.confidence = 70;
+  } else if (tick.momentum < -0.5) {
+    currentSignal.direction = 'SELL';
+    currentSignal.confidence = 70;
+  } else {
+    currentSignal.direction = 'HOLD';
+    currentSignal.confidence = 40;
+  }
+
+  currentSignal.status = 'SIMULATING';
+  currentSignal.lastTick = tick;
+}
+
+export default {
+  init,
+  snapshot,
+  resetSignal,
+  ingestMarketTick
+};
