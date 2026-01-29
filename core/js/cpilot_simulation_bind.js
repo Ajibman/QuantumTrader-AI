@@ -38,3 +38,36 @@ const CPilotSimulationBind = {
 };
 
 export default CPilotSimulationBind;
+
+// core/cpilot/cpilot_simulation_bind.js
+
+import { CPilotEngine } from "./cpilot_engine.js";
+import { simulationFeed } from "../simulation/simulation_feed.js";
+
+let activeSignal = null;
+
+const CPilotSimulationBind = {
+  start(signal) {
+    if (!signal?.permission?.cpilotAllowed) {
+      console.warn("CPilot not permitted by signal");
+      return;
+    }
+
+    activeSignal = signal;
+
+    CPilotEngine.loadSignal(signal);
+    CPilotEngine.start();
+
+    simulationFeed.start(signal.timing, tick => {
+      CPilotEngine.onMarketTick(tick);
+    });
+  },
+
+  stop() {
+    simulationFeed.stop();
+    CPilotEngine.stop();
+    activeSignal = null;
+  }
+};
+
+export default CPilotSimulationBind;
