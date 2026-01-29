@@ -25,4 +25,13 @@ const signal = createFullSignal({
   mode: "auto"  
 });  
   
-CPilotEngine.loadSignal(signal);
+function saveSimulationSession(signal) {
+  const session = {
+    endedAt: new Date().toISOString(),
+    timing: signal.timing.takeProfit,
+    mode: signal.execution.mode,
+    environment: signal.meta.environment
+  };
+
+  localStorage.setItem("lastSimulationSession", JSON.stringify(session));
+}
