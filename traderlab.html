@@ -1,0 +1,67 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>QuantumTrader AI — TraderLab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="core/css/main.css"/>
+<style>
+  :root{
+    --qt-primary:#1f7f8c;
+    --qt-primary-hover:#165f69;
+    --qt-secondary:#0b3442;
+    --qt-secondary-hover:#07262f;
+    --qt-neutral:#e7f2f4;
+    --qt-neutral-text:#102a33;
+  }
+  body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+  header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+  main{padding:2rem;max-width:1100px;margin:auto;}
+  .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;}
+  #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+  #ori-ologo-container img{width:100%;border-radius:50%;}
+  button{padding:.8rem 1.2rem;margin:.5rem 0;width:100%;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>TraderLab</h1>
+  <p>Training & Assessment</p>
+</header>
+
+<main>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo"/>
+  </div>
+
+  <!-- Wallet -->
+  <section class="panel">
+    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+    <p>Status: <span id="wallet-status">Active</span></p>
+    <button id="reset-wallet-btn">Reset Wallet</button>
+  </section>
+
+  <!-- Assessment -->
+  <section class="panel">
+    <p id="assessment-feedback">Complete tasks to see your score.</p>
+  </section>
+
+  <!-- Hints / Help -->
+  <section class="panel">
+    <button id="request-hint-btn">Request Hint</button>
+  </section>
+</main>
+
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/ori_ologo.js"></script>
+
+<script type="module">
+  import TraderLabCPilotBind from './core/js/traderlab_cpilot_bind.js';
+  TraderLabCPilotBind.wire();
+</script>
+ 
+</body>
+</html>

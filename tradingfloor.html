@@ -1,0 +1,183 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — TradingFloor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
+  <style>
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-primary-hover:#165f69;
+      --qt-secondary:#0b3442;
+      --qt-secondary-hover:#07262f;
+      --qt-neutral:#e7f2f4;
+      --qt-neutral-text:#102a33;
+      --qt-locked-bg:#f1f4f6;
+      --qt-locked-text:#9aa6ad;
+    }
+    body{
+      margin:0;
+      font-family:system-ui,sans-serif;
+      background:#f7fbfc;
+      color:#102a33;
+    }
+    header{
+      padding:1.5rem;
+      background:var(--qt-secondary);
+      color:#fff;
+      text-align:center;
+    }
+    main{
+      padding:2rem;
+      max-width:1200px;
+      margin:auto;
+    }
+    .section{
+      margin-bottom:2rem;
+      padding:1.5rem;
+      background:#fff;
+      border-radius:6px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05);
+    }
+    .section h2{
+      margin-top:0;
+      color:var(--qt-secondary);
+    }
+    .panel{
+      padding:1rem;
+      background:var(--qt-neutral);
+      border-radius:4px;
+    }
+    #ori-ologo-container{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:110px;
+      opacity:.85;
+      z-index:999;
+    }
+    #ori-ologo-container img{
+      width:100%;
+      border-radius:50%;
+    }
+    .status-item{
+      margin:0.5rem 0;
+      font-weight:500;
+    }
+    .live-feed{
+      max-height:400px;
+      overflow-y:auto;
+      font-size:0.95rem;
+      line-height:1.4rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>TradingFloor</h1>
+  <p>Live Simulation & Monitoring Hub</p>
+</header>
+
+<main>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Super AI Assistant"/>
+  </div>
+
+  <!-- Access Status -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
+  </section>
+
+  <!-- Wallet Snapshot -->
+  <section class="section">
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p class="status-item">Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p class="status-item">Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
+
+  <!-- AutoTrader Summary -->
+  <section class="section">
+    <h2>AutoTrader Status</h2>
+    <div class="panel">
+      <p class="status-item">Current Mode: <span id="trademode">Manual</span></p>
+      <p class="status-item">Take-Profit Timing: <span id="tp-timing">15s</span></p>
+      <p class="status-item">
+        Market Guidance:
+        <span id="market-light" style="display:inline-block;width:15px;height:15px;border-radius:50%;margin-right:5px;background:gray;"></span>
+        <span id="market-label">Awaiting guidance…</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Live Simulation Feed -->
+  <section class="section">
+    <h2>Live Simulation Feed</h2>
+    <div class="panel live-feed" id="simulation-feed">
+      <p>No simulation running yet. Activate AutoTrader in CPilot to see live data.</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="core/js/state.js"></script>
+<script src="core/js/wallet.js"></script>
+<script src="core/js/cpilot.js"></script>
+<script src="core/js/ori_ologo.js"></script>
+
+<script>
+  // Initialize Ori Ologo as Super AI Assistant
+  if(window.OriOlogo){
+    OriOlogo.init();
+  }
+
+  // TradingFloor status update with guidance
+  function updateTradingFloorStatus(mode, timing, guidance){
+    // Update mode and TP
+    document.getElementById('trademode').textContent = mode;
+    document.getElementById('tp-timing').textContent = timing;
+
+    // Update market guidance light & label
+    const light = document.getElementById('market-light');
+    const label = document.getElementById('market-label');
+
+    switch(guidance){
+      case 'favorable':
+        light.style.backgroundColor = 'green';
+        label.textContent = 'Proceed consciously';
+        break;
+      case 'caution':
+        light.style.backgroundColor = 'yellow';
+        label.textContent = 'Caution advised';
+        break;
+      case 'unfavorable':
+        light.style.backgroundColor = 'red';
+        label.textContent = 'Wait is recommended';
+        break;
+      default:
+        light.style.backgroundColor = 'gray';
+        label.textContent = 'Awaiting guidance…';
+    }
+
+    // Update live feed
+    const feed = document.getElementById('simulation-feed');
+    feed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] Mode: ${mode}, TP: ${timing}, Guidance: ${label.textContent}</p>`;
+    feed.scrollTop = feed.scrollHeight;
+
+    // Trigger Ori Ologo voice
+    if(window.OriOlogo){
+      OriOlogo.speak(label.textContent);
+    }
+  }
+
+  // Example call from CPilot:
+  // updateTradingFloorStatus('Auto','30s','favorable');
+</script>
+
+</body>
+</html>
