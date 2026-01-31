@@ -1,35 +1,62 @@
-// core/js/cpilot/cpilot_run_controller.js
+ // core/js/cpilot/cpilot_run_controller.js
 
 import CPilotSimulationBind from "./cpilot_simulation_bind.js";
 
+/**
+ * Active Full Signal Object.
+ * Must be set via explicit arming.
+ */
 let activeSignal = null;
 
-export function armCPilot(signal) {
-  if (!signal) {
-    throw new Error("No CPilot signal prepared");
+const CPilotRunController = {
+  /**
+   * Explicitly arm CPilot with a Full Signal Object.
+   * @param {object} signal - Full Signal Object
+   */
+  arm(signal) {
+    if (!signal) {
+      throw new Error("[CPilotRunController] No CPilot signal provided");
+    }
+    activeSignal = signal;
+    console.log("[CPilotRunController] CPilot armed:", signal);
+  },
+
+  /**
+   * Start CPilot execution.
+   * Will only run if previously armed.
+   */
+  start() {
+    if (!activeSignal) {
+      throw new Error("[CPilotRunController] CPilot not armed with a signal");
+    }
+
+    CPilotSimulationBind.start(activeSignal);
+    this._setRunningState(true);
+
+    console.log("[CPilotRunController] CPilot started");
+  },
+
+  /**
+   * Stop CPilot execution safely.
+   */
+  stop() {
+    CPilotSimulationBind.stop();
+    activeSignal = null;
+    this._setRunningState(false);
+
+    console.log("[CPilotRunController] CPilot stopped");
+  },
+
+  /**
+   * Reflect running state in UI buttons.
+   */
+  _setRunningState(isRunning) {
+    const startBtn = document.getElementById("cpilot-start");
+    const stopBtn = document.getElementById("cpilot-stop");
+
+    if (startBtn) startBtn.disabled = isRunning;
+    if (stopBtn) stopBtn.disabled = !isRunning;
   }
+};
 
-  activeSignal = signal;
-}
-
-export function startCPilot() {
-  if (!activeSignal) {
-    throw new Error("CPilot not armed with a signal");
-  }
-
-  CPilotSimulationBind.start(activeSignal);
-  setRunningState(true);
-}
-
-export function stopCPilot() {
-  CPilotSimulationBind.stop();
-  setRunningState(false);
-}
-
-function setRunningState(isRunning) {
-  const startBtn = document.getElementById("cpilot-start");
-  const stopBtn = document.getElementById("cpilot-stop");
-
-  startBtn.disabled = isRunning;
-  stopBtn.disabled = !isRunning;
-}
+export default CPilotRunController;
