@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -16,33 +16,98 @@
       --qt-locked-bg:#f1f4f6;
       --qt-locked-text:#9aa6ad;
     }
-    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
-    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
-    main{padding:2rem;max-width:1100px;margin:auto;}
-    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
-    .section h2{margin-top:0;color:var(--qt-secondary);}
-    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
-    .btn-primary{background:var(--qt-primary);color:#fff;}
-    .btn-primary:hover{background:var(--qt-primary-hover);}
-    .btn-secondary{background:var(--qt-secondary);color:#fff;}
-    .btn-secondary:hover{background:var(--qt-secondary-hover);}
-    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
-    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
-    .radio-group{margin:1rem 0;}
-    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
-    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
-    #ori-ologo-container img{width:100%;border-radius:50%;}
+    body{
+      margin:0;
+      font-family:system-ui,sans-serif;
+      background:#f7fbfc;
+      color:#102a33;
+    }
+    header{
+      padding:1.5rem;
+      background:var(--qt-secondary);
+      color:#fff;
+      text-align:center;
+    }
+    main{
+      padding:2rem;
+      max-width:1100px;
+      margin:auto;
+    }
+    .section{
+      margin-bottom:2rem;
+      padding:1.5rem;
+      background:#fff;
+      border-radius:6px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05);
+    }
+    .section h2{
+      margin-top:0;
+      color:var(--qt-secondary);
+    }
+    button{
+      padding:.8rem 1.2rem;
+      font-size:1rem;
+      border-radius:4px;
+      border:none;
+      cursor:pointer;
+      transition:background-color .2s;
+      margin:.5rem 0;
+      width:100%;
+    }
+    .btn-primary{
+      background:var(--qt-primary);
+      color:#fff;
+    }
+    .btn-primary:hover{
+      background:var(--qt-primary-hover);
+    }
+    .btn-secondary{
+      background:var(--qt-secondary);
+      color:#fff;
+    }
+    .btn-secondary:hover{
+      background:var(--qt-secondary-hover);
+    }
+    .btn-locked,button:disabled{
+      background:var(--qt-locked-bg);
+      color:var(--qt-locked-text);
+      cursor:not-allowed;
+    }
+    .panel{
+      padding:1rem;
+      background:var(--qt-neutral);
+      border-radius:4px;
+    }
+    .radio-group{
+      margin:1rem 0;
+    }
+    .radio-group label{
+      display:block;
+      margin-bottom:.5rem;
+      cursor:pointer;
+    }
+    #ori-ologo-container{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:110px;
+      opacity:.85;
+      z-index:999;
+    }
+    #ori-ologo-container img{
+      width:100%;
+      border-radius:50%;
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>TradingFloor</h1>
-  <p>Live Trading — Access Controlled</p>
+  <p>Automated Trading — Access Controlled</p>
 </header>
 
 <main>
-
   <!-- Ori Ologo -->
   <div id="ori-ologo-container">
     <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
@@ -51,7 +116,7 @@
   <!-- Access Status -->
   <section class="section" id="access-gate">
     <h2>Access Status</h2>
-    <p id="access-message">Verifying CPilot completion and subscription…</p>
+    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
   </section>
 
   <!-- Wallet Snapshot -->
@@ -68,7 +133,7 @@
     <h2>Trade Selection</h2>
     <div class="radio-group">
       <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
-      <label><input type="radio" name="trade-type" value="auto"> Auto Trade</label>
+      <label><input type="radio" name="trade-type" value="autotrade"> Auto Trade</label>
     </div>
   </section>
 
@@ -79,68 +144,84 @@
       <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
       <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
       <label><input type="radio" name="tp-time" value="60s"> 60 Seconds</label>
-      <label><input type="radio" name="tp-time" value="120s"> 120 Seconds</label>
+      <label><input type="radio" name="tp-time" value="120s"> 2 Minutes</label>
+      <label><input type="radio" name="tp-time" value="180s"> 3 Minutes</label>
       <label><input type="radio" name="tp-time" value="300s"> 5 Minutes</label>
       <label><input type="radio" name="tp-time" value="600s"> 10 Minutes</label>
     </div>
   </section>
 
-  <!-- TradingFloor Controls -->
+  <!-- Trading Controls -->
   <section class="section">
-    <h2>TradingFloor Controls</h2>
-    <button class="btn-primary" id="trading-start" disabled>Start Live Trading</button>
-    <button class="btn-secondary" id="trading-stop" disabled>Stop Live Trading</button>
-    <button class="btn-secondary" id="strategy-settings">Strategy Settings</button>
-    <button class="btn-secondary" id="trade-report">Trade Report</button>
+    <h2>Trading Controls</h2>
+    <button class="btn-primary" id="start-trade-btn" disabled>Start Trading</button>
+    <button class="btn-secondary" id="stop-trade-btn" disabled>Stop Trading</button>
+    <button class="btn-secondary" id="strategy-settings-btn">Strategy Settings</button>
+    <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
   </section>
 
   <!-- Simulation Monitor -->
   <section class="section">
-    <h2>Trading Monitor</h2>
-    <div class="panel" id="trading-monitor">
-      <p>Live trading logs will appear here once TradingFloor is activated.</p>
-      <p>All simulated trades are controlled; no real capital risk unless enabled.</p>
+    <h2>Simulation Monitor</h2>
+    <div class="panel" id="simulation-monitor">
+      <p>Live simulation data will appear here once Auto Trading is activated.</p>
+      <p>No real trading occurs unless explicitly authorized.</p>
     </div>
   </section>
-
 </main>
 
-<!-- JS Modules -->
+<!-- Core JS -->
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
+<script src="core/js/tradingfloor_gate.js"></script>
+<script src="core/js/tradingfloor_signal.js"></script>
+<script src="core/js/tradingfloor_run_controller.js"></script>
+<script src="core/js/tradingfloor_sim_feed.js"></script>
 
 <script type="module">
-  import { prepareTradingSignal } from "./core/js/tradingfloor/tradingfloor_signal_builder.js";
-  import { startTradingFloor, stopTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+  import { prepareTradingFloorSignal } from "./core/js/tradingfloor_signal.js";
 
-  const startBtn = document.getElementById("trading-start");
-  const stopBtn = document.getElementById("trading-stop");
-  const statusMessage = document.getElementById("access-message");
+  const status = document.getElementById("signal-status");
 
-  // Prepare signal
-  const signal = prepareTradingSignal();
-  if(signal){
-    window.__TRADINGFLOOR_SIGNAL__ = signal;
-    statusMessage.textContent = "TradingFloor ready — signal staged.";
-    startBtn.disabled = false;
-  } else {
-    statusMessage.textContent = "Cannot access TradingFloor yet.";
-    startBtn.disabled = true;
-  }
+  document
+    .getElementById("prepare-signal-btn")
+    .addEventListener("click", () => {
+      try {
+        const signal = prepareTradingFloorSignal();
+        if (!signal) {
+          status.textContent = "TradingFloor signal not permitted yet.";
+          return;
+        }
 
-  // Button bindings
-  startBtn.addEventListener("click", () => {
-    try {
-      startTradingFloor();
-    } catch(e){
-      alert(e.message);
-    }
-  });
+        window.__TRADINGFLOOR_SIGNAL__ = signal;
+        status.textContent = "Signal prepared and staged.";
+      } catch (e) {
+        status.textContent = e.message;
+      }
+    });
+</script>
 
-  stopBtn.addEventListener("click", () => {
-    stopTradingFloor();
-  });
+<script type="module">
+  import {
+    startTradingFloor,
+    stopTradingFloor
+  } from "./core/js/tradingfloor_run_controller.js";
 
+  document
+    .getElementById("start-trade-btn")
+    .addEventListener("click", () => {
+      try {
+        startTradingFloor();
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+
+  document
+    .getElementById("stop-trade-btn")
+    .addEventListener("click", () => {
+      stopTradingFloor();
+    });
 </script>
 
 </body>
