@@ -225,5 +225,28 @@
     });
 </script>
 
+<script type="module">
+  import {
+    startCPilot,
+    stopCPilot
+  } from "./core/js/cpilot/cpilot_run_controller.js";
+
+  document
+    .getElementById("cpilot-start")
+    .addEventListener("click", () => {
+      try {
+        startCPilot();
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+
+  document
+    .getElementById("cpilot-stop")
+    .addEventListener("click", () => {
+      stopCPilot();
+    });
+</script>
+ 
 </body>
 </html>
