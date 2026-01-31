@@ -1,96 +1,32 @@
- // core/js/cpilot/cpilot_engine.js
+ // core/js/cpilot/cpilot_engine.js // STEP H — App‑ready integration of SimulationFeed // NOTE: This file OWNS simulation lifecycle. No external patches.
 
 import { simulationFeed } from "../simulation/simulation_feed.js";
 
-let activeSignal = null;
-let running = false;
-let takeProfitTimer = null;
+const CPilotEngine = { state: { running: false, timing: { unit: "seconds", value: 15 }, lastTick: null, subscribers: [] },
 
-export const CPilotEngine = {
-  /**
-   * Load a Full Signal Object into the engine.
-   */
-  loadSignal(signal) {
-    if (!signal || signal.execution?.engine !== "CPilot") {
-      throw new Error("[CPilotEngine] Invalid or incompatible signal");
-    }
-    activeSignal = signal;
-    console.log("[CPilotEngine] Signal loaded:", signal);
-  },
+/* ============================= LIFECYCLE CONTROLS ============================= */
 
-  /**
-   * Start CPilot execution.
-   * Binds simulation feed and take-profit timing.
-   */
-  start() {
-    if (!activeSignal) throw new Error("[CPilotEngine] No signal loaded");
-    if (running) return; // prevent double-start
+startSimulation(timing) { if (this.state.running) return;
 
-    running = true;
+if (timing) this.state.timing = timing;
 
-    // ⏱ Bind take-profit from Full Signal Object
-    const { value, unit, label } = activeSignal.timing.takeProfit;
-    const durationMs = this._toMilliseconds(value, unit);
+simulationFeed.start(this.state.timing, (tick) => {
+  this.state.lastTick = tick;
+  this.dispatchTick(tick);
+});
 
-    takeProfitTimer = setTimeout(() => {
-      console.log(`[CPilotEngine] Take-profit reached (${label})`);
-      this.stop();
-    }, durationMs);
+this.state.running = true;
 
-    // Subscribe to simulation feed
-    simulationFeed.subscribe(this.onTick.bind(this));
-    simulationFeed.start(activeSignal.timing);
+},
 
-    console.log("[CPilotEngine] Started");
-  },
+stopSimulation() { simulationFeed.stop(); this.state.running = false; },
 
-  /**
-   * Stop CPilot execution safely.
-   */
-  stop() {
-    running = false;
+resetSimulation() { this.stopSimulation(); this.state.lastTick = null; },
 
-    if (takeProfitTimer) {
-      clearTimeout(takeProfitTimer);
-      takeProfitTimer = null;
-    }
+/* ============================= OBSERVERS (UI / MONITORS) ============================= */
 
-    simulationFeed.stop();
-    console.log("[CPilotEngine] Stopped");
-  },
+subscribe(fn) { if (typeof fn === "function") { this.state.subscribers.push(fn); } },
 
-  /**
-   * Handle each market tick from simulation feed.
-   */
-  onTick(tick) {
-    if (!running) return;
+dispatchTick(tick) { this.state.subscribers.forEach(fn => fn(tick)); } };
 
-    console.log("[CPilotEngine] Tick:", tick);
-    this.emitToMonitor(tick);
-  },
-
-  /**
-   * Push tick to CPilot monitor.
-   */
-  emitToMonitor(tick) {
-    const monitor = document.getElementById("cpilot-monitor");
-    if (!monitor) return;
-
-    monitor.textContent =
-      `[${tick.timestamp}] Price: ${tick.price} Volume: ${tick.volume}\n\n` +
-      monitor.textContent;
-  },
-
-  /**
-   * Convert timing to milliseconds
-   */
-  _toMilliseconds(value, unit) {
-    const multipliers = {
-      seconds: 1_000,
-      minutes: 60_000,
-      hours: 3_600_000,
-      days: 86_400_000
-    };
-    return (multipliers[unit] || 1000) * value;
-  }
-};
+export default CPilotEngine;
