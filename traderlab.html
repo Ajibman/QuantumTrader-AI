@@ -67,5 +67,35 @@ main{
   </div>
 </main>
 
+<button id="qualify-btn">Mark as Qualified (Mock)</button>
+<button id="disqualify-btn">Mark as Not Qualified</button>
+<p id="qualification-status"></p>
+
+<script type="module">
+  import { issueQualification, readQualification } 
+    from "./core/traderlab/traderlab_controller.js";
+
+  const status = document.getElementById("qualification-status");
+
+  function refresh() {
+    const q = readQualification();
+    status.textContent = q
+      ? `Status: ${q.status} (CPilot Allowed: ${q.permission.cpilotAllowed})`
+      : "Status: Not evaluated";
+  }
+
+  document.getElementById("qualify-btn").onclick = () => {
+    issueQualification({ passed: true });
+    refresh();
+  };
+
+  document.getElementById("disqualify-btn").onclick = () => {
+    issueQualification({ passed: false });
+    refresh();
+  };
+
+  refresh();
+</script>
+ 
 </body>
 </html>
