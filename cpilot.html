@@ -201,6 +201,29 @@
 
 <!-- Full 4-step CPilot -->
 <script src="core/js/cpilot_full.js"></script>
- 
+
+<script type="module">
+  import { prepareCPilotSignal } from "./core/js/cpilot/cpilot_signal_builder.js";
+
+  const status = document.getElementById("signal-status");
+
+  document
+    .getElementById("prepare-signal")
+    .addEventListener("click", () => {
+      try {
+        const signal = prepareCPilotSignal();
+        if (!signal) {
+          status.textContent = "CPilot not permitted yet.";
+          return;
+        }
+
+        window.__CPILOT_SIGNAL__ = signal; // staged, not executed
+        status.textContent = "Signal prepared and staged.";
+      } catch (e) {
+        status.textContent = e.message;
+      }
+    });
+</script>
+
 </body>
 </html>
