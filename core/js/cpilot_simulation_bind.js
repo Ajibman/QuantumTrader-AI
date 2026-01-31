@@ -1,46 +1,50 @@
- // core/cpilot/cpilot_simulation_bind.js
+ // core/js/cpilot/cpilot_simulation_bind.js
 
 import { CPilotEngine } from "./cpilot_engine.js";
 import { simulationFeed } from "../simulation/simulation_feed.js";
 
+let activeSignal = null;
+
 const CPilotSimulationBind = {
-  activeSignal: null,
-
+  /**
+   * Start CPilot with a Full Signal Object.
+   */
   start(signal) {
-    if (!signal) {
-      console.warn("CPilotSimulationBind.start: No signal provided");
+    if (!signal?.permission?.cpilotAllowed) {
+      console.warn("[CPilotSimulationBind] CPilot not permitted by signal");
       return;
     }
 
-    if (!signal.permission?.cpilotAllowed) {
-      console.warn("CPilotSimulationBind.start: CPilot not permitted by signal");
-      return;
-    }
+    activeSignal = signal;
 
-    this.activeSignal = signal;
-
-    // Load signal into CPilot
+    // Load signal into engine
     CPilotEngine.loadSignal(signal);
 
-    // Start CPilot core
+    // Start engine
     CPilotEngine.start();
 
-    // Start simulation feed and forward ticks
-    simulationFeed.start(signal.timing, (tick) => {
-      CPilotEngine.onMarketTick(tick);
+    // Start simulation feed for real-time tick handling
+    simulationFeed.start(signal.timing, tick => {
+      CPilotEngine.onTick(tick);
     });
+
+    console.log("[CPilotSimulationBind] Started with signal:", signal);
   },
 
+  /**
+   * Stop CPilot execution safely.
+   */
   stop() {
-    if (!this.activeSignal) {
-      console.warn("CPilotSimulationBind.stop: No active signal");
+    if (!activeSignal) {
+      console.warn("[CPilotSimulationBind] No active signal to stop");
       return;
     }
 
     simulationFeed.stop();
     CPilotEngine.stop();
+    activeSignal = null;
 
-    this.activeSignal = null;
+    console.log("[CPilotSimulationBind] Stopped");
   }
 };
 
