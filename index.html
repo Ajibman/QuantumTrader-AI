@@ -118,13 +118,15 @@ Public preview · Controlled rollout · No live trading access
 <!-- CPilot Card -->
 <div class="card">
   <div>
-    <span class="status locked">🔒 LOCKED</span>
+    <span id="cpilot-status" class="status locked">🔒 LOCKED</span>
     <h2>CPilot</h2>
     <p>Automated trading simulation and strategy execution layer.</p>
-    <p><em>Unlocks only after successful TraderLab Training completion.</em></p>
+    <p id="cpilot-note">
+      <em>Unlocks only after successful TraderLab Training completion.</em>
+    </p>
   </div>
-  <button disabled>Enter CPilot</button>
-  <button disabled>Reset CPilot</button>
+  <button id="enter-cpilot" disabled>Enter CPilot</button>
+  <button id="reset-cpilot" disabled>Reset CPilot</button>
 </div>
 
 <!-- Trading Floor Card -->
