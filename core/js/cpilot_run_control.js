@@ -1,55 +1,78 @@
-/* CPilot STEP 3 — Run / Stop + Lock / Unlock */
+ // core/js/cpilot/cpilot_controller.js
+// CPilot — Run / Stop + Lock / Unlock (App-ready)
 
-(function () {
+import { prepareCPilotSignal } from "./cpilot_signal_builder.js";
+import { armCPilot, startCPilot, stopCPilot } from "./cpilot_run_controller.js";
 
-  const startBtn = document.getElementById('start-autotrade-btn');
-  const stopBtn  = document.getElementById('stop-autotrade-btn');
-  const tpRadios = document.querySelectorAll('input[name="tp-time"]');
+const CPilotController = (() => {
 
-  function lockIntervals(lock) {
-    tpRadios.forEach(r => r.disabled = lock);
+  const ui = {
+    startBtn: document.getElementById("cpilot-start"),
+    stopBtn: document.getElementById("cpilot-stop"),
+    tpInputs: document.querySelectorAll('input[name="tp-time"], select#tp-timing'),
+    status: document.getElementById("signal-status")
+  };
+
+  function lockTiming(lock) {
+    ui.tpInputs.forEach(el => {
+      if (el) el.disabled = lock;
+    });
   }
 
-  startBtn.addEventListener('click', () => {
+  function setIdleState() {
+    if (ui.startBtn) ui.startBtn.disabled = false;
+    if (ui.stopBtn) ui.stopBtn.disabled = true;
+    lockTiming(false);
+  }
 
-    if (!window.CPilotGate) {
-      console.warn('CPilot gate not available');
+  function setRunningState() {
+    if (ui.startBtn) ui.startBtn.disabled = true;
+    if (ui.stopBtn) ui.stopBtn.disabled = false;
+    lockTiming(true);
+  }
+
+  function prepareAndArm() {
+    const signal = prepareCPilotSignal();
+
+    if (!signal) {
+      throw new Error("CPilot signal could not be prepared");
+    }
+
+    armCPilot(signal);
+    return signal;
+  }
+
+  function bind() {
+    if (!ui.startBtn || !ui.stopBtn) {
+      console.warn("[CPilot] Control buttons not found");
       return;
     }
 
-    const gate = window.CPilotGate.check();
-    if (!gate.ok) {
-      alert(gate.reason);
-      return;
-    }
-
-    if (typeof window.Autotrader.start !== 'function') {
-      console.warn('Autotrader.start not implemented');
-      return;
-    }
-
-    lockIntervals(true);
-    startBtn.disabled = true;
-    stopBtn.disabled  = false;
-
-    window.Autotrader.start({
-      takeProfitSeconds: window.CPilot.takeProfitSeconds
+    ui.startBtn.addEventListener("click", () => {
+      try {
+        prepareAndArm();
+        startCPilot();
+        setRunningState();
+        if (ui.status) ui.status.textContent = "CPilot running (simulation)";
+      } catch (err) {
+        alert(err.message);
+      }
     });
 
-    console.log('[CPilot] Autotrader RUNNING');
-  });
+    ui.stopBtn.addEventListener("click", () => {
+      stopCPilot();
+      setIdleState();
+      if (ui.status) ui.status.textContent = "CPilot stopped";
+    });
 
-  stopBtn.addEventListener('click', () => {
+    // initial truth
+    setIdleState();
+  }
 
-    if (window.Autotrader && typeof window.Autotrader.stop === 'function') {
-      window.Autotrader.stop();
-    }
-
-    lockIntervals(false);
-    startBtn.disabled = false;
-    stopBtn.disabled  = true;
-
-    console.log('[CPilot] Autotrader STOPPED');
+  return Object.freeze({
+    bind
   });
 
 })();
+
+export default CPilotController;
