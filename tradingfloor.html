@@ -16,167 +16,131 @@
       --qt-locked-bg:#f1f4f6;
       --qt-locked-text:#9aa6ad;
     }
-    body{
-      margin:0;
-      font-family:system-ui,sans-serif;
-      background:#f7fbfc;
-      color:#102a33;
-    }
-    header{
-      padding:1.5rem;
-      background:var(--qt-secondary);
-      color:#fff;
-      text-align:center;
-    }
-    main{
-      padding:2rem;
-      max-width:1200px;
-      margin:auto;
-    }
-    .section{
-      margin-bottom:2rem;
-      padding:1.5rem;
-      background:#fff;
-      border-radius:6px;
-      box-shadow:0 2px 6px rgba(0,0,0,.05);
-    }
-    .section h2{
-      margin-top:0;
-      color:var(--qt-secondary);
-    }
-    .panel{
-      padding:1rem;
-      background:var(--qt-neutral);
-      border-radius:4px;
-    }
-    #ori-ologo-container{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      width:110px;
-      opacity:.85;
-      z-index:999;
-    }
-    #ori-ologo-container img{
-      width:100%;
-      border-radius:50%;
-    }
-    .status-item{
-      margin:0.5rem 0;
-      font-weight:500;
-    }
-    .live-feed{
-      max-height:400px;
-      overflow-y:auto;
-      font-size:0.95rem;
-      line-height:1.4rem;
-    }
+    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+    main{padding:2rem;max-width:1100px;margin:auto;}
+    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .section h2{margin-top:0;color:var(--qt-secondary);}
+    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
+    .btn-primary{background:var(--qt-primary);color:#fff;}
+    .btn-primary:hover{background:var(--qt-primary-hover);}
+    .btn-secondary{background:var(--qt-secondary);color:#fff;}
+    .btn-secondary:hover{background:var(--qt-secondary-hover);}
+    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
+    .radio-group{margin:1rem 0;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+    #ori-ologo-container img{width:100%;border-radius:50%;}
   </style>
 </head>
 <body>
 
 <header>
   <h1>TradingFloor</h1>
-  <p>Live Simulation & Monitoring Hub</p>
+  <p>Live Trading — Access Controlled</p>
 </header>
 
 <main>
+
   <!-- Ori Ologo -->
   <div id="ori-ologo-container">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Super AI Assistant"/>
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
 
   <!-- Access Status -->
   <section class="section" id="access-gate">
     <h2>Access Status</h2>
-    <p id="access-message">Verifying TraderLab completion and subscription status…</p>
+    <p id="access-message">Verifying CPilot completion and subscription…</p>
   </section>
 
   <!-- Wallet Snapshot -->
   <section class="section">
     <h2>Wallet Snapshot</h2>
     <div class="panel">
-      <p class="status-item">Balance: <strong id="wallet-balance">₦0.00</strong></p>
-      <p class="status-item">Status: <span id="wallet-status">Active</span></p>
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
     </div>
   </section>
 
-  <!-- AutoTrader Summary -->
+  <!-- Trade Selection -->
   <section class="section">
-    <h2>AutoTrader Status</h2>
-    <div class="panel">
-      <p class="status-item">Current Mode: <span id="trademode">Manual</span></p>
-      <p class="status-item">Take-Profit Timing: <span id="tp-timing">15s</span></p>
-      <p class="status-item">
-        Market Guidance:
-        <span id="market-light" style="display:inline-block;width:15px;height:15px;border-radius:50%;margin-right:5px;background:gray;"></span>
-        <span id="market-label">Awaiting guidance…</span>
-      </p>
+    <h2>Trade Selection</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
+      <label><input type="radio" name="trade-type" value="auto"> Auto Trade</label>
     </div>
   </section>
 
-  <!-- Live Simulation Feed -->
+  <!-- Auto Take-Profit Timing -->
   <section class="section">
-    <h2>Live Simulation Feed</h2>
-    <div class="panel live-feed" id="simulation-feed">
-      <p>No simulation running yet. Activate AutoTrader in CPilot to see live data.</p>
+    <h2>Auto Take-Profit Timing</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
+      <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
+      <label><input type="radio" name="tp-time" value="60s"> 60 Seconds</label>
+      <label><input type="radio" name="tp-time" value="120s"> 120 Seconds</label>
+      <label><input type="radio" name="tp-time" value="300s"> 5 Minutes</label>
+      <label><input type="radio" name="tp-time" value="600s"> 10 Minutes</label>
+    </div>
+  </section>
+
+  <!-- TradingFloor Controls -->
+  <section class="section">
+    <h2>TradingFloor Controls</h2>
+    <button class="btn-primary" id="trading-start" disabled>Start Live Trading</button>
+    <button class="btn-secondary" id="trading-stop" disabled>Stop Live Trading</button>
+    <button class="btn-secondary" id="strategy-settings">Strategy Settings</button>
+    <button class="btn-secondary" id="trade-report">Trade Report</button>
+  </section>
+
+  <!-- Simulation Monitor -->
+  <section class="section">
+    <h2>Trading Monitor</h2>
+    <div class="panel" id="trading-monitor">
+      <p>Live trading logs will appear here once TradingFloor is activated.</p>
+      <p>All simulated trades are controlled; no real capital risk unless enabled.</p>
     </div>
   </section>
 
 </main>
 
-<script src="core/js/state.js"></script>
+<!-- JS Modules -->
 <script src="core/js/wallet.js"></script>
-<script src="core/js/cpilot.js"></script>
 <script src="core/js/ori_ologo.js"></script>
 
-<script>
-  // Initialize Ori Ologo as Super AI Assistant
-  if(window.OriOlogo){
-    OriOlogo.init();
+<script type="module">
+  import { prepareTradingSignal } from "./core/js/tradingfloor/tradingfloor_signal_builder.js";
+  import { startTradingFloor, stopTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+
+  const startBtn = document.getElementById("trading-start");
+  const stopBtn = document.getElementById("trading-stop");
+  const statusMessage = document.getElementById("access-message");
+
+  // Prepare signal
+  const signal = prepareTradingSignal();
+  if(signal){
+    window.__TRADINGFLOOR_SIGNAL__ = signal;
+    statusMessage.textContent = "TradingFloor ready — signal staged.";
+    startBtn.disabled = false;
+  } else {
+    statusMessage.textContent = "Cannot access TradingFloor yet.";
+    startBtn.disabled = true;
   }
 
-  // TradingFloor status update with guidance
-  function updateTradingFloorStatus(mode, timing, guidance){
-    // Update mode and TP
-    document.getElementById('trademode').textContent = mode;
-    document.getElementById('tp-timing').textContent = timing;
-
-    // Update market guidance light & label
-    const light = document.getElementById('market-light');
-    const label = document.getElementById('market-label');
-
-    switch(guidance){
-      case 'favorable':
-        light.style.backgroundColor = 'green';
-        label.textContent = 'Proceed consciously';
-        break;
-      case 'caution':
-        light.style.backgroundColor = 'yellow';
-        label.textContent = 'Caution advised';
-        break;
-      case 'unfavorable':
-        light.style.backgroundColor = 'red';
-        label.textContent = 'Wait is recommended';
-        break;
-      default:
-        light.style.backgroundColor = 'gray';
-        label.textContent = 'Awaiting guidance…';
+  // Button bindings
+  startBtn.addEventListener("click", () => {
+    try {
+      startTradingFloor();
+    } catch(e){
+      alert(e.message);
     }
+  });
 
-    // Update live feed
-    const feed = document.getElementById('simulation-feed');
-    feed.innerHTML += `<p>[${new Date().toLocaleTimeString()}] Mode: ${mode}, TP: ${timing}, Guidance: ${label.textContent}</p>`;
-    feed.scrollTop = feed.scrollHeight;
+  stopBtn.addEventListener("click", () => {
+    stopTradingFloor();
+  });
 
-    // Trigger Ori Ologo voice
-    if(window.OriOlogo){
-      OriOlogo.speak(label.textContent);
-    }
-  }
-
-  // Example call from CPilot:
-  // updateTradingFloorStatus('Auto','30s','favorable');
 </script>
 
 </body>
