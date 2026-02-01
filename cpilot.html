@@ -91,54 +91,37 @@
 <!-- JS -->
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
-<script src="core/js/cpilot_autotrader_bridge.js"></script>
-<script src="core/js/cpilot_execution_gate.js"></script>
-<script src="core/js/cpilot_run_control.js"></script>
-<script src="core/js/cpilot_full.js"></script>
 
 <script type="module">
-  import { prepareCPilotSignal } from "./core/js/cpilot/cpilot_signal_builder.js";
+  import { startCPilot, stopCPilot, enableCPilotControls } from "./core/js/cpilot/cpilot_run_controller.js";
 
-  const status = document.getElementById("signal-status");
+  // Enable buttons once module is qualified
+  enableCPilotControls();
 
-  document
-    .getElementById("prepare-signal")
-    ?.addEventListener("click", () => {
-      try {
-        const signal = prepareCPilotSignal();
-        if (!signal) {
-          status.textContent = "CPilot not permitted yet.";
-          return;
-        }
-        window.__CPILOT_SIGNAL__ = signal;
-        status.textContent = "Signal prepared and staged.";
-      } catch (e) {
-        status.textContent = e.message;
-      }
+  // Start / Stop
+  document.getElementById("start-autotrade-btn").addEventListener("click", () => {
+    try { startCPilot(); } catch(e) { alert(e.message); }
+  });
+  document.getElementById("stop-autotrade-btn").addEventListener("click", () => { stopCPilot(); });
+
+  // Persist TP and Trade Mode selection locally
+  const tradeRadios = document.querySelectorAll('input[name="trade-type"]');
+  const tpRadios = document.querySelectorAll('input[name="tp-time"]');
+
+  tradeRadios.forEach(r => {
+    r.addEventListener("change", () => {
+      localStorage.setItem("cpilot_trade_type", r.value);
     });
-</script>
+    // Load persisted value
+    if(localStorage.getItem("cpilot_trade_type") === r.value) r.checked = true;
+  });
 
-<script type="module">
-  import {
-    startCPilot,
-    stopCPilot
-  } from "./core/js/cpilot/cpilot_run_controller.js";
-
-  document
-    .getElementById("start-autotrade-btn")
-    .addEventListener("click", () => {
-      try {
-        startCPilot();
-      } catch (e) {
-        alert(e.message);
-      }
+  tpRadios.forEach(r => {
+    r.addEventListener("change", () => {
+      localStorage.setItem("cpilot_tp_time", r.value);
     });
-
-  document
-    .getElementById("stop-autotrade-btn")
-    .addEventListener("click", () => {
-      stopCPilot();
-    });
+    if(localStorage.getItem("cpilot_tp_time") === r.value) r.checked = true;
+  });
 </script>
 
 </body>
