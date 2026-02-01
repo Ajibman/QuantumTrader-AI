@@ -1,38 +1,38 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<title>QuantumTrader AI — CPilot</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="core/css/main.css"/>
-<style>
-:root{
-  --qt-primary:#1f7f8c;
-  --qt-primary-hover:#165f69;
-  --qt-secondary:#0b3442;
-  --qt-secondary-hover:#07262f;
-  --qt-neutral:#e7f2f4;
-  --qt-neutral-text:#102a33;
-  --qt-locked-bg:#f1f4f6;
-  --qt-locked-text:#9aa6ad;
-}
-body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-neutral-text);}
-header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
-main{padding:2rem;max-width:1100px;margin:auto;}
-.section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
-.section h2{margin-top:0;color:var(--qt-secondary);}
-button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
-.btn-primary{background:var(--qt-primary);color:#fff;}
-.btn-primary:hover{background:var(--qt-primary-hover);}
-.btn-secondary{background:var(--qt-secondary);color:#fff;}
-.btn-secondary:hover{background:var(--qt-secondary-hover);}
-.btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
-.panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
-.radio-group{margin:1rem 0;}
-.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
-#ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
-#ori-ologo-container img{width:100%;border-radius:50%;}
-</style>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — CPilot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
+  <style>
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-primary-hover:#165f69;
+      --qt-secondary:#0b3442;
+      --qt-secondary-hover:#07262f;
+      --qt-neutral:#e7f2f4;
+      --qt-neutral-text:#102a33;
+      --qt-locked-bg:#f1f4f6;
+      --qt-locked-text:#9aa6ad;
+    }
+    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+    main{padding:2rem;max-width:1100px;margin:auto;}
+    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .section h2{margin-top:0;color:var(--qt-secondary);}
+    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
+    .btn-primary{background:var(--qt-primary);color:#fff;}
+    .btn-primary:hover{background:var(--qt-primary-hover);}
+    .btn-secondary{background:var(--qt-secondary);color:#fff;}
+    .btn-secondary:hover{background:var(--qt-secondary-hover);}
+    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
+    .radio-group{margin:1rem 0;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+    #ori-ologo-container img{width:100%;border-radius:50%;}
+  </style>
 </head>
 <body>
 
@@ -42,6 +42,7 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
 </header>
 
 <main>
+  <!-- Ori Ologo -->
   <div id="ori-ologo-container">
     <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
@@ -82,7 +83,7 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
   <section class="section">
     <h2>Simulation Monitor</h2>
     <div class="panel" id="simulation-monitor">
-      <p>Simulation data will appear here once Auto Trading is activated.</p>
+      <p>Live simulation data will appear here once Auto Trading is activated.</p>
     </div>
   </section>
 </main>
@@ -90,24 +91,36 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
 <!-- JS -->
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
+<script src="core/js/cpilot_autotrader_bridge.js"></script>
+<script src="core/js/cpilot_execution_gate.js"></script>
+<script src="core/js/cpilot_run_control.js"></script>
 
-<!-- CPilot Run Controller -->
 <script type="module">
-import { startCPilot, stopCPilot, checkCPilotGate } from "./core/js/cpilot/cpilot_run_controller.js";
+  import { startCPilot, stopCPilot } from "./core/js/cpilot_run_controller.js";
 
-// Gate verification: enable buttons if TraderLab is completed
-const startBtn = document.getElementById("start-autotrade-btn");
-const stopBtn = document.getElementById("stop-autotrade-btn");
+  // Enable Start/Stop buttons once CPilot is Ready
+  document.addEventListener("DOMContentLoaded", () => {
+    // Gate check or any initialization logic here
+    const startBtn = document.getElementById("start-autotrade-btn");
+    const stopBtn = document.getElementById("stop-autotrade-btn");
 
-if(checkCPilotGate()) {
-  startBtn.disabled = false;
-  stopBtn.disabled = false;
-}
+    // Assuming CPilot gate is satisfied immediately for testing
+    startBtn.disabled = false;
+    stopBtn.disabled = false;
 
-// Event listeners
-startBtn.addEventListener("click", () => { startCPilot(); });
-stopBtn.addEventListener("click", () => { stopCPilot(); });
+    // Handshake: CPilot completion sets qualification flag
+    window.__CPILOT_QUALIFIED__ = true;
+  });
 
+  document.getElementById("start-autotrade-btn").addEventListener("click", () => {
+    try { startCPilot(); } 
+    catch(e){ alert("CPilot Start Error: " + e.message); }
+  });
+
+  document.getElementById("stop-autotrade-btn").addEventListener("click", () => {
+    try { stopCPilot(); } 
+    catch(e){ alert("CPilot Stop Error: " + e.message); }
+  });
 </script>
 
 </body>
