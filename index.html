@@ -213,6 +213,44 @@ document.getElementById("reset-tradingfloor").addEventListener("click", () => {
     location.reload();
 });
 </script>
+
+<!-- CPilot AutoTrade -->
+<section class="section">
+  <h2>CPilot AutoTrader</h2>
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-trade-type" value="manual" checked> Manual Trade</label>
+    <label><input type="radio" name="cpilot-trade-type" value="autotrade"> Auto Trade</label>
+  </div>
+
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-tp-time" value="15s" checked> 15 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="30s"> 30 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="60s"> 1 Minute</label>
+    <label><input type="radio" name="cpilot-tp-time" value="120s"> 2 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="180s"> 3 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="300s"> 5 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="600s"> 10 Minutes</label>
+  </div>
+</section>
+
+<!-- TradingFloor AutoTrade -->
+<section class="section">
+  <h2>TradingFloor AutoTrader</h2>
+  <div class="radio-group">
+    <label><input type="radio" name="tf-trade-type" value="manual" checked> Manual Trade</label>
+    <label><input type="radio" name="tf-trade-type" value="autotrade"> Auto Trade</label>
+  </div>
+
+  <div class="radio-group">
+    <label><input type="radio" name="tf-tp-time" value="15s" checked> 15 Seconds</label>
+    <label><input type="radio" name="tf-tp-time" value="30s"> 30 Seconds</label>
+    <label><input type="radio" name="tf-tp-time" value="60s"> 1 Minute</label>
+    <label><input type="radio" name="tf-tp-time" value="120s"> 2 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="180s"> 3 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="300s"> 5 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="600s"> 10 Minutes</label>
+  </div>
+</section>
  
 </body>
 </html>
