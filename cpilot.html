@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>QuantumTrader AI — CPilot</title>
+  <title>QuantumTrader AI — Trading Floor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="core/css/main.css"/>
   <style>
@@ -37,8 +37,8 @@
 <body>
 
 <header>
-  <h1>CPilot</h1>
-  <p>Automated Trading Simulation — Access Controlled</p>
+  <h1>Trading Floor</h1>
+  <p>Live Trading Simulation — Access Controlled</p>
 </header>
 
 <main>
@@ -47,9 +47,24 @@
     <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
 
-  <!-- Trade Mode -->
+  <!-- Access Status -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">Verifying CPilot qualification and subscription…</p>
+  </section>
+
+  <!-- Wallet Snapshot -->
   <section class="section">
-    <h2>Trade Mode</h2>
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
+
+  <!-- Trade Selection -->
+  <section class="section">
+    <h2>Trade Selection</h2>
     <div class="radio-group">
       <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
       <label><input type="radio" name="trade-type" value="autotrade"> Auto Trade</label>
@@ -70,12 +85,11 @@
     </div>
   </section>
 
-  <!-- CPilot Controls -->
+  <!-- TradingFloor Controls -->
   <section class="section">
-    <h2>CPilot Controls</h2>
-    <button class="btn-primary" id="start-autotrade-btn" disabled>Start Auto Trading</button>
-    <button class="btn-secondary" id="stop-autotrade-btn" disabled>Stop Auto Trading</button>
-    <button class="btn-secondary" id="strategy-settings-btn">Strategy Settings</button>
+    <h2>TradingFloor Controls</h2>
+    <button class="btn-primary" id="start-trading-btn" disabled>Start Trading</button>
+    <button class="btn-secondary" id="stop-trading-btn" disabled>Stop Trading</button>
     <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
   </section>
 
@@ -83,7 +97,7 @@
   <section class="section">
     <h2>Simulation Monitor</h2>
     <div class="panel" id="simulation-monitor">
-      <p>Live simulation data will appear here once Auto Trading is activated.</p>
+      <p>Live simulation data will appear here once trading is activated.</p>
     </div>
   </section>
 </main>
@@ -93,16 +107,16 @@
 <script src="core/js/ori_ologo.js"></script>
 
 <script type="module">
-  import { startCPilot, stopCPilot, enableCPilotControls } from "./core/js/cpilot/cpilot_run_controller.js";
+  import { startTradingFloor, stopTradingFloor, enableTradingFloorControls } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
 
-  // Enable buttons once module is qualified
-  enableCPilotControls();
+  // Enable controls only if CPilot qualification is valid
+  enableTradingFloorControls();
 
   // Start / Stop
-  document.getElementById("start-autotrade-btn").addEventListener("click", () => {
-    try { startCPilot(); } catch(e) { alert(e.message); }
+  document.getElementById("start-trading-btn").addEventListener("click", () => {
+    try { startTradingFloor(); } catch(e) { alert(e.message); }
   });
-  document.getElementById("stop-autotrade-btn").addEventListener("click", () => { stopCPilot(); });
+  document.getElementById("stop-trading-btn").addEventListener("click", () => { stopTradingFloor(); });
 
   // Persist TP and Trade Mode selection locally
   const tradeRadios = document.querySelectorAll('input[name="trade-type"]');
@@ -110,17 +124,16 @@
 
   tradeRadios.forEach(r => {
     r.addEventListener("change", () => {
-      localStorage.setItem("cpilot_trade_type", r.value);
+      localStorage.setItem("tradingfloor_trade_type", r.value);
     });
-    // Load persisted value
-    if(localStorage.getItem("cpilot_trade_type") === r.value) r.checked = true;
+    if(localStorage.getItem("tradingfloor_trade_type") === r.value) r.checked = true;
   });
 
   tpRadios.forEach(r => {
     r.addEventListener("change", () => {
-      localStorage.setItem("cpilot_tp_time", r.value);
+      localStorage.setItem("tradingfloor_tp_time", r.value);
     });
-    if(localStorage.getItem("cpilot_tp_time") === r.value) r.checked = true;
+    if(localStorage.getItem("tradingfloor_tp_time") === r.value) r.checked = true;
   });
 </script>
 
