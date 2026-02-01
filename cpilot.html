@@ -109,5 +109,39 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
   document.getElementById("stop-autotrade-btn").addEventListener("click", () => stopCPilot());
 </script>
 
+<section class="section">
+  <h2>Debug: CPilot Signals</h2>
+  <div class="panel">
+    <p>Trade Type: <span id="cpilot-trade-type">manual</span></p>
+    <p>Take-Profit Time: <span id="cpilot-tp-time">15s</span></p>
+  </div>
+</section>
+
+<script type="module">
+  const tradeRadios = document.querySelectorAll('input[name="trade-type"]');
+  const tpRadios = document.querySelectorAll('input[name="tp-time"]');
+
+  const tradeTypeDisplay = document.getElementById('cpilot-trade-type');
+  const tpTimeDisplay = document.getElementById('cpilot-tp-time');
+
+  tradeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      window.__CPILOT_TRADE_TYPE__ = radio.value;
+      tradeTypeDisplay.textContent = radio.value;
+    });
+  });
+
+  tpRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      window.__CPILOT_TP_TIME__ = radio.value;
+      tpTimeDisplay.textContent = radio.value;
+    });
+  });
+
+  // Initialize default values
+  window.__CPILOT_TRADE_TYPE__ = document.querySelector('input[name="trade-type"]:checked').value;
+  window.__CPILOT_TP_TIME__ = document.querySelector('input[name="tp-time"]:checked').value;
+</script>
+ 
 </body>
 </html>
