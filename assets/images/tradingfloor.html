@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI - TradingFloor</title>
+<link rel="stylesheet" href="qtai.css">
+<style>
+  /* ----- TradingFloor Container ----- */
+  #tradingfloor {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  /* Apex TradingFloor */
+  #tradingfloor-apex {
+    width: 90%;
+    height: 300px;
+    background: url('tradingfloor2_main.png') no-repeat center center;
+    background-size: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  /* Modules 01-15 rotational plane */
+  #modules-plane {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .module {
+    width: 100px;
+    height: 100px;
+    background: #222;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0f0;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .module:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: #333;
+  }
+
+  /* TraderLab & Copilot panels */
+  #panels {
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  .panel {
+    width: 48%;
+    background: #111;
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    max-height: 250px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+
+  .panel h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #0ff;
+    position: sticky;
+    top: 0;
+    background: #111;
+    padding: 5px 0;
+  }
+
+  /* Signal colors for logs */
+  .signal-BUY { color: #0f0; font-weight: bold; }
+  .signal-SELL { color: #f00; font-weight: bold; }
+  .signal-HOLD { color: #ff0; font-weight: bold; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-right: 4px;
+  }
+
+  .badge-BUY { background-color: #0f0; color: #000; }
+  .badge-SELL { background-color: #f00; color: #fff; }
+  .badge-HOLD { background-color: #ff0; color: #000; }
+
+  /* Top globe and bottom Ori Olokun image */
+  #top-globe { width: 300px; margin-bottom: 20px; }
+  #bottom-ori-olokun { width: 200px; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<!-- QuantumTrader AI Globe Top -->
+<img id="top-globe" src="qtai_globe.png" alt="QuantumTrader AI Globe">
+
+<!-- TradingFloor Container -->
+<div id="tradingfloor">
+
+  <!-- Apex TradingFloor -->
+  <div id="tradingfloor-apex">TradingFloor Apex Node</div>
+
+  <!-- Modules Plane -->
+  <div id="modules-plane">
+    <div class="module">M01</div>
+    <div class="module">M02</div>
+    <div class="module">M03</div>
+    <div class="module">M04</div>
+    <div class="module">M05</div>
+    <div class="module">M06</div>
+    <div class="module">M07</div>
+    <div class="module">M08</div>
+    <div class="module">M09</div>
+    <div class="module">M10</div>
+    <div class="module">M11</div>
+    <div class="module">M12</div>
+    <div class="module">M13</div>
+    <div class="module">M14</div>
+    <div class="module">M15</div>
+  </div>
+
+  <!-- TraderLab & Copilot Panels -->
+  <div id="panels">
+    <div class="panel" id="traderlab-panel"><h3>TraderLab</h3></div>
+    <div class="panel" id="copilot-panel"><h3>Copilot Hints</h3></div>
+  </div>
+
+</div>
+
+<!-- Ori Olokun Image Bottom -->
+<img id="bottom-ori-olokun" src="qtai_ori_olokun.png" alt="Ori Olokun">
+
+<!-- ----- Unified JS: Liftbridge + Simulation + Color-coded Badges + Auto-scroll ----- -->
+<script type="module">
+import { connect, subscribe } from 'https://cdn.jsdelivr.net/npm/@liftbridge/liftbridge-client/dist/liftbridge-client.min.js';
+
+const modules = document.querySelectorAll('.module');
+const signalColors = { BUY:'#0f0', SELL:'#f00', HOLD:'#ff0' };
+
+// Panels
+const traderLabPanel = document.getElementById('traderlab-panel');
+const copilotPanel = document.getElementById('copilot-panel');
+
+// Maintain last 20 ticks
+const traderLabHistory = [];
+const maxTicks = 20;
+
+// Update modules and panels
+function updateModules(signals) {
+  modules.forEach(mod => mod.style.background='#222'); // Reset module colors
+  signals.forEach(signal => {
+    if (modules[signal.module] !== undefined) {
+      modules[signal.module].style.background = signalColors[signal.signal] || '#222';
+    }
+  });
+  logTick(signals);
+}
+
+// Log signals to panels with badges and auto-scroll
+function logTick(signals) {
+  const time = new Date().toLocaleTimeString();
+  let labLog;
+  if(signals.length === 0) {
+    labLog = 'No signals';
+  } else {
+    labLog = signals.map(s => 
+      `<span class="badge badge-${s.signal}">M${(s.module+1).toString().padStart(2,'0')} ${s.signal}</span>`
+    ).join(' ');
+  }
+
+  traderLabHistory.push(`${time} → ${labLog}`);
+  if(traderLabHistory.length > maxTicks) traderLabHistory.shift(); // keep last 20 ticks
+
+  traderLabPanel.innerHTML = `<h3>TraderLab</h3><p>${traderLabHistory.join('<br>')}</p>`;
+  copilotPanel.innerHTML = `<h3>Copilot Hints</h3><p>${time} → ${signals.length} signal(s)</p>`;
+
+  // Auto-scroll
+  traderLabPanel.scrollTop = traderLabPanel.scrollHeight;
+  copilotPanel.scrollTop = copilotPanel.scrollHeight;
+}
+
+// Simulation fallback
+function simulateSignals() {
+  const tickSignals = [];
+  const count = Math.floor(Math.random()*3)+1;
+  const used = [];
+  for(let i=0;i<count;i++){
+    let idx;
+    do { idx=Math.floor(Math.random()*modules.length);} while(used.includes(idx));
+    used.push(idx);
+    const types = ['BUY','SELL','HOLD'];
+    tickSignals.push({module:idx, signal:types[Math.floor(Math.random()*types.length)]});
+  }
+  updateModules(tickSignals);
+}
+
+// Start Liftbridge feed
+async function startLiftbridgeFeed() {
+  try {
+    const client = await connect('ws://localhost:9292'); // Replace with your Liftbridge URL
+    await subscribe(client, {
+      subject:'autotrader.signals',
+      startPosition:'new_only',
+      onMessage:(msg)=>{
+        try{
+          const signals = JSON.parse(msg.value.toString());
+          updateModules(signals);
+        } catch(err){
+          console.error('Invalid Liftbridge message', err);
+        }
+      }
+    });
+    console.log('Subscribed to Liftbridge AutoTrader signals.');
+  } catch(e) {
+    console.warn('Liftbridge unavailable. Running simulation.');
+    setInterval(simulateSignals, 500);
+  }
+}
+
+startLiftbridgeFeed();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — CPilot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    body{font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;margin:0;padding:0;}
+    header{background:#0b3442;color:#fff;text-align:center;padding:1.5rem;}
+    main{max-width:900px;margin:auto;padding:2rem;}
+    .section{background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);padding:1.5rem;margin-bottom:2rem;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    button{padding:.8rem 1.2rem;margin:.5rem 0;width:100%;border:none;border-radius:4px;cursor:pointer;}
+    .btn-primary{background:#1f7f8c;color:#fff;}
+    .btn-secondary{background:#0b3442;color:#fff;}
+    .btn-locked,button:disabled{background:#f1f4f6;color:#9aa6ad;cursor:not-allowed;}
+    .panel{
+      padding:1rem;
+      background:#0b3442;
+      color:#e7f2f4;
+      border-radius:4px;
+      max-height:260px;
+      overflow-y:auto;
+      font-size:.85rem;
+      line-height:1.4;
+      white-space:pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CPilot</h1>
+  <p>Automated Trading Simulation</p>
+</header>
+
+<main>
+
+  <section class="section">
+    <h2>Trade Mode</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
+      <label><input type="radio" name="trade-type" value="auto"> Auto Trade</label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Auto Take-Profit Timing</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="tp-time" value="15" checked> 15 Seconds</label>
+      <label><input type="radio" name="tp-time" value="30"> 30 Seconds</label>
+      <label><input type="radio" name="tp-time" value="60"> 60 Seconds</label>
+      <label><input type="radio" name="tp-time" value="300"> 5 Minutes</label>
+      <label><input type="radio" name="tp-time" value="600"> 10 Minutes</label>
+      <label><input type="radio" name="tp-time" value="3600"> 1 Hour</label>
+      <label><input type="radio" name="tp-time" value="86400"> 1 Day</label>
+      <label><input type="radio" name="tp-time" value="604800"> 7 Days</label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>CPilot Controls</h2>
+    <button class="btn-primary" id="cpilot-start">Start Auto Trading</button>
+    <button class="btn-secondary" id="cpilot-stop" disabled>Stop Auto Trading</button>
+  </section>
+
+  <section class="section">
+    <h2>Simulation Monitor</h2>
+    <div class="panel" id="cpilot-monitor">
+Waiting for simulation ticks…
+    </div>
+  </section>
+
+</main>
+
+<!-- App-level CPilot wiring -->
+<script type="module">
+  import CPilotUIBind from "./core/js/cpilot/cpilot_ui_bind.js";
+  import CPilotMonitorUI from "./core/js/monitor/cpilot_monitor_ui.js";
+
+  CPilotMonitorUI.init();
+  CPilotUIBind.wire();
+</script>
+
+</body>
+</html>
