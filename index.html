@@ -158,5 +158,61 @@ applyTradingFloorGate();// Trading Floor buttons based on CPilot
   });
  </script>
 
+<script type="module">
+import { applyTraderLabGate } from "./core/js/traderlab_ui_gate.js";
+import { applyCPilotGate } from "./core/js/cpilot_ui_gate.js";
+import { applyTradingFloorGate } from "./core/js/tradingfloor_ui_gate.js";
+import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
+import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
+import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+
+// Apply gates in order
+applyTraderLabGate();
+applyCPilotGate();
+applyTradingFloorGate();
+
+// --- TraderLab buttons ---
+document.getElementById("enter-traderlab").addEventListener("click", () => {
+    try {
+        startTraderLab();
+        alert("TraderLab started successfully. CPilot is now unlockable.");
+    } catch(e) {
+        alert("TraderLab Error: " + e.message);
+    }
+});
+
+document.getElementById("reset-traderlab").addEventListener("click", () => {
+    location.reload();
+});
+
+// --- CPilot buttons ---
+document.getElementById("enter-cpilot").addEventListener("click", () => {
+    try {
+        startCPilot();
+        alert("CPilot started. TradingFloor can now respond when CPilot signals ready.");
+    } catch(e) {
+        alert("CPilot Error: " + e.message);
+    }
+});
+
+document.getElementById("reset-cpilot").addEventListener("click", () => {
+    location.reload();
+});
+
+// --- TradingFloor buttons ---
+document.getElementById("enter-tradingfloor").addEventListener("click", () => {
+    try {
+        startTradingFloor();
+        alert("TradingFloor started. AutoTrade signals are now independent and ready.");
+    } catch(e) {
+        alert("TradingFloor Error: " + e.message);
+    }
+});
+
+document.getElementById("reset-tradingfloor").addEventListener("click", () => {
+    location.reload();
+});
+</script>
+ 
 </body>
 </html>
