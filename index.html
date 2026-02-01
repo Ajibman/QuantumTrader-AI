@@ -2,22 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>QuantumTrader AI™</title>
+<title>QuantumTrader AI™ — Orchestrator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 :root{
-  --qt-primary:#1f7f8c;
-  --qt-primary-hover:#165f69;
-  --qt-secondary:#0b3442;
-  --qt-secondary-hover:#07262f;
-  --qt-muted:#e7f2f4;
-  --qt-text:#102a33;
-  --qt-lock:#9aa6ad;
-  --qt-danger:#8c1f1f;
+  --qt-primary:#1f7f8c; --qt-primary-hover:#165f69;
+  --qt-secondary:#0b3442; --qt-secondary-hover:#07262f;
+  --qt-muted:#e7f2f4; --qt-text:#102a33;
+  --qt-lock:#9aa6ad; --qt-danger:#8c1f1f;
 }
-body{
-  margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);
-}
+body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);}
 header{text-align:center;padding:2rem 1.5rem;background:var(--qt-secondary);color:#fff;}
 header h1{margin:0;font-size:2.2rem;letter-spacing:.5px;}
 header p{margin:.6rem 0 0;font-size:1rem;opacity:.9;}
@@ -32,7 +26,9 @@ main{max-width:1100px;margin:auto;padding:2rem 1.5rem;}
 .card p{font-size:.95rem;line-height:1.5;color:#4a646d;}
 button{margin-top:1rem;padding:.9rem 1.2rem;border:none;border-radius:4px;font-size:1rem;cursor:pointer;background:var(--qt-primary);color:#fff;transition:0.2s all;}
 button:hover{opacity:0.85;transform:translateY(-1px);}
-button:disabled{background:var(--qt-muted);color:var(--qt-lock);cursor:not-allowed;transform:none;opacity:0.7;}
+button:disabled{background:var(--qt-muted);color:var(--qt-lock);cursor:not-allowed;transform:none;opacity:.7;}
+.radio-group{margin:1rem 0;}
+.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
 footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:#6b848d;}
 #qtai-globe{display:block;margin:0 auto 1rem;width:70px;opacity:.85;}
 #peace-index-logo{display:block;margin:0 auto .6rem;width:80px;opacity:.75;}
@@ -51,7 +47,7 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
 <main>
 <div class="cards">
 
-<!-- TraderLab -->
+<!-- TraderLab Card -->
 <div class="card">
   <div>
     <span id="traderlab-status" class="status available">🟢 AVAILABLE</span>
@@ -62,7 +58,7 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
   <button id="reset-traderlab">Reset TraderLab</button>
 </div>
 
-<!-- CPilot -->
+<!-- CPilot Card -->
 <div class="card">
   <div>
     <span id="cpilot-status" class="status locked">🔒 LOCKED</span>
@@ -72,9 +68,24 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
   </div>
   <button id="enter-cpilot" disabled>Enter CPilot</button>
   <button id="reset-cpilot" disabled>Reset CPilot</button>
+
+  <!-- CPilot AutoTrader -->
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-trade-type" value="manual" checked> Manual Trade</label>
+    <label><input type="radio" name="cpilot-trade-type" value="autotrade"> Auto Trade</label>
+  </div>
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-tp-time" value="15s" checked> 15 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="30s"> 30 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="60s"> 1 Minute</label>
+    <label><input type="radio" name="cpilot-tp-time" value="120s"> 2 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="180s"> 3 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="300s"> 5 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="600s"> 10 Minutes</label>
+  </div>
 </div>
 
-<!-- Trading Floor -->
+<!-- Trading Floor Card -->
 <div class="card">
   <div>
     <span id="tradingfloor-status" class="status restricted">⛔ RESTRICTED</span>
@@ -84,6 +95,21 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
   </div>
   <button id="enter-tradingfloor" disabled>Enter Trading Floor</button>
   <button id="reset-tradingfloor" disabled>Reset Trading Floor</button>
+
+  <!-- TradingFloor AutoTrader -->
+  <div class="radio-group">
+    <label><input type="radio" name="tf-trade-type" value="manual" checked> Manual Trade</label>
+    <label><input type="radio" name="tf-trade-type" value="autotrade"> Auto Trade</label>
+  </div>
+  <div class="radio-group">
+    <label><input type="radio" name="tf-tp-time" value="15s" checked> 15 Seconds</label>
+    <label><input type="radio" name="tf-tp-time" value="30s"> 30 Seconds</label>
+    <label><input type="radio" name="tf-tp-time" value="60s"> 1 Minute</label>
+    <label><input type="radio" name="tf-tp-time" value="120s"> 2 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="180s"> 3 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="300s"> 5 Minutes</label>
+    <label><input type="radio" name="tf-tp-time" value="600s"> 10 Minutes</label>
+  </div>
 </div>
 
 </div>
@@ -103,154 +129,50 @@ QuantumTrader AI operates under staged deployment and access-control principles.
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
 
-<!-- Gate Logic for each module -->
+<!-- Gate Logic -->
 <script type="module">
 import { applyTraderLabGate } from "./core/js/traderlab_ui_gate.js";
 import { applyCPilotGate } from "./core/js/cpilot_ui_gate.js";
 import { applyTradingFloorGate } from "./core/js/tradingfloor_ui_gate.js";
 
-// Sequentially apply module gates
-applyTraderLabGate();   // TraderLab buttons
-applyCPilotGate();      // CPilot buttons based on TraderLab
-applyTradingFloorGate();// Trading Floor buttons based on CPilot
-</script>
-
- <script type="module">
-  // Import start/stop controllers for each module
-  import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
-  import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
-  import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
-
-  // TraderLab
-  document.getElementById("enter-traderlab").addEventListener("click", () => {
-    try {
-      startTraderLab();
-    } catch(e) {
-      alert("TraderLab Error: " + e.message);
-    }
-  });
-  document.getElementById("reset-traderlab").addEventListener("click", () => {
-    location.reload(); // simple reset for now
-  });
-
-  // CPilot
-  document.getElementById("enter-cpilot").addEventListener("click", () => {
-    try {
-      startCPilot();
-    } catch(e) {
-      alert("CPilot Error: " + e.message);
-    }
-  });
-  document.getElementById("reset-cpilot").addEventListener("click", () => {
-    location.reload();
-  });
-
-  // Trading Floor
-  document.getElementById("enter-tradingfloor").addEventListener("click", () => {
-    try {
-      startTradingFloor();
-    } catch(e) {
-      alert("Trading Floor Error: " + e.message);
-    }
-  });
-  document.getElementById("reset-tradingfloor").addEventListener("click", () => {
-    location.reload();
-  });
- </script>
-
-<script type="module">
-import { applyTraderLabGate } from "./core/js/traderlab_ui_gate.js";
-import { applyCPilotGate } from "./core/js/cpilot_ui_gate.js";
-import { applyTradingFloorGate } from "./core/js/tradingfloor_ui_gate.js";
-import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
-import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
-import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
-
-// Apply gates in order
 applyTraderLabGate();
 applyCPilotGate();
 applyTradingFloorGate();
-
-// --- TraderLab buttons ---
-document.getElementById("enter-traderlab").addEventListener("click", () => {
-    try {
-        startTraderLab();
-        alert("TraderLab started successfully. CPilot is now unlockable.");
-    } catch(e) {
-        alert("TraderLab Error: " + e.message);
-    }
-});
-
-document.getElementById("reset-traderlab").addEventListener("click", () => {
-    location.reload();
-});
-
-// --- CPilot buttons ---
-document.getElementById("enter-cpilot").addEventListener("click", () => {
-    try {
-        startCPilot();
-        alert("CPilot started. TradingFloor can now respond when CPilot signals ready.");
-    } catch(e) {
-        alert("CPilot Error: " + e.message);
-    }
-});
-
-document.getElementById("reset-cpilot").addEventListener("click", () => {
-    location.reload();
-});
-
-// --- TradingFloor buttons ---
-document.getElementById("enter-tradingfloor").addEventListener("click", () => {
-    try {
-        startTradingFloor();
-        alert("TradingFloor started. AutoTrade signals are now independent and ready.");
-    } catch(e) {
-        alert("TradingFloor Error: " + e.message);
-    }
-});
-
-document.getElementById("reset-tradingfloor").addEventListener("click", () => {
-    location.reload();
-});
 </script>
 
-<!-- CPilot AutoTrade -->
-<section class="section">
-  <h2>CPilot AutoTrader</h2>
-  <div class="radio-group">
-    <label><input type="radio" name="cpilot-trade-type" value="manual" checked> Manual Trade</label>
-    <label><input type="radio" name="cpilot-trade-type" value="autotrade"> Auto Trade</label>
-  </div>
+<!-- Controllers -->
+<script type="module">
+// TraderLab
+import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
+document.getElementById("enter-traderlab").addEventListener("click",()=>startTraderLab());
+document.getElementById("reset-traderlab").addEventListener("click",()=>location.reload());
 
-  <div class="radio-group">
-    <label><input type="radio" name="cpilot-tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="cpilot-tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="cpilot-tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="cpilot-tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="180s"> 3 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="600s"> 10 Minutes</label>
-  </div>
-</section>
+// CPilot
+import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
+document.getElementById("enter-cpilot").addEventListener("click",()=>startCPilot());
+document.getElementById("reset-cpilot").addEventListener("click",()=>location.reload());
 
-<!-- TradingFloor AutoTrade -->
-<section class="section">
-  <h2>TradingFloor AutoTrader</h2>
-  <div class="radio-group">
-    <label><input type="radio" name="tf-trade-type" value="manual" checked> Manual Trade</label>
-    <label><input type="radio" name="tf-trade-type" value="autotrade"> Auto Trade</label>
-  </div>
+// CPilot AutoTrader signals
+document.querySelectorAll("input[name='cpilot-trade-type']").forEach(r=>r.addEventListener("change",e=>{
+  window.__CPILOT_TRADE_TYPE__ = e.target.value;
+}));
+document.querySelectorAll("input[name='cpilot-tp-time']").forEach(r=>r.addEventListener("change",e=>{
+  window.__CPILOT_TP_TIME__ = e.target.value;
+}));
 
-  <div class="radio-group">
-    <label><input type="radio" name="tf-tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="tf-tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="180s"> 3 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="600s"> 10 Minutes</label>
-  </div>
-</section>
- 
+// TradingFloor
+import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+document.getElementById("enter-tradingfloor").addEventListener("click",()=>startTradingFloor());
+document.getElementById("reset-tradingfloor").addEventListener("click",()=>location.reload());
+
+// TradingFloor AutoTrader signals
+document.querySelectorAll("input[name='tf-trade-type']").forEach(r=>r.addEventListener("change",e=>{
+  window.__TF_TRADE_TYPE__ = e.target.value;
+}));
+document.querySelectorAll("input[name='tf-tp-time']").forEach(r=>r.addEventListener("change",e=>{
+  window.__TF_TP_TIME__ = e.target.value;
+}));
+</script>
+
 </body>
 </html>
