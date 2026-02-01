@@ -1,140 +1,112 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title>QuantumTrader AI — Trading Floor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="core/css/main.css"/>
-  <style>
-    :root{
-      --qt-primary:#1f7f8c;
-      --qt-primary-hover:#165f69;
-      --qt-secondary:#0b3442;
-      --qt-secondary-hover:#07262f;
-      --qt-neutral:#e7f2f4;
-      --qt-neutral-text:#102a33;
-      --qt-locked-bg:#f1f4f6;
-      --qt-locked-text:#9aa6ad;
-    }
-    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
-    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
-    main{padding:2rem;max-width:1100px;margin:auto;}
-    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
-    .section h2{margin-top:0;color:var(--qt-secondary);}
-    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
-    .btn-primary{background:var(--qt-primary);color:#fff;}
-    .btn-primary:hover{background:var(--qt-primary-hover);}
-    .btn-secondary{background:var(--qt-secondary);color:#fff;}
-    .btn-secondary:hover{background:var(--qt-secondary-hover);}
-    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
-    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
-    .radio-group{margin:1rem 0;}
-    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
-    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
-    #ori-ologo-container img{width:100%;border-radius:50%;}
-  </style>
+<meta charset="UTF-8"/>
+<title>QuantumTrader AI — CPilot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="core/css/main.css"/>
+<style>
+:root{
+  --qt-primary:#1f7f8c;
+  --qt-primary-hover:#165f69;
+  --qt-secondary:#0b3442;
+  --qt-secondary-hover:#07262f;
+  --qt-neutral:#e7f2f4;
+  --qt-neutral-text:#102a33;
+  --qt-locked-bg:#f1f4f6;
+  --qt-locked-text:#9aa6ad;
+}
+body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+main{padding:2rem;max-width:1100px;margin:auto;}
+.section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+.section h2{margin-top:0;color:var(--qt-secondary);}
+button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:.2s;margin:.5rem 0;width:100%;}
+.btn-primary{background:var(--qt-primary);color:#fff;}
+.btn-primary:hover{background:var(--qt-primary-hover);}
+.btn-secondary{background:var(--qt-secondary);color:#fff;}
+.btn-secondary:hover{background:var(--qt-secondary-hover);}
+.btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+.panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
+.radio-group{margin:1rem 0;}
+.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+#ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+#ori-ologo-container img{width:100%;border-radius:50%;}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Trading Floor</h1>
-  <p>Live Trading Simulation — Access Controlled</p>
+<h1>CPilot</h1>
+<p>Automated Trading Simulation — Access Controlled</p>
 </header>
 
 <main>
-  <!-- Ori Ologo -->
-  <div id="ori-ologo-container">
-    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
+
+<!-- Ori Ologo -->
+<div id="ori-ologo-container">
+  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
+</div>
+
+<!-- Trade Mode -->
+<section class="section">
+  <h2>Trade Mode</h2>
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-trade-type" value="manual" checked> Manual Trade</label>
+    <label><input type="radio" name="cpilot-trade-type" value="autotrade"> Auto Trade</label>
   </div>
+</section>
 
-  <!-- Access Status -->
-  <section class="section" id="access-gate">
-    <h2>Access Status</h2>
-    <p id="access-message">Verifying CPilot qualification and subscription…</p>
-  </section>
+<!-- Auto Take-Profit Timing -->
+<section class="section">
+  <h2>Auto Take-Profit Timing</h2>
+  <div class="radio-group">
+    <label><input type="radio" name="cpilot-tp-time" value="15s" checked> 15 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="30s"> 30 Seconds</label>
+    <label><input type="radio" name="cpilot-tp-time" value="60s"> 1 Minute</label>
+    <label><input type="radio" name="cpilot-tp-time" value="120s"> 2 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="180s"> 3 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="300s"> 5 Minutes</label>
+    <label><input type="radio" name="cpilot-tp-time" value="600s"> 10 Minutes</label>
+  </div>
+</section>
 
-  <!-- Wallet Snapshot -->
-  <section class="section">
-    <h2>Wallet Snapshot</h2>
-    <div class="panel">
-      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
-      <p>Status: <span id="wallet-status">Active</span></p>
-    </div>
-  </section>
+<!-- CPilot Controls -->
+<section class="section">
+  <h2>CPilot Controls</h2>
+  <button class="btn-primary" id="start-autotrade-btn" disabled>Start Auto Trading</button>
+  <button class="btn-secondary" id="stop-autotrade-btn" disabled>Stop Auto Trading</button>
+  <button class="btn-secondary" id="strategy-settings-btn">Strategy Settings</button>
+  <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
+</section>
 
-  <!-- Trade Selection -->
-  <section class="section">
-    <h2>Trade Selection</h2>
-    <div class="radio-group">
-      <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
-      <label><input type="radio" name="trade-type" value="autotrade"> Auto Trade</label>
-    </div>
-  </section>
+<!-- Simulation Monitor -->
+<section class="section">
+  <h2>Simulation Monitor</h2>
+  <div class="panel" id="simulation-monitor">
+    <p>Live simulation data will appear here once Auto Trading is activated.</p>
+  </div>
+</section>
 
-  <!-- Auto Take-Profit Timing -->
-  <section class="section">
-    <h2>Auto Take-Profit Timing</h2>
-    <div class="radio-group">
-      <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
-      <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
-      <label><input type="radio" name="tp-time" value="60s"> 1 Minute</label>
-      <label><input type="radio" name="tp-time" value="120s"> 2 Minutes</label>
-      <label><input type="radio" name="tp-time" value="180s"> 3 Minutes</label>
-      <label><input type="radio" name="tp-time" value="300s"> 5 Minutes</label>
-      <label><input type="radio" name="tp-time" value="600s"> 10 Minutes</label>
-    </div>
-  </section>
-
-  <!-- TradingFloor Controls -->
-  <section class="section">
-    <h2>TradingFloor Controls</h2>
-    <button class="btn-primary" id="start-trading-btn" disabled>Start Trading</button>
-    <button class="btn-secondary" id="stop-trading-btn" disabled>Stop Trading</button>
-    <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
-  </section>
-
-  <!-- Simulation Monitor -->
-  <section class="section">
-    <h2>Simulation Monitor</h2>
-    <div class="panel" id="simulation-monitor">
-      <p>Live simulation data will appear here once trading is activated.</p>
-    </div>
-  </section>
 </main>
 
 <!-- JS -->
 <script src="core/js/wallet.js"></script>
 <script src="core/js/ori_ologo.js"></script>
+<script src="core/js/cpilot_autotrader_bridge.js"></script>
+<script src="core/js/cpilot_execution_gate.js"></script>
+<script src="core/js/cpilot_run_control.js"></script>
 
 <script type="module">
-  import { startTradingFloor, stopTradingFloor, enableTradingFloorControls } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+  import { startCPilot, stopCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
 
-  // Enable controls only if CPilot qualification is valid
-  enableTradingFloorControls();
+  // Enable buttons once module allowed
+  document.getElementById("start-autotrade-btn").disabled = false;
+  document.getElementById("stop-autotrade-btn").disabled = false;
 
-  // Start / Stop
-  document.getElementById("start-trading-btn").addEventListener("click", () => {
-    try { startTradingFloor(); } catch(e) { alert(e.message); }
-  });
-  document.getElementById("stop-trading-btn").addEventListener("click", () => { stopTradingFloor(); });
-
-  // Persist TP and Trade Mode selection locally
-  const tradeRadios = document.querySelectorAll('input[name="trade-type"]');
-  const tpRadios = document.querySelectorAll('input[name="tp-time"]');
-
-  tradeRadios.forEach(r => {
-    r.addEventListener("change", () => {
-      localStorage.setItem("tradingfloor_trade_type", r.value);
-    });
-    if(localStorage.getItem("tradingfloor_trade_type") === r.value) r.checked = true;
-  });
-
-  tpRadios.forEach(r => {
-    r.addEventListener("change", () => {
-      localStorage.setItem("tradingfloor_tp_time", r.value);
-    });
-    if(localStorage.getItem("tradingfloor_tp_time") === r.value) r.checked = true;
-  });
+  // Start/Stop handlers
+  document.getElementById("start-autotrade-btn").addEventListener("click", () => startCPilot());
+  document.getElementById("stop-autotrade-btn").addEventListener("click", () => stopCPilot());
 </script>
 
 </body>
