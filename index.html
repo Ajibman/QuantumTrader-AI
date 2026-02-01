@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>QuantumTrader AI™ — Orchestrator</title>
+<title>QuantumTrader AI™</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 :root{
-  --qt-primary:#1f7f8c; --qt-primary-hover:#165f69;
-  --qt-secondary:#0b3442; --qt-secondary-hover:#07262f;
-  --qt-muted:#e7f2f4; --qt-text:#102a33;
-  --qt-lock:#9aa6ad; --qt-danger:#8c1f1f;
+  --qt-primary:#1f7f8c;
+  --qt-secondary:#0b3442;
+  --qt-muted:#e7f2f4;
+  --qt-text:#102a33;
+  --qt-lock:#9aa6ad;
+  --qt-danger:#8c1f1f;
 }
-body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);}
+body{
+  margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);
+}
 header{text-align:center;padding:2rem 1.5rem;background:var(--qt-secondary);color:#fff;}
 header h1{margin:0;font-size:2.2rem;letter-spacing:.5px;}
 header p{margin:.6rem 0 0;font-size:1rem;opacity:.9;}
@@ -22,18 +26,17 @@ main{max-width:1100px;margin:auto;padding:2rem 1.5rem;}
 .status{display:inline-block;font-size:.85rem;font-weight:600;margin-bottom:.8rem;letter-spacing:.4px;padding:6px 12px;border-radius:6px;font-weight:bold;}
 .available{background:#e6f7e6;color:#1a7f3c;}
 .locked{background:#f2f2f2;color:#9aa6ad;}
-.restricted{background:#fdd;color:#8c1f1f;}
+.phase-locked{background:#fdd;color:#8c1f1f;}
 .card p{font-size:.95rem;line-height:1.5;color:#4a646d;}
 button{margin-top:1rem;padding:.9rem 1.2rem;border:none;border-radius:4px;font-size:1rem;cursor:pointer;background:var(--qt-primary);color:#fff;transition:0.2s all;}
 button:hover{opacity:0.85;transform:translateY(-1px);}
-button:disabled{background:var(--qt-muted);color:var(--qt-lock);cursor:not-allowed;transform:none;opacity:.7;}
-.radio-group{margin:1rem 0;}
-.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+button:disabled{background:var(--qt-muted);color:var(--qt-lock);cursor:not-allowed;transform:none;opacity:0.7;}
 footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:#6b848d;}
 #qtai-globe{display:block;margin:0 auto 1rem;width:70px;opacity:.85;}
 #peace-index-logo{display:block;margin:0 auto .6rem;width:80px;opacity:.75;}
 #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:100px;opacity:.85;z-index:999;}
 #ori-ologo-container img{width:100%;border-radius:50%;}
+.network-cap{margin-top:1rem;font-size:.85rem;color:#35555f;font-weight:600;text-align:center;}
 </style>
 </head>
 <body>
@@ -47,7 +50,7 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
 <main>
 <div class="cards">
 
-<!-- TraderLab Card -->
+<!-- TraderLab -->
 <div class="card">
   <div>
     <span id="traderlab-status" class="status available">🟢 AVAILABLE</span>
@@ -58,61 +61,33 @@ footer{margin-top:4rem;padding:2rem 1.5rem;text-align:center;font-size:.8rem;col
   <button id="reset-traderlab">Reset TraderLab</button>
 </div>
 
-<!-- CPilot Card -->
+<!-- CPilot -->
 <div class="card">
   <div>
-    <span id="cpilot-status" class="status locked">🔒 LOCKED</span>
+    <span id="cpilot-status" class="status locked">🔒 Locked</span>
     <h2>CPilot</h2>
     <p>Automated trading simulation and strategy execution layer.</p>
-    <p><em>Unlocks only after successful TraderLab completion.</em></p>
+    <p><em id="cpilot-note">Unlocks only after successful TraderLab completion.</em></p>
   </div>
   <button id="enter-cpilot" disabled>Enter CPilot</button>
   <button id="reset-cpilot" disabled>Reset CPilot</button>
-
-  <!-- CPilot AutoTrader -->
-  <div class="radio-group">
-    <label><input type="radio" name="cpilot-trade-type" value="manual" checked> Manual Trade</label>
-    <label><input type="radio" name="cpilot-trade-type" value="autotrade"> Auto Trade</label>
-  </div>
-  <div class="radio-group">
-    <label><input type="radio" name="cpilot-tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="cpilot-tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="cpilot-tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="cpilot-tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="180s"> 3 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="cpilot-tp-time" value="600s"> 10 Minutes</label>
-  </div>
 </div>
 
-<!-- Trading Floor Card -->
+<!-- Trading Floor -->
 <div class="card">
   <div>
-    <span id="tradingfloor-status" class="status restricted">⛔ RESTRICTED</span>
+    <span id="tradingfloor-status" class="status phase-locked">⛔ PHASE-LOCKED</span>
     <h2>Trading Floor</h2>
     <p>Live trading environment with real capital exposure.</p>
-    <p><em>Invitation-only. Requires CPilot qualification.</em></p>
+    <p><em id="tradingfloor-note">Requires CPilot qualification to access.</em></p>
   </div>
   <button id="enter-tradingfloor" disabled>Enter Trading Floor</button>
   <button id="reset-tradingfloor" disabled>Reset Trading Floor</button>
-
-  <!-- TradingFloor AutoTrader -->
-  <div class="radio-group">
-    <label><input type="radio" name="tf-trade-type" value="manual" checked> Manual Trade</label>
-    <label><input type="radio" name="tf-trade-type" value="autotrade"> Auto Trade</label>
-  </div>
-  <div class="radio-group">
-    <label><input type="radio" name="tf-tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="tf-tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="180s"> 3 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="600s"> 10 Minutes</label>
-  </div>
 </div>
 
 </div>
+
+<div class="network-cap">5 Million Users – First Come, First Served</div>
 </main>
 
 <footer>
@@ -135,43 +110,33 @@ import { applyTraderLabGate } from "./core/js/traderlab_ui_gate.js";
 import { applyCPilotGate } from "./core/js/cpilot_ui_gate.js";
 import { applyTradingFloorGate } from "./core/js/tradingfloor_ui_gate.js";
 
-applyTraderLabGate();
-applyCPilotGate();
-applyTradingFloorGate();
+applyTraderLabGate();   // updates TraderLab buttons
+applyCPilotGate();      // updates CPilot buttons when TraderLab completes
+applyTradingFloorGate();// updates Trading Floor buttons when CPilot completes
 </script>
 
-<!-- Controllers -->
 <script type="module">
-// TraderLab
 import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
-document.getElementById("enter-traderlab").addEventListener("click",()=>startTraderLab());
-document.getElementById("reset-traderlab").addEventListener("click",()=>location.reload());
+import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
+import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+
+// TraderLab
+document.getElementById("enter-traderlab").addEventListener("click", () => {
+  try { startTraderLab(); } catch(e){ alert("TraderLab Error: " + e.message); }
+});
+document.getElementById("reset-traderlab").addEventListener("click", () => { location.reload(); });
 
 // CPilot
-import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
-document.getElementById("enter-cpilot").addEventListener("click",()=>startCPilot());
-document.getElementById("reset-cpilot").addEventListener("click",()=>location.reload());
+document.getElementById("enter-cpilot").addEventListener("click", () => {
+  try { startCPilot(); } catch(e){ alert("CPilot Error: " + e.message); }
+});
+document.getElementById("reset-cpilot").addEventListener("click", () => { location.reload(); });
 
-// CPilot AutoTrader signals
-document.querySelectorAll("input[name='cpilot-trade-type']").forEach(r=>r.addEventListener("change",e=>{
-  window.__CPILOT_TRADE_TYPE__ = e.target.value;
-}));
-document.querySelectorAll("input[name='cpilot-tp-time']").forEach(r=>r.addEventListener("change",e=>{
-  window.__CPILOT_TP_TIME__ = e.target.value;
-}));
-
-// TradingFloor
-import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
-document.getElementById("enter-tradingfloor").addEventListener("click",()=>startTradingFloor());
-document.getElementById("reset-tradingfloor").addEventListener("click",()=>location.reload());
-
-// TradingFloor AutoTrader signals
-document.querySelectorAll("input[name='tf-trade-type']").forEach(r=>r.addEventListener("change",e=>{
-  window.__TF_TRADE_TYPE__ = e.target.value;
-}));
-document.querySelectorAll("input[name='tf-tp-time']").forEach(r=>r.addEventListener("change",e=>{
-  window.__TF_TP_TIME__ = e.target.value;
-}));
+// Trading Floor
+document.getElementById("enter-tradingfloor").addEventListener("click", () => {
+  try { startTradingFloor(); } catch(e){ alert("Trading Floor Error: " + e.message); }
+});
+document.getElementById("reset-tradingfloor").addEventListener("click", () => { location.reload(); });
 </script>
 
 </body>
