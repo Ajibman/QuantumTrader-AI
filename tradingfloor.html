@@ -1,107 +1,105 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<title>QuantumTrader AI — Trading Floor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="core/css/main.css"/>
-<style>
-:root{
-  --qt-primary:#1f7f8c;
-  --qt-primary-hover:#165f69;
-  --qt-secondary:#0b3442;
-  --qt-secondary-hover:#07262f;
-  --qt-neutral:#e7f2f4;
-  --qt-neutral-text:#102a33;
-  --qt-locked-bg:#f1f4f6;
-  --qt-locked-text:#9aa6ad;
-}
-body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
-header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
-main{padding:2rem;max-width:1100px;margin:auto;}
-.section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
-.section h2{margin-top:0;color:var(--qt-secondary);}
-button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:.2s;margin:.5rem 0;width:100%;}
-.btn-primary{background:var(--qt-primary);color:#fff;}
-.btn-primary:hover{background:var(--qt-primary-hover);}
-.btn-secondary{background:var(--qt-secondary);color:#fff;}
-.btn-secondary:hover{background:var(--qt-secondary-hover);}
-.btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
-.panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
-.radio-group{margin:1rem 0;}
-.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
-#ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
-#ori-ologo-container img{width:100%;border-radius:50%;}
-</style>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — Trading Floor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
+  <style>
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-primary-hover:#165f69;
+      --qt-secondary:#0b3442;
+      --qt-secondary-hover:#07262f;
+      --qt-neutral:#e7f2f4;
+      --qt-neutral-text:#102a33;
+      --qt-locked-bg:#f1f4f6;
+      --qt-locked-text:#9aa6ad;
+    }
+    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+    main{padding:2rem;max-width:1100px;margin:auto;}
+    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .section h2{margin-top:0;color:var(--qt-secondary);}
+    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
+    .btn-primary{background:var(--qt-primary);color:#fff;}
+    .btn-primary:hover{background:var(--qt-primary-hover);}
+    .btn-secondary{background:var(--qt-secondary);color:#fff;}
+    .btn-secondary:hover{background:var(--qt-secondary-hover);}
+    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
+    .radio-group{margin:1rem 0;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+    #ori-ologo-container img{width:100%;border-radius:50%;}
+  </style>
 </head>
 <body>
 
 <header>
-<h1>Trading Floor</h1>
-<p>Live Trading Simulation — Access Controlled</p>
+  <h1>Trading Floor</h1>
+  <p>Live Trading Simulation — Access Controlled</p>
 </header>
 
 <main>
-
-<!-- Ori Ologo -->
-<div id="ori-ologo-container">
-  <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
-</div>
-
-<!-- Access Status -->
-<section class="section" id="access-gate">
-  <h2>Access Status</h2>
-  <p id="access-message">Verifying CPilot qualification and subscription…</p>
-</section>
-
-<!-- Wallet Snapshot -->
-<section class="section">
-  <h2>Wallet Snapshot</h2>
-  <div class="panel">
-    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
-    <p>Status: <span id="wallet-status">Active</span></p>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
   </div>
-</section>
 
-<!-- Trade Selection -->
-<section class="section">
-  <h2>Trade Mode</h2>
-  <div class="radio-group">
-    <label><input type="radio" name="tf-trade-type" value="manual" checked> Manual Trade</label>
-    <label><input type="radio" name="tf-trade-type" value="autotrade"> Auto Trade</label>
-  </div>
-</section>
+  <!-- Access Status -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">Checking CPilot qualification…</p>
+  </section>
 
-<!-- Auto Take-Profit Timing -->
-<section class="section">
-  <h2>Auto Take-Profit Timing</h2>
-  <div class="radio-group">
-    <label><input type="radio" name="tf-tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="tf-tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="tf-tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="180s"> 3 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="tf-tp-time" value="600s"> 10 Minutes</label>
-  </div>
-</section>
+  <!-- Wallet Snapshot -->
+  <section class="section">
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
 
-<!-- TradingFloor Controls -->
-<section class="section">
-  <h2>TradingFloor Controls</h2>
-  <button class="btn-primary" id="start-trading-btn" disabled>Start Trading</button>
-  <button class="btn-secondary" id="stop-trading-btn" disabled>Stop Trading</button>
-  <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
-</section>
+  <!-- Trade Selection -->
+  <section class="section">
+    <h2>Trade Mode</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="trade-type" value="manual" checked> Manual Trade</label>
+      <label><input type="radio" name="trade-type" value="autotrade"> Auto Trade</label>
+    </div>
+  </section>
 
-<!-- Simulation Monitor -->
-<section class="section">
-  <h2>Simulation Monitor</h2>
-  <div class="panel" id="simulation-monitor">
-    <p>Live simulation data will appear here once trading is activated.</p>
-  </div>
-</section>
+  <!-- Auto Take-Profit Timing -->
+  <section class="section">
+    <h2>Auto Take-Profit Timing</h2>
+    <div class="radio-group">
+      <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
+      <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
+      <label><input type="radio" name="tp-time" value="60s"> 1 Minute</label>
+      <label><input type="radio" name="tp-time" value="120s"> 2 Minutes</label>
+      <label><input type="radio" name="tp-time" value="180s"> 3 Minutes</label>
+      <label><input type="radio" name="tp-time" value="300s"> 5 Minutes</label>
+      <label><input type="radio" name="tp-time" value="600s"> 10 Minutes</label>
+    </div>
+  </section>
 
+  <!-- TradingFloor Controls -->
+  <section class="section">
+    <h2>TradingFloor Controls</h2>
+    <button class="btn-primary" id="start-trading-btn" disabled>Start Trading</button>
+    <button class="btn-secondary" id="stop-trading-btn" disabled>Stop Trading</button>
+    <button class="btn-secondary" id="trade-report-btn">Trade Report</button>
+  </section>
+
+  <!-- Simulation Monitor -->
+  <section class="section">
+    <h2>Simulation Monitor</h2>
+    <div class="panel" id="simulation-monitor">
+      <p>Live simulation data will appear here once trading is activated.</p>
+    </div>
+  </section>
 </main>
 
 <!-- JS -->
@@ -114,48 +112,32 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
 <script type="module">
   import { startTradingFloor, stopTradingFloor } from "./core/js/tradingfloor_run_controller.js";
 
-  // Enable buttons once CPilot qualification confirmed
-  document.getElementById("start-trading-btn").disabled = false;
-  document.getElementById("stop-trading-btn").disabled = false;
+  const startBtn = document.getElementById("start-trading-btn");
+  const stopBtn = document.getElementById("stop-trading-btn");
+  const accessMsg = document.getElementById("access-message");
 
-  // Start/Stop handlers
-  document.getElementById("start-trading-btn").addEventListener("click", () => startTradingFloor());
-  document.getElementById("stop-trading-btn").addEventListener("click", () => stopTradingFloor());
-</script>
-
-<section class="section">
-  <h2>Debug: TradingFloor Signals</h2>
-  <div class="panel">
-    <p>Trade Type: <span id="tf-trade-type">manual</span></p>
-    <p>Take-Profit Time: <span id="tf-tp-time">15s</span></p>
-  </div>
-</section>
-
-<script type="module">
-  const tfTradeRadios = document.querySelectorAll('input[name="trade-type"]');
-  const tfTpRadios = document.querySelectorAll('input[name="tp-time"]');
-
-  const tfTradeDisplay = document.getElementById('tf-trade-type');
-  const tfTpDisplay = document.getElementById('tf-tp-time');
-
-  tfTradeRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      window.__TF_TRADE_TYPE__ = radio.value;
-      tfTradeDisplay.textContent = radio.value;
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    if(window.__CPILOT_QUALIFIED__){
+      startBtn.disabled = false;
+      stopBtn.disabled = false;
+      accessMsg.textContent = "CPilot completed. Trading Floor is READY.";
+    } else {
+      startBtn.disabled = true;
+      stopBtn.disabled = true;
+      accessMsg.textContent = "Trading Floor locked. Complete CPilot first.";
+    }
   });
 
-  tfTpRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      window.__TF_TP_TIME__ = radio.value;
-      tfTpDisplay.textContent = radio.value;
-    });
+  startBtn.addEventListener("click", () => {
+    try { startTradingFloor(); } 
+    catch(e){ alert("TradingFloor Start Error: " + e.message); }
   });
 
-  // Initialize default values
-  window.__TF_TRADE_TYPE__ = document.querySelector('input[name="trade-type"]:checked').value;
-  window.__TF_TP_TIME__ = document.querySelector('input[name="tp-time"]:checked').value;
+  stopBtn.addEventListener("click", () => {
+    try { stopTradingFloor(); } 
+    catch(e){ alert("TradingFloor Stop Error: " + e.message); }
+  });
 </script>
- 
+
 </body>
 </html>
