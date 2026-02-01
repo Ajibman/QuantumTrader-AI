@@ -4,35 +4,87 @@
 <meta charset="UTF-8">
 <title>QuantumTrader AI™</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="./core/css/main.css"/>
 <style>
 :root{
   --qt-primary:#1f7f8c;
+  --qt-primary-hover:#165f69;
   --qt-secondary:#0b3442;
+  --qt-secondary-hover:#07262f;
   --qt-muted:#e7f2f4;
   --qt-text:#102a33;
   --qt-lock:#9aa6ad;
   --qt-danger:#8c1f1f;
 }
-body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:var(--qt-text);}
-header{text-align:center;padding:2rem 1.5rem;background:var(--qt-secondary);color:#fff;}
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#f7fbfc;
+  color:var(--qt-text);
+}
+header{
+  text-align:center;
+  padding:2rem 1.5rem;
+  background:var(--qt-secondary);
+  color:#fff;
+}
 header h1{margin:0;font-size:2.2rem;letter-spacing:.5px;}
 header p{margin:.6rem 0 0;font-size:1rem;opacity:.9;}
 main{max-width:1100px;margin:auto;padding:2rem 1.5rem;}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;}
-.card{background:#fff;border-radius:8px;padding:2rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.card{
+  background:#fff;
+  border-radius:8px;
+  padding:2rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
 .card h2{margin-top:0;color:var(--qt-secondary);}
-.status{display:inline-block;font-size:.85rem;font-weight:bold;margin-bottom:.8rem;padding:6px 12px;border-radius:6px;}
+.status{
+  display:inline-block;
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.8rem;
+  letter-spacing:.4px;
+  padding:6px 12px;
+  border-radius:6px;
+  font-weight:bold;
+}
 .available{background:#e6f7e6;color:#1a7f3c;}
 .locked{background:#f2f2f2;color:#9aa6ad;}
 .restricted{background:#fdd;color:#8c1f1f;}
 .card p{font-size:.95rem;line-height:1.5;color:#4a646d;}
-button{margin-top:1rem;padding:.9rem 1.2rem;border:none;border-radius:4px;font-size:1rem;cursor:pointer;background:var(--qt-primary);color:#fff;transition:.2s all;}
-button:hover{opacity:.85;transform:translateY(-1px);}
-button:disabled{background:var(--qt-muted);color:var(--qt-lock);cursor:not-allowed;transform:none;opacity:.7;}
-.panel{padding:1rem;background:var(--qt-muted);border-radius:4px;}
-.radio-group{margin:1rem 0;}
-.radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+button{
+  margin-top:1rem;
+  padding:.9rem 1.2rem;
+  border:none;
+  border-radius:4px;
+  font-size:1rem;
+  cursor:pointer;
+  background:var(--qt-primary);
+  color:#fff;
+  transition:0.2s all;
+}
+button:hover{
+  opacity:0.85;
+  transform:translateY(-1px);
+}
+button:disabled{
+  background:var(--qt-muted);
+  color:var(--qt-lock);
+  cursor:not-allowed;
+  transform:none;
+  opacity:0.7;
+}
+.panel{
+  padding:1rem;
+  background:var(--qt-muted);
+  border-radius:4px;
+  max-height:200px;
+  overflow-y:auto;
+  margin-top:1rem;
+}
 #qtai-globe{display:block;margin:0 auto 1rem;width:70px;opacity:.85;}
 #peace-index-logo{display:block;margin:0 auto .6rem;width:80px;opacity:.75;}
 #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:100px;opacity:.85;z-index:999;}
@@ -53,15 +105,17 @@ Public preview · Controlled rollout · No live trading access
 </div>
 
 <section class="cards">
+
 <!-- TraderLab Card -->
-<div class="card">
+<div class="card primary">
   <div>
     <span class="status available">🟢 AVAILABLE</span>
     <h2>TraderLab</h2>
-    <p>Training, evaluation, and qualification environment. Entry point for all system access.</p>
+    <p>Training, evaluation and qualification environment. All system access begins here.</p>
   </div>
   <button id="enter-traderlab">Enter TraderLab</button>
   <button id="reset-traderlab">Reset TraderLab</button>
+  <div class="panel" id="traderlab-monitor"><p>Logs will appear here.</p></div>
 </div>
 
 <!-- CPilot Card -->
@@ -70,53 +124,28 @@ Public preview · Controlled rollout · No live trading access
     <span id="cpilot-status" class="status locked">🔒 LOCKED</span>
     <h2>CPilot</h2>
     <p>Automated trading simulation and strategy execution layer.</p>
-    <p><em>Unlocks after successful TraderLab completion.</em></p>
+    <p id="cpilot-note"><em>Unlocks only after successful TraderLab completion.</em></p>
   </div>
   <button id="enter-cpilot" disabled>Enter CPilot</button>
   <button id="reset-cpilot" disabled>Reset CPilot</button>
+  <div class="panel" id="cpilot-monitor"><p>Simulation logs will appear here.</p></div>
 </div>
 
-<!-- Trading Floor Card -->
+<!-- TradingFloor Card -->
 <div class="card">
   <div>
-    <span class="status restricted">⛔ RESTRICTED</span>
+    <span id="tf-status" class="status restricted">⛔ RESTRICTED</span>
     <h2>Trading Floor</h2>
     <p>Live trading environment with real capital exposure.</p>
     <p><em>Invitation-only. Requires CPilot qualification.</em></p>
   </div>
   <button id="enter-tradingfloor" disabled>Enter Trading Floor</button>
   <button id="reset-tradingfloor" disabled>Reset Trading Floor</button>
+  <div class="panel" id="tradingfloor-monitor"><p>Live simulation logs will appear here.</p></div>
 </div>
 
-<!-- Wallet Snapshot Card -->
-<div class="card">
-  <div>
-    <h2>Wallet Snapshot</h2>
-    <p>Current balance and accrued auto-trade profits.</p>
-  </div>
-  <div class="panel">
-    <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
-    <p>Accrued Auto Profit: <strong id="wallet-profit">₦0.00</strong></p>
-    <p>Status: <span id="wallet-status">Active</span></p>
-  </div>
-</div>
-
-<!-- Auto Take-Profit Timer Card -->
-<div class="card">
-  <div>
-    <h2>Auto Take-Profit Timer</h2>
-    <p>Set auto-close timing for trades (15s → 10min)</p>
-  </div>
-  <div class="radio-group" id="tp-timer-group">
-    <label><input type="radio" name="tp-time" value="15s" checked> 15 Seconds</label>
-    <label><input type="radio" name="tp-time" value="30s"> 30 Seconds</label>
-    <label><input type="radio" name="tp-time" value="60s"> 1 Minute</label>
-    <label><input type="radio" name="tp-time" value="120s"> 2 Minutes</label>
-    <label><input type="radio" name="tp-time" value="300s"> 5 Minutes</label>
-    <label><input type="radio" name="tp-time" value="600s"> 10 Minutes</label>
-  </div>
-</div>
 </section>
+</main>
 
 <footer>
 <img id="peace-index-logo" src="./assets/images/peace_index_logo.png" alt="Peace Index"/>
@@ -128,52 +157,110 @@ QuantumTrader AI operates under staged deployment and access-control principles.
 <img src="./assets/images/qtai_ori_olokun.png" alt="Ori Olokun — Silent Guide"/>
 </div>
 
-<!-- Wallet & TP Scripts -->
-<script type="module">
-const walletBalanceEl = document.getElementById("wallet-balance");
-const walletProfitEl = document.getElementById("wallet-profit");
+<!-- Core Scripts -->
+<script src="core/js/wallet.js"></script>
+<script src="core/js/ori_ologo.js"></script>
+<script src="core/js/cpilot_autotrader_bridge.js"></script>
+<script src="core/js/cpilot_execution_gate.js"></script>
+<script src="core/js/cpilot_run_control.js"></script>
+<script src="core/js/cpilot_full.js"></script>
+<script src="core/js/simulation/simulation_feed.js"></script>
 
-const tpRadios = document.querySelectorAll('input[name="tp-time"]');
-
-window.__WALLET__ = {
-  balance: 100000,
-  profit: 0,
-  addProfit(amount){
-    this.profit += amount;
-    walletProfitEl.textContent = `₦${this.profit.toLocaleString()}`;
-  },
-  getBalance(){
-    return this.balance + this.profit;
-  }
-};
-
-window.__AUTO_TP__ = {
-  getSelected(){
-    const sel = Array.from(tpRadios).find(r=>r.checked);
-    if(!sel) return null;
-    const val = parseInt(sel.value,10);
-    return val; 
-  },
-  showSelected(){
-    const seconds = this.getSelected();
-    if(seconds) console.log(`Auto Take-Profit set to ${seconds} seconds.`);
-  }
-};
-
-tpRadios.forEach(radio=>{
-  radio.addEventListener("change", ()=>{
-    window.__AUTO_TP__.showSelected();
-  });
+<!-- TraderLab Simulation -->
+<script>
+const traderlabMonitor=document.getElementById("traderlab-monitor");
+let tlRunning=false;
+document.getElementById("enter-traderlab").addEventListener("click",()=>{
+  if(tlRunning)return;
+  tlRunning=true;
+  const p=document.createElement("p");
+  p.textContent=`[${new Date().toLocaleTimeString()}] TraderLab session STARTED`;
+  traderlabMonitor.appendChild(p);
+  traderlabMonitor.scrollTop=traderlabMonitor.scrollHeight;
+  setTimeout(()=>{
+    const p=document.createElement("p");
+    p.textContent=`[${new Date().toLocaleTimeString()}] TraderLab session COMPLETED`;
+    traderlabMonitor.appendChild(p);
+    traderlabMonitor.scrollTop=traderlabMonitor.scrollHeight;
+    tlRunning=false;
+  },5000);
 });
-
-walletBalanceEl.textContent = `₦${window.__WALLET__.balance.toLocaleString()}`;
-walletProfitEl.textContent = `₦${window.__WALLET__.profit.toLocaleString()}`;
+document.getElementById("reset-traderlab").addEventListener("click",()=>{
+  traderlabMonitor.innerHTML="<p>Logs cleared</p>";
+  tlRunning=false;
+});
 </script>
 
-<!-- CPilot Gate Module -->
+<!-- CPilot Simulation -->
+<script>
+const cpilotMonitor=document.getElementById("cpilot-monitor");
+let cpilotRunning=false;
+document.getElementById("enter-cpilot").addEventListener("click",()=>{
+  if(cpilotRunning)return;
+  cpilotRunning=true;
+  const p=document.createElement("p");
+  p.textContent=`[${new Date().toLocaleTimeString()}] CPilot session STARTED`;
+  cpilotMonitor.appendChild(p);
+  cpilotMonitor.scrollTop=cpilotMonitor.scrollHeight;
+  setTimeout(()=>{
+    const p=document.createElement("p");
+    p.textContent=`[${new Date().toLocaleTimeString()}] CPilot session COMPLETED`;
+    cpilotMonitor.appendChild(p);
+    cpilotMonitor.scrollTop=cpilotMonitor.scrollHeight;
+    cpilotRunning=false;
+  },5000);
+});
+document.getElementById("reset-cpilot").addEventListener("click",()=>{
+  cpilotMonitor.innerHTML="<p>Logs cleared</p>";
+  cpilotRunning=false;
+});
+</script>
+
+<!-- TradingFloor Simulation -->
+<script>
+import { simulationFeed } from "./core/js/simulation/simulation_feed.js";
+
+const enterTfBtn=document.getElementById("enter-tradingfloor");
+const resetTfBtn=document.getElementById("reset-tradingfloor");
+const tfMonitor=document.getElementById("tradingfloor-monitor");
+let tfRunning=false;
+
+function logTf(msg){
+  const p=document.createElement("p");
+  p.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;
+  tfMonitor.appendChild(p);
+  tfMonitor.scrollTop=tfMonitor.scrollHeight;
+}
+
+function startTradingFloor(){
+  if(tfRunning)return;
+  tfRunning=true;
+  logTf("TradingFloor session STARTED");
+  simulationFeed.subscribe(tick=>{
+    if(!tfRunning)return;
+    logTf(`Price: ${tick.price}, Volume: ${tick.volume}`);
+  });
+  simulationFeed.start({value:5,unit:"seconds"});
+  enterTfBtn.disabled=true;
+  resetTfBtn.disabled=false;
+}
+
+function stopTradingFloor(){
+  if(!tfRunning)return;
+  tfRunning=false;
+  simulationFeed.stop();
+  logTf("TradingFloor session STOPPED");
+  enterTfBtn.disabled=false;
+  resetTfBtn.disabled=true;
+}
+
+enterTfBtn.addEventListener("click",startTradingFloor);
+resetTfBtn.addEventListener("click",stopTradingFloor);
+</script>
+
 <script type="module">
-import { applyCPilotGate } from "./core/js/cpilot/cpilot_ui_gate.js";
-applyCPilotGate();
+  import { applyCPilotGate } from "./core/js/cpilot/cpilot_ui_gate.js";
+  applyCPilotGate();
 </script>
 
 </body>
