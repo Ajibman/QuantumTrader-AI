@@ -123,5 +123,39 @@ button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:
   document.getElementById("stop-trading-btn").addEventListener("click", () => stopTradingFloor());
 </script>
 
+<section class="section">
+  <h2>Debug: TradingFloor Signals</h2>
+  <div class="panel">
+    <p>Trade Type: <span id="tf-trade-type">manual</span></p>
+    <p>Take-Profit Time: <span id="tf-tp-time">15s</span></p>
+  </div>
+</section>
+
+<script type="module">
+  const tfTradeRadios = document.querySelectorAll('input[name="trade-type"]');
+  const tfTpRadios = document.querySelectorAll('input[name="tp-time"]');
+
+  const tfTradeDisplay = document.getElementById('tf-trade-type');
+  const tfTpDisplay = document.getElementById('tf-tp-time');
+
+  tfTradeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      window.__TF_TRADE_TYPE__ = radio.value;
+      tfTradeDisplay.textContent = radio.value;
+    });
+  });
+
+  tfTpRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      window.__TF_TP_TIME__ = radio.value;
+      tfTpDisplay.textContent = radio.value;
+    });
+  });
+
+  // Initialize default values
+  window.__TF_TRADE_TYPE__ = document.querySelector('input[name="trade-type"]:checked').value;
+  window.__TF_TP_TIME__ = document.querySelector('input[name="tp-time"]:checked').value;
+</script>
+ 
 </body>
 </html>
