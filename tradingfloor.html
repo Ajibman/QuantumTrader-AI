@@ -99,5 +99,129 @@ document.getElementById("stop-trade-btn").addEventListener("click", () => {
 });
 </script>
 
+<section class="section" id="access-gate">
+  <h2>Access Status</h2>
+  <p id="access-message">Checking CPilot qualification...</p>
+</section>
+
+<section class="section">
+<h2>Trade Mode</h2>
+<div class="radio-group">
+  <label><input type="radio" name="trade-type" value="manual" checked disabled> Manual Trade</label>
+  <label><input type="radio" name="trade-type" value="autotrade" disabled> Auto Trade</label>
+</div>
+</section>
+
+<section class="section">
+<h2>Auto Take-Profit Timing</h2>
+<div class="radio-group">
+  <label><input type="radio" name="tp-time" value="15s" checked disabled> 15 Seconds</label>
+  <label><input type="radio" name="tp-time" value="30s" disabled> 30 Seconds</label>
+  <label><input type="radio" name="tp-time" value="60s" disabled> 1 Minute</label>
+  <label><input type="radio" name="tp-time" value="120s" disabled> 2 Minutes</label>
+  <label><input type="radio" name="tp-time" value="180s" disabled> 3 Minutes</label>
+  <label><input type="radio" name="tp-time" value="240s" disabled> 4 Minutes</label>
+  <label><input type="radio" name="tp-time" value="300s" disabled> 5 Minutes</label>
+  <label><input type="radio" name="tp-time" value="600s" disabled> 10 Minutes</label>
+</div>
+</section>
+
+<section class="section">
+<h2>Trading Controls</h2>
+<button class="btn-primary" id="start-trade-btn" disabled>Start Auto Trading</button>
+<button class="btn-secondary" id="stop-trade-btn" disabled>Stop Auto Trading</button>
+</section>
+
+<script type="module">
+import { startTradingFloor, stopTradingFloor } from "./core/js/tradingfloor_run_controller.js";
+
+// Access gate check: must pass CPilot
+const startBtn = document.getElementById("start-trade-btn");
+const stopBtn = document.getElementById("stop-trade-btn");
+const tpRadios = document.querySelectorAll('input[name="tp-time"]');
+const modeRadios = document.querySelectorAll('input[name="trade-type"]');
+const accessMsg = document.getElementById("access-message");
+
+function unlockTradingFloor() {
+  accessMsg.textContent = "Access Granted — Ready for Auto Trading.";
+  startBtn.disabled = false;
+  modeRadios.forEach(r => r.disabled = false);
+  tpRadios.forEach(r => r.disabled = false);
+}
+
+// Simulated CPilot check
+if (window.TraderLab && window.TraderLab.passedCPilot) {
+  unlockTradingFloor();
+} else {
+  accessMsg.textContent = "⛔ Access Denied — Complete CPilot to unlock Trading Floor.";
+}
+
+startBtn.addEventListener("click", () => {
+  try {
+    startTradingFloor();
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    tpRadios.forEach(r => r.disabled = true);
+    modeRadios.forEach(r => r.disabled = true);
+  } catch(e){ alert(e.message); }
+});
+
+stopBtn.addEventListener("click", () => {
+  stopTradingFloor();
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+  tpRadios.forEach(r => r.disabled = false);
+  modeRadios.forEach(r => r.disabled = false);
+});
+</script>
+
+<section class="section">
+  <h2>Trading Monitor</h2>
+  <div class="panel" id="trading-monitor">
+    <p>Simulation ticks will appear here once Auto Trading is activated.</p>
+  </div>
+</section>
+
+<script type="module">
+import { simulationFeed } from "./core/js/simulation/simulation_feed.js";
+
+const monitor = document.getElementById("trading-monitor");
+const startBtn = document.getElementById("start-trade-btn");
+const stopBtn = document.getElementById("stop-trade-btn");
+
+// Emit tick to monitor
+function logTick(tick) {
+  const p = document.createElement("p");
+  p.textContent = `[${new Date(tick.timestamp).toLocaleTimeString()}] Price: ${tick.price} | Volume: ${tick.volume}`;
+  monitor.prepend(p);
+}
+
+// Start TradingFloor simulation
+export function startTradingFloor() {
+  simulationFeed.subscribe(logTick);
+  const selectedTP = document.querySelector('input[name="tp-time"]:checked').value;
+  const durationMs = convertToMs(selectedTP);
+
+  simulationFeed.start({ unit: "seconds", value: durationMs / 1000 });
+
+  setTimeout(() => {
+    stopTradingFloor();
+  }, durationMs);
+}
+
+// Stop TradingFloor simulation
+export function stopTradingFloor() {
+  simulationFeed.stop();
+}
+
+// Convert radio button value to milliseconds
+function convertToMs(value) {
+  const num = parseInt(value, 10);
+  if (value.endsWith("s")) return num * 1000;
+  if (value.endsWith("m")) return num * 60000;
+  return 10000; // default fallback
+}
+   </script>
+ 
 </body>
 </html>
