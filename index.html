@@ -115,5 +115,48 @@ applyCPilotGate();      // CPilot buttons based on TraderLab
 applyTradingFloorGate();// Trading Floor buttons based on CPilot
 </script>
 
+ <script type="module">
+  // Import start/stop controllers for each module
+  import { startTraderLab } from "./core/js/traderlab/traderlab_run_controller.js";
+  import { startCPilot } from "./core/js/cpilot/cpilot_run_controller.js";
+  import { startTradingFloor } from "./core/js/tradingfloor/tradingfloor_run_controller.js";
+
+  // TraderLab
+  document.getElementById("enter-traderlab").addEventListener("click", () => {
+    try {
+      startTraderLab();
+    } catch(e) {
+      alert("TraderLab Error: " + e.message);
+    }
+  });
+  document.getElementById("reset-traderlab").addEventListener("click", () => {
+    location.reload(); // simple reset for now
+  });
+
+  // CPilot
+  document.getElementById("enter-cpilot").addEventListener("click", () => {
+    try {
+      startCPilot();
+    } catch(e) {
+      alert("CPilot Error: " + e.message);
+    }
+  });
+  document.getElementById("reset-cpilot").addEventListener("click", () => {
+    location.reload();
+  });
+
+  // Trading Floor
+  document.getElementById("enter-tradingfloor").addEventListener("click", () => {
+    try {
+      startTradingFloor();
+    } catch(e) {
+      alert("Trading Floor Error: " + e.message);
+    }
+  });
+  document.getElementById("reset-tradingfloor").addEventListener("click", () => {
+    location.reload();
+  });
+ </script>
+
 </body>
 </html>
