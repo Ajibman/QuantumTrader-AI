@@ -168,6 +168,22 @@
     applyOwnerState(getOwnerState());
   }, POLL_INTERVAL);
 })();
+
+<div id="ownerBadge"
+     style="position:fixed;bottom:6px;right:6px;
+            background:#1f6feb;color:#fff;
+            padding:4px 6px;font-size:11px;
+            display:none;z-index:9999;">
+  OWNER TEST MODE
+</div>
+
+<script>
+document.addEventListener("QT_OWNER_UPDATE", (e) => {
+  if (e.detail.mode === "owner-test") {
+    document.getElementById("ownerBadge").style.display = "block";
+  }
+});
+</script>
  
 </body>
 </html>
