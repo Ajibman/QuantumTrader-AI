@@ -155,5 +155,35 @@
   });
 </script>
 
+(function () {
+  const POLL_INTERVAL = 500; // ms
+
+  function getOwnerState() {
+    return window.QT_OWNER_STATE || null;
+  }
+
+  function applyOwnerState(state) {
+    if (!state) return;
+
+    // Expose globally for all modules
+    window.QT_CONTEXT = {
+      mode: state.mode,
+      page: state.page,
+      nodes: Array.from(state.nodes)
+    };
+
+    // Page-specific hooks
+    document.dispatchEvent(
+      new CustomEvent("QT_OWNER_UPDATE", {
+        detail: window.QT_CONTEXT
+      })
+    );
+  }
+
+  setInterval(() => {
+    applyOwnerState(getOwnerState());
+  }, POLL_INTERVAL);
+})();
+ 
 </body>
 </html>
