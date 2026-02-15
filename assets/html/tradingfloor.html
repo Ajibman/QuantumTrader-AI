@@ -1,0 +1,174 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumTrader AI™ — Trading Floor</title>
+
+<style>
+:root {
+  --bg: #000428;
+  --card: #071226;
+  --accent: #00ffe7;
+  --text: #ffffff;
+  --warn: #ffb000;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem 2rem;
+  background: var(--card);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.panel {
+  background: #08192e;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 12px rgba(0,0,0,.5);
+}
+
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00ffd0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Trading Floor</h1>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>Market State Overview</h2>
+    <p>
+      Aggregated intelligence from Peace Indexes, Forex markets,
+      commodities, metals, oil, shares, and global indexes.
+    </p>
+    <p>
+      Ori Ologo continuously evaluates whether the current environment
+      is suitable for trading or demands restraint.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Ori Ologo Commentary</h2>
+    <p id="ori-commentary">Awaiting market alignment…</p>
+  </div>
+
+  <div class="panel">
+    <h2>Simulation / AutoTrader</h2>
+    <label for="market-select">Select Market:</label>
+    <select id="market-select">
+      <option value="SP500">S&P 500</option>
+      <option value="Forex">E-Currencies</option>
+      <option value="Crypto">Cryptocurrencies</option>
+    </select>
+    <label for="ta-select">Select TA Tool:</label>
+    <select id="ta-select">
+      <option value="preset">Preset Default</option>
+      <option value="tool1">Tool 1</option>
+      <option value="tool2">Tool 2</option>
+      <option value="tool3">Tool 3</option>
+      <option value="tool4">Tool 4</option>
+      <option value="tool5">Tool 5</option>
+      <option value="tool6">Tool 6</option>
+      <option value="tool7">Tool 7</option>
+      <option value="tool8">Tool 8</option>
+      <option value="tool9">Tool 9</option>
+      <option value="tool10">Tool 10</option>
+    </select>
+    <label for="pattern-select">Select Pattern:</label>
+    <select id="pattern-select">
+      <option value="doji">Doji</option>
+      <option value="hammer">Hammer</option>
+      <option value="engulfing">Engulfing</option>
+    </select>
+    <button id="execute-sim">Execute Simulated Trade</button>
+    <div id="simulation-log" style="margin-top:1rem; max-height:200px; overflow-y:auto; color:#00ffd0;"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Execution Discipline</h2>
+    <ul>
+      <li>No forced trades</li>
+      <li>No emotional execution</li>
+      <li>Capital protection enforced</li>
+      <li>Peace-weighted market bias</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+© 2026 QuantumTrader AI™ — Trading Floor
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const ori = document.getElementById("ori-commentary");
+  const executeBtn = document.getElementById("execute-sim");
+  const simLog = document.getElementById("simulation-log");
+
+  executeBtn.addEventListener("click", () => {
+    const market = document.getElementById("market-select").value;
+    const ta = document.getElementById("ta-select").value;
+    const pattern = document.getElementById("pattern-select").value;
+
+    // Simulate Peace Index (0-100)
+    const peaceIndex = Math.floor(Math.random() * 101);
+    const status = peaceIndex >= 50 ? "Executed" : "Skipped due to Peace Index";
+
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] Market: ${market}, TA: ${ta}, Pattern: ${pattern}, Peace Index: ${peaceIndex}, Status: ${status}`;
+    
+    simLog.prepend(logEntry + "<br>");
+    ori.textContent = `Ori Ologo Advisory: Last trade ${status} at ${timestamp}`;
+  });
+});
+</script>
+
+</body>
+</html>

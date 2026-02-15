@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumTrader AI™ — Dashboard</title>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+
+  <!-- =========================
+       DASHBOARD JS
+  ========================== -->
+  <script src="js/dashboard.js"></script>
+
+  <!-- Globe Preview -->
+  <section id="globe-dashboard">
+    <img src="assets/images/qtai_globe.png" alt="Quantum Trader Globe" class="globe">
+  </section>
+  
+  <!-- Dashboard Header -->
+  <header>
+    <img src="assets/images/peace_index_logo.png" alt="Peace Index Logo" class="logo">
+  </header>
+
+  <!-- Modules Display -->
+  <section id="modules">  
+    <div class="module">
+      <img src="assets/images/macarthur.png" alt="Macarthur">
+    </div>
+    <div class="module">
+      <img src="assets/images/tradingfloor_main.png" alt="Trading Floor Main">
+    </div>
+    <div class="module">
+      <img src="assets/images/traderlab_icon.png" alt="Trader Lab">
+    </div>
+    <div class="module">
+      <img src="assets/images/cpilot_panel.png" alt="Commercial Pilot Panel">
+    </div>
+  </section>
+
+  <script src="js/dashboard.js"></script>
+
+<style>
+:root{
+  --bg:#000428;
+  --card:#071226;
+  --muted:#bbb;
+  --accent:#1abc9c;
+  --buy:#2ecc71;
+  --sell:#e74c3c;
+  --hold:#f39c12;
+  --panel-gap:12px;
+  --header-gap:18px;
+}
+
+html,body{
+  height:100%; margin:0; padding:0;
+  background:var(--bg);
+  font-family:Inter, Arial, sans-serif;
+  color:#fff;
+}
+.container{max-width:1120px; margin:0 auto; padding:18px;}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--header-gap);
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+.brand-left, .brand-right{display:flex; align-items:center; justify-content:center;}
+.brand-left img, .brand-right img{height:auto; max-height:80px;}
+@media (max-width:520px){
+  header{flex-direction:column; gap:8px;}
+  .brand-left img, .brand-right img{max-height:64px;}
+}
+
+h1{font-size:20px; margin:12px 0 6px;}
+h2{font-size:18px; margin:8px 0;}
+p{margin:6px 0; color:var(--muted); font-size:14px;}
+
+.node-section{margin-top:22px; padding:10px;}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  border-radius:10px;
+  padding:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.45);
+}
+
+.center{text-align:center;}
+button.cta{
+  background:var(--accent);
+  color:#061018;
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+/* Map */
+#map-area{display:flex; flex-direction:column; gap:12px; align-items:center;}
+#macarthur-map{
+  max-width:480px; width:100%;
+  border-radius:8px; cursor:pointer;
+  box-shadow:0 8px 30px rgba(0,0,0,0.6);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+#macarthur-map:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 40px rgba(0,0,0,0.7);
+}
+#forex-tooltip{
+  position:fixed; display:none;
+  background:rgba(10,12,18,0.97);
+  padding:10px; border-radius:8px;
+  pointer-events:none; z-index:9999;
+  max-width:380px; font-size:13px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.6);
+}
+
+/* Currencies */
+#currencies-panel{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:var(--panel-gap);
+}
+@media (max-width:880px){
+  #currencies-panel{grid-template-columns:1fr;}
+  .container{padding:12px;}
+}
+.currency-card{
+  background:var(--card);
+  border-radius:10px;
+  padding:12px;
+  transition:transform .12s ease;
+  cursor:pointer;
+}
+.currency-card:hover{transform:translateY(-3px);}
+.currency-card .row{display:flex; justify-content:space-between;}
+.currency-title{font-weight:700;}
+.signal-pill{
+  padding:6px 10px; border-radius:999px;
+  font-weight:700; font-size:13px; color:#061018;
+}
+.signal-buy{background:var(--buy);}
+.signal-sell{background:var(--sell);}
+.signal-hold{background:var(--hold);}
+.currency-body{margin-top:10px; display:none; color:var(--muted);}
+.currency-body.open{display:block;}
+
+footer{margin-top:28px; padding:14px; text-align:center; color:var(--muted); font-size:13px;}
+</style>
+
+<div class="container">
+<header>
+  <div class="brand-left">
+    <img src="images/qtai_globe.png" alt="QuantumTrader AI Logo">
+  </div>
+  <div class="brand-right">
+    <a href="https://www.visionofhumanity.org/maps/" target="_blank" rel="noopener noreferrer">
+      <img src="images/peace_index_logo.png" alt="Peace Index Logo">
+    </a>
+  </div>
+</header>
+
+<!-- MAP -->
+<section class="node-section">
+  <div class="card center" id="map-area">
+    <img id="macarthur-map" src="assets/images/macarthur.png" alt="MacArthur Map" />
+    <p class="muted">Click map to open full dashboard or hover for signals</p>
+  </div>
+  <div id="forex-tooltip"></div>
+</section>
+
+<!-- PAYMENTS -->
+<section class="node-section">
+  <div class="card">
+    <h2>Payments</h2>
+    <p class="muted">Simulation-safe payment options</p>
+
+    <label for="paymentOption">Choose Payment Option:</label>
+    <select id="paymentOption">
+      <option value="OPTION_1">Option 1</option>
+      <option value="OPTION_2">Option 2</option>
+      <option value="OPTION_3">Option 3</option>
+    </select>
+
+    <button id="payBtn" class="cta" style="margin-top:10px;">Pay Now</button>
+  </div>
+</section>
+
+<!-- CURRENCIES -->
+<section class="node-section">
+  <div class="card">
+    <h2>Top 10 Currencies — Market Engine</h2>
+    <p class="muted">Technical Analysis + Forex Events</p>
+    <div id="currencies-panel"></div>
+  </div>
+</section>
+
+<!-- LOGS -->
+<section class="node-section">
+  <div class="card">
+    <h2>Trade & System Logs</h2>
+    <p class="muted">Monitor simulation & live trades</p>
+    <div id="logs-panel"><p class="muted">No logs yet…</p></div>
+  </div>
+</section>
+
+<footer>© 2025 QuantumTrader AI™ | Olagoke Ajibulu - Architect, Concepts & Design</footer>
+</div>
+
+<!-- PAYMENT MODULE -->
+<script type="module">
+import { runOption1Payment } from './utils/option1-trigger.js';
+import { runOption2Payment } from './utils/option2-trigger.js';
+import { runOption3Payment } from './utils/option3-trigger.js';
+
+const payBtn = document.getElementById('payBtn');
+const paymentOption = document.getElementById('paymentOption');
+
+const currentUser = { id:'USER123' };
+const paymentData = { amount:2000, method:'CARD' };
+
+payBtn.addEventListener('click', async ()=>{
+  payBtn.disabled = true;
+  payBtn.textContent = 'Processing…';
+
+  let result;
+  switch(paymentOption.value){
+    case 'OPTION_1': result = await runOption1Payment(currentUser,paymentData); break;
+    case 'OPTION_2': result = await runOption2Payment(currentUser,paymentData); break;
+    case 'OPTION_3': result = await runOption3Payment(currentUser,paymentData); break;
+  }
+
+  if(result?.status === 'BLOCKED') alert(result.reason);
+  else if(result?.status === 'SUCCESS') alert('Payment processed.');
+  else alert('Payment failed.');
+
+  payBtn.disabled = false;
+  payBtn.textContent = 'Pay Now';
+});
+</script>
+
+<script src="js/cclm2.js"></script>
+<script src="js/nodes.js"></script>
+<script src="js/owner-bridge.js"></script>
+<script>
+  // page-specific QT_OWNER_UPDATE listener
+</script>
+  
+</body>
+</html>

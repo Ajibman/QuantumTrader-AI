@@ -1,0 +1,47 @@
+// core/cpilot/cpilot_simulation_bind.js
+
+import { CPilotEngine } from "./cpilot_engine.js";
+import { simulationFeed } from "../simulation/simulation_feed.js";
+
+const CPilotSimulationBind = {
+  activeSignal: null,
+
+  start(signal) {
+    if (!signal) {
+      console.warn("CPilotSimulationBind.start: No signal provided");
+      return;
+    }
+
+    if (!signal.permission?.cpilotAllowed) {
+      console.warn("CPilotSimulationBind.start: CPilot not permitted by signal");
+      return;
+    }
+
+    this.activeSignal = signal;
+
+    // Load signal into CPilot
+    CPilotEngine.loadSignal(signal);
+
+    // Start CPilot core
+    CPilotEngine.start();
+
+    // Start simulation feed and forward ticks
+    simulationFeed.start(signal.timing, (tick) => {
+      CPilotEngine.onMarketTick(tick);
+    });
+  },
+
+  stop() {
+    if (!this.activeSignal) {
+      console.warn("CPilotSimulationBind.stop: No active signal");
+      return;
+    }
+
+    simulationFeed.stop();
+    CPilotEngine.stop();
+
+    this.activeSignal = null;
+  }
+};
+
+export default CPilotSimulationBind;

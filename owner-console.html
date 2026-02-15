@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QuantumTrader AI — Owner Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    body {
+      font-family: monospace;
+      background: #0b0f14;
+      color: #e6edf3;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #58a6ff;
+    }
+
+    .panel {
+      border: 1px solid #30363d;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      background: #0d1117;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      color: #79c0ff;
+    }
+
+    button {
+      background: #238636;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      margin: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #30363d;
+    }
+
+    .node-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .node {
+      padding: 6px;
+      border: 1px solid #30363d;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+    }
+
+    .node.active {
+      background: #1f6feb;
+    }
+
+    .status {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    footer {
+      opacity: 0.6;
+      margin-top: 30px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🧠 QuantumTrader AI — Owner Console</h1>
+
+  <!-- MODE CONTROL -->
+  <div class="panel">
+    <h2>System Mode</h2>
+    <button onclick="setMode('simulation')">Simulation</button>
+    <button onclick="setMode('owner-test')">Owner Test</button>
+    <button onclick="setMode('live')" class="secondary">Live (Locked)</button>
+  </div>
+
+  <!-- PAGE CONTEXT -->
+  <div class="panel">
+    <h2>Active Page Context</h2>
+    <button onclick="setPage('TraderLab')">TraderLab</button>
+    <button onclick="setPage('TradingFloor')">TradingFloor</button>
+    <button onclick="setPage('CPilot')">CPilot</button>
+  </div>
+
+  <!-- NODE SELECTION -->
+  <div class="panel">
+    <h2>Active Cognitive Nodes</h2>
+    <div class="node-grid" id="nodeGrid"></div>
+  </div>
+
+  <!-- SYSTEM STATE -->
+  <div class="panel">
+    <h2>System State</h2>
+    <div class="status" id="statusPanel"></div>
+  </div>
+
+  <footer>
+    Owner Console — Restricted • QuantumTrader AI
+  </footer>
+
+<script>
+  // ===== OWNER STATE (GLOBAL) =====
+  const OwnerState = {
+    mode: 'simulation',
+    page: 'TraderLab',
+    nodes: new Set()
+  };
+
+  // ===== INIT NODES =====
+  const nodeGrid = document.getElementById('nodeGrid');
+  for (let i = 1; i <= 15; i++) {
+    const div = document.createElement('div');
+    div.className = 'node';
+    div.innerText = `Node ${String(i).padStart(2,'0')}`;
+    div.onclick = () => toggleNode(i, div);
+    nodeGrid.appendChild(div);
+  }
+
+  function toggleNode(id, el) {
+    if (OwnerState.nodes.has(id)) {
+      OwnerState.nodes.delete(id);
+      el.classList.remove('active');
+    } else {
+      OwnerState.nodes.add(id);
+      el.classList.add('active');
+    }
+    renderStatus();
+  }
+
+  function setMode(mode) {
+    if (mode === 'live') {
+      alert('Live mode is locked in Owner Console.');
+      return;
+    }
+    OwnerState.mode = mode;
+    renderStatus();
+  }
+
+  function setPage(page) {
+    OwnerState.page = page;
+    renderStatus();
+  }
+
+  function renderStatus() {
+    document.getElementById('statusPanel').innerHTML = `
+      <strong>Mode:</strong> ${OwnerState.mode}<br/>
+      <strong>Page:</strong> ${OwnerState.page}<br/>
+      <strong>Active Nodes:</strong> ${[...OwnerState.nodes].sort().join(', ') || 'None'}
+    `;
+
+    // Make available globally for later CCLM² wiring
+    window.QT_OWNER_STATE = OwnerState;
+  }
+
+  renderStatus();
+</script>
+
+</body>
+</html>
