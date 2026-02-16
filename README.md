@@ -1,4 +1,4 @@
-1. 🌹🕊️👉QuantumTrader-AI
+ 1. 🌹🕊️👉QuantumTrader-AI
 Owner-Test / Simulation Edition (Architecture-Frozen)
 Status: Owner-Test & Simulation Only
 Execution: Disabled by Design
@@ -58,8 +58,6 @@ Blocks execution.
 Logs the event.
 Preserves safety.
 
-https://ajibman.github.io/QuantumTrader-AI/
-
 System Architecture (High Level)
 Owner Console:
 Central authority for mode selection and node activation.
@@ -106,8 +104,6 @@ Regulators (for inspection).
 Investors (for governance evaluation).
 It is not intended for retail users or live trading.
 
-https://ajibman.github.io/QuantumTrader-AI/
-
 Usage Notice:
 By using or reviewing this software, you acknowledge that -
 It does not execute trades.
@@ -133,6 +129,6 @@ This Owner-Test release represents a complete, frozen, and defensible architectu
 
 https://ajibman.github.io/QuantumTrader-AI/
 
-Concepts, Design and Architecture Team
+Concepts, Design and Systems Architecture Team
 February 15, 2026
 
