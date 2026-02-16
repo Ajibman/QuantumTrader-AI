@@ -1,4 +1,4 @@
- 1. 🌹🕊️👉QuantumTrader-AI
+🌹🕊️👉QuantumTrader-AI
 Owner-Test / Simulation Edition (Architecture-Frozen)
 Status: Owner-Test & Simulation Only
 Execution: Disabled by Design
@@ -19,6 +19,7 @@ Auditability
 before any notion of live deployment.
 What This Release Is
 This Owner-Test release is:
+
 ✅ A decision-support and analysis system.
 ✅ A governed AI experimentation platform.
 ✅ A demonstration of safe system architecture.
@@ -33,6 +34,7 @@ https://ajibman.github.io/QuantumTrader-AI/
 
 What This Release Is NOT
 This release is not:
+
 ❌ A live trading bot.
 ❌ An autonomous execution system.
 ❌ Connected to brokers or exchanges.
