@@ -1,8 +1,24 @@
 🌹🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️
-QuantumTrader-AI
+QuantumTrader-AI 
+Translate this README:
+https://translate.google.com/translatesl=auto&tl=en&u=https://github.com/ajibman/QuantumTrader-AI
+
+📌 How it works:
+sl=auto → auto-detect source language
+tl=en → default target language (user can change it)
+Users can select any language from the Google Translate UI
+You may optionally replace tl=en with:
+tl=fr (French)
+tl=ar (Arabic)
+tl=pt (Portuguese) …but leaving it as en is neutral and safe.
+⚖️ Disclaimer:
+👉Note: Translations are provided for accessibility.  
+👉 In the event of interpretational differences, the original English version governs. Else change "en" to language of choice.
+
+QuantumTrader-AI is now at 
 Owner-Test / Simulation Edition (Architecture-Frozen)
-QuantumTrader-AI is the App. Quantum-origen neural exchange ai is the network.
-Status: Owner-Test & Simulation Only
+QuantumTrader-AI is the App. Quantum-origin neural exchange ai (Qonexeai is the network.
+Current Status: Owner-Test & Simulation Only
 Execution: Disabled by Design
 Live Trading: Architecturally Unreachable
 Version Line: v1.0.0-owner-test-frozen.
@@ -101,7 +117,7 @@ Contained.
 If you have invested any amount during test mode, be rest assured that it is still intact. We know payments are possible.
 
  👉Certification Status:
-QuantumTrader-AI is currently operating prior to external certification from QonexAI™.
+QuantumTrader-AI is currently operating prior to external certification from QonexAI in a 60 day Registrar window.
 
 Until certification is granted:
 Live execution remains disabled.
@@ -168,5 +184,21 @@ Following certification under the QonexAI™ framework, this posture ensures tha
 👉Trust is earned and Safety is no compromise.
 👉If a NT member invite a user, you automatically become a guarantor and mentor.
 
+👉🧬 Doctrine–Software Binding Statement
+In QuantumTrader-AI, every technical node corresponds to a human responsibility.
+No logic executes without accountability. No access exists without mentorship.
+This binds:
+Cognitive Nodes ↔ Human Guarantors
+Access Rights ↔ Ethical Responsibility
+Growth ↔ Traceability
+🪡 The Threaded Needle, Restated as System Law
+A threaded needle is never gone missing.
+In system terms:
+No anonymous actors
+No orphan intelligence
+No unmanaged scale
+Every participant is introduced, guided, and answerable—not surveilled, not excluded, but held within the fabric of the system.
+
+?????
 Concepts, Design and Systems Architecture Team
-February 24, 2026
+February 25, 2026
