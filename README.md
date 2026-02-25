@@ -23,10 +23,15 @@ before any notion of live deployment.
 What This Release Is
 This Owner-Test release is:
 
-✅ A decision-support and analysis system.
+✅A decision-support and analysis system.
+
 ✅ A governed AI experimentation platform.
+
 ✅ A demonstration of safe system architecture.
-✅ Suitable for research, review and demonstration.
+
+✅ Suitable for research,
+review and demonstration.
+
 It allows owners and reviewers to:
 Explore system behavior safely
 Validate permission boundaries
@@ -39,9 +44,13 @@ What This Release Is NOT
 This release is not:
 
 ❌ A live trading bot.
+
 ❌ An autonomous execution system.
+
 ❌ Connected to brokers or exchanges.
+
 ❌ Capable of placing real or simulated trades.
+
 ❌ A financial product or investment service.
 There is no execution path, visible or hidden.
 
@@ -157,6 +166,7 @@ QuantumTrader-AI welcomes global inspection, research and dialogue.
 👉Certification Context:
 Following certification under the QonexAI™ framework, this posture ensures that QuantumTrader-AI scales responsibly without compromising safety or trust. QonexAI is a quantum origin neural artificial intelligence network.
 👉Trust is earned and Safety is no compromise.
+👉If a NT member invite a user, you automatically become a guarantor and mentor.
 
 Concepts, Design and Systems Architecture Team
 February 24, 2026
