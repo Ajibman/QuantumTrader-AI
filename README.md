@@ -1,7 +1,8 @@
 🌹🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️
 QuantumTrader-AI 
 Translate this README:
-https://translate.google.com/translatesl=auto&tl=en&u=https://github.com/ajibman/QuantumTrader-AI
+
+https://translate.google.com/translate?sl=auto&tl=en&u=https://raw.githubusercontent.com/ajibman/QuantumTrader-AI/main/README.md
 
 📌 How it works:
 sl=auto → auto-detect source language
@@ -13,7 +14,6 @@ tl=ar (Arabic)
 tl=pt (Portuguese) …but leaving it as en is neutral and safe.
 
 ⚖️ Disclaimer:
-
 👉Note: Translations are provided for accessibility.  
 👉 In the event of interpretational differences, the original English version governs. Else change "en" to language of choice.
 
