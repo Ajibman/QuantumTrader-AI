@@ -17,7 +17,7 @@ tl=pt (Portuguese) …but leaving it as en is neutral and safe.
 👉Note: Translations are provided for accessibility.  
 👉 In the event of interpretational differences, the original English version governs. Else change "en" to language of choice.
 
-QuantumTrader-AI is now at 
+👉QuantumTrader-AI is now at 
 Owner-Test / Simulation Edition (Architecture-Frozen)
 QuantumTrader-AI is the App. Quantum-origin neural exchange ai (Qonexeai is the network.
 Current Status: Owner-Test & Simulation Only
