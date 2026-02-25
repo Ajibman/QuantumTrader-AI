@@ -13,6 +13,7 @@ tl=ar (Arabic)
 tl=pt (Portuguese) …but leaving it as en is neutral and safe.
 
 ⚖️ Disclaimer:
+
 👉Note: Translations are provided for accessibility.  
 👉 In the event of interpretational differences, the original English version governs. Else change "en" to language of choice.
 
