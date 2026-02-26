@@ -214,3 +214,17 @@ Every participant is introduced, guided, and answerable—not surveilled, not ex
         ?????
 Concepts, Design and Systems Architecture Team
 February 25, 2026
+
+=============
+Formal Annex / Footnote (Certification & Governance)
+👉Annex A: PEACE INDEX 
+— Disclosure Status During Registrar Certification Waiting Window
+During the active 60-day Registrar Certification Waiting Window, no public statements, documentation, or representations have been issued concerning the Peace Index or any potential relationship to the platform.
+This non-disclosure posture is maintained in strict compliance with certification requirements, governance safeguards, and responsible information-release protocols. Any future disclosure, reference, or integration related to the Peace Index shall be contingent upon the successful completion of certification procedures and subsequent authorization through formally approved governance and compliance mechanisms.
+
+👉Donor Due-Diligence Disclosure Note - 
+At the time of this submission, QuantumTrader-AI has not made any public disclosures regarding the Peace Index or its relevance to the platform.
+This posture reflects a precautionary, compliance-first approach during the active 60-day Registrar Certification Waiting Window. The project maintains a clear separation between certification processes and any prospective conceptual, analytical, or policy frameworks in order to preserve governance integrity, ensure donor confidence, and remain aligned with internationally accepted disclosure and accountability standards. Any future communication on this subject will be considered only upon completion of certification and following formal governance approval.
+
+Concepts, Design and Systems Architecture Team
+February 26, 2026
