@@ -1,0 +1,218 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>QuantumTrader AI — TraderLab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="core/css/main.css"/>
+  <style>
+    :root{
+      --qt-primary:#1f7f8c;
+      --qt-primary-hover:#165f69;
+      --qt-secondary:#0b3442;
+      --qt-secondary-hover:#07262f;
+      --qt-neutral:#e7f2f4;
+      --qt-neutral-text:#102a33;
+      --qt-locked-bg:#f1f4f6;
+      --qt-locked-text:#9aa6ad;
+    }
+    body{margin:0;font-family:system-ui,sans-serif;background:#f7fbfc;color:#102a33;}
+    header{padding:1.5rem;background:var(--qt-secondary);color:#fff;text-align:center;}
+    main{padding:2rem;max-width:1100px;margin:auto;}
+    .section{margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .section h2{margin-top:0;color:var(--qt-secondary);}
+    button{padding:.8rem 1.2rem;font-size:1rem;border-radius:4px;border:none;cursor:pointer;transition:background-color .2s;margin:.5rem 0;width:100%;}
+    .btn-primary{background:var(--qt-primary);color:#fff;}
+    .btn-primary:hover{background:var(--qt-primary-hover);}
+    .btn-secondary{background:var(--qt-secondary);color:#fff;}
+    .btn-secondary:hover{background:var(--qt-secondary-hover);}
+    .btn-locked,button:disabled{background:var(--qt-locked-bg);color:var(--qt-locked-text);cursor:not-allowed;}
+    .panel{padding:1rem;background:var(--qt-neutral);border-radius:4px;max-height:200px;overflow-y:auto;}
+    .radio-group{margin:1rem 0;}
+    .radio-group label{display:block;margin-bottom:.5rem;cursor:pointer;}
+    #ori-ologo-container{position:fixed;bottom:20px;right:20px;width:110px;opacity:.85;z-index:999;}
+    #ori-ologo-container img{width:100%;border-radius:50%;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>TraderLab</h1>
+  <p>Interactive Training Modules — Access Controlled</p>
+</header>
+
+<main>
+  <!-- Ori Ologo -->
+  <div id="ori-ologo-container">
+    <img src="assets/images/qtai_ori_olokun.png" alt="Ori Ologo — Silent Guide"/>
+  </div>
+
+  <!-- Access Status -->
+  <section class="section" id="access-gate">
+    <h2>Access Status</h2>
+    <p id="access-message">Verifying subscription & module access…</p>
+  </section>
+
+  <!-- Wallet Snapshot -->
+  <section class="section">
+    <h2>Wallet Snapshot</h2>
+    <div class="panel">
+      <p>Balance: <strong id="wallet-balance">₦0.00</strong></p>
+      <p>Status: <span id="wallet-status">Active</span></p>
+    </div>
+  </section>
+
+  <!-- Module Selection -->
+  <section class="section">
+    <h2>Training Modules</h2>
+    <div class="radio-group" id="module-selection">
+      <label><input type="radio" name="module" value="module1" checked> Module 1 — Basics</label>
+      <label><input type="radio" name="module" value="module2"> Module 2 — Intermediate</label>
+      <label><input type="radio" name="module" value="module3"> Module 3 — Advanced</label>
+    </div>
+  </section>
+
+  <!-- TraderLab Controls -->
+  <section class="section">
+    <h2>TraderLab Controls</h2>
+    <button class="btn-primary" id="start-module-btn" disabled>Start Module</button>
+    <button class="btn-secondary" id="stop-module-btn" disabled>Stop Module</button>
+    <button class="btn-secondary" id="reset-module-btn">Reset Module</button>
+  </section>
+
+  <!-- Simulation Monitor -->
+  <section class="section">
+    <h2>Simulation Monitor</h2>
+    <div class="panel" id="simulation-monitor">
+      <p>Step logs will appear here once a module is started.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Core Scripts -->
+<script src="core/js/wallet.js"></script>
+<script src="core/js/ori_ologo.js"></script>
+
+<!-- TraderLab JS -->
+<script type="module">
+  import { prepareModuleSignal } from "./core/js/traderlab_signal_builder.js";
+  import { startModule, stopModule } from "./core/js/traderlab_run_controller.js";
+  import { evaluateAccess } from "./core/js/traderlab_execution_gate.js";
+
+  const startBtn = document.getElementById("start-module-btn");
+  const stopBtn = document.getElementById("stop-module-btn");
+  const monitor = document.getElementById("simulation-monitor");
+  const moduleRadios = document.querySelectorAll('input[name="module"]');
+  const accessMessage = document.getElementById("access-message");
+
+  // Initial access check
+  function checkAccess() {
+    const verdict = evaluateAccess(window.TraderLab || { passed: true, expiry: null });
+    if (!verdict.allowed) {
+      accessMessage.textContent = verdict.reason;
+      startBtn.disabled = true;
+    } else {
+      accessMessage.textContent = "Access granted — you may start modules.";
+      startBtn.disabled = false;
+    }
+  }
+
+  checkAccess();
+
+  // Log utility
+  function logToMonitor(message) {
+    const p = document.createElement("p");
+    p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+    monitor.appendChild(p);
+    monitor.scrollTop = monitor.scrollHeight;
+  }
+
+  // Start Module
+  startBtn.addEventListener("click", () => {
+    const selectedModule = [...moduleRadios].find(r => r.checked).value;
+    const signal = prepareModuleSignal(selectedModule);
+    window.__TRADERLAB_SIGNAL__ = signal; // staged
+    startModule(signal);
+    logToMonitor(`Module "${selectedModule}" STARTED.`);
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+  });
+
+  // Stop Module
+  stopBtn.addEventListener("click", () => {
+    stopModule();
+    logToMonitor("Module STOPPED.");
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  });
+
+  // Optional: Reset Module
+  document.getElementById("reset-module-btn").addEventListener("click", () => {
+    stopModule();
+    logToMonitor("Module RESET.");
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  });
+</script>
+
+(function () {
+  const POLL_INTERVAL = 500; // ms
+
+  function getOwnerState() {
+    return window.QT_OWNER_STATE || null;
+  }
+
+  function applyOwnerState(state) {
+    if (!state) return;
+
+    // Expose globally for all modules
+    window.QT_CONTEXT = {
+      mode: state.mode,
+      page: state.page,
+      nodes: Array.from(state.nodes)
+    };
+
+    // Page-specific hooks
+    document.dispatchEvent(
+      new CustomEvent("QT_OWNER_UPDATE", {
+        detail: window.QT_CONTEXT
+      })
+    );
+  }
+
+  setInterval(() => {
+    applyOwnerState(getOwnerState());
+  }, POLL_INTERVAL);
+})();
+
+<div id="ownerBadge"
+     style="position:fixed;bottom:6px;right:6px;
+            background:#1f6feb;color:#fff;
+            padding:4px 6px;font-size:11px;
+            display:none;z-index:9999;">
+  OWNER TEST MODE
+</div>
+
+<script>
+document.addEventListener("QT_OWNER_UPDATE", (e) => {
+  if (e.detail.mode === "owner-test") {
+    document.getElementById("ownerBadge").style.display = "block";
+  }
+});
+</script>
+
+<script src="js/cclm2.js"></script>
+<script src="js/nodes.js"></script>
+<script src="js/owner-bridge.js"></script>
+<script>
+  // page-specific QT_OWNER_UPDATE listener
+</script>
+
+<script>
+document.addEventListener("QT_CCLM_UPDATE", (e) => {
+  console.log("[CCLM² OUTPUT]", e.detail);
+});
+</script>
+ 
+</body>
+</html>

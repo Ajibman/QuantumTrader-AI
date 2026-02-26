@@ -1,0 +1,36 @@
+{
+  "ai_id": "string",
+  "version": "string",
+  "provider": "string",
+
+  "capabilities": {
+    "analysis_only": true,
+    "decision": false,
+    "instruction": false,
+    "execution": false
+  },
+
+  "outputs": {
+    "declares_uncertainty": true,
+    "allows_abstention": true
+  },
+
+  "ethics": {
+    "simulation_first": true,
+    "no_responsibility_deflection": true,
+    "no_user_interaction": true
+  },
+
+  "temporal": {
+    "accepts_decay": true,
+    "accepts_deactivation": true,
+    "versioned": true
+  },
+
+  "language": {
+    "neutral": true,
+    "no_urgency": true,
+    "no_persuasion": true,
+    "no_emotive_framing": true
+  }
+}
