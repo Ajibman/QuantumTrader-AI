@@ -1,3 +1,4 @@
+ cat <<EOF > analytics/peace-index-stats.json
 {
   "total_views": 1245,
   "unique_visitors": 897,
@@ -7,3 +8,4 @@
   "weekly_visitors": 301,
   "top_regions": ["USA", "Germany", "Nigeria", "India", "UK"]
 }
+EOF
