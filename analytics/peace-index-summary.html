@@ -12,6 +12,8 @@ h1 { color:#00ffd5; }
 ul { line-height:1.8; }
 .status { color:#7CFC98; font-weight:bold; }
 footer { margin-top:40px; font-size:12px; color:#777; }
+button { padding:10px 15px; margin:5px 0; border:none; border-radius:6px; background:#00ffd5; cursor:pointer; font-weight:bold; }
+button:hover { background:#00c7a8; }
 </style>
 </head>
 <body>
@@ -38,6 +40,16 @@ footer { margin-top:40px; font-size:12px; color:#777; }
 </ul>
 </div>
 
+<div class="panel">
+<h2>Investor Insights</h2>
+<p>The Peace Index monitoring demonstrates that QuantumTrader-AI measures value beyond financial metrics, reflecting global awareness and ethical alignment.</p>
+<ul>
+<li>Engagement with core doctrine indicates societal impact</li>
+<li>Provides confidence to investors that governance is actively monitored</li>
+<li>Signals transparency and long-term project sustainability</li>
+</ul>
+</div>
+
 <footer>
 QuantumTrader-AI Peace Index Summary<br>
 Prepared for selective investor review<br>
@@ -45,7 +57,7 @@ Metrics are read-only and secure
 </footer>
 
 <script>
-// Fetch live metrics from the JSON file
+// Fetch live metrics from JSON
 fetch('peace-index-stats.json')
   .then(response => response.json())
   .then(data => {
@@ -53,7 +65,6 @@ fetch('peace-index-stats.json')
     document.getElementById('unique-visitors').innerText = data.unique_visitors;
     document.getElementById('countries').innerText = data.countries + " countries";
     document.getElementById('avg-time').innerText = data.avg_time;
-
     document.getElementById('weekly-views').innerText = data.weekly_views;
     document.getElementById('weekly-visitors').innerText = data.weekly_visitors;
     document.getElementById('top-regions').innerText = data.top_regions.join(', ');
