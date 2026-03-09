@@ -75,6 +75,18 @@ Open Public Website
 </div>
 
 <div class="panel">
+
+<h2>Live QuantumTrader-AI Traffic</h2>
+
+<p>Total Visitors:</p>
+<h3 id="visitors">Loading...</h3>
+
+<p>Page Views:</p>
+<h3 id="pageviews">Loading...</h3>
+
+</div>
+  
+<div class="panel">
 <h2>System Status</h2>
 
 <p>GitHub Pages: ONLINE</p>
@@ -82,5 +94,32 @@ Open Public Website
 
 </div>
 
+<script>
+
+async function loadAnalytics(){
+
+try{
+
+const response = await fetch("https://api.umami.is/v1/websites/YOUR-WEBSITE-ID/stats");
+
+const data = await response.json();
+
+document.getElementById("visitors").innerText = data.visitors;
+
+document.getElementById("pageviews").innerText = data.pageviews;
+
+}catch(e){
+
+document.getElementById("visitors").innerText = "Unavailable";
+document.getElementById("pageviews").innerText = "Unavailable";
+
+}
+
+}
+
+loadAnalytics();
+
+  </script>
+  
 </body>
 </html>
