@@ -228,3 +228,35 @@ This posture reflects a precautionary, compliance-first approach during the acti
 
 Concepts, Design and Systems Architecture Team
 February 26, 2026
+==========
+
+Peace Index in QuantumTrader-AI: Current Status and API Use
+During the Registrar 60-Day Public Scrutiny Window
+
+The Peace Index logo in the UI is static. It does not reflect live or dynamic values and is purely informational during this period.
+Users should not rely on the UI logo for decision-making—it is dormant and visually redundant at this stage.
+
+The Peace Index API, however, is fully functional and serves as the authoritative source:
+Users can query the API for the latest Peace Index values.
+These values can be integrated directly into decision models, trading strategies, or analytics pipelines.
+
+Recommendation: Treat the API as the “live” source. The UI logo will remain static until the 60-day window expires.
+Post-60-Day Window Behavior
+Once the Registrar public scrutiny window concludes:
+
+The Peace Index logo will become dynamic, visually reflecting live values or trends.
+Users can optionally use the UI logo for a quick glance at the Peace Index, in addition to API queries.
+
+The API remains the primary source for programmatic access and automated decision-making.
+At this point, the UI logo and API values will be synchronized, reducing redundancy and increasing clarity for visitors.
+
+The Peace Index logo is static and dormant. Live values are not available at this time. Once the API becomes functional, it will provide the authoritative data for decision-making.
+
+Live values via API will be available post 60-day scrutiny window.”
+
+Concepts, Design and Systems Architecture Team
+March 09, 2026
+
+
+
+
