@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuantumTrader-AI Peace Index Summary</title>
+<style>
+body { font-family: Arial, sans-serif; background:#0b0f1a; color:white; margin:40px; }
+h1 { color:#00ffd5; }
+.subtitle { color:#9aa4b2; margin-bottom:20px; }
+.panel { background:#12182b; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); }
+ul { line-height:1.8; }
+.status { color:#7CFC98; font-weight:bold; }
+footer { margin-top:40px; font-size:12px; color:#777; }
+button { padding:10px 15px; margin:5px 0; border:none; border-radius:6px; background:#00ffd5; cursor:pointer; font-weight:bold; }
+button:hover { background:#00c7a8; }
+</style>
+</head>
+<body>
+
+<h1>QuantumTrader-AI Peace Index Summary</h1>
+<p class="subtitle">Ethical engagement and societal impact overview for investors.</p>
+
+<div class="panel">
+<h2>Global Engagement Metrics</h2>
+<ul>
+<li>Total Doctrine Page Views: <span class="status" id="total-views">Loading...</span></li>
+<li>Unique Visitors Engaged: <span class="status" id="unique-visitors">Loading...</span></li>
+<li>Global Reach: <span class="status" id="countries">Loading...</span></li>
+<li>Average Time on Doctrine Pages: <span class="status" id="avg-time">Loading...</span></li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>Engagement Trends</h2>
+<ul>
+<li>Page Views Last 7 Days: <span class="status" id="weekly-views">Loading...</span></li>
+<li>Unique Visitors Last 7 Days: <span class="status" id="weekly-visitors">Loading...</span></li>
+<li>Top Visiting Regions: <span class="status" id="top-regions">Loading...</span></li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>Investor Insights</h2>
+<p>The Peace Index monitoring demonstrates that QuantumTrader-AI measures value beyond financial metrics, reflecting global awareness and ethical alignment.</p>
+<ul>
+<li>Engagement with core doctrine indicates societal impact</li>
+<li>Provides confidence to investors that governance is actively monitored</li>
+<li>Signals transparency and long-term project sustainability</li>
+</ul>
+</div>
+
+<footer>
+QuantumTrader-AI Peace Index Summary<br>
+Prepared for selective investor review<br>
+Metrics are read-only and secure
+</footer>
+
+<script>
+// Fetch live metrics from JSON
+fetch('peace-index-stats.json')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('total-views').innerText = data.total_views;
+    document.getElementById('unique-visitors').innerText = data.unique_visitors;
+    document.getElementById('countries').innerText = data.countries + " countries";
+    document.getElementById('avg-time').innerText = data.avg_time;
+    document.getElementById('weekly-views').innerText = data.weekly_views;
+    document.getElementById('weekly-visitors').innerText = data.weekly_visitors;
+    document.getElementById('top-regions').innerText = data.top_regions.join(', ');
+  })
+  .catch(err => console.log("Error loading Peace Index stats:", err));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+name: Update Peace Index Stats
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # runs daily at 03:00 UTC
+  workflow_dispatch:    # manual trigger
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Generate Peace Index JSON
+      run: |
+        # Example placeholder script
+        # Replace with actual logic to fetch aggregated stats from Umami or your tracker
+        cat <<EOF > analytics/peace-index-stats.json
+{
+  "total_views": 1245,
+  "unique_visitors": 897,
+  "countries": 27,
+  "avg_time": "3m 42s",
+  "weekly_views": 412,
+  "weekly_visitors": 301,
+  "top_regions": ["USA", "Germany", "Nigeria", "India", "UK"]
+}
+EOF
+
+    - name: Commit & Push JSON
+      run: |
+        git config --local user.name "GitHub Actions"
+        git config --local user.email "actions@github.com"
+        git add analytics/peace-index-stats.json
+        git commit -m "Automated update of Peace Index stats"
+        git push
