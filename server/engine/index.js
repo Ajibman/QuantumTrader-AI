@@ -38,13 +38,14 @@ export const Engine = {
   },
 
   cpilot(input = {}) {
-    return {
-      success: true,
-      module: "cpilot",
-      input,
-      output: "CPilot module not yet connected"
-    };
-  },
+  return {
+    success: true,
+    module: "cpilot",
+    connected: true,
+    input,
+    status: cpilot.getStatus()
+  };
+},
 
   simulation(input = {}) {
     return {
