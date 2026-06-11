@@ -1,15 +1,30 @@
 // core/js/cpilot.js
-function setTradeMode(mode){
-  state.currentTradeMode = mode;
-  state.notify(); // broadcast to observers
-}
 
-function setTpTiming(timing){
-  state.currentTpTiming = timing;
-  state.notify();
-}
+const cpilot = {
 
-function setMarketGuidance(guidance){
-  state.currentGuidance = guidance; // "favorable" | "caution" | "unfavorable"
-  state.notify();
-}
+  setTradeMode(mode) {
+    state.currentTradeMode = mode;
+    state.notify();
+  },
+
+  setTpTiming(timing) {
+    state.currentTpTiming = timing;
+    state.notify();
+  },
+
+  setMarketGuidance(guidance) {
+    state.currentGuidance = guidance;
+    state.notify();
+  },
+
+  getStatus() {
+    return {
+      tradeMode: state.currentTradeMode,
+      tpTiming: state.currentTpTiming,
+      guidance: state.currentGuidance
+    };
+  }
+
+};
+
+export default cpilot;
