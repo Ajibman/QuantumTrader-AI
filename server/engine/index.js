@@ -66,3 +66,50 @@ export const Engine = {
   }
 
 };
+
+// QuantumTrader-AI MVP Entry Point
+
+const marketFeed = require("./core/marketFeed");
+const traderLab = require("./traderlab/strategyEngine");
+const cPilot = require("./cpilot/decisionEngine");
+const executionSim = require("./core/executionSim");
+
+// System State
+let systemState = {
+  mode: "balanced",
+  activeStrategy: null,
+  lastSignal: null,
+  result: null
+};
+
+// MAIN LOOP (simplified MVP cycle)
+async function runSystem() {
+  console.log("QuantumTrader-AI MVP Starting...");
+
+  // 1. Get Market Data
+  const marketData = await marketFeed.getLatestPrice();
+  console.log("Market Data:", marketData);
+
+  // 2. TraderLab runs strategies
+  const labResult = traderLab.evaluate(marketData);
+  console.log("TraderLab Output:", labResult);
+
+  // 3. cPilot selects strategy mode
+  const selected = cPilot.selectStrategy(labResult);
+  systemState.activeStrategy = selected;
+  console.log("cPilot Selected Strategy:", selected);
+
+  // 4. Execution Simulation
+  const executionResult = executionSim.run(selected, marketData);
+  systemState.result = executionResult;
+
+  console.log("Execution Result:", executionResult);
+
+  // 5. Final Output Signal
+  systemState.lastSignal = executionResult.signal;
+
+  console.log("FINAL SIGNAL:", executionResult.signal);
+}
+
+// Run system once (MVP mode)
+runSystem();
