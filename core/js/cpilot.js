@@ -1,5 +1,15 @@
 // core/js/cpilot.js
 
+const state = {
+  currentTradeMode: "manual",
+  currentTpTiming: "normal",
+  currentGuidance: "caution",
+
+  notify() {
+    console.log("CPilot state updated");
+  }
+};
+
 const cpilot = {
 
   setTradeMode(mode) {
