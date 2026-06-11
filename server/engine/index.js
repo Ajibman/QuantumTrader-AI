@@ -11,6 +11,23 @@ export const Engine = {
     };
   },
 
+  getAppState() {
+  return {
+    wallet: {
+      exists: true,
+      subscriptionValid: true
+    },
+    traderLab: {
+      completed: false
+    },
+    cPilot: {
+      qualified: false
+    },
+    tradingFloor: {
+      approved: false
+    }
+  };
+},
   signal(input = {}) {
     return {
       success: true,
