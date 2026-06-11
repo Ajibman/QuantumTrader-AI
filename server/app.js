@@ -30,6 +30,12 @@ app.get("/api/status", (req, res) => {
   );
 });
 
+app.get("/api/state", (req, res) => {
+  res.json(
+    Engine.getAppState()
+  );
+});
+
 /**
  * Signal Endpoint
  */
