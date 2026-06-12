@@ -1,1 +1,188 @@
-dashboard-ui-wireframe.json
+{
+  "app": "QuantumTrader-AI",
+  "version": "1.0",
+  "screen": "dashboard",
+
+  "layout": {
+    "type": "grid",
+    "mode": "responsive",
+    "columns": {
+      "desktop": 12,
+      "tablet": 8,
+      "mobile": 4
+    },
+    "spacing": 12
+  },
+
+  "sections": [
+
+    {
+      "id": "top_status_bar",
+      "type": "status_bar",
+      "position": {
+        "row": 1,
+        "col": 1,
+        "span": 12
+      },
+      "priority": 1,
+      "components": [
+        "market_state",
+        "system_mode",
+        "ai_confidence",
+        "risk_level",
+        "session_time"
+      ],
+      "visibility": ["beginner", "intermediate", "advanced"]
+    },
+
+    {
+      "id": "decision_panel",
+      "type": "core_decision_card",
+      "position": {
+        "row": 2,
+        "col": 1,
+        "span": 8
+      },
+      "priority": 1,
+      "components": [
+        "asset_pair",
+        "direction_bias",
+        "entry_zone",
+        "stop_guidance",
+        "take_profit_zones",
+        "confidence_score",
+        "reason_summary"
+      ],
+      "visibility": ["beginner", "intermediate", "advanced"],
+      "highlight": true
+    },
+
+    {
+      "id": "risk_control_panel",
+      "type": "risk_panel",
+      "position": {
+        "row": 2,
+        "col": 9,
+        "span": 4
+      },
+      "priority": 2,
+      "components": [
+        "lot_sensitivity",
+        "risk_warning_level",
+        "trade_quality_score",
+        "max_exposure"
+      ],
+      "visibility": ["intermediate", "advanced"]
+    },
+
+    {
+      "id": "action_buttons",
+      "type": "action_bar",
+      "position": {
+        "row": 3,
+        "col": 1,
+        "span": 8
+      },
+      "priority": 1,
+      "components": [
+        "follow_signal",
+        "pause_trading",
+        "re_evaluate_market",
+        "show_reasoning",
+        "risk_override_mode"
+      ],
+      "visibility": ["beginner", "intermediate", "advanced"]
+    },
+
+    {
+      "id": "ai_insight_feed",
+      "type": "insight_stream",
+      "position": {
+        "row": 3,
+        "col": 9,
+        "span": 4
+      },
+      "priority": 3,
+      "components": [
+        "market_insights",
+        "pattern_notes",
+        "risk_alerts",
+        "missed_opportunities",
+        "discipline_reminders"
+      ],
+      "visibility": ["beginner", "intermediate", "advanced"]
+    },
+
+    {
+      "id": "trade_history_panel",
+      "type": "analytics_panel",
+      "position": {
+        "row": 4,
+        "col": 1,
+        "span": 12
+      },
+      "priority": 4,
+      "components": [
+        "win_loss_ratio",
+        "discipline_score",
+        "execution_timing_quality",
+        "emotional_deviation_index",
+        "trade_feedback_history"
+      ],
+      "visibility": ["intermediate", "advanced"]
+    }
+
+  ],
+
+  "ui_rules": {
+    "no_brokers_visible": true,
+    "no_raw_order_execution": true,
+    "no_exchange_ui": true,
+    "no_complex_market_data": true,
+
+    "decision_only_interface": true,
+
+    "allowed_outputs": [
+      "signals",
+      "risk_guidance",
+      "ai_explanations",
+      "trade_quality_metrics"
+    ]
+  },
+
+  "user_modes": {
+    "beginner": {
+      "simplify_ui": true,
+      "show_only": ["direction_bias", "entry_zone_simple", "confidence_score"],
+      "hide": ["risk_override_mode", "execution_metrics", "advanced_analytics"]
+    },
+
+    "intermediate": {
+      "balanced_detail": true
+    },
+
+    "advanced": {
+      "full_access": true,
+      "enable_risk_controls": true,
+      "enable_analytics": true
+    }
+  },
+
+  "data_bindings": {
+    "market_state": "engine.market.state",
+    "system_mode": "engine.ai.mode",
+    "ai_confidence": "engine.ai.confidence",
+    "risk_level": "engine.risk.level",
+
+    "asset_pair": "signal.asset",
+    "direction_bias": "signal.direction",
+    "entry_zone": "signal.entry_zone",
+    "stop_guidance": "signal.stop_loss",
+    "take_profit_zones": "signal.take_profits",
+    "reason_summary": "signal.explanation",
+
+    "win_loss_ratio": "analytics.performance.win_loss",
+    "discipline_score": "analytics.behavior.discipline"
+  }
+
+}
