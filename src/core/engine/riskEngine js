@@ -1,0 +1,35 @@
+export function calculateRisk(marketData, aiModelOutput, marketState) {
+
+  let level = "MEDIUM";
+  let max_exposure_percent = 2;
+  let lot_sensitivity = "SMALL";
+
+  const confidence = aiModelOutput.confidence || 0;
+
+  // High volatility increases risk
+  if (marketState === "VOLATILE") {
+    level = "HIGH";
+    max_exposure_percent = 1;
+    lot_sensitivity = "MICRO";
+  }
+
+  // High confidence reduces perceived risk
+  if (confidence > 80 && marketState === "TRENDING") {
+    level = "LOW";
+    max_exposure_percent = 3;
+    lot_sensitivity = "MEDIUM";
+  }
+
+  // Uncertain market forces caution
+  if (marketState === "UNCERTAIN") {
+    level = "HIGH";
+    max_exposure_percent = 1;
+    lot_sensitivity = "MICRO";
+  }
+
+  return {
+    level,
+    max_exposure_percent,
+    lot_sensitivity
+  };
+}
