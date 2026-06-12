@@ -1,0 +1,44 @@
+{
+  "signal_id": "string",
+  "timestamp": "ISO-8601",
+
+  "asset": "BTCUSD",
+
+  "market_state": "TRENDING | RANGING | VOLATILE | UNCERTAIN",
+
+  "direction": "BUY | SELL | WAIT",
+
+  "entry_zone": {
+    "low": 0,
+    "high": 0
+  },
+
+  "stop_loss": {
+    "value": 0,
+    "reason": "string"
+  },
+
+  "take_profits": [
+    { "level": "TP1", "value": 0 },
+    { "level": "TP2", "value": 0 },
+    { "level": "TP3", "value": 0 }
+  ],
+
+  "confidence": 0,
+
+  "risk": {
+    "level": "LOW | MEDIUM | HIGH",
+    "max_exposure_percent": 0,
+    "lot_sensitivity": "MICRO | SMALL | MEDIUM"
+  },
+
+  "reasoning": [
+    "string"
+  ],
+
+  "warnings": [
+    "string"
+  ],
+
+  "ai_mode": "CONSERVATIVE | BALANCED | AGGRESSIVE"
+}
