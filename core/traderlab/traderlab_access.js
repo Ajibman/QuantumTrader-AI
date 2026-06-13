@@ -1,35 +1,20 @@
- // traderlab_access.js
+// core/js/traderlab_access.js
 
 import { runEngineCycle } from "./traderlab_engine.js";
 import { readQualification } from "./traderlab_controller.js";
-
-/**
- * TraderLab Access Layer
- * ----------------------
- * This is the SYSTEM ORCHESTRATOR.
- * It controls:
- *  - lifecycle (start/stop)
- *  - cycle execution
- *  - performance accumulation (scoop system)
- */
+import { recordCycleOutcome } from "../cpilot/cpilot_memory.js";
 
 let intervalId = null;
 
-/**
- * Internal system state (read-only via getter)
- */
 const state = {
   isRunning: false,
   cycleCount: 0,
+  executedCycles: 0,
+  skippedCycles: 0,
   lastCycleTime: null,
-  lastMarketSnapshot: null,
   lastResult: null
 };
 
-/**
- * Profit + performance accumulator ("Scoop Bank")
- * This is the core of your set-and-forget model
- */
 const cycleBank = {
   totalPnL: 0,
   trades: 0,
@@ -39,7 +24,7 @@ const cycleBank = {
 };
 
 /**
- * START TRADERLAB LOOP
+ * START LOOP
  */
 export function startTraderLab({
   getMarketData,
@@ -52,19 +37,12 @@ export function startTraderLab({
 
   intervalId = setInterval(async () => {
     try {
-      const marketData = await getMarketData();
 
-      state.lastMarketSnapshot = marketData;
+      const marketData = await getMarketData();
       state.cycleCount += 1;
 
-      // 1. Qualification Gate (risk filter layer)
       const qualification = readQualification(marketData);
 
-      if (!qualification.allowed) {
-        return;
-      }
-
-      // 2. Engine Cycle Execution
       const cycleResult = await runEngineCycle({
         marketData,
         qualification,
@@ -74,7 +52,15 @@ export function startTraderLab({
       state.lastResult = cycleResult;
       state.lastCycleTime = Date.now();
 
-      // 3. Scoop Profit Tracking
+      // 🚫 CASE 1: SKIPPED CYCLE (HOLD ACTIVE)
+      if (cycleResult?.skipped) {
+        state.skippedCycles += 1;
+        return; // nothing else happens
+      }
+
+      // ✅ CASE 2: EXECUTED CYCLE ONLY
+      state.executedCycles += 1;
+
       const pnl = cycleResult?.result?.pnl;
 
       if (typeof pnl === "number") {
@@ -86,6 +72,12 @@ export function startTraderLab({
         } else {
           cycleBank.losses += 1;
         }
+
+        // 🧠 Feed ONLY real outcomes into CPilot memory
+        recordCycleOutcome({
+          guidance: cycleResult?.guidance,
+          result: cycleResult?.result
+        });
       }
 
     } catch (err) {
@@ -95,7 +87,7 @@ export function startTraderLab({
 }
 
 /**
- * STOP TRADERLAB LOOP
+ * STOP LOOP
  */
 export function stopTraderLab() {
   if (intervalId) {
@@ -107,18 +99,11 @@ export function stopTraderLab() {
 }
 
 /**
- * MANUAL SINGLE CYCLE (debug / testing / UI trigger)
+ * SINGLE CYCLE (debug)
  */
 export async function triggerSingleCycle(getMarketData, mode = "simulation") {
   const marketData = await getMarketData();
   const qualification = readQualification(marketData);
-
-  if (!qualification.allowed) {
-    return {
-      status: "blocked",
-      reason: qualification.reason
-    };
-  }
 
   const cycleResult = await runEngineCycle({
     marketData,
@@ -129,6 +114,16 @@ export async function triggerSingleCycle(getMarketData, mode = "simulation") {
   state.lastResult = cycleResult;
   state.lastCycleTime = Date.now();
 
+  if (cycleResult?.skipped) {
+    state.skippedCycles += 1;
+    return {
+      status: "skipped",
+      reason: cycleResult.reason
+    };
+  }
+
+  state.executedCycles += 1;
+
   const pnl = cycleResult?.result?.pnl;
 
   if (typeof pnl === "number") {
@@ -136,6 +131,11 @@ export async function triggerSingleCycle(getMarketData, mode = "simulation") {
     cycleBank.trades += 1;
 
     pnl > 0 ? cycleBank.wins++ : cycleBank.losses++;
+
+    recordCycleOutcome({
+      guidance: cycleResult?.guidance,
+      result: cycleResult?.result
+    });
   }
 
   return {
@@ -145,19 +145,16 @@ export async function triggerSingleCycle(getMarketData, mode = "simulation") {
 }
 
 /**
- * SCOOP PROFITS + RESET CYCLE
- * This is your "set and forget → come back → reset" mechanism
+ * SCOOP + RESET
  */
 export function scoopAndResetCycle() {
   const snapshot = {
     ...cycleBank,
-    profitFactor:
-      cycleBank.trades > 0
-        ? cycleBank.wins / cycleBank.trades
-        : 0
+    winRate: cycleBank.trades
+      ? cycleBank.wins / cycleBank.trades
+      : 0
   };
 
-  // reset cycle bank
   cycleBank.totalPnL = 0;
   cycleBank.trades = 0;
   cycleBank.wins = 0;
@@ -171,7 +168,7 @@ export function scoopAndResetCycle() {
 }
 
 /**
- * READ SYSTEM STATE (UI / dashboard safe)
+ * STATE VIEW
  */
 export function getTraderLabState() {
   return {
@@ -180,14 +177,13 @@ export function getTraderLabState() {
 }
 
 /**
- * READ PERFORMANCE BANK (dashboard / analytics)
+ * PERFORMANCE VIEW
  */
 export function getCycleBank() {
   return {
     ...cycleBank,
-    winRate:
-      cycleBank.trades > 0
-        ? cycleBank.wins / cycleBank.trades
-        : 0
+    winRate: cycleBank.trades
+      ? cycleBank.wins / cycleBank.trades
+      : 0
   };
-      }
+}
