@@ -5,47 +5,26 @@ import state from "./state.js";
 /**
  * QuantumTrader-AI CPilot Service
  * --------------------------------
- * This layer controls:
- * - trading mode configuration
- * - system qualification state
- * - market "permission to act" logic (HOLD system)
- *
- * IMPORTANT:
- * CPilot does NOT execute trades.
- * CPilot ONLY decides if the system is allowed to act or stay idle.
+ * HOLD-based decision gate system
+ * Now enhanced with context-aware memory feedback.
  */
 
-import { recordCycleOutcome } from "./cpilot_memory.js";
+import { getContextStrength } from "./cpilot_memory.js";
 
 const cpilot = {
 
-  /**
-   * Trade Mode
-   * Manual | Assisted | Automatic
-   */
   setTradeMode(mode) {
     state.update("currentTradeMode", mode);
   },
 
-  /**
-   * Take-Profit Timing
-   * 15s | 1m | 5m | Dynamic
-   */
   setTpTiming(timing) {
     state.update("currentTpTiming", timing);
   },
 
-  /**
-   * Market Guidance (non-directional context only)
-   * favorable | caution | unfavorable
-   */
   setMarketGuidance(guidance) {
     state.update("currentGuidance", guidance);
   },
 
-  /**
-   * Trader Qualification Gate
-   */
   qualifyTrader() {
     state.update("cPilotQualified", true);
   },
@@ -54,9 +33,6 @@ const cpilot = {
     state.update("cPilotQualified", false);
   },
 
-  /**
-   * System Status Snapshot
-   */
   getStatus() {
     return {
       tradeMode: state.currentTradeMode,
@@ -68,52 +44,63 @@ const cpilot = {
   },
 
   /**
-   * 🧠 CORE FUNCTION: HOLD-BASED DECISION ENGINE
+   * 🧠 CORE HOLD-BASED DECISION ENGINE (MEMORY ENHANCED)
    *
-   * This replaces ALL "bias thinking".
-   *
-   * Output meaning:
-   * - hold: true  → DO NOT run engine cycle
-   * - hold: false → ALLOW engine cycle execution
+   * - hold: true  → BLOCK execution
+   * - hold: false → ALLOW execution
    */
   getGuidance({ marketData = {}, qualification = {} } = {}) {
 
     const volatility = marketData?.volatility || 0;
-    const qualified = qualification?.allowed ?? state.cPilotQualified;
+
+    const qualified =
+      qualification?.allowed ?? state.cPilotQualified;
+
+    /**
+     * 🧠 MEMORY CONTEXT SIGNAL
+     * This adjusts how strict CPilot behaves in different environments
+     */
+    const contextSignal = getContextStrength(marketData);
+    const contextWeight = contextSignal?.weight || 1.0;
 
     let hold = false;
     let confidence = 0.5;
     let riskLevel = "medium";
 
     /**
-     * RULE SET (simple, stable gating logic)
+     * 1. Hard safety gate
      */
-
-    // 1. Hard safety: not qualified → always HOLD
     if (!qualified) {
       hold = true;
       confidence = 0.2;
       riskLevel = "high";
     }
 
-    // 2. Low volatility → no action environment
+    /**
+     * 2. Low volatility → usually no action
+     * Memory can slightly relax or tighten this rule
+     */
     else if (volatility < 0.2) {
-      hold = true;
-      confidence = 0.4;
+      hold = contextWeight < 1.0; // adaptive HOLD
+      confidence = 0.4 * contextWeight;
       riskLevel = "low";
     }
 
-    // 3. Extremely unstable market → HOLD for protection
+    /**
+     * 3. Extreme volatility → always risky
+     */
     else if (volatility > 0.85) {
       hold = true;
       confidence = 0.3;
       riskLevel = "high";
     }
 
-    // 4. Normal operating zone → ALLOW execution
+    /**
+     * 4. Normal trading zone → memory-influenced execution
+     */
     else {
-      hold = false;
-      confidence = 0.7;
+      hold = contextWeight < 0.7; // learned preference influences execution
+      confidence = 0.7 * contextWeight;
       riskLevel = "medium";
     }
 
@@ -121,20 +108,21 @@ const cpilot = {
       hold,
       confidence,
       riskLevel,
+      context: contextSignal.context,
+      contextWeight,
       guidance: state.currentGuidance || "neutral",
       mode: state.currentTradeMode
     };
   },
 
   /**
-   * Legacy hook (kept for compatibility)
-   * Now just returns HOLD-safe default
+   * Legacy compatibility hook
    */
   analyzeMarket(data = {}) {
     return {
       decision: "HOLD",
       confidence: 0,
-      message: "CPilot now uses HOLD-based guidance system"
+      message: "CPilot uses HOLD-based + memory-aware guidance system"
     };
   }
 };
