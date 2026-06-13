@@ -8,6 +8,8 @@ import state from "./state.js";
  * and future AI decision workflows.
  */
 
+import { getWeightedBias, recordCycleOutcome } from "./cpilot_memory.js";
+
 const cpilot = {
 
   /**
