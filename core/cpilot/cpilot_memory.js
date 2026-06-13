@@ -1,129 +1,120 @@
-// cpilot_memory.js
+ // cpilot_memory.js
 
 /**
- * CPilot Memory Layer
- * -------------------
- * Learns from trading outcomes and adjusts
- * guidance bias weights over time.
+ * CPilot Memory Layer (v2)
+ * ------------------------
+ * Now learns CONTEXT + OUTCOME, not just win/loss.
  *
- * This is NOT execution logic.
- * It is behavioral adaptation logic.
+ * Key improvement:
+ * We track WHEN decisions work, not just IF they work.
  */
 
 const memory = {
   totalCycles: 0,
 
-  // performance tracking by bias type
-  biasStats: {
-    bullish: { wins: 0, losses: 0 },
-    bearish: { wins: 0, losses: 0 },
-    neutral: { wins: 0, losses: 0 }
+  // context-based performance tracking
+  contextStats: {
+    lowVolatility: { wins: 0, losses: 0 },
+    mediumVolatility: { wins: 0, losses: 0 },
+    highVolatility: { wins: 0, losses: 0 }
   },
 
-  // adaptive weights (this evolves CPilot behavior)
   biasWeights: {
-    bullish: 1.0,
-    bearish: 1.0,
-    neutral: 1.0
+    lowVolatility: 1.0,
+    mediumVolatility: 1.0,
+    highVolatility: 1.0
   }
 };
 
 /**
- * FEED RESULT INTO MEMORY
- * Called after each engine cycle
+ * CLASSIFY MARKET CONTEXT
  */
-export function recordCycleOutcome({ guidance, result }) {
-  const bias = guidance?.bias || "neutral";
-  const pnl = result?.pnl;
+function getContext(marketData = {}) {
+  const v = marketData.volatility || 0;
 
-  if (!memory.biasStats[bias]) return;
-
-  memory.totalCycles += 1;
-
-  if (typeof pnl !== "number") return;
-
-  if (pnl > 0) {
-    memory.biasStats[bias].wins += 1;
-  } else {
-    memory.biasStats[bias].losses += 1;
-  }
-
-  // Recalculate weights after update
-  updateBiasWeights();
+  if (v < 0.3) return "lowVolatility";
+  if (v < 0.7) return "mediumVolatility";
+  return "highVolatility";
 }
 
 /**
- * CORE LEARNING FUNCTION
- * Adjusts CPilot bias strength based on performance
+ * FEED ONLY REAL EXECUTED OUTCOMES
  */
-function updateBiasWeights() {
-  const biases = Object.keys(memory.biasStats);
+export function recordCycleOutcome({ guidance, result, marketData }) {
+  const pnl = result?.pnl;
+  if (typeof pnl !== "number") return;
 
-  biases.forEach((bias) => {
-    const stats = memory.biasStats[bias];
+  const context = getContext(marketData);
+
+  if (!memory.contextStats[context]) return;
+
+  memory.totalCycles += 1;
+
+  if (pnl > 0) {
+    memory.contextStats[context].wins += 1;
+  } else {
+    memory.contextStats[context].losses += 1;
+  }
+
+  updateWeights();
+}
+
+/**
+ * LEARNING LOGIC (context-aware adaptation)
+ */
+function updateWeights() {
+  Object.keys(memory.contextStats).forEach((ctx) => {
+    const stats = memory.contextStats[ctx];
 
     const total = stats.wins + stats.losses;
-
-    if (total < 3) return; // avoid early noise
+    if (total < 5) return; // avoid noise early
 
     const winRate = stats.wins / total;
 
-    /**
-     * Learning rule:
-     * - Above 55% win rate → strengthen bias
-     * - Below 45% win rate → weaken bias
-     * - Else → neutral
-     */
-
     if (winRate > 0.55) {
-      memory.biasWeights[bias] += 0.05;
+      memory.biasWeights[ctx] += 0.05;
     } else if (winRate < 0.45) {
-      memory.biasWeights[bias] -= 0.05;
+      memory.biasWeights[ctx] -= 0.05;
     }
 
-    // clamp values (stability protection)
-    memory.biasWeights[bias] = clamp(memory.biasWeights[bias], 0.3, 2.0);
+    memory.biasWeights[ctx] = clamp(memory.biasWeights[ctx], 0.3, 2.0);
   });
 }
 
 /**
- * USED BY CPilot
- * Applies learned weights to guidance decision
+ * CPilot uses this to understand environment quality
  */
-export function getWeightedBias(rawBias = "neutral") {
-  const weight = memory.biasWeights[rawBias] || 1.0;
+export function getContextStrength(marketData = {}) {
+  const context = getContext(marketData);
 
   return {
-    bias: rawBias,
-    weight,
-    adjustedStrength: weight
+    context,
+    weight: memory.biasWeights[context] || 1.0
   };
 }
 
 /**
- * READ MEMORY STATE (for dashboards/debugging)
+ * DEBUG / ANALYTICS
  */
 export function getMemorySnapshot() {
-  return {
-    ...memory
-  };
+  return { ...memory };
 }
 
 /**
- * RESET MEMORY (optional system reset mode)
+ * RESET MEMORY
  */
 export function resetMemory() {
   memory.totalCycles = 0;
 
-  Object.keys(memory.biasStats).forEach((b) => {
-    memory.biasStats[b] = { wins: 0, losses: 0 };
-    memory.biasWeights[b] = 1.0;
+  Object.keys(memory.contextStats).forEach((k) => {
+    memory.contextStats[k] = { wins: 0, losses: 0 };
+    memory.biasWeights[k] = 1.0;
   });
 }
 
 /**
- * Utility
+ * UTILITY
  */
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-  }
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
