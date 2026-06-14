@@ -4,7 +4,7 @@
 import { simulationFeed } from "../simulation/simulation_feed.js";
 import { getBestStrategy } from "../strategy_memory.js";
 import { getContextStrength } from "./cpilot_memory.js";
-import { getMetaInfluence } from "../traderlab/meta_brain.js";
+import { getMetaInfluence, recordMetaStrategyOutcome } from "../traderlab/meta_brain.js";
 
 /**
  * CPilot Engine
@@ -51,6 +51,22 @@ const CPilotEngine = {
           this.analyzeTick(tick);
 
         this.dispatchTick(enriched);
+
+        // =============================
+        // META-BRAIN FEEDBACK LOOP
+        // =============================
+        recordMetaStrategyOutcome({
+          strategyName:
+            enriched?.intelligence?.strategy?.name ||
+            "default",
+
+          pnl:
+            enriched?.intelligence?.pnl || 0,
+
+          context:
+            enriched?.intelligence?.context || "unknown"
+        });
+
       }
     );
 
@@ -101,7 +117,6 @@ const CPilotEngine = {
 
     /**
      * CPilot recommendation
-     * (not execution authority)
      */
     const hold =
       marketData.volatility < 0.20 ||
@@ -125,36 +140,24 @@ const CPilotEngine = {
       intelligence: {
 
         suggestion,
-
-        decision: suggestion, // backward compatibility
-
+        decision: suggestion,
         hold,
-
         confidence,
 
         context: context.context,
-
-        contextWeight:
-          context.weight,
+        contextWeight: context.weight,
 
         strategy:
           strategy?.bestStrategy || null,
 
         combinedSignal,
 
-        volatility:
-          marketData.volatility,
+        volatility: marketData.volatility,
 
         metaInfluence: {
-
-          riskBias:
-            influence.riskBias,
-
-          explorationRate:
-            influence.explorationRate,
-
-          cpilotSensitivity:
-            influence.cpilotSensitivity
+          riskBias: influence.riskBias,
+          explorationRate: influence.explorationRate,
+          cpilotSensitivity: influence.cpilotSensitivity
         }
       }
     };
