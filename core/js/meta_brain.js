@@ -1,8 +1,12 @@
-// Meta-Brain Evolution Layer — System Intelligence Over Time
+ // Meta-Brain Evolution Layer — System Intelligence Over Time
 
 import { listSessions } from "./traderlab_orchestrator.js";
 import { getStrategyMemory } from "./strategy_memory.js";
 import { getMemorySnapshot } from "../cpilot/cpilot_memory.js";
+
+/* =========================================================
+   META STATE
+========================================================= */
 
 const metaState = {
   evolutionHistory: [],
@@ -12,10 +16,7 @@ const metaState = {
 /**
  * META-BRAIN INFLUENCE PROFILE
  *
- * This does NOT execute trades.
- * This does NOT control TradingFloor.
- *
- * It only influences:
+ * Only affects system behavior:
  * - risk posture
  * - exploration rate
  * - CPilot sensitivity
@@ -27,9 +28,38 @@ const influenceState = {
   lastAdjustment: null
 };
 
+/* =========================================================
+   🔥 NEW: STRATEGY REINFORCEMENT MEMORY
+========================================================= */
+
+const reinforcementMemory = {
+  strategyWins: {},
+  strategyLosses: {}
+};
+
 /**
- * ANALYZE SYSTEM PERFORMANCE ACROSS SESSIONS
+ * FEED STRATEGY OUTCOME INTO META-BRAIN
+ * (called from CPilot / Strategy layer)
  */
+export function recordMetaStrategyOutcome({
+  strategyName,
+  pnl
+}) {
+  if (!strategyName || typeof pnl !== "number") return;
+
+  if (pnl > 0) {
+    reinforcementMemory.strategyWins[strategyName] =
+      (reinforcementMemory.strategyWins[strategyName] || 0) + 1;
+  } else {
+    reinforcementMemory.strategyLosses[strategyName] =
+      (reinforcementMemory.strategyLosses[strategyName] || 0) + 1;
+  }
+}
+
+/* =========================================================
+   SYSTEM ANALYSIS
+========================================================= */
+
 export function evaluateSystemEvolution() {
 
   const sessions = listSessions();
@@ -53,6 +83,12 @@ export function evaluateSystemEvolution() {
       strategyStats: strategyMemory.strategyStats
     },
 
+    // 🔥 NEW: reinforcement snapshot
+    reinforcement: {
+      wins: reinforcementMemory.strategyWins,
+      losses: reinforcementMemory.strategyLosses
+    },
+
     timestamp: Date.now()
   };
 
@@ -62,9 +98,10 @@ export function evaluateSystemEvolution() {
   return analysis;
 }
 
-/**
- * GENERATE NEXT EVOLUTION CONFIG
- */
+/* =========================================================
+   EVOLUTION LOGIC
+========================================================= */
+
 export function generateNextEvolution() {
 
   const latest =
@@ -99,18 +136,16 @@ export function generateNextEvolution() {
   };
 }
 
-/**
- * GET META-BRAIN INFLUENCE PROFILE
- */
+/* =========================================================
+   META INFLUENCE ACCESS
+========================================================= */
+
 export function getMetaInfluence() {
   return { ...influenceState };
 }
 
 /**
- * APPLY META-BRAIN INFLUENCE
- *
- * Uses CPilot learning performance
- * to adapt system posture.
+ * 🔥 UPDATED: APPLY META INFLUENCE WITH REINFORCEMENT LEARNING
  */
 export function applyMetaInfluence(analysis) {
 
@@ -127,40 +162,74 @@ export function applyMetaInfluence(analysis) {
       values.length;
   }
 
-  // Conservative adaptation
+  // =====================================================
+  // BASE CPilot LEARNING SIGNAL
+  // =====================================================
+
   if (averageWeight < 0.9) {
 
     influenceState.riskBias = 1.2;
     influenceState.cpilotSensitivity = 1.2;
     influenceState.explorationRate = 0.20;
 
-  }
-
-  // Strong adaptation
-  else if (averageWeight > 1.1) {
+  } else if (averageWeight > 1.1) {
 
     influenceState.riskBias = 0.9;
     influenceState.cpilotSensitivity = 0.9;
     influenceState.explorationRate = 0.05;
 
-  }
-
-  // Balanced adaptation
-  else {
+  } else {
 
     influenceState.riskBias = 1.0;
     influenceState.cpilotSensitivity = 1.0;
     influenceState.explorationRate = 0.10;
   }
 
+  // =====================================================
+  // 🔥 NEW: STRATEGY REINFORCEMENT ADJUSTMENT
+  // =====================================================
+
+  const wins = reinforcementMemory.strategyWins;
+  const losses = reinforcementMemory.strategyLosses;
+
+  for (const strategy in wins) {
+
+    const w = wins[strategy] || 0;
+    const l = losses[strategy] || 0;
+
+    const total = w + l;
+
+    if (total < 5) continue;
+
+    const winRate = w / total;
+
+    if (winRate > 0.6) {
+      influenceState.riskBias += 0.02;
+      influenceState.explorationRate -= 0.01;
+    }
+
+    if (winRate < 0.4) {
+      influenceState.riskBias -= 0.02;
+      influenceState.explorationRate += 0.02;
+    }
+  }
+
+  // SAFETY CLAMP
+  influenceState.riskBias =
+    Math.max(0.5, Math.min(2, influenceState.riskBias));
+
+  influenceState.explorationRate =
+    Math.max(0.05, Math.min(0.5, influenceState.explorationRate));
+
   influenceState.lastAdjustment = Date.now();
 
   return getMetaInfluence();
 }
 
-/**
- * RUN META-BRAIN EVOLUTION CYCLE
- */
+/* =========================================================
+   META CYCLE
+========================================================= */
+
 export function runMetaBrainCycle() {
 
   const analysis =
@@ -175,9 +244,10 @@ export function runMetaBrainCycle() {
   };
 }
 
-/**
- * META-BRAIN STATUS
- */
+/* =========================================================
+   STATUS
+========================================================= */
+
 export function getMetaBrainStatus() {
   return {
     lastEvaluation: metaState.lastEvaluation,
@@ -186,13 +256,17 @@ export function getMetaBrainStatus() {
   };
 }
 
-/**
- * RESET META STATE
- */
+/* =========================================================
+   RESET
+========================================================= */
+
 export function resetMetaBrain() {
 
   metaState.evolutionHistory = [];
   metaState.lastEvaluation = null;
+
+  reinforcementMemory.strategyWins = {};
+  reinforcementMemory.strategyLosses = {};
 
   influenceState.riskBias = 1.0;
   influenceState.explorationRate = 0.10;
