@@ -192,6 +192,51 @@ export function selectWinningStrategy(
   return winner;
 }
 
+/* =========================================================
+   UNIFIED STRATEGY DECISION ENGINE (NEW - CPILOT USES THIS)
+========================================================= */
+
+export function getStrategyDecision(
+  marketData = {},
+  influence = null,
+  mode = "competition" // "competition" | "legacy"
+) {
+
+  let selected;
+
+  if (mode === "competition") {
+    selected = selectWinningStrategy(
+      marketData,
+      influence
+    );
+  } else {
+    const legacy = getBestStrategy(marketData);
+    selected = {
+      name: legacy.bestStrategy.name,
+      score: legacy.bestStrategy.score,
+      context: legacy.context
+    };
+  }
+
+  const score =
+    selected?.competitionScore ||
+    selected?.score ||
+    1;
+
+  const decision =
+    score >= 1 ? "ALLOW" : "HOLD";
+
+  const confidence =
+    Math.min(0.95, Math.max(0.35, score / 2));
+
+  return {
+    strategy: selected,
+    decision,
+    confidence,
+    mode
+  };
+}
+
 /**
  * GET COMPETITION STATUS
  */
@@ -235,4 +280,4 @@ export function resetStrategyMemory() {
 
 function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
-    }
+}
