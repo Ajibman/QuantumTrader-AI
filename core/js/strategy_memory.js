@@ -1,4 +1,4 @@
-// Strategy Memory Layer — CPilot Learning Extension
+ // Strategy Memory Layer — CPilot Learning + Competition Extension
 
 const memory = {
   totalRecords: 0,
@@ -12,6 +12,14 @@ const memory = {
 };
 
 /**
+ * STRATEGY COMPETITION REGISTRY
+ */
+const strategyCompetition = {
+  candidates: [],
+  lastWinner: null
+};
+
+/**
  * CLASSIFY CONTEXT
  */
 function getContext(marketData = {}) {
@@ -22,10 +30,10 @@ function getContext(marketData = {}) {
   return "highVolatility";
 }
 
-/**
- * RECORD STRATEGY OUTCOME
- * Called after each cycle or module execution
- */
+/* =========================================================
+   STRATEGY OUTCOME LEARNING
+========================================================= */
+
 export function recordStrategyOutcome({
   strategy = "default",
   result = {},
@@ -42,7 +50,8 @@ export function recordStrategyOutcome({
     };
   }
 
-  const entry = memory.strategyStats[context][strategy];
+  const entry =
+    memory.strategyStats[context][strategy];
 
   const pnl = result?.pnl;
 
@@ -51,11 +60,8 @@ export function recordStrategyOutcome({
   entry.total += 1;
   memory.totalRecords += 1;
 
-  if (pnl > 0) {
-    entry.wins += 1;
-  } else {
-    entry.losses += 1;
-  }
+  if (pnl > 0) entry.wins++;
+  else entry.losses++;
 
   updateScore(entry);
 }
@@ -66,7 +72,7 @@ export function recordStrategyOutcome({
 function updateScore(entry) {
   const total = entry.wins + entry.losses;
 
-  if (total < 5) return; // avoid noise early
+  if (total < 5) return;
 
   const winRate = entry.wins / total;
 
@@ -79,9 +85,10 @@ function updateScore(entry) {
   entry.score = clamp(entry.score, 0.2, 3.0);
 }
 
-/**
- * GET BEST STRATEGY FOR CONTEXT
- */
+/* =========================================================
+   BASIC BEST STRATEGY (BACKWARD COMPATIBILITY)
+========================================================= */
+
 export function getBestStrategy(marketData = {}) {
   const context = getContext(marketData);
   const strategies = memory.strategyStats[context];
@@ -93,10 +100,7 @@ export function getBestStrategy(marketData = {}) {
 
   for (const [name, data] of Object.entries(strategies)) {
     if (data.score > best.score) {
-      best = {
-        name,
-        score: data.score
-      };
+      best = { name, score: data.score };
     }
   }
 
@@ -106,16 +110,112 @@ export function getBestStrategy(marketData = {}) {
   };
 }
 
+/* =========================================================
+   STRATEGY COMPETITION LAYER (NEW)
+========================================================= */
+
 /**
- * MEMORY SNAPSHOT
+ * REGISTER STRATEGY CANDIDATE
  */
+export function registerStrategyCandidate(strategy) {
+  if (!strategy?.name) return;
+
+  strategyCompetition.candidates.push({
+    ...strategy,
+    registeredAt: Date.now()
+  });
+}
+
+/**
+ * SCORE CANDIDATES (META-BRAIN READY)
+ */
+export function scoreStrategyCandidates(
+  marketData = {},
+  influence = null
+) {
+  const multiplier =
+    influence?.riskBias || 1;
+
+  return strategyCompetition.candidates.map(
+    strategy => {
+
+      const context =
+        getContext(marketData);
+
+      const data =
+        memory.strategyStats?.[context]?.[
+          strategy.name
+        ] || { wins: 0, losses: 0, score: 1 };
+
+      const total =
+        data.wins + data.losses;
+
+      const winRate =
+        total > 0
+          ? data.wins / total
+          : 0.5;
+
+      return {
+        ...strategy,
+
+        competitionScore:
+          (data.score * winRate) / multiplier
+      };
+    }
+  );
+}
+
+/**
+ * SELECT WINNING STRATEGY
+ */
+export function selectWinningStrategy(
+  marketData = {},
+  influence = null
+) {
+  const scored =
+    scoreStrategyCandidates(
+      marketData,
+      influence
+    );
+
+  if (!scored.length) return null;
+
+  const winner =
+    scored.sort(
+      (a, b) =>
+        b.competitionScore -
+        a.competitionScore
+    )[0];
+
+  strategyCompetition.lastWinner = winner;
+
+  return winner;
+}
+
+/**
+ * GET COMPETITION STATUS
+ */
+export function getCompetitionStatus() {
+  return {
+    candidateCount:
+      strategyCompetition.candidates.length,
+
+    lastWinner:
+      strategyCompetition.lastWinner,
+
+    candidates:
+      strategyCompetition.candidates
+  };
+}
+
+/* =========================================================
+   MEMORY MANAGEMENT
+========================================================= */
+
 export function getStrategyMemory() {
   return { ...memory };
 }
 
-/**
- * RESET MEMORY
- */
 export function resetStrategyMemory() {
   memory.totalRecords = 0;
 
@@ -124,11 +224,15 @@ export function resetStrategyMemory() {
     mediumVolatility: {},
     highVolatility: {}
   };
+
+  strategyCompetition.candidates = [];
+  strategyCompetition.lastWinner = null;
 }
 
-/**
- * UTIL
- */
+/* =========================================================
+   UTIL
+========================================================= */
+
 function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
-}
+    }
