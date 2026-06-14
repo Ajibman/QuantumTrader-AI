@@ -10,6 +10,24 @@ const metaState = {
 };
 
 /**
+ * META-BRAIN INFLUENCE PROFILE
+ *
+ * This does NOT execute trades.
+ * This does NOT control TradingFloor.
+ *
+ * It only influences:
+ * - risk posture
+ * - exploration rate
+ * - CPilot sensitivity
+ */
+const influenceState = {
+  riskBias: 1.0,
+  explorationRate: 0.10,
+  cpilotSensitivity: 1.0,
+  lastAdjustment: null
+};
+
+/**
  * ANALYZE SYSTEM PERFORMANCE ACROSS SESSIONS
  */
 export function evaluateSystemEvolution() {
@@ -20,7 +38,9 @@ export function evaluateSystemEvolution() {
 
   const analysis = {
     totalSessions: sessions.length,
-    runningSessions: sessions.filter(s => s.status === "running").length,
+    runningSessions: sessions.filter(
+      s => s.status === "running"
+    ).length,
 
     cpilot: {
       totalCycles: cpilotMemory.totalCycles,
@@ -47,7 +67,9 @@ export function evaluateSystemEvolution() {
  */
 export function generateNextEvolution() {
 
-  const latest = metaState.lastEvaluation || evaluateSystemEvolution();
+  const latest =
+    metaState.lastEvaluation ||
+    evaluateSystemEvolution();
 
   const evolution = {
     riskAdjustment: "stable",
@@ -55,7 +77,6 @@ export function generateNextEvolution() {
     explorationRate: 0.1
   };
 
-  // simple adaptive logic (safe baseline)
   const lowPerformance =
     latest?.cpilot?.biasWeights?.mediumVolatility < 0.9;
 
@@ -79,12 +100,89 @@ export function generateNextEvolution() {
 }
 
 /**
- * GET META-BRAIN STATUS
+ * GET META-BRAIN INFLUENCE PROFILE
+ */
+export function getMetaInfluence() {
+  return { ...influenceState };
+}
+
+/**
+ * APPLY META-BRAIN INFLUENCE
+ *
+ * Uses CPilot learning performance
+ * to adapt system posture.
+ */
+export function applyMetaInfluence(analysis) {
+
+  const weights =
+    analysis?.cpilot?.biasWeights || {};
+
+  const values = Object.values(weights);
+
+  let averageWeight = 1.0;
+
+  if (values.length) {
+    averageWeight =
+      values.reduce((a, b) => a + b, 0) /
+      values.length;
+  }
+
+  // Conservative adaptation
+  if (averageWeight < 0.9) {
+
+    influenceState.riskBias = 1.2;
+    influenceState.cpilotSensitivity = 1.2;
+    influenceState.explorationRate = 0.20;
+
+  }
+
+  // Strong adaptation
+  else if (averageWeight > 1.1) {
+
+    influenceState.riskBias = 0.9;
+    influenceState.cpilotSensitivity = 0.9;
+    influenceState.explorationRate = 0.05;
+
+  }
+
+  // Balanced adaptation
+  else {
+
+    influenceState.riskBias = 1.0;
+    influenceState.cpilotSensitivity = 1.0;
+    influenceState.explorationRate = 0.10;
+  }
+
+  influenceState.lastAdjustment = Date.now();
+
+  return getMetaInfluence();
+}
+
+/**
+ * RUN META-BRAIN EVOLUTION CYCLE
+ */
+export function runMetaBrainCycle() {
+
+  const analysis =
+    evaluateSystemEvolution();
+
+  const influence =
+    applyMetaInfluence(analysis);
+
+  return {
+    analysis,
+    influence
+  };
+}
+
+/**
+ * META-BRAIN STATUS
  */
 export function getMetaBrainStatus() {
   return {
     lastEvaluation: metaState.lastEvaluation,
-    historyLength: metaState.evolutionHistory.length
+    historyLength: metaState.evolutionHistory.length,
+    influence: getMetaInfluence()
   };
 }
 
@@ -92,6 +190,12 @@ export function getMetaBrainStatus() {
  * RESET META STATE
  */
 export function resetMetaBrain() {
+
   metaState.evolutionHistory = [];
   metaState.lastEvaluation = null;
+
+  influenceState.riskBias = 1.0;
+  influenceState.explorationRate = 0.10;
+  influenceState.cpilotSensitivity = 1.0;
+  influenceState.lastAdjustment = null;
 }
