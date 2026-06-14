@@ -1,48 +1,93 @@
-// TradingFloor Simulation Feed — App-ready
+ // TradingFloor Simulation Feed — Rebuilt Core Version
+
 class TradingFloorFeed {
   constructor() {
-    this.interval = null;
-    this.subscribers = [];
+    this.intervalId = null;
+    this.subscribers = new Set();
+    this.running = false;
   }
 
-  start(timing = { value: 5, unit: "seconds" }) {
-    if (this.interval) return;
+  /**
+   * Start feed loop
+   */
+  start(timing = { value: 5, unit: "s" }) {
+    if (this.running) return;
 
-    const ms = this._toMilliseconds(timing.value, timing.unit);
+    const ms = this._toMilliseconds(timing);
 
-    this.interval = setInterval(() => {
-      const tick = this.generateTick();
-      this.notify(tick);
+    this.running = true;
+
+    this.intervalId = setInterval(() => {
+      const tick = this._generateTick();
+      this._emit(tick);
     }, ms);
   }
 
+  /**
+   * Stop feed loop
+   */
   stop() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = null;
+    this.running = false;
+
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
+  /**
+   * Subscribe to tick stream
+   * returns unsubscribe function
+   */
   subscribe(fn) {
-    if (typeof fn === "function") this.subscribers.push(fn);
+    if (typeof fn !== "function") return;
+
+    this.subscribers.add(fn);
+
+    return () => this.subscribers.delete(fn);
   }
 
-  notify(tick) {
-    this.subscribers.forEach(fn => fn(tick));
+  /**
+   * Emit tick to all subscribers safely
+   */
+  _emit(tick) {
+    for (const fn of this.subscribers) {
+      try {
+        fn(tick);
+      } catch (err) {
+        console.error("[TradingFloorFeed Error]", err);
+      }
+    }
   }
 
-  generateTick() {
+  /**
+   * Tick generator (simulation engine)
+   */
+  _generateTick() {
+    const basePrice = 1000;
+
     return {
       timestamp: new Date().toISOString(),
-      price: +(Math.random() * 100 + 1000).toFixed(2),
-      volume: +(Math.random() * 10).toFixed(3),
-      trend: Math.random() > 0.5 ? "up" : "down"
+      price: +(basePrice + (Math.random() - 0.5) * 20).toFixed(2),
+      volume: Math.floor(Math.random() * 1000),
+      direction: Math.random() > 0.5 ? "up" : "down"
     };
   }
 
-  _toMilliseconds(value, unit) {
-    const map = { seconds: 1000, minutes: 60_000 };
-    return map[unit] ? value * map[unit] : 5000;
+  /**
+   * Normalize timing input
+   */
+  _toMilliseconds(timing) {
+    const value = timing?.value ?? 5;
+    const unit = timing?.unit ?? "s";
+
+    const map = {
+      ms: 1,
+      s: 1000,
+      m: 60_000
+    };
+
+    return value * (map[unit] || 5000);
   }
 }
 
