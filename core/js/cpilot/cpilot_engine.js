@@ -1,15 +1,27 @@
  // core/js/cpilot/cpilot_engine.js
-// STEP H — App-ready integration of SimulationFeed + Intelligence Layer
+// STEP I — Meta-Brain Integrated Intelligence Layer
 
 import { simulationFeed } from "../simulation/simulation_feed.js";
 import { getBestStrategy } from "../strategy_memory.js";
 import { getContextStrength } from "./cpilot_memory.js";
+import { getMetaInfluence } from "../traderlab/meta_brain.js";
 
 /**
  * CPilot Engine
- * Owns simulation lifecycle + intelligence evaluation
+ *
+ * Responsibilities:
+ * - Own simulation lifecycle
+ * - Analyze market context
+ * - Evaluate strategy suitability
+ * - Apply Meta-Brain influence
+ * - Publish enriched intelligence ticks
+ *
+ * Does NOT:
+ * - Execute trades
+ * - Override TradingFloor authority
  */
 const CPilotEngine = {
+
   state: {
     running: false,
     timing: { unit: "seconds", value: 15 },
@@ -17,88 +29,174 @@ const CPilotEngine = {
     subscribers: []
   },
 
-  /* ============================= LIFECYCLE CONTROLS ============================= */
+  /* =============================
+     LIFECYCLE CONTROLS
+  ============================= */
 
   startSimulation(timing) {
+
     if (this.state.running) return;
 
     if (timing) {
       this.state.timing = timing;
     }
 
-    simulationFeed.start(this.state.timing, (tick) => {
-      this.state.lastTick = tick;
+    simulationFeed.start(
+      this.state.timing,
+      (tick) => {
 
-      // enrich tick with intelligence layer
-      const enriched = this.analyzeTick(tick);
+        this.state.lastTick = tick;
 
-      this.dispatchTick(enriched);
-    });
+        const enriched =
+          this.analyzeTick(tick);
+
+        this.dispatchTick(enriched);
+      }
+    );
 
     this.state.running = true;
   },
 
   stopSimulation() {
+
     simulationFeed.stop();
     this.state.running = false;
   },
 
   resetSimulation() {
+
     this.stopSimulation();
     this.state.lastTick = null;
   },
 
-  /* ============================= INTELLIGENCE LAYER ============================= */
+  /* =============================
+     INTELLIGENCE LAYER
+  ============================= */
 
   analyzeTick(tick) {
+
     const marketData = {
       price: tick.price,
       volume: tick.volume,
       volatility: this.estimateVolatility(tick)
     };
 
-    const context = getContextStrength(marketData);
-    const strategy = getBestStrategy(marketData);
+    const context =
+      getContextStrength(marketData);
 
+    const strategy =
+      getBestStrategy(marketData);
+
+    const influence =
+      getMetaInfluence();
+
+    /**
+     * Meta-Brain adjusted signal
+     */
     const combinedSignal =
-      (strategy?.bestStrategy?.score || 1) *
-      (context?.weight || 1);
+      (
+        (strategy?.bestStrategy?.score || 1) *
+        (context?.weight || 1)
+      ) / influence.cpilotSensitivity;
 
+    /**
+     * CPilot recommendation
+     * (not execution authority)
+     */
     const hold =
-      marketData.volatility < 0.2 ||
+      marketData.volatility < 0.20 ||
       marketData.volatility > 0.85 ||
-      combinedSignal < 0.9;
+      combinedSignal < 0.90;
+
+    const suggestion =
+      hold ? "HOLD" : "ALLOW";
+
+    /**
+     * Confidence adapts to Meta-Brain
+     */
+    const confidence = hold
+      ? 0.4 / influence.cpilotSensitivity
+      : 0.7 * (2 - influence.cpilotSensitivity);
 
     return {
+
       ...tick,
+
       intelligence: {
+
+        suggestion,
+
+        decision: suggestion, // backward compatibility
+
         hold,
-        decision: hold ? "HOLD" : "ALLOW",
+
+        confidence,
+
         context: context.context,
-        contextWeight: context.weight,
-        strategy: strategy.bestStrategy,
+
+        contextWeight:
+          context.weight,
+
+        strategy:
+          strategy?.bestStrategy || null,
+
         combinedSignal,
-        confidence: hold ? 0.4 : 0.7
+
+        volatility:
+          marketData.volatility,
+
+        metaInfluence: {
+
+          riskBias:
+            influence.riskBias,
+
+          explorationRate:
+            influence.explorationRate,
+
+          cpilotSensitivity:
+            influence.cpilotSensitivity
+        }
       }
     };
   },
 
+  /**
+   * Lightweight volatility estimator
+   */
   estimateVolatility(tick) {
-    // lightweight synthetic volatility estimate
-    return Math.min(1, Math.abs((tick.price % 10) / 10));
+
+    return Math.min(
+      1,
+      Math.abs((tick.price % 10) / 10)
+    );
   },
 
-  /* ============================= OBSERVERS ============================= */
+  /* =============================
+     OBSERVERS
+  ============================= */
 
   subscribe(fn) {
+
     if (typeof fn === "function") {
       this.state.subscribers.push(fn);
     }
   },
 
+  unsubscribe(fn) {
+
+    this.state.subscribers =
+      this.state.subscribers.filter(
+        sub => sub !== fn
+      );
+  },
+
   dispatchTick(tick) {
-    this.state.subscribers.forEach(fn => fn(tick));
+
+    this.state.subscribers.forEach(
+      fn => fn(tick)
+    );
   }
+
 };
 
 export default CPilotEngine;
