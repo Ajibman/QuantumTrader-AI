@@ -21,20 +21,21 @@ function normalizeTrade(trade) {
 }
 
 // ------------------------------------------------------
-// EXECUTION GATE
+// CORE EXECUTION PIPELINE
 // ------------------------------------------------------
 
-function executeThroughOrchestrator(trade, signal) {
+function executeThroughOrchestrator(trade, signal, mode = "SIMULATION") {
 
   const control = orchestrator.evaluate(signal);
 
   // --------------------------
-  // HARD GATE (NO OVERRIDE)
+  // GLOBAL GATE
   // --------------------------
 
   if (!control.allowTrade) {
     return {
       status: "BLOCKED",
+      mode,
       reason: control.mode,
       trade: null
     };
@@ -52,44 +53,55 @@ function executeThroughOrchestrator(trade, signal) {
   const result = normalizeTrade(adjustedTrade);
 
   // --------------------------
-  // FEEDBACK LOOP
+  // FEEDBACK LOOP (META BRAIN)
   // --------------------------
 
-  metaBrain.recordLiveOutcome(result.success);
+  const success = result.success;
+
+  if (mode === "SIMULATION") {
+    metaBrain.recordSimulationOutcome(success);
+  } else {
+    metaBrain.recordLiveOutcome(success);
+  }
+
+  // --------------------------
+  // RETURN STANDARDIZED OUTPUT
+  // --------------------------
 
   return {
     status: "EXECUTED",
-    mode: control.mode,
+    mode,
     control,
     result
   };
 }
 
 // ------------------------------------------------------
-// PUBLIC INTERFACE
+// PUBLIC API
 // ------------------------------------------------------
 
 export function executeSimulationTrade(trade, signal) {
-  const output = executeThroughOrchestrator(trade, signal);
+  const output = executeThroughOrchestrator(trade, signal, "SIMULATION");
 
-  console.log("[SIM]", output.status, output.mode || "");
+  console.log("[SIM]", output.status);
 
   return output;
 }
 
 export function executeLiveTrade(trade, signal) {
-  const output = executeThroughOrchestrator(trade, signal);
+  const output = executeThroughOrchestrator(trade, signal, "LIVE");
 
-  console.log("[LIVE]", output.status, output.mode || "");
+  console.log("[LIVE]", output.status);
 
   return output;
 }
 
 // ------------------------------------------------------
-// BACKTEST BATCH
+// BATCH SIMULATION
 // ------------------------------------------------------
 
 export function runSimulationBatch(trades = [], signals = []) {
+
   const results = [];
 
   for (let i = 0; i < trades.length; i++) {
