@@ -4,6 +4,55 @@
 // META BRAIN — SINGLE COGNITIVE KERNEL (ORCHESTRATOR)
 // ======================================================
 
+class SyncEngine {
+
+  constructor() {
+    this.state = {
+      simulation: { wins: 0, losses: 0 },
+      live: { wins: 0, losses: 0 },
+      driftScore: 0
+    };
+  }
+
+  recordSimulation(correct) {
+    correct
+      ? this.state.simulation.wins++
+      : this.state.simulation.losses++;
+
+    this._updateDrift();
+  }
+
+  recordLive(correct) {
+    correct
+      ? this.state.live.wins++
+      : this.state.live.losses++;
+
+    this._updateDrift();
+  }
+
+  _updateDrift() {
+    const sim = this._rate(this.state.simulation);
+    const live = this._rate(this.state.live);
+
+    this.state.driftScore = Math.abs(sim - live);
+  }
+
+  _rate(g) {
+    const total = g.wins + g.losses;
+    return total ? g.wins / total : 0.5;
+  }
+
+  getReport() {
+    return {
+      simulationWinRate: this._rate(this.state.simulation),
+      liveWinRate: this._rate(this.state.live),
+      driftScore: this.state.driftScore
+    };
+  }
+}
+
+// ------------------------------------------------------
+
 class ZoneEngine {
   constructor() {
     this.zones = {
@@ -60,11 +109,14 @@ class DecisionEngine {
     const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
 
     const risk =
-      signal.riskLevel === "high"
-        ? -0.4
-        : signal.riskLevel === "medium"
-        ? -0.2
-        : 0.1;
+      (
+        signal.riskLevel === "high"
+          ? -0.4
+          : signal.riskLevel === "medium"
+          ? -0.2
+          : 0.1
+      )
+      + this.learning.riskBias;
 
     const volatility =
       (signal.volatility > 0.7 ? -0.3 : 0.2) + this.learning.volatilityBias;
@@ -161,6 +213,7 @@ class LearningEngine {
     this.learning.trendBias = this._limit(this.learning.trendBias);
     this.learning.riskBias = this._limit(this.learning.riskBias);
     this.learning.volatilityBias = this._limit(this.learning.volatilityBias);
+
     this.learning.confidenceCalibrator = Math.max(
       0.5,
       Math.min(1.5, this.learning.confidenceCalibrator)
@@ -190,6 +243,9 @@ class MetaBrain {
     this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
+
+    // INSERTION 2 — SyncEngine
+    this.syncEngine = new SyncEngine();
   }
 
   evaluate(signal, systemContext = {}) {
@@ -236,6 +292,23 @@ class MetaBrain {
 
   learnFromSimulation(results) {
     this.learningEngine.apply(results);
+  }
+
+  // INSERTION 4 — Sync API
+
+  recordSimulationOutcome(correct) {
+    this.syncEngine.recordSimulation(correct);
+  }
+
+  recordLiveOutcome(correct) {
+    this.syncEngine.recordLive(correct);
+  }
+
+  getHealthReport() {
+    return {
+      learning: this.learning,
+      sync: this.syncEngine.getReport()
+    };
   }
 }
 
