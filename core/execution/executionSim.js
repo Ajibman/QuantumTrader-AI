@@ -1,25 +1,10 @@
-// core/execution/executionSim.js
+ import { metaBrain } from "../brain/meta_brain/meta_brain.js";
+import { AutoTraderOrchestrator } from "../autotrader/autotrader_orchestrator.js";
 
-import { metaBrain } from "../brain/meta_brain/meta_brain.js";
-
-/**
- * ======================================================
- * EXECUTION SIMULATION ENGINE (UNIFIED SIM + LIVE)
- * ======================================================
- *
- * Responsibility:
- * - Execute simulated or live trades
- * - Normalize trade results
- * - Report outcomes to MetaBrain SyncEngine
- *
- * IMPORTANT:
- * - Does NOT make decisions
- * - Does NOT learn
- * - Only executes + reports
- */
+const orchestrator = new AutoTraderOrchestrator();
 
 // ------------------------------------------------------
-// TRADE NORMALIZER
+// NORMALIZER
 // ------------------------------------------------------
 
 function normalizeTrade(trade) {
@@ -36,61 +21,81 @@ function normalizeTrade(trade) {
 }
 
 // ------------------------------------------------------
-// CORE EXECUTION REPORTER
+// EXECUTION GATE
 // ------------------------------------------------------
 
-function reportTradeOutcome(trade) {
-  const result = normalizeTrade(trade);
+function executeThroughOrchestrator(trade, signal) {
 
-  // Send ONLY outcome signal to MetaBrain
+  const control = orchestrator.evaluate(signal);
+
+  // --------------------------
+  // HARD GATE (NO OVERRIDE)
+  // --------------------------
+
+  if (!control.allowTrade) {
+    return {
+      status: "BLOCKED",
+      reason: control.mode,
+      trade: null
+    };
+  }
+
+  // --------------------------
+  // RISK APPLICATION
+  // --------------------------
+
+  const adjustedTrade = {
+    ...trade,
+    riskMultiplier: control.riskMultiplier
+  };
+
+  const result = normalizeTrade(adjustedTrade);
+
+  // --------------------------
+  // FEEDBACK LOOP
+  // --------------------------
+
   metaBrain.recordLiveOutcome(result.success);
 
-  return result;
+  return {
+    status: "EXECUTED",
+    mode: control.mode,
+    control,
+    result
+  };
 }
 
 // ------------------------------------------------------
-// SIMULATION EXECUTION
+// PUBLIC INTERFACE
 // ------------------------------------------------------
 
-export function executeSimulationTrade(trade) {
-  const result = reportTradeOutcome(trade);
+export function executeSimulationTrade(trade, signal) {
+  const output = executeThroughOrchestrator(trade, signal);
 
-  console.log("[SIM TRADE]", {
-    asset: result.asset,
-    action: result.action,
-    pnl: result.pnl,
-    success: result.success
-  });
+  console.log("[SIM]", output.status, output.mode || "");
 
-  return result;
+  return output;
+}
+
+export function executeLiveTrade(trade, signal) {
+  const output = executeThroughOrchestrator(trade, signal);
+
+  console.log("[LIVE]", output.status, output.mode || "");
+
+  return output;
 }
 
 // ------------------------------------------------------
-// LIVE EXECUTION
+// BACKTEST BATCH
 // ------------------------------------------------------
 
-export function executeLiveTrade(trade) {
-  const result = reportTradeOutcome(trade);
-
-  console.log("[LIVE TRADE]", {
-    asset: result.asset,
-    action: result.action,
-    pnl: result.pnl,
-    success: result.success
-  });
-
-  return result;
-}
-
-// ------------------------------------------------------
-// OPTIONAL: BULK PROCESSING (SIM BACKTESTING)
-// ------------------------------------------------------
-
-export function runSimulationBatch(trades = []) {
+export function runSimulationBatch(trades = [], signals = []) {
   const results = [];
 
-  for (const trade of trades) {
-    results.push(executeSimulationTrade(trade));
+  for (let i = 0; i < trades.length; i++) {
+    results.push(
+      executeSimulationTrade(trades[i], signals[i] || {})
+    );
   }
 
   return results;
