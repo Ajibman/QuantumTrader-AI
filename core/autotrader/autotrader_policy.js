@@ -1,4 +1,4 @@
-import { metaBrain } from "../brain/meta_brain/meta_brain.js";
+ import { metaBrain } from "../brain/meta_brain/meta_brain.js";
 
 export class AutoTraderPolicy {
 
@@ -15,64 +15,62 @@ export class AutoTraderPolicy {
 
     const drift = health.sync.driftScore;
 
+    const simWin = health.sync.simulationWinRate;
+    const liveWin = health.sync.liveWinRate;
+
+    const performanceGap = Math.abs(simWin - liveWin);
+
+    const adjustedDrift = drift + performanceGap * 0.5;
+
     // --------------------------
-    // DRIFT RESPONSE LOGIC
+    // MODE SELECTION
     // --------------------------
 
-    if (drift < 0.10) {
+    if (adjustedDrift < 0.08) {
       this._setNormalMode();
     }
 
-    if (drift >= 0.10 && drift < 0.25) {
+    else if (adjustedDrift < 0.18) {
       this._setCautionMode();
     }
 
-    if (drift >= 0.25) {
+    else if (adjustedDrift < 0.30) {
       this._setRiskMode();
     }
+
+    else {
+      this._setShutdownMode();
+    }
+
+    // --------------------------
+    // CONFIDENCE SUPPRESSION
+    // --------------------------
+
+    this.state.confidenceThreshold =
+      0.35 + adjustedDrift * 0.5;
 
     return this.state;
   }
 
-const policy = new AutoTraderPolicy();
-
-const state = policy.evaluate();
-
-if (state.pauseTrading) {
-  return; // stop trading completely
-}
-
-if (signal.confidence < state.confidenceThreshold) {
-  return; // ignore weak signals
-}
-
-executeTrade(signal, state.riskMultiplier);
-  
-  // --------------------------
-  // MODES
-  // --------------------------
-
   _setNormalMode() {
     this.state.riskMultiplier = 1;
     this.state.pauseTrading = false;
-    this.state.confidenceThreshold = 0.35;
   }
 
   _setCautionMode() {
     this.state.riskMultiplier = 0.6;
     this.state.pauseTrading = false;
-    this.state.confidenceThreshold = 0.5;
   }
 
   _setRiskMode() {
     this.state.riskMultiplier = 0.2;
-    this.state.pauseTrading = true;
-    this.state.confidenceThreshold = 0.7;
+    this.state.pauseTrading = false;
   }
 
-  // --------------------------
-  // ACCESSORS
-  // --------------------------
+  _setShutdownMode() {
+    this.state.riskMultiplier = 0;
+    this.state.pauseTrading = true;
+  }
 
   getState() {
     return this.state;
