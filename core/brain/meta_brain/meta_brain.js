@@ -1,6 +1,4 @@
- // core/brain/meta_brain/meta_brain.js
-
-// ======================================================
+ // ======================================================
 // META BRAIN — SINGLE COGNITIVE KERNEL (ORCHESTRATOR)
 // ======================================================
 
@@ -33,7 +31,6 @@ class SyncEngine {
   _updateDrift() {
     const sim = this._rate(this.state.simulation);
     const live = this._rate(this.state.live);
-
     this.state.driftScore = Math.abs(sim - live);
   }
 
@@ -115,11 +112,11 @@ class DecisionEngine {
           : signal.riskLevel === "medium"
           ? -0.2
           : 0.1
-      )
-      + this.learning.riskBias;
+      ) + this.learning.riskBias;
 
     const volatility =
-      (signal.volatility > 0.7 ? -0.3 : 0.2) + this.learning.volatilityBias;
+      (signal.volatility > 0.7 ? -0.3 : 0.2) +
+      this.learning.volatilityBias;
 
     const zoneBias = this.zoneEngine.getZoneBias(signal);
 
@@ -226,10 +223,11 @@ class LearningEngine {
 }
 
 // ======================================================
-// META BRAIN ORCHESTRATOR (SINGLE EXPORT)
+// META BRAIN ORCHESTRATOR
 // ======================================================
 
 class MetaBrain {
+
   constructor() {
     this.learning = {
       trendBias: 0,
@@ -244,13 +242,12 @@ class MetaBrain {
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
 
-    // INSERTION 2 — SyncEngine
     this.syncEngine = new SyncEngine();
   }
 
   evaluate(signal, systemContext = {}) {
-    const zone = this.zoneEngine.classify(signal);
 
+    const zone = this.zoneEngine.classify(signal);
     const raw = this.decisionEngine.evaluate(signal);
 
     const confidence = this.calibrationEngine.calibrate(
@@ -258,7 +255,9 @@ class MetaBrain {
       signal
     );
 
-    const action = this._decide(raw.score);
+    const drift = this.syncEngine.state.driftScore;
+
+    const action = this._decide(raw.score, drift);
 
     const output = {
       action,
@@ -269,7 +268,8 @@ class MetaBrain {
         zone,
         trend: raw.trend,
         risk: raw.risk,
-        volatility: raw.volatility
+        volatility: raw.volatility,
+        drift
       }
     };
 
@@ -278,7 +278,14 @@ class MetaBrain {
     return output;
   }
 
-  _decide(score) {
+  _decide(score, drift) {
+
+    if (drift > 0.6) {
+      if (score > 0.5) return "BUY";
+      if (score < -0.5) return "SELL";
+      return "HOLD";
+    }
+
     if (score > 0.35) return "BUY";
     if (score < -0.35) return "SELL";
     return "HOLD";
@@ -293,8 +300,6 @@ class MetaBrain {
   learnFromSimulation(results) {
     this.learningEngine.apply(results);
   }
-
-  // INSERTION 4 — Sync API
 
   recordSimulationOutcome(correct) {
     this.syncEngine.recordSimulation(correct);
