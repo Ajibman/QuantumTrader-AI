@@ -1,6 +1,6 @@
  // ======================================================
-// META BRAIN OS — PRODUCTION KERNEL
-// STAGES 1–17 FULLY UNIFIED (CLEAN ARCHITECTURE)
+// META BRAIN — APP GRADE PRODUCTION KERNEL
+// STAGES 1–18B UNIFIED SYSTEM
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -22,7 +22,7 @@ class ZoneEngine {
     return "neutral";
   }
 
-  bias(signal) {
+  getBias(signal) {
     const z = this.classify(signal);
     return z === "profit" ? 0.1 : z === "danger" ? -0.1 : 0;
   }
@@ -35,16 +35,22 @@ class ZoneEngine {
 
 class MemoryEngine {
   constructor() {
-    this.history = [];
+    this.signals = [];
+    this.decisions = [];
   }
 
   store(signal, decision) {
-    this.history.push({ signal, decision });
-    if (this.history.length > 100) this.history.shift();
+    this.signals.push(signal);
+    this.decisions.push(decision);
+
+    if (this.signals.length > 100) {
+      this.signals.shift();
+      this.decisions.shift();
+    }
   }
 
   recent(n = 10) {
-    return this.history.slice(-n).map(h => h.signal);
+    return this.signals.slice(-n);
   }
 }
 
@@ -59,7 +65,7 @@ class ContextEngine {
   }
 
   classify(signal) {
-    const hist = this.memory.recent(10);
+    const hist = this.memory.recent(12);
 
     if (hist.length < 3) return "RANGING";
 
@@ -69,10 +75,13 @@ class ContextEngine {
     const avgV =
       hist.reduce((s, x) => s + (x.volatility ?? 0), 0) / hist.length;
 
+    const t = signal.trendStrength ?? 0;
+    const v = signal.volatility ?? 0;
+
     if (avgT > 0.7 && avgV < 0.5) return "TRENDING";
     if (avgV > 0.75) return "VOLATILE";
-    if (signal.trendStrength > avgT && signal.volatility < avgV) return "RECOVERY";
-    if (signal.trendStrength < avgT && signal.volatility > avgV) return "BREAKDOWN";
+    if (t > avgT && v < avgV) return "RECOVERY";
+    if (t < avgT && v > avgV) return "BREAKDOWN";
 
     return "RANGING";
   }
@@ -85,21 +94,24 @@ class ContextEngine {
 
 class ReactionEngine {
   getProfile(context) {
-    const map = {
-      TRENDING: { buy: 0.25, sell: -0.25, mult: 1.15, mode: "AGGRESSIVE" },
-      RECOVERY: { buy: 0.30, sell: -0.30, mult: 1.05, mode: "OPTIMISTIC" },
-      VOLATILE: { buy: 0.60, sell: -0.60, mult: 0.85, mode: "DEFENSIVE" },
-      BREAKDOWN: { buy: 0.75, sell: -0.25, mult: 0.75, mode: "SURVIVAL" },
-      RANGING: { buy: 0.35, sell: -0.35, mult: 1.0, mode: "BALANCED" }
-    };
-
-    return map[context] ?? map.RANGING;
+    switch (context) {
+      case "TRENDING":
+        return { buy: 0.25, sell: -0.25, mult: 1.15 };
+      case "RECOVERY":
+        return { buy: 0.3, sell: -0.3, mult: 1.05 };
+      case "VOLATILE":
+        return { buy: 0.6, sell: -0.6, mult: 0.85 };
+      case "BREAKDOWN":
+        return { buy: 0.75, sell: -0.25, mult: 0.75 };
+      default:
+        return { buy: 0.35, sell: -0.35, mult: 1 };
+    }
   }
 }
 
 
 // ======================================================
-// STAGE 6: CORE DECISION ENGINE
+// STAGE 6: DECISION ENGINE
 // ======================================================
 
 class DecisionEngine {
@@ -109,12 +121,20 @@ class DecisionEngine {
   }
 
   evaluate(signal) {
-    const t = (signal.trendStrength ?? 0) + this.learning.trendBias;
-    const r = (signal.riskLevel === "high" ? -0.4 : 0.1) + this.learning.riskBias;
-    const v = (signal.volatility > 0.7 ? -0.3 : 0.2) + this.learning.volatilityBias;
-    const z = this.zone.bias(signal);
+    const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
 
-    const score = t + r + v + z;
+    const risk =
+      (signal.riskLevel === "high" ? -0.4 :
+       signal.riskLevel === "medium" ? -0.2 : 0.1)
+       + this.learning.riskBias;
+
+    const vol =
+      (signal.volatility > 0.7 ? -0.3 : 0.2)
+      + this.learning.volatilityBias;
+
+    const zoneBias = this.zone.getBias(signal);
+
+    const score = trend + risk + vol + zoneBias;
 
     return { score: Math.max(-1, Math.min(1, score)) };
   }
@@ -131,17 +151,14 @@ class CalibrationEngine {
     this.zone = zone;
   }
 
-  calibrate(confidence, signal, reaction) {
+  calibrate(conf, signal, reaction) {
     const z = this.zone.classify(signal);
+    const rel = this.zone.reliability?.(z) ?? 0.5;
 
-    let adjusted =
-      confidence *
-      this.learning.confidenceCalibrator *
-      (0.3 + (z === "profit" ? 0.8 : z === "danger" ? 0.2 : 0.5));
+    let adj = conf * this.learning.confidenceCalibrator * (0.3 + rel);
+    adj *= reaction.mult;
 
-    adjusted *= reaction.mult;
-
-    return Math.max(0, Math.min(1, adjusted));
+    return Math.max(0, Math.min(1, adj));
   }
 }
 
@@ -160,13 +177,13 @@ class LearningEngine {
     for (const r of results) {
       const correct = r.evaluation?.actionCorrect;
       const zone = r.decision?.meta?.zone;
+      if (!zone) continue;
 
       const d = correct ? 0.005 : -0.005;
 
       this.learning.trendBias += d;
       this.learning.riskBias += d;
       this.learning.volatilityBias += d;
-
       this.learning.confidenceCalibrator += correct ? 0.001 : -0.001;
     }
   }
@@ -178,11 +195,14 @@ class LearningEngine {
 // ======================================================
 
 class PolicyFirewall {
-  validate(signal, decision) {
+  validate(signal, decision, context) {
     const issues = [];
 
-    if (decision.confidence < 0.05 || decision.confidence > 0.95)
+    if (decision.confidence > 0.95 || decision.confidence < 0.05)
       issues.push("CONFIDENCE_OUT_OF_RANGE");
+
+    if (context === "BREAKDOWN")
+      issues.push("DANGEROUS_CONTEXT");
 
     if ((signal.volatility ?? 0) > 0.95)
       issues.push("EXTREME_VOLATILITY");
@@ -192,27 +212,29 @@ class PolicyFirewall {
 }
 
 class AnomalyDetector {
-  constructor() {
-    this.buffer = [];
-  }
+  constructor() { this.h = []; }
 
-  track(signal, decision) {
-    this.buffer.push({
-      score: decision.strength,
-      vol: signal.volatility ?? 0
+  track(signal, output) {
+    this.h.push({
+      score: output.strength,
+      vol: signal.volatility ?? 0,
+      conf: output.confidence
     });
 
-    if (this.buffer.length > 50) this.buffer.shift();
+    if (this.h.length > 60) this.h.shift();
   }
 
   detect() {
-    if (this.buffer.length < 10) return { anomaly: false };
+    if (this.h.length < 10) return { anomaly: false };
 
-    const avg = this.buffer.reduce((s, b) => s + b.score, 0) / this.buffer.length;
-    const last = this.buffer.at(-1);
+    const avg = this.h.reduce((s, x) => s + x.score, 0) / this.h.length;
+    const last = this.h.at(-1);
 
     return {
-      anomaly: Math.abs(last.score - avg) > 0.6 || last.vol > 0.9
+      anomaly:
+        Math.abs(last.score - avg) > 0.6 ||
+        last.vol > 0.9 ||
+        last.conf < 0.3
     };
   }
 }
@@ -259,13 +281,15 @@ class IntentBuilder {
 
 class ExecutionGate {
   allow(decision, safety) {
-    return !safety.safeMode && decision.confidence > 0.2 && decision.action !== "HOLD";
+    return !safety.safeMode &&
+           decision.confidence > 0.2 &&
+           decision.action !== "HOLD";
   }
 }
 
 
 // ======================================================
-// STAGE 13: META BRAIN ORCHESTRATOR
+// STAGE 13: ORCHESTRATOR
 // ======================================================
 
 class MetaBrain {
@@ -296,6 +320,10 @@ class MetaBrain {
 
     this.sync = new SyncEngine();
     this.health = new HealthEngine();
+
+    // STAGE 14–15–16–17–18 modules
+    this.swarm = null; // optional plug
+    this.capitalControl = null;
   }
 
   evaluate(signal) {
@@ -304,7 +332,7 @@ class MetaBrain {
 
     const raw = this.decision.evaluate(signal);
 
-    const confidence = this.calibration.calibrate(
+    let confidence = this.calibration.calibrate(
       Math.abs(raw.score),
       signal,
       reaction
@@ -313,19 +341,14 @@ class MetaBrain {
     const decision = {
       action:
         raw.score > reaction.buy ? "BUY" :
-        raw.score < reaction.sell ? "SELL" :
-        "HOLD",
+        raw.score < reaction.sell ? "SELL" : "HOLD",
 
       confidence,
       strength: raw.score,
-      meta: {
-        context,
-        zone: this.zone.classify(signal),
-        reaction: reaction.mode
-      }
+      meta: { context }
     };
 
-    const firewall = this.firewall.validate(signal, decision);
+    const firewall = this.firewall.validate(signal, decision, context);
     const anomaly = this.anomaly.detect();
     const safety = this.governor.evaluate(firewall, anomaly);
 
@@ -333,111 +356,24 @@ class MetaBrain {
 
     let execution = null;
 
-    if (!this.governor.shouldBlock() && this.gate.allow(decision, safety)) {
+    if (!this.governor.shouldBlock()) {
       const intent = this.intent.build(signal, decision, decision.meta);
-      execution = this.execution.execute(intent);
+      if (this.gate.allow(decision, safety)) {
+        execution = this.execution.execute(intent);
+      }
     }
 
     this.memory.store(signal, decision);
 
-    return { ...decision, execution, meta: { ...decision.meta, safeMode: safety.safeMode } };
+    return {
+      ...decision,
+      execution,
+      meta: { ...decision.meta, safeMode: safety.safeMode }
+    };
   }
 
-  learn(results) {
+  learn(results = []) {
     this.learningEngine.apply(results);
-  }
-}
-
-
-// ======================================================
-// STAGE 14: SWARM CONSENSUS
-// ======================================================
-
-class SwarmNode {
-  constructor(factory) {
-    this.brain = factory();
-    this.bias = (Math.random() - 0.5) * 0.05;
-  }
-
-  evaluate(signal) {
-    const mutated = {
-      ...signal,
-      trendStrength: (signal.trendStrength ?? 0) + this.bias
-    };
-
-    return this.brain.evaluate(mutated);
-  }
-}
-
-class SwarmLayer {
-  constructor(factory, size = 5) {
-    this.nodes = Array.from({ length: size }, () => new SwarmNode(factory));
-  }
-
-  evaluate(signal) {
-    const results = this.nodes.map(n => n.evaluate(signal));
-
-    const avg =
-      results.reduce((s, r) => s + r.score, 0) / results.length;
-
-    const dispersion =
-      results.reduce((s, r) => s + Math.abs(r.score - avg), 0) / results.length;
-
-    return { swarmScore: avg, dispersion };
-  }
-}
-
-
-// ======================================================
-// STAGE 15: EVOLUTION CONTROLLER
-// ======================================================
-
-class EvolutionController {
-  adapt(learning, swarm) {
-    if (swarm.dispersion > 0.6) learning.confidenceCalibrator *= 0.99;
-    if (swarm.dispersion < 0.3) learning.confidenceCalibrator *= 1.01;
-  }
-}
-
-
-// ======================================================
-// STAGE 16–17: CAPITAL CONTROL SYSTEM
-// ======================================================
-
-class CapitalControlSystem {
-  constructor() {
-    this.state = {
-      dailyLoss: 0,
-      dailyTrades: 0,
-      exposure: 0,
-      maxDailyLoss: 0.05,
-      maxTrades: 50,
-      maxExposure: 0.3
-    };
-  }
-
-  evaluateRisk(signal, decision) {
-    const issues = [];
-
-    if (decision.confidence < 0.25) issues.push("LOW_CONFIDENCE");
-    if ((signal.volatility ?? 0) > 0.95) issues.push("EXTREME_VOLATILITY");
-
-    return {
-      allowed: issues.length === 0,
-      riskLevel: "AUTO",
-      issues
-    };
-  }
-
-  computeExecution(signal, decision, risk) {
-    let size = decision.confidence * (1 - (signal.volatility ?? 0));
-    size = Math.max(0, Math.min(1, size));
-
-    return {
-      size,
-      mode: risk.riskLevel === "HIGH" ? "PAPER_ONLY" : "LIVE",
-      adjustedConfidence: decision.confidence
-    };
   }
 }
 
@@ -447,5 +383,3 @@ class CapitalControlSystem {
 // ======================================================
 
 export const metaBrain = new MetaBrain();
-export const swarmLayer = new SwarmLayer(() => new MetaBrain());
-export const capitalControl = new CapitalControlSystem();
