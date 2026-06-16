@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 3 (OPPORTUNITY ENGINE INTEGRATED)
+// STAGE 4A INTEGRATED (EXECUTION INTENT ENGINE)
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -133,22 +133,16 @@ class ReactionEngine {
     switch (context) {
       case "TRENDING":
         return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, mult: 1.15 };
-
       case "RECOVERY":
         return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, mult: 1.05 };
-
       case "ACCUMULATION":
         return { mode: "PREPARING", buy: 0.35, sell: -0.35, mult: 1.0 };
-
       case "DISTRIBUTION":
         return { mode: "CAUTIOUS", buy: 0.45, sell: -0.45, mult: 0.95 };
-
       case "VOLATILE":
         return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, mult: 0.85 };
-
       case "BREAKDOWN":
         return { mode: "SURVIVAL", buy: 0.75, sell: -0.25, mult: 0.75 };
-
       default:
         return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
     }
@@ -156,16 +150,12 @@ class ReactionEngine {
 }
 
 // ------------------------------------------------------
-// OPPORTUNITY ENGINE (STAGE 3)
+// OPPORTUNITY ENGINE
 // ------------------------------------------------------
 
 class OpportunityEngine {
   score(signal, context, reaction) {
-    const trend = signal.trendStrength ?? 0;
-    const volatility = signal.volatility ?? 0;
-    const risk = signal.riskLevel;
-
-    let score = trend * 0.5;
+    let score = (signal.trendStrength ?? 0) * 0.5;
 
     if (context === "TRENDING") score *= 1.4;
     if (context === "VOLATILE") score *= 0.6;
@@ -173,14 +163,47 @@ class OpportunityEngine {
 
     score *= reaction.mult;
 
-    if (risk === "high") score -= 0.3;
-    if (volatility > 0.8) score -= 0.25;
+    if (signal.riskLevel === "high") score -= 0.3;
+    if (signal.volatility > 0.8) score -= 0.25;
 
     return Math.max(0, Math.min(1, score));
   }
 
   isValid(score) {
     return score > 0.45;
+  }
+}
+
+// ------------------------------------------------------
+// EXECUTION INTENT ENGINE (STAGE 4A)
+// ------------------------------------------------------
+
+class ExecutionIntentEngine {
+  build(score, confidence, opportunityScore) {
+    const conviction =
+      (Math.abs(score) * 0.5) +
+      (confidence * 0.3) +
+      (opportunityScore * 0.2);
+
+    return {
+      intentStrength: conviction,
+      positionSize: this._size(conviction),
+      urgency: this._urgency(conviction)
+    };
+  }
+
+  _size(v) {
+    if (v > 0.75) return "HIGH";
+    if (v > 0.5) return "MEDIUM";
+    if (v > 0.3) return "LOW";
+    return "MINIMAL";
+  }
+
+  _urgency(v) {
+    if (v > 0.8) return "IMMEDIATE";
+    if (v > 0.6) return "FAST";
+    if (v > 0.4) return "NORMAL";
+    return "SLOW";
   }
 }
 
@@ -211,10 +234,10 @@ class DecisionEngine {
 
     const zoneBias = this.zoneEngine.getZoneBias(signal);
 
-    const rawScore = trend + risk + volatility + zoneBias;
+    const raw = trend + risk + volatility + zoneBias;
 
     return {
-      score: Math.max(-1, Math.min(1, rawScore)),
+      score: Math.max(-1, Math.min(1, raw)),
       trend,
       risk,
       volatility
@@ -237,10 +260,9 @@ class CalibrationEngine {
     const rel = this.zoneEngine.reliability(zone);
 
     let adjusted =
-      confidence *
-      this.learning.confidenceCalibrator;
+      confidence * this.learning.confidenceCalibrator;
 
-    adjusted *= 0.3 + rel;
+    adjusted *= (0.3 + rel);
 
     return Math.max(0, Math.min(1, adjusted));
   }
@@ -258,8 +280,9 @@ class LearningEngine {
 
   apply(results = []) {
     for (const r of results) {
-      const correct = r.evaluation?.actionCorrect;
       const zone = r.decision?.meta?.zone;
+      const correct = r.evaluation?.actionCorrect;
+
       if (!zone) continue;
 
       this.zoneEngine.record(zone, correct);
@@ -305,6 +328,8 @@ export class MetaBrain {
     this.contextEngine = new ContextEngine(this.memoryEngine);
     this.reactionEngine = new ReactionEngine();
     this.opportunityEngine = new OpportunityEngine();
+    this.executionIntentEngine = new ExecutionIntentEngine();
+
     this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
@@ -344,7 +369,18 @@ export class MetaBrain {
     confidence *= reaction.mult;
     confidence = Math.max(0, Math.min(1, confidence));
 
-    const action = this._decide(raw.score, reaction);
+    const intent = this.executionIntentEngine.build(
+      raw.score,
+      confidence,
+      opportunityScore
+    );
+
+    const action =
+      raw.score > reaction.buy
+        ? "BUY"
+        : raw.score < reaction.sell
+        ? "SELL"
+        : "HOLD";
 
     const output = {
       action,
@@ -355,18 +391,13 @@ export class MetaBrain {
         context,
         reactionMode: reaction.mode,
         zone,
-        opportunityScore
+        opportunityScore,
+        intent
       }
     };
 
     this.memoryEngine.store(signal, output);
     return output;
-  }
-
-  _decide(score, reaction) {
-    if (score > reaction.buy) return "BUY";
-    if (score < reaction.sell) return "SELL";
-    return "HOLD";
   }
 
   _reason(score) {
@@ -395,7 +426,6 @@ export class MetaBrain {
   }
 
   getSystemHealth() {
-    const sync = this.syncEngine.getReport();
-    return this.healthEngine.calculate(sync);
+    return this.healthEngine.calculate(this.syncEngine.getReport());
   }
      }
