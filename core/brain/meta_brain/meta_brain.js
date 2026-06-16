@@ -1,5 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
+// CLEAN STAGE 2 (REBUILT + STABLE)
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -33,7 +34,6 @@ class ZoneEngine {
 
     if (zone === "profit") return 0.1;
     if (zone === "danger") return -0.1;
-
     return 0;
   }
 
@@ -50,7 +50,6 @@ class ZoneEngine {
     const total = z.strong + z.weak;
 
     if (total < 5) return 0.5;
-
     return z.strong / total;
   }
 }
@@ -78,10 +77,6 @@ class MemoryEngine {
   getRecentSignals(count = 10) {
     return this.lastSignals.slice(-count);
   }
-
-  getRecentDecisions(count = 10) {
-    return this.lastDecisions.slice(-count);
-  }
 }
 
 // ------------------------------------------------------
@@ -100,94 +95,70 @@ class ContextEngine {
     const volatility = signal.volatility ?? 0;
 
     if (history.length < 3) {
-      return this._basicClassification(trend, volatility);
+      return this._basic(trend, volatility);
     }
 
     const avgTrend =
-      history.reduce(
-        (sum, s) => sum + (s.trendStrength ?? 0),
-        0
-      ) / history.length;
+      history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
+      history.length;
 
-    const avgVolatility =
-      history.reduce(
-        (sum, s) => sum + (s.volatility ?? 0),
-        0
-      ) / history.length;
+    const avgVol =
+      history.reduce((s, x) => s + (x.volatility ?? 0), 0) /
+      history.length;
 
-    // Strong directional market
+    if (avgTrend > 0.7 && avgVol < 0.5) return "TRENDING";
+    if (avgVol > 0.75) return "VOLATILE";
+    if (avgTrend < 0.35) return "RANGING";
 
-    if (avgTrend > 0.7 && avgVolatility < 0.5) {
-      return "TRENDING";
-    }
+    if (trend > avgTrend && volatility < avgVol) return "RECOVERY";
+    if (trend < avgTrend && volatility > avgVol) return "BREAKDOWN";
 
-    // High volatility environment
-
-    if (avgVolatility > 0.75) {
-      return "VOLATILE";
-    }
-
-    // Weak movement
-
-    if (avgTrend < 0.35 && avgVolatility < 0.5) {
-      return "RANGING";
-    }
-
-    // Improving conditions
-
-    if (
-      trend > avgTrend &&
-      volatility < avgVolatility
-    ) {
-      return "RECOVERY";
-    }
-
-    // Deteriorating conditions
-
-    if (
-      trend < avgTrend &&
-      volatility > avgVolatility
-    ) {
-      return "BREAKDOWN";
-    }
-
-    // Quiet accumulation
-
-    if (
-      avgTrend >= 0.35 &&
-      avgTrend <= 0.55 &&
-      avgVolatility < 0.4
-    ) {
+    if (avgTrend >= 0.35 && avgTrend <= 0.55 && avgVol < 0.4)
       return "ACCUMULATION";
-    }
 
-    // Distribution
-
-    if (
-      avgTrend >= 0.35 &&
-      avgTrend <= 0.55 &&
-      avgVolatility >= 0.4
-    ) {
+    if (avgTrend >= 0.35 && avgTrend <= 0.55 && avgVol >= 0.4)
       return "DISTRIBUTION";
-    }
 
     return "RANGING";
   }
 
-  _basicClassification(trend, volatility) {
-    if (trend > 0.7 && volatility < 0.5) {
-      return "TRENDING";
-    }
-
-    if (volatility > 0.75) {
-      return "VOLATILE";
-    }
-
-    if (trend < 0.35) {
-      return "RANGING";
-    }
-
+  _basic(trend, vol) {
+    if (trend > 0.7 && vol < 0.5) return "TRENDING";
+    if (vol > 0.75) return "VOLATILE";
+    if (trend < 0.35) return "RANGING";
     return "ACCUMULATION";
+  }
+}
+
+// ------------------------------------------------------
+// REACTION ENGINE
+// ------------------------------------------------------
+
+class ReactionEngine {
+  getProfile(context) {
+    switch (context) {
+
+      case "TRENDING":
+        return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, mult: 1.15 };
+
+      case "RECOVERY":
+        return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, mult: 1.05 };
+
+      case "ACCUMULATION":
+        return { mode: "PREPARING", buy: 0.35, sell: -0.35, mult: 1.0 };
+
+      case "DISTRIBUTION":
+        return { mode: "CAUTIOUS", buy: 0.45, sell: -0.45, mult: 0.95 };
+
+      case "VOLATILE":
+        return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, mult: 0.85 };
+
+      case "BREAKDOWN":
+        return { mode: "SURVIVAL", buy: 0.75, sell: -0.25, mult: 0.75 };
+
+      default:
+        return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
+    }
   }
 }
 
@@ -203,44 +174,29 @@ class DecisionEngine {
 
   evaluate(signal) {
     const trend =
-      (signal.trendStrength ?? 0) +
-      this.learning.trendBias;
+      (signal.trendStrength ?? 0) + this.learning.trendBias;
 
     const risk =
-      (
-        signal.riskLevel === "high"
-          ? -0.4
-          : signal.riskLevel === "medium"
-          ? -0.2
-          : 0.1
-      ) + this.learning.riskBias;
+      (signal.riskLevel === "high"
+        ? -0.4
+        : signal.riskLevel === "medium"
+        ? -0.2
+        : 0.1) + this.learning.riskBias;
 
     const volatility =
-      (
-        signal.volatility > 0.7
-          ? -0.3
-          : 0.2
-      ) + this.learning.volatilityBias;
+      (signal.volatility > 0.7 ? -0.3 : 0.2) +
+      this.learning.volatilityBias;
 
-    const zoneBias =
-      this.zoneEngine.getZoneBias(signal);
+    const zoneBias = this.zoneEngine.getZoneBias(signal);
 
-    const rawScore =
-      trend +
-      risk +
-      volatility +
-      zoneBias;
+    const rawScore = trend + risk + volatility + zoneBias;
 
     return {
-      score: this._clamp(rawScore, -1, 1),
+      score: Math.max(-1, Math.min(1, rawScore)),
       trend,
       risk,
       volatility
     };
-  }
-
-  _clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
   }
 }
 
@@ -255,23 +211,16 @@ class CalibrationEngine {
   }
 
   calibrate(confidence, signal) {
-    const zone =
-      this.zoneEngine.classify(signal);
-
-    const reliability =
-      this.zoneEngine.reliability(zone);
+    const zone = this.zoneEngine.classify(signal);
+    const rel = this.zoneEngine.reliability(zone);
 
     let adjusted =
       confidence *
       this.learning.confidenceCalibrator;
 
-    adjusted *= (0.3 + reliability);
+    adjusted *= 0.3 + rel;
 
-    return this._clamp(adjusted, 0, 1);
-  }
-
-  _clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
+    return Math.max(0, Math.min(1, adjusted));
   }
 }
 
@@ -287,68 +236,34 @@ class LearningEngine {
 
   apply(results = []) {
     for (const r of results) {
-      const correct =
-        r.evaluation?.actionCorrect;
-
-      const zone =
-        r.decision?.meta?.zone;
+      const correct = r.evaluation?.actionCorrect;
+      const zone = r.decision?.meta?.zone;
 
       if (!zone) continue;
 
-      this.zoneEngine.record(
-        zone,
-        correct
-      );
+      this.zoneEngine.record(zone, correct);
 
-      const delta =
-        correct
-          ? 0.005
-          : -0.005;
+      const delta = correct ? 0.005 : -0.005;
 
       this.learning.trendBias += delta;
       this.learning.riskBias += delta;
       this.learning.volatilityBias += delta;
 
       this.learning.confidenceCalibrator +=
-        correct
-          ? 0.001
-          : -0.001;
+        correct ? 0.001 : -0.001;
     }
 
-    this._clamp();
-  }
-
-  _clamp() {
     this.learning.trendBias =
-      this._limit(
-        this.learning.trendBias
-      );
+      Math.max(-0.5, Math.min(0.5, this.learning.trendBias));
 
     this.learning.riskBias =
-      this._limit(
-        this.learning.riskBias
-      );
+      Math.max(-0.5, Math.min(0.5, this.learning.riskBias));
 
     this.learning.volatilityBias =
-      this._limit(
-        this.learning.volatilityBias
-      );
+      Math.max(-0.5, Math.min(0.5, this.learning.volatilityBias));
 
     this.learning.confidenceCalibrator =
-      Math.max(
-        0.5,
-        Math.min(
-          1.5,
-          this.learning.confidenceCalibrator
-        )
-      );
-  }
-
-  _limit(v) {
-    return Math.max(
-      -0.5,
-      Math.min(0.5, v)
-    );
+      Math.max(0.5, Math.min(1.5, this.learning.confidenceCalibrator));
   }
 }
 
@@ -356,7 +271,7 @@ class LearningEngine {
 // META BRAIN ORCHESTRATOR
 // ------------------------------------------------------
 
-class MetaBrain {
+export class MetaBrain {
   constructor() {
     this.learning = {
       trendBias: 0,
@@ -365,66 +280,34 @@ class MetaBrain {
       confidenceCalibrator: 1
     };
 
-    this.zoneEngine =
-      new ZoneEngine();
+    this.zoneEngine = new ZoneEngine();
+    this.memoryEngine = new MemoryEngine();
+    this.contextEngine = new ContextEngine(this.memoryEngine);
+    this.reactionEngine = new ReactionEngine();
+    this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
+    this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
+    this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
 
-    this.memoryEngine =
-      new MemoryEngine();
-
-    this.contextEngine =
-      new ContextEngine(
-        this.memoryEngine
-      );
-
-    this.decisionEngine =
-      new DecisionEngine(
-        this.learning,
-        this.zoneEngine
-      );
-
-    this.calibrationEngine =
-      new CalibrationEngine(
-        this.learning,
-        this.zoneEngine
-      );
-
-    this.learningEngine =
-      new LearningEngine(
-        this.learning,
-        this.zoneEngine
-      );
-
-    this.syncEngine =
-      new SyncEngine();
-
-    this.healthEngine =
-      new HealthEngine();
+    this.syncEngine = new SyncEngine();
+    this.healthEngine = new HealthEngine();
   }
 
-  evaluate(signal, systemContext = {}) {
-    const context =
-      this.contextEngine.classify(signal);
+  evaluate(signal) {
+    const context = this.contextEngine.classify(signal);
+    const reaction = this.reactionEngine.getProfile(context);
+    const zone = this.zoneEngine.classify(signal);
 
-    const zone =
-      this.zoneEngine.classify(signal);
+    const raw = this.decisionEngine.evaluate(signal);
 
-    const raw =
-      this.decisionEngine.evaluate(signal);
+    let confidence = this.calibrationEngine.calibrate(
+      Math.abs(raw.score),
+      signal
+    );
 
-    const confidence =
-      this.calibrationEngine.calibrate(
-        Math.abs(raw.score),
-        signal
-      );
+    confidence *= reaction.mult;
+    confidence = Math.max(0, Math.min(1, confidence));
 
-    const sync =
-      this.syncEngine.getReport();
-
-    const action =
-      this._decide(
-        raw.score,
-        sync.driftScore
-      );
+    const action = this._decide(raw.score, reaction);
 
     const output = {
       action,
@@ -433,44 +316,28 @@ class MetaBrain {
       reasoning: this._reason(raw.score),
       meta: {
         context,
+        reactionMode: reaction.mode,
         zone,
         trend: raw.trend,
         risk: raw.risk,
-        volatility: raw.volatility,
-        drift: sync.driftScore
+        volatility: raw.volatility
       }
     };
 
-    this.memoryEngine.store(
-      signal,
-      output
-    );
+    this.memoryEngine.store(signal, output);
 
     return output;
   }
 
-  _decide(score, drift) {
-    if (drift > 0.6) {
-      if (score > 0.5) return "BUY";
-      if (score < -0.5) return "SELL";
-      return "HOLD";
-    }
-
-    if (score > 0.35) return "BUY";
-    if (score < -0.35) return "SELL";
-
+  _decide(score, reaction) {
+    if (score > reaction.buy) return "BUY";
+    if (score < reaction.sell) return "SELL";
     return "HOLD";
   }
 
   _reason(score) {
-    if (score > 0.35) {
-      return "Bullish alignment across system layers";
-    }
-
-    if (score < -0.35) {
-      return "Bearish pressure dominates structure";
-    }
-
+    if (score > 0.35) return "Bullish alignment across system layers";
+    if (score < -0.35) return "Bearish pressure dominates structure";
     return "Neutral equilibrium state";
   }
 
@@ -494,23 +361,13 @@ class MetaBrain {
   }
 
   getSystemHealth() {
-    const sync =
-      this.syncEngine.getReport();
+    const sync = this.syncEngine.getReport();
 
     return this.healthEngine.calculate({
       driftScore: sync.driftScore,
-      simulationWinRate:
-        sync.simulationWinRate,
-      liveWinRate:
-        sync.liveWinRate,
-      confidenceCalibrator:
-        this.learning.confidenceCalibrator
+      simulationWinRate: sync.simulationWinRate,
+      liveWinRate: sync.liveWinRate,
+      confidenceCalibrator: this.learning.confidenceCalibrator
     });
   }
-}
-
-// ------------------------------------------------------
-// SINGLE EXPORT
-// ------------------------------------------------------
-
-export const metaBrain = new MetaBrain();
+         }
