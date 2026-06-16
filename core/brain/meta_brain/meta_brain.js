@@ -1,53 +1,12 @@
  // ======================================================
-// META BRAIN — SINGLE COGNITIVE KERNEL (ORCHESTRATOR)
+// META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
 // ======================================================
 
-class SyncEngine {
+import { SyncEngine } from "./engines/sync_engine.js";
+import { HealthEngine } from "./engines/health_engine.js";
 
-  constructor() {
-    this.state = {
-      simulation: { wins: 0, losses: 0 },
-      live: { wins: 0, losses: 0 },
-      driftScore: 0
-    };
-  }
-
-  recordSimulation(correct) {
-    correct
-      ? this.state.simulation.wins++
-      : this.state.simulation.losses++;
-
-    this._updateDrift();
-  }
-
-  recordLive(correct) {
-    correct
-      ? this.state.live.wins++
-      : this.state.live.losses++;
-
-    this._updateDrift();
-  }
-
-  _updateDrift() {
-    const sim = this._rate(this.state.simulation);
-    const live = this._rate(this.state.live);
-    this.state.driftScore = Math.abs(sim - live);
-  }
-
-  _rate(g) {
-    const total = g.wins + g.losses;
-    return total ? g.wins / total : 0.5;
-  }
-
-  getReport() {
-    return {
-      simulationWinRate: this._rate(this.state.simulation),
-      liveWinRate: this._rate(this.state.live),
-      driftScore: this.state.driftScore
-    };
-  }
-}
-
+// ------------------------------------------------------
+// ZONE ENGINE
 // ------------------------------------------------------
 
 class ZoneEngine {
@@ -95,6 +54,8 @@ class ZoneEngine {
 }
 
 // ------------------------------------------------------
+// DECISION ENGINE
+// ------------------------------------------------------
 
 class DecisionEngine {
   constructor(learning, zoneEngine) {
@@ -106,13 +67,11 @@ class DecisionEngine {
     const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
 
     const risk =
-      (
-        signal.riskLevel === "high"
-          ? -0.4
-          : signal.riskLevel === "medium"
-          ? -0.2
-          : 0.1
-      ) + this.learning.riskBias;
+      (signal.riskLevel === "high"
+        ? -0.4
+        : signal.riskLevel === "medium"
+        ? -0.2
+        : 0.1) + this.learning.riskBias;
 
     const volatility =
       (signal.volatility > 0.7 ? -0.3 : 0.2) +
@@ -136,6 +95,8 @@ class DecisionEngine {
 }
 
 // ------------------------------------------------------
+// MEMORY ENGINE
+// ------------------------------------------------------
 
 class MemoryEngine {
   constructor() {
@@ -154,6 +115,8 @@ class MemoryEngine {
   }
 }
 
+// ------------------------------------------------------
+// CALIBRATION ENGINE
 // ------------------------------------------------------
 
 class CalibrationEngine {
@@ -177,6 +140,8 @@ class CalibrationEngine {
   }
 }
 
+// ------------------------------------------------------
+// LEARNING ENGINE
 // ------------------------------------------------------
 
 class LearningEngine {
@@ -222,12 +187,11 @@ class LearningEngine {
   }
 }
 
-// ======================================================
+// ------------------------------------------------------
 // META BRAIN ORCHESTRATOR
-// ======================================================
+// ------------------------------------------------------
 
 class MetaBrain {
-
   constructor() {
     this.learning = {
       trendBias: 0,
@@ -243,11 +207,12 @@ class MetaBrain {
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
 
     this.syncEngine = new SyncEngine();
+    this.healthEngine = new HealthEngine();
   }
 
   evaluate(signal, systemContext = {}) {
-
     const zone = this.zoneEngine.classify(signal);
+
     const raw = this.decisionEngine.evaluate(signal);
 
     const confidence = this.calibrationEngine.calibrate(
@@ -255,9 +220,9 @@ class MetaBrain {
       signal
     );
 
-    const drift = this.syncEngine.state.driftScore;
+    const sync = this.syncEngine.getReport();
 
-    const action = this._decide(raw.score, drift);
+    const action = this._decide(raw.score, sync.driftScore);
 
     const output = {
       action,
@@ -269,7 +234,7 @@ class MetaBrain {
         trend: raw.trend,
         risk: raw.risk,
         volatility: raw.volatility,
-        drift
+        drift: sync.driftScore
       }
     };
 
@@ -279,7 +244,6 @@ class MetaBrain {
   }
 
   _decide(score, drift) {
-
     if (drift > 0.6) {
       if (score > 0.5) return "BUY";
       if (score < -0.5) return "SELL";
@@ -315,7 +279,21 @@ class MetaBrain {
       sync: this.syncEngine.getReport()
     };
   }
+
+  getSystemHealth() {
+    const sync = this.syncEngine.getReport();
+
+    return this.healthEngine.calculate({
+      driftScore: sync.driftScore,
+      simulationWinRate: sync.simulationWinRate,
+      liveWinRate: sync.liveWinRate,
+      confidenceCalibrator: this.learning.confidenceCalibrator
+    });
+  }
 }
 
+// ------------------------------------------------------
 // SINGLE EXPORT
+// ------------------------------------------------------
+
 export const metaBrain = new MetaBrain();
