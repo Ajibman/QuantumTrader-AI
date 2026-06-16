@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 9 — MULTI-BRAIN COMPETITION INTEGRATED
+// STAGE 10 — EVOLUTION CONTROLLER INTEGRATED
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -115,13 +115,12 @@ class ContextEngine {
 
 
 // ------------------------------------------------------
-// REACTION ENGINE (STAGE 9 CONTROL LAYER)
+// REACTION ENGINE
 // ------------------------------------------------------
 
 class ReactionEngine {
   getProfile(context) {
     switch (context) {
-
       case "TRENDING":
         return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, multiplier: 1.15 };
 
@@ -159,19 +158,19 @@ class DecisionEngine {
        signal.riskLevel === "medium" ? -0.2 : 0.1)
       + this.learning.riskBias;
 
-    const vol =
+    const volatility =
       (signal.volatility > 0.7 ? -0.3 : 0.2)
       + this.learning.volatilityBias;
 
     const zoneBias = this.zoneEngine.getZoneBias(signal);
 
-    const raw = trend + risk + vol + zoneBias;
+    const raw = trend + risk + volatility + zoneBias;
 
     return {
       score: Math.max(-1, Math.min(1, raw)),
       trend,
       risk,
-      volatility: vol
+      volatility
     };
   }
 }
@@ -239,7 +238,7 @@ class LearningEngine {
 
 
 // ------------------------------------------------------
-// STAGE 9 — BRAIN INSTANCE
+// STAGE 9 — BRAIN NODE
 // ------------------------------------------------------
 
 class BrainNode {
@@ -254,7 +253,6 @@ class BrainNode {
 
   evaluate(signal) {
     const out = this.brain.evaluate(signal);
-
     out.meta = { ...out.meta, brainId: this.id };
     return out;
   }
@@ -319,6 +317,60 @@ class CompetitionEngine {
 
 
 // ------------------------------------------------------
+// STAGE 10 — EVOLUTION CONTROLLER
+// ------------------------------------------------------
+
+class EvolutionController {
+  constructor(competition) {
+    this.competition = competition;
+
+    this.minPerformance = 0.42;
+    this.maxBrains = 6;
+    this.cloneThreshold = 0.62;
+  }
+
+  evolve() {
+    const report = this.competition.brains.map(b => ({
+      id: b.id,
+      score: b.win / (b.win + b.loss || 1)
+    }));
+
+    this._prune(report);
+    this._promote(report);
+  }
+
+  _prune(report) {
+    for (const r of report) {
+      if (r.score < this.minPerformance) {
+        const brain = this.competition.brains.find(b => b.id === r.id);
+        if (brain) brain.weight *= 0.7;
+      }
+    }
+  }
+
+  _promote(report) {
+    const best = report.reduce((a, b) => (b.score > a.score ? b : a));
+
+    if (
+      best.score > this.cloneThreshold &&
+      this.competition.brains.length < this.maxBrains
+    ) {
+      const source = this.competition.brains.find(b => b.id === best.id);
+
+      const clone = new BrainNode(
+        best.id + "_CLONE_" + Date.now(),
+        () => source.brain
+      );
+
+      clone.weight = source.weight * 0.95;
+
+      this.competition.brains.push(clone);
+    }
+  }
+}
+
+
+// ------------------------------------------------------
 // META BRAIN ORCHESTRATOR
 // ------------------------------------------------------
 
@@ -341,6 +393,7 @@ class MetaBrain {
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
 
     this.competition = new CompetitionEngine(() => new MetaBrain());
+    this.evolution = new EvolutionController(this.competition);
 
     this.syncEngine = new SyncEngine();
     this.healthEngine = new HealthEngine();
@@ -359,17 +412,15 @@ class MetaBrain {
       reaction
     );
 
-    const score = raw.score;
-
     const action =
-      score > reaction.buy ? "BUY" :
-      score < reaction.sell ? "SELL" :
+      raw.score > reaction.buy ? "BUY" :
+      raw.score < reaction.sell ? "SELL" :
       "HOLD";
 
     const output = {
       action,
       confidence,
-      strength: score,
+      strength: raw.score,
       meta: {
         context,
         zone: this.zoneEngine.classify(signal),
@@ -380,6 +431,11 @@ class MetaBrain {
     };
 
     this.memoryEngine.store(signal, output);
+
+    // Stage 10 evolution trigger (light-weight)
+    if (Math.random() < 0.05) {
+      this.evolution.evolve();
+    }
 
     return output;
   }
