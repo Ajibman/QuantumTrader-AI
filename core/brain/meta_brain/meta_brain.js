@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 4B + 4C CLEAN BUILD (STABLE CORE)
+// STAGE 5 FULL EVOLUTION BUILD (PRODUCTION READY)
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -87,7 +87,7 @@ class ContextEngine {
     const history = this.memoryEngine.getRecentSignals(10);
 
     const trend = signal.trendStrength ?? 0;
-    const volatility = signal.volatility ?? 0;
+    const vol = signal.volatility ?? 0;
 
     if (history.length < 3) return "RANGING";
 
@@ -103,8 +103,8 @@ class ContextEngine {
     if (avgVol > 0.75) return "VOLATILE";
     if (avgTrend < 0.35) return "RANGING";
 
-    if (trend > avgTrend && volatility < avgVol) return "RECOVERY";
-    if (trend < avgTrend && volatility > avgVol) return "BREAKDOWN";
+    if (trend > avgTrend && vol < avgVol) return "RECOVERY";
+    if (trend < avgTrend && vol > avgVol) return "BREAKDOWN";
 
     return "RANGING";
   }
@@ -121,10 +121,9 @@ class ReactionEngine {
         return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, mult: 1.15 };
       case "RECOVERY":
         return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, mult: 1.05 };
-      case "RANGING":
-        return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
       case "VOLATILE":
         return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, mult: 0.85 };
+      case "RANGING":
       default:
         return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
     }
@@ -163,12 +162,9 @@ class MultiSignalFusionEngine {
 
     const alignment = 1 - Math.abs(current - avgTrend);
 
-    let stability = 1.0;
-    if (avgVol > 0.75) stability = 0.7;
-    else if (avgVol < 0.4) stability = 1.1;
+    let stability = avgVol > 0.75 ? 0.7 : avgVol < 0.4 ? 1.1 : 1.0;
 
-    const fusedTrend =
-      ((current * 0.6) + (avgTrend * 0.4)) * stability;
+    const fusedTrend = ((current * 0.6) + (avgTrend * 0.4)) * stability;
 
     return {
       alignment: Math.max(0, Math.min(1, alignment)),
@@ -187,7 +183,6 @@ class RiskDominanceEngine {
     const drift = syncReport.driftScore ?? 0;
     const sim = syncReport.simulationWinRate ?? 0;
     const live = syncReport.liveWinRate ?? 0;
-
     const alignment = fusion?.alignment ?? 0.5;
 
     let riskPressure = 0;
@@ -206,6 +201,42 @@ class RiskDominanceEngine {
 }
 
 // ------------------------------------------------------
+// STRATEGY EVOLUTION ENGINE (STAGE 5)
+// ------------------------------------------------------
+
+class StrategyEvolutionEngine {
+  constructor() {
+    this.stats = {
+      TRENDING: { win: 0, loss: 0 },
+      VOLATILE: { win: 0, loss: 0 },
+      RANGING: { win: 0, loss: 0 },
+      RECOVERY: { win: 0, loss: 0 },
+      BREAKDOWN: { win: 0, loss: 0 }
+    };
+  }
+
+  record(context, correct) {
+    if (!this.stats[context]) return;
+    correct ? this.stats[context].win++ : this.stats[context].loss++;
+  }
+
+  bias(context) {
+    const s = this.stats[context];
+    if (!s) return 0;
+
+    const total = s.win + s.loss;
+    if (total < 5) return 0;
+
+    const p = s.win / total;
+
+    if (p > 0.65) return 0.15;
+    if (p < 0.4) return -0.15;
+
+    return 0;
+  }
+}
+
+// ------------------------------------------------------
 // DECISION ENGINE
 // ------------------------------------------------------
 
@@ -216,9 +247,7 @@ class DecisionEngine {
   }
 
   evaluate(signal) {
-    const trend =
-      (signal.trendStrength ?? 0) + this.learning.trendBias;
-
+    const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
     const risk =
       (signal.riskLevel === "high"
         ? -0.4
@@ -227,15 +256,14 @@ class DecisionEngine {
         : 0.1) + this.learning.riskBias;
 
     const volatility =
-      (signal.volatility > 0.7 ? -0.3 : 0.2) +
-      this.learning.volatilityBias;
+      (signal.volatility > 0.7 ? -0.3 : 0.2) + this.learning.volatilityBias;
 
     const zoneBias = this.zoneEngine.getZoneBias(signal);
 
-    const raw = trend + risk + volatility + zoneBias;
+    const score = trend + risk + volatility + zoneBias;
 
     return {
-      score: Math.max(-1, Math.min(1, raw)),
+      score: Math.max(-1, Math.min(1, score)),
       trend,
       risk,
       volatility
@@ -257,9 +285,7 @@ class CalibrationEngine {
     const zone = this.zoneEngine.classify(signal);
     const rel = this.zoneEngine.reliability(zone);
 
-    let adjusted =
-      confidence * this.learning.confidenceCalibrator;
-
+    let adjusted = confidence * this.learning.confidenceCalibrator;
     adjusted *= (0.3 + rel);
 
     return Math.max(0, Math.min(1, adjusted));
@@ -280,7 +306,6 @@ class LearningEngine {
     for (const r of results) {
       const zone = r.decision?.meta?.zone;
       const correct = r.evaluation?.actionCorrect;
-
       if (!zone) continue;
 
       this.zoneEngine.record(zone, correct);
@@ -290,21 +315,13 @@ class LearningEngine {
       this.learning.trendBias += delta;
       this.learning.riskBias += delta;
       this.learning.volatilityBias += delta;
-
       this.learning.confidenceCalibrator += correct ? 0.001 : -0.001;
     }
 
-    this.learning.trendBias =
-      Math.max(-0.5, Math.min(0.5, this.learning.trendBias));
-
-    this.learning.riskBias =
-      Math.max(-0.5, Math.min(0.5, this.learning.riskBias));
-
-    this.learning.volatilityBias =
-      Math.max(-0.5, Math.min(0.5, this.learning.volatilityBias));
-
-    this.learning.confidenceCalibrator =
-      Math.max(0.5, Math.min(1.5, this.learning.confidenceCalibrator));
+    this.learning.trendBias = Math.max(-0.5, Math.min(0.5, this.learning.trendBias));
+    this.learning.riskBias = Math.max(-0.5, Math.min(0.5, this.learning.riskBias));
+    this.learning.volatilityBias = Math.max(-0.5, Math.min(0.5, this.learning.volatilityBias));
+    this.learning.confidenceCalibrator = Math.max(0.5, Math.min(1.5, this.learning.confidenceCalibrator));
   }
 }
 
@@ -327,6 +344,7 @@ export class MetaBrain {
     this.reactionEngine = new ReactionEngine();
     this.fusionEngine = new MultiSignalFusionEngine(this.memoryEngine);
     this.riskEngine = new RiskDominanceEngine();
+    this.strategyEngine = new StrategyEvolutionEngine();
 
     this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
@@ -341,12 +359,13 @@ export class MetaBrain {
     const reaction = this.reactionEngine.getProfile(context);
     const fusion = this.fusionEngine.fuse(signal);
 
-    const raw = this.decisionEngine.evaluate(signal);
+    const base = this.decisionEngine.evaluate(signal);
 
-    let confidence = this.calibrationEngine.calibrate(
-      Math.abs(raw.score),
-      signal
-    );
+    const score = base.score + this.strategyEngine.bias(context);
+
+    let confidence = this.calibrationEngine.calibrate(Math.abs(score), signal);
+    confidence *= reaction.mult;
+    confidence = Math.max(0, Math.min(1, confidence));
 
     const sync = this.syncEngine.getReport();
 
@@ -356,27 +375,21 @@ export class MetaBrain {
       return {
         action: "HOLD",
         confidence: confidence * 0.25,
-        strength: raw.score,
+        strength: score,
         reasoning: "Risk Dominance Override Activated",
         meta: { context, reactionMode: reaction.mode, fusion, risk }
       };
     }
 
-    confidence *= reaction.mult;
-    confidence = Math.max(0, Math.min(1, confidence));
-
     const action =
-      raw.score > reaction.buy
-        ? "BUY"
-        : raw.score < reaction.sell
-        ? "SELL"
-        : "HOLD";
+      score > reaction.buy ? "BUY" :
+      score < reaction.sell ? "SELL" : "HOLD";
 
     return {
       action,
       confidence,
-      strength: raw.score,
-      reasoning: this._reason(raw.score),
+      strength: score,
+      reasoning: this._reason(score),
       meta: {
         context,
         reactionMode: reaction.mode,
@@ -391,4 +404,4 @@ export class MetaBrain {
     if (score < -0.35) return "Bearish pressure dominates structure";
     return "Neutral equilibrium state";
   }
-                }
+       }
