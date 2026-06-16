@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 10 — EVOLUTION CONTROLLER INTEGRATED
+// STAGE 11 — POLICY FIREWALL + ANOMALY + GOVERNOR
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -32,7 +32,6 @@ class ZoneEngine {
 
   getZoneBias(signal) {
     const zone = this.classify(signal);
-
     if (zone === "profit") return 0.1;
     if (zone === "danger") return -0.1;
     return 0;
@@ -40,7 +39,6 @@ class ZoneEngine {
 
   record(zone, correct) {
     if (!this.zones[zone]) return;
-
     correct ? this.zones[zone].strong++ : this.zones[zone].weak++;
   }
 
@@ -152,7 +150,6 @@ class DecisionEngine {
 
   evaluate(signal) {
     const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
-
     const risk =
       (signal.riskLevel === "high" ? -0.4 :
        signal.riskLevel === "medium" ? -0.2 : 0.1)
@@ -237,135 +234,106 @@ class LearningEngine {
 }
 
 
+// ======================================================
+// STAGE 11 — SAFETY LAYER
+// ======================================================
+
+
 // ------------------------------------------------------
-// STAGE 9 — BRAIN NODE
+// POLICY FIREWALL
 // ------------------------------------------------------
 
-class BrainNode {
-  constructor(id, factory) {
-    this.id = id;
-    this.brain = factory();
+class PolicyFirewall {
+  validate(signal, decision, context) {
+    const issues = [];
 
-    this.win = 0;
-    this.loss = 0;
-    this.weight = 1;
-  }
+    if (decision.confidence > 0.95 || decision.confidence < 0.05) {
+      issues.push("CONFIDENCE_OUT_OF_RANGE");
+    }
 
-  evaluate(signal) {
-    const out = this.brain.evaluate(signal);
-    out.meta = { ...out.meta, brainId: this.id };
-    return out;
-  }
+    if (context === "BREAKDOWN") {
+      issues.push("DANGEROUS_CONTEXT");
+    }
 
-  update(correct) {
-    if (correct) this.win++; else this.loss++;
+    if ((signal.volatility ?? 0) > 0.95) {
+      issues.push("EXTREME_VOLATILITY");
+    }
 
-    const total = this.win + this.loss;
-    if (total < 5) return;
-
-    this.weight = Math.max(0.4, Math.min(1.4, this.win / total + 0.2));
+    return {
+      allowed: issues.length === 0,
+      issues
+    };
   }
 }
 
 
 // ------------------------------------------------------
-// STAGE 9 — COMPETITION ENGINE
+// ANOMALY DETECTOR
 // ------------------------------------------------------
 
-class CompetitionEngine {
-  constructor(factory) {
-    this.brains = [
-      new BrainNode("CONSERVATIVE", factory),
-      new BrainNode("BALANCED", factory),
-      new BrainNode("AGGRESSIVE", factory),
-      new BrainNode("RECOVERY", factory)
-    ];
+class AnomalyDetector {
+  constructor() {
+    this.history = [];
+    this.max = 50;
   }
 
-  evaluate(signal) {
-    const results = this.brains.map(b => ({
-      id: b.id,
-      output: b.evaluate(signal),
-      weight: b.weight
-    }));
+  track(signal, output) {
+    this.history.push({
+      score: output.strength,
+      volatility: signal.volatility ?? 0,
+      confidence: output.confidence
+    });
 
-    let best = results[0];
-
-    for (const r of results) {
-      const scoreA = r.output.strength * r.weight;
-      const scoreB = best.output.strength * best.weight;
-      if (scoreA > scoreB) best = r;
-    }
-
-    return best.output;
+    if (this.history.length > this.max) this.history.shift();
   }
 
-  learn(results = []) {
-    const map = new Map();
-
-    for (const r of results) {
-      const id = r.decision?.meta?.brainId;
-      const correct = r.evaluation?.actionCorrect;
-      if (id) map.set(id, correct);
+  detect() {
+    if (this.history.length < 10) {
+      return { anomaly: false };
     }
 
-    for (const b of this.brains) {
-      if (map.has(b.id)) b.update(map.get(b.id));
-    }
+    const avg =
+      this.history.reduce((s, h) => s + h.score, 0) /
+      this.history.length;
+
+    const last = this.history.at(-1);
+
+    return {
+      anomaly:
+        Math.abs(last.score - avg) > 0.6 ||
+        last.volatility > 0.9 ||
+        last.confidence < 0.3
+    };
   }
 }
 
 
 // ------------------------------------------------------
-// STAGE 10 — EVOLUTION CONTROLLER
+// SYSTEM GOVERNOR
 // ------------------------------------------------------
 
-class EvolutionController {
-  constructor(competition) {
-    this.competition = competition;
-
-    this.minPerformance = 0.42;
-    this.maxBrains = 6;
-    this.cloneThreshold = 0.62;
+class SystemGovernor {
+  constructor() {
+    this.safeMode = false;
+    this.freeze = 0;
   }
 
-  evolve() {
-    const report = this.competition.brains.map(b => ({
-      id: b.id,
-      score: b.win / (b.win + b.loss || 1)
-    }));
-
-    this._prune(report);
-    this._promote(report);
-  }
-
-  _prune(report) {
-    for (const r of report) {
-      if (r.score < this.minPerformance) {
-        const brain = this.competition.brains.find(b => b.id === r.id);
-        if (brain) brain.weight *= 0.7;
-      }
+  evaluate(firewall, anomaly) {
+    if (!firewall.allowed || anomaly.anomaly) {
+      this.freeze++;
+      if (this.freeze >= 3) this.safeMode = true;
+    } else {
+      this.freeze = Math.max(0, this.freeze - 1);
     }
+
+    return {
+      safeMode: this.safeMode,
+      freeze: this.freeze
+    };
   }
 
-  _promote(report) {
-    const best = report.reduce((a, b) => (b.score > a.score ? b : a));
-
-    if (
-      best.score > this.cloneThreshold &&
-      this.competition.brains.length < this.maxBrains
-    ) {
-      const source = this.competition.brains.find(b => b.id === best.id);
-
-      const clone = new BrainNode(
-        best.id + "_CLONE_" + Date.now(),
-        () => source.brain
-      );
-
-      clone.weight = source.weight * 0.95;
-
-      this.competition.brains.push(clone);
-    }
+  shouldBlock() {
+    return this.safeMode;
   }
 }
 
@@ -392,8 +360,9 @@ class MetaBrain {
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
     this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
 
-    this.competition = new CompetitionEngine(() => new MetaBrain());
-    this.evolution = new EvolutionController(this.competition);
+    this.firewall = new PolicyFirewall();
+    this.anomaly = new AnomalyDetector();
+    this.governor = new SystemGovernor();
 
     this.syncEngine = new SyncEngine();
     this.healthEngine = new HealthEngine();
@@ -412,37 +381,55 @@ class MetaBrain {
       reaction
     );
 
-    const action =
-      raw.score > reaction.buy ? "BUY" :
-      raw.score < reaction.sell ? "SELL" :
-      "HOLD";
+    const decision = {
+      action:
+        raw.score > reaction.buy ? "BUY" :
+        raw.score < reaction.sell ? "SELL" :
+        "HOLD",
 
-    const output = {
-      action,
       confidence,
       strength: raw.score,
       meta: {
         context,
         zone: this.zoneEngine.classify(signal),
         reaction: reaction.mode,
-        brainId: "MASTER",
         drift: sync.driftScore
       }
     };
 
-    this.memoryEngine.store(signal, output);
+    const firewall = this.firewall.validate(signal, decision, context);
+    const anomaly = this.anomaly.detect();
+    const safety = this.governor.evaluate(firewall, anomaly);
 
-    // Stage 10 evolution trigger (light-weight)
-    if (Math.random() < 0.05) {
-      this.evolution.evolve();
+    this.anomaly.track(signal, decision);
+
+    if (this.governor.shouldBlock()) {
+      return {
+        action: "HOLD",
+        confidence: 0,
+        strength: 0,
+        meta: {
+          blocked: true,
+          reason: "SAFE_MODE_ACTIVE"
+        }
+      };
     }
 
-    return output;
+    this.memoryEngine.store(signal, decision);
+
+    return {
+      ...decision,
+      meta: {
+        ...decision.meta,
+        firewall: firewall.allowed,
+        anomaly: anomaly.anomaly,
+        safeMode: safety.safeMode
+      }
+    };
   }
 
   learn(results = []) {
     this.learningEngine.apply(results);
-    this.competition.learn(results);
   }
 
   recordSimulationOutcome(c) { this.syncEngine.recordSimulation(c); }
