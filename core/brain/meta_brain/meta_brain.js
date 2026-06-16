@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 4A INTEGRATED (EXECUTION INTENT ENGINE)
+// STAGE 4B + 4C CLEAN BUILD (STABLE CORE)
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -31,7 +31,6 @@ class ZoneEngine {
 
   getZoneBias(signal) {
     const zone = this.classify(signal);
-
     if (zone === "profit") return 0.1;
     if (zone === "danger") return -0.1;
     return 0;
@@ -90,7 +89,7 @@ class ContextEngine {
     const trend = signal.trendStrength ?? 0;
     const volatility = signal.volatility ?? 0;
 
-    if (history.length < 3) return this._basic(trend, volatility);
+    if (history.length < 3) return "RANGING";
 
     const avgTrend =
       history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
@@ -107,20 +106,7 @@ class ContextEngine {
     if (trend > avgTrend && volatility < avgVol) return "RECOVERY";
     if (trend < avgTrend && volatility > avgVol) return "BREAKDOWN";
 
-    if (avgTrend >= 0.35 && avgTrend <= 0.55 && avgVol < 0.4)
-      return "ACCUMULATION";
-
-    if (avgTrend >= 0.35 && avgTrend <= 0.55 && avgVol >= 0.4)
-      return "DISTRIBUTION";
-
     return "RANGING";
-  }
-
-  _basic(trend, vol) {
-    if (trend > 0.7 && vol < 0.5) return "TRENDING";
-    if (vol > 0.75) return "VOLATILE";
-    if (trend < 0.35) return "RANGING";
-    return "ACCUMULATION";
   }
 }
 
@@ -135,14 +121,10 @@ class ReactionEngine {
         return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, mult: 1.15 };
       case "RECOVERY":
         return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, mult: 1.05 };
-      case "ACCUMULATION":
-        return { mode: "PREPARING", buy: 0.35, sell: -0.35, mult: 1.0 };
-      case "DISTRIBUTION":
-        return { mode: "CAUTIOUS", buy: 0.45, sell: -0.45, mult: 0.95 };
+      case "RANGING":
+        return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
       case "VOLATILE":
         return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, mult: 0.85 };
-      case "BREAKDOWN":
-        return { mode: "SURVIVAL", buy: 0.75, sell: -0.25, mult: 0.75 };
       default:
         return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
     }
@@ -150,60 +132,76 @@ class ReactionEngine {
 }
 
 // ------------------------------------------------------
-// OPPORTUNITY ENGINE
+// MULTI-SIGNAL FUSION ENGINE (STAGE 4B)
 // ------------------------------------------------------
 
-class OpportunityEngine {
-  score(signal, context, reaction) {
-    let score = (signal.trendStrength ?? 0) * 0.5;
-
-    if (context === "TRENDING") score *= 1.4;
-    if (context === "VOLATILE") score *= 0.6;
-    if (context === "BREAKDOWN") score *= 0.4;
-
-    score *= reaction.mult;
-
-    if (signal.riskLevel === "high") score -= 0.3;
-    if (signal.volatility > 0.8) score -= 0.25;
-
-    return Math.max(0, Math.min(1, score));
+class MultiSignalFusionEngine {
+  constructor(memoryEngine) {
+    this.memoryEngine = memoryEngine;
   }
 
-  isValid(score) {
-    return score > 0.45;
+  fuse(signal) {
+    const history = this.memoryEngine.getRecentSignals(10);
+
+    if (history.length < 3) {
+      return {
+        alignment: 0.5,
+        stability: 0.5,
+        fusedTrend: signal.trendStrength ?? 0
+      };
+    }
+
+    const avgTrend =
+      history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
+      history.length;
+
+    const avgVol =
+      history.reduce((s, x) => s + (x.volatility ?? 0), 0) /
+      history.length;
+
+    const current = signal.trendStrength ?? 0;
+
+    const alignment = 1 - Math.abs(current - avgTrend);
+
+    let stability = 1.0;
+    if (avgVol > 0.75) stability = 0.7;
+    else if (avgVol < 0.4) stability = 1.1;
+
+    const fusedTrend =
+      ((current * 0.6) + (avgTrend * 0.4)) * stability;
+
+    return {
+      alignment: Math.max(0, Math.min(1, alignment)),
+      stability,
+      fusedTrend
+    };
   }
 }
 
 // ------------------------------------------------------
-// EXECUTION INTENT ENGINE (STAGE 4A)
+// RISK DOMINANCE ENGINE (STAGE 4C)
 // ------------------------------------------------------
 
-class ExecutionIntentEngine {
-  build(score, confidence, opportunityScore) {
-    const conviction =
-      (Math.abs(score) * 0.5) +
-      (confidence * 0.3) +
-      (opportunityScore * 0.2);
+class RiskDominanceEngine {
+  evaluate(syncReport, confidence, fusion) {
+    const drift = syncReport.driftScore ?? 0;
+    const sim = syncReport.simulationWinRate ?? 0;
+    const live = syncReport.liveWinRate ?? 0;
+
+    const alignment = fusion?.alignment ?? 0.5;
+
+    let riskPressure = 0;
+
+    if (drift > 0.7) riskPressure += 0.4;
+    if (sim < 0.45) riskPressure += 0.2;
+    if (live < 0.45) riskPressure += 0.2;
+    if (alignment < 0.4) riskPressure += 0.2;
+    if (confidence < 0.3) riskPressure += 0.2;
 
     return {
-      intentStrength: conviction,
-      positionSize: this._size(conviction),
-      urgency: this._urgency(conviction)
+      riskPressure,
+      override: riskPressure > 0.6
     };
-  }
-
-  _size(v) {
-    if (v > 0.75) return "HIGH";
-    if (v > 0.5) return "MEDIUM";
-    if (v > 0.3) return "LOW";
-    return "MINIMAL";
-  }
-
-  _urgency(v) {
-    if (v > 0.8) return "IMMEDIATE";
-    if (v > 0.6) return "FAST";
-    if (v > 0.4) return "NORMAL";
-    return "SLOW";
   }
 }
 
@@ -327,8 +325,8 @@ export class MetaBrain {
     this.memoryEngine = new MemoryEngine();
     this.contextEngine = new ContextEngine(this.memoryEngine);
     this.reactionEngine = new ReactionEngine();
-    this.opportunityEngine = new OpportunityEngine();
-    this.executionIntentEngine = new ExecutionIntentEngine();
+    this.fusionEngine = new MultiSignalFusionEngine(this.memoryEngine);
+    this.riskEngine = new RiskDominanceEngine();
 
     this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
     this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
@@ -341,24 +339,8 @@ export class MetaBrain {
   evaluate(signal) {
     const context = this.contextEngine.classify(signal);
     const reaction = this.reactionEngine.getProfile(context);
+    const fusion = this.fusionEngine.fuse(signal);
 
-    const opportunityScore =
-      this.opportunityEngine.score(signal, context, reaction);
-
-    if (!this.opportunityEngine.isValid(opportunityScore)) {
-      const output = {
-        action: "HOLD",
-        confidence: 0,
-        strength: 0,
-        reasoning: "Low opportunity signal filtered",
-        meta: { context, reactionMode: reaction.mode, opportunityScore }
-      };
-
-      this.memoryEngine.store(signal, output);
-      return output;
-    }
-
-    const zone = this.zoneEngine.classify(signal);
     const raw = this.decisionEngine.evaluate(signal);
 
     let confidence = this.calibrationEngine.calibrate(
@@ -366,14 +348,22 @@ export class MetaBrain {
       signal
     );
 
+    const sync = this.syncEngine.getReport();
+
+    const risk = this.riskEngine.evaluate(sync, confidence, fusion);
+
+    if (risk.override) {
+      return {
+        action: "HOLD",
+        confidence: confidence * 0.25,
+        strength: raw.score,
+        reasoning: "Risk Dominance Override Activated",
+        meta: { context, reactionMode: reaction.mode, fusion, risk }
+      };
+    }
+
     confidence *= reaction.mult;
     confidence = Math.max(0, Math.min(1, confidence));
-
-    const intent = this.executionIntentEngine.build(
-      raw.score,
-      confidence,
-      opportunityScore
-    );
 
     const action =
       raw.score > reaction.buy
@@ -382,7 +372,7 @@ export class MetaBrain {
         ? "SELL"
         : "HOLD";
 
-    const output = {
+    return {
       action,
       confidence,
       strength: raw.score,
@@ -390,14 +380,10 @@ export class MetaBrain {
       meta: {
         context,
         reactionMode: reaction.mode,
-        zone,
-        opportunityScore,
-        intent
+        fusion,
+        risk
       }
     };
-
-    this.memoryEngine.store(signal, output);
-    return output;
   }
 
   _reason(score) {
@@ -405,27 +391,4 @@ export class MetaBrain {
     if (score < -0.35) return "Bearish pressure dominates structure";
     return "Neutral equilibrium state";
   }
-
-  learnFromSimulation(results) {
-    this.learningEngine.apply(results);
-  }
-
-  recordSimulationOutcome(correct) {
-    this.syncEngine.recordSimulation(correct);
-  }
-
-  recordLiveOutcome(correct) {
-    this.syncEngine.recordLive(correct);
-  }
-
-  getHealthReport() {
-    return {
-      learning: this.learning,
-      sync: this.syncEngine.getReport()
-    };
-  }
-
-  getSystemHealth() {
-    return this.healthEngine.calculate(this.syncEngine.getReport());
-  }
-     }
+                }
