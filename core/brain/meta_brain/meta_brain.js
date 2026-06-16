@@ -1,151 +1,24 @@
- // ======================================================
-// META BRAIN — STAGE 13 PRODUCTION KERNEL
-// FULL CONSOLIDATED BUILD (13 + 13.1 STABILIZATION)
+// ======================================================
+// META BRAIN — FINAL CONSOLIDATED PRODUCTION KERNEL
+// (Stage 13.1 + 14 + 15 Unified System)
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
 import { HealthEngine } from "./engines/health_engine.js";
 
-
 // ======================================================
-// ZONE ENGINE
-// ======================================================
-
-class ZoneEngine {
-  constructor() {
-    this.zones = {
-      profit: { strong: 0, weak: 0 },
-      danger: { strong: 0, weak: 0 },
-      neutral: { strong: 0, weak: 0 }
-    };
-  }
-
-  classify(signal) {
-    const trend = signal.trendStrength ?? 0;
-    const vol = signal.volatility ?? 0;
-    const risk = signal.riskLevel;
-
-    if (trend > 0.6 && vol < 0.5 && risk !== "high") return "profit";
-    if (vol > 0.8 || risk === "high") return "danger";
-    return "neutral";
-  }
-
-  getZoneBias(signal) {
-    const zone = this.classify(signal);
-    if (zone === "profit") return 0.1;
-    if (zone === "danger") return -0.1;
-    return 0;
-  }
-
-  record(zone, correct) {
-    if (!this.zones[zone]) return;
-    correct ? this.zones[zone].strong++ : this.zones[zone].weak++;
-  }
-
-  reliability(zone) {
-    const z = this.zones[zone];
-    const total = z.strong + z.weak;
-    if (total < 5) return 0.5;
-    return z.strong / total;
-  }
-}
-
-
-// ======================================================
-// MEMORY ENGINE
+// CORE ENGINE (Stage 13.1)
 // ======================================================
 
-class MemoryEngine {
-  constructor() {
-    this.lastSignals = [];
-    this.lastDecisions = [];
-  }
-
-  store(signal, decision) {
-    this.lastSignals.push(signal);
-    this.lastDecisions.push(decision);
-
-    if (this.lastSignals.length > 50) {
-      this.lastSignals.shift();
-      this.lastDecisions.shift();
-    }
-  }
-
-  getRecentSignals(count = 10) {
-    return this.lastSignals.slice(-count);
-  }
-}
-
-
-// ======================================================
-// CONTEXT ENGINE
-// ======================================================
-
-class ContextEngine {
-  constructor(memoryEngine) {
-    this.memoryEngine = memoryEngine;
-  }
-
-  classify(signal) {
-    const history = this.memoryEngine.getRecentSignals(10);
-
-    const trend = signal.trendStrength ?? 0;
-    const volatility = signal.volatility ?? 0;
-
-    if (history.length < 3) return "RANGING";
-
-    const avgTrend =
-      history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) / history.length;
-
-    const avgVol =
-      history.reduce((s, x) => s + (x.volatility ?? 0), 0) / history.length;
-
-    if (avgTrend > 0.7 && avgVol < 0.5) return "TRENDING";
-    if (avgVol > 0.75) return "VOLATILE";
-    if (avgTrend < 0.35) return "RANGING";
-
-    if (trend > avgTrend && volatility < avgVol) return "RECOVERY";
-    if (trend < avgTrend && volatility > avgVol) return "BREAKDOWN";
-
-    return "RANGING";
-  }
-}
-
-
-// ======================================================
-// REACTION ENGINE
-// ======================================================
-
-class ReactionEngine {
-  getProfile(context) {
-    switch (context) {
-      case "TRENDING":
-        return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, multiplier: 1.15 };
-      case "RECOVERY":
-        return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, multiplier: 1.05 };
-      case "VOLATILE":
-        return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, multiplier: 0.85 };
-      case "BREAKDOWN":
-        return { mode: "SURVIVAL", buy: 0.75, sell: -0.25, multiplier: 0.75 };
-      default:
-        return { mode: "BALANCED", buy: 0.35, sell: -0.35, multiplier: 1.0 };
-    }
-  }
-}
-
-
-// ======================================================
-// DECISION ENGINE
-// ======================================================
-
-class DecisionEngine {
+class CoreEngine {
   constructor(learning, zoneEngine) {
     this.learning = learning;
     this.zoneEngine = zoneEngine;
   }
 
   evaluate(signal) {
-    const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
+    const trend =
+      (signal.trendStrength ?? 0) + this.learning.trendBias;
 
     const risk =
       (signal.riskLevel === "high"
@@ -160,10 +33,10 @@ class DecisionEngine {
 
     const zoneBias = this.zoneEngine.getZoneBias(signal);
 
-    const raw = trend + risk + volatility + zoneBias;
+    const score = trend + risk + volatility + zoneBias;
 
     return {
-      score: Math.max(-1, Math.min(1, raw)),
+      score: Math.max(-1, Math.min(1, score)),
       trend,
       risk,
       volatility
@@ -171,260 +44,223 @@ class DecisionEngine {
   }
 }
 
+// ======================================================
+// ZONE ENGINE
+// ======================================================
+
+class ZoneEngine {
+  classify(signal) {
+    const t = signal.trendStrength ?? 0;
+    const v = signal.volatility ?? 0;
+    const r = signal.riskLevel;
+
+    if (t > 0.6 && v < 0.5 && r !== "high") return "profit";
+    if (v > 0.8 || r === "high") return "danger";
+    return "neutral";
+  }
+
+  getZoneBias(signal) {
+    const z = this.classify(signal);
+    if (z === "profit") return 0.1;
+    if (z === "danger") return -0.1;
+    return 0;
+  }
+}
+
+// ======================================================
+// MEMORY ENGINE
+// ======================================================
+
+class MemoryEngine {
+  constructor() {
+    this.history = [];
+  }
+
+  store(signal, output) {
+    this.history.push({ signal, output });
+    if (this.history.length > 50) this.history.shift();
+  }
+
+  recent(n = 10) {
+    return this.history.slice(-n).map(h => h.signal);
+  }
+}
+
+// ======================================================
+// CONTEXT ENGINE
+// ======================================================
+
+class ContextEngine {
+  constructor(memory) {
+    this.memory = memory;
+  }
+
+  classify(signal) {
+    const hist = this.memory.recent(10);
+
+    if (hist.length < 3) return "RANGING";
+
+    const avgT =
+      hist.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
+      hist.length;
+
+    const avgV =
+      hist.reduce((s, x) => s + (x.volatility ?? 0), 0) /
+      hist.length;
+
+    if (avgT > 0.7 && avgV < 0.5) return "TRENDING";
+    if (avgV > 0.75) return "VOLATILE";
+    if (avgT < 0.35) return "RANGING";
+
+    if (signal.trendStrength > avgT) return "RECOVERY";
+    if (signal.trendStrength < avgT) return "BREAKDOWN";
+
+    return "RANGING";
+  }
+}
+
+// ======================================================
+// REACTION ENGINE (Stage 15 behavior layer)
+// ======================================================
+
+class ReactionEngine {
+  getProfile(context) {
+    switch (context) {
+      case "TRENDING":
+        return { buy: 0.25, sell: -0.25, mult: 1.15 };
+
+      case "RECOVERY":
+        return { buy: 0.30, sell: -0.30, mult: 1.05 };
+
+      case "VOLATILE":
+        return { buy: 0.60, sell: -0.60, mult: 0.85 };
+
+      case "BREAKDOWN":
+        return { buy: 0.75, sell: -0.25, mult: 0.75 };
+
+      default:
+        return { buy: 0.35, sell: -0.35, mult: 1.0 };
+    }
+  }
+}
+
+// ======================================================
+// DECISION ENGINE
+// ======================================================
+
+class DecisionEngine {
+  constructor(learning, zoneEngine) {
+    this.learning = learning;
+    this.zoneEngine = zoneEngine;
+  }
+
+  evaluate(signal) {
+    const core = this.learning;
+
+    const trend = (signal.trendStrength ?? 0) + core.trendBias;
+    const risk =
+      (signal.riskLevel === "high"
+        ? -0.4
+        : signal.riskLevel === "medium"
+        ? -0.2
+        : 0.1) + core.riskBias;
+
+    const volatility =
+      (signal.volatility > 0.7 ? -0.3 : 0.2) + core.volatilityBias;
+
+    const zoneBias = this.zoneEngine.getZoneBias(signal);
+
+    const score = trend + risk + volatility + zoneBias;
+
+    return {
+      score: Math.max(-1, Math.min(1, score))
+    };
+  }
+}
 
 // ======================================================
 // CALIBRATION ENGINE
 // ======================================================
 
 class CalibrationEngine {
-  constructor(learning, zoneEngine) {
+  constructor(learning) {
     this.learning = learning;
-    this.zoneEngine = zoneEngine;
   }
 
-  calibrate(confidence, signal, reaction) {
-    const zone = this.zoneEngine.classify(signal);
-    const reliability = this.zoneEngine.reliability(zone);
-
+  calibrate(confidence, reaction) {
     let adjusted =
-      confidence *
-      this.learning.confidenceCalibrator *
-      (0.3 + reliability);
+      confidence * this.learning.confidenceCalibrator;
 
-    adjusted *= reaction.multiplier;
+    adjusted *= reaction.mult;
 
     return Math.max(0, Math.min(1, adjusted));
   }
 }
 
-
 // ======================================================
-// LEARNING ENGINE
+// SWARM ENGINE (Stage 14)
 // ======================================================
 
-class LearningEngine {
-  constructor(learning, zoneEngine) {
-    this.learning = learning;
-    this.zoneEngine = zoneEngine;
+class SwarmEngine {
+  constructor(coreEvaluate) {
+    this.coreEvaluate = coreEvaluate;
+    this.nodes = 5;
   }
 
-  apply(results = []) {
-    for (const r of results) {
-      const correct = r.evaluation?.actionCorrect;
-      const zone = r.decision?.meta?.zone;
-      if (!zone) continue;
+  evaluate(signal) {
+    const results = [];
 
-      this.zoneEngine.record(zone, correct);
+    for (let i = 0; i < this.nodes; i++) {
+      const mutated = {
+        ...signal,
+        trendStrength:
+          (signal.trendStrength ?? 0) +
+          (Math.random() - 0.5) * 0.05
+      };
 
-      const delta = correct ? 0.005 : -0.005;
-
-      this.learning.trendBias += delta;
-      this.learning.riskBias += delta;
-      this.learning.volatilityBias += delta;
-
-      this.learning.confidenceCalibrator += correct ? 0.001 : -0.001;
+      results.push(this.coreEvaluate(mutated));
     }
-
-    this.learning.trendBias = Math.max(-0.5, Math.min(0.5, this.learning.trendBias));
-    this.learning.riskBias = Math.max(-0.5, Math.min(0.5, this.learning.riskBias));
-    this.learning.volatilityBias = Math.max(-0.5, Math.min(0.5, this.learning.volatilityBias));
-    this.learning.confidenceCalibrator = Math.max(0.5, Math.min(1.5, this.learning.confidenceCalibrator));
-  }
-}
-
-
-// ======================================================
-// SAFETY LAYER
-// ======================================================
-
-class PolicyFirewall {
-  validate(signal, decision, context) {
-    const issues = [];
-
-    if (decision.confidence > 0.95 || decision.confidence < 0.05)
-      issues.push("CONFIDENCE_OUT_OF_RANGE");
-
-    if (context === "BREAKDOWN")
-      issues.push("DANGEROUS_CONTEXT");
-
-    if ((signal.volatility ?? 0) > 0.95)
-      issues.push("EXTREME_VOLATILITY");
-
-    return { allowed: issues.length === 0, issues };
-  }
-}
-
-
-// ======================================================
-// ANOMALY DETECTOR
-// ======================================================
-
-class AnomalyDetector {
-  constructor() {
-    this.history = [];
-    this.max = 50;
-  }
-
-  track(signal, output) {
-    this.history.push({
-      score: output.strength,
-      volatility: signal.volatility ?? 0,
-      confidence: output.confidence
-    });
-
-    if (this.history.length > this.max) this.history.shift();
-  }
-
-  detect() {
-    if (this.history.length < 10) return { anomaly: false };
 
     const avg =
-      this.history.reduce((s, h) => s + h.score, 0) / this.history.length;
-
-    const last = this.history.at(-1);
+      results.reduce((s, r) => s + r.score, 0) / results.length;
 
     return {
-      anomaly:
-        Math.abs(last.score - avg) > 0.6 ||
-        last.volatility > 0.9 ||
-        last.confidence < 0.3
+      swarmScore: avg,
+      dispersion: this._dispersion(results)
     };
+  }
+
+  _dispersion(results) {
+    const mean =
+      results.reduce((s, r) => s + r.score, 0) / results.length;
+
+    return (
+      results.reduce(
+        (s, r) => s + Math.abs(r.score - mean),
+        0
+      ) / results.length
+    );
   }
 }
 
-
 // ======================================================
-// SYSTEM GOVERNOR
+// EVOLUTION ENGINE (Stage 15)
 // ======================================================
 
-class SystemGovernor {
-  constructor() {
-    this.safeMode = false;
-    this.freeze = 0;
-  }
-
-  evaluate(firewall, anomaly) {
-    if (!firewall.allowed || anomaly.anomaly) {
-      this.freeze++;
-      if (this.freeze >= 3) this.safeMode = true;
-    } else {
-      this.freeze = Math.max(0, this.freeze - 1);
+class EvolutionEngine {
+  adjust(learning, swarmResult) {
+    if (swarmResult.dispersion > 0.6) {
+      learning.confidenceCalibrator *= 0.99;
     }
 
-    return { safeMode: this.safeMode, freeze: this.freeze };
-  }
-
-  shouldBlock() {
-    return this.safeMode;
+    if (swarmResult.dispersion < 0.3) {
+      learning.confidenceCalibrator *= 1.01;
+    }
   }
 }
 
-
 // ======================================================
-// EXECUTION ENGINE
-// ======================================================
-
-class ExecutionEngine {
-  constructor() {
-    this.paperMode = true;
-    this.slippage = 0.0005;
-  }
-
-  execute(intent) {
-    if (this.paperMode) return this.paper(intent);
-
-    return { status: "LIVE_SENT", ...intent };
-  }
-
-  paper(intent) {
-    const fill =
-      intent.price * (1 + (Math.random() - 0.5) * this.slippage);
-
-    return { status: "FILLED_PAPER", ...intent, fillPrice: fill };
-  }
-}
-
-
-// ======================================================
-// INTENT BUILDER
-// ======================================================
-
-class IntentBuilder {
-  build(signal, decision, meta) {
-    return {
-      symbol: signal.symbol || "UNKNOWN",
-      side: decision.action,
-      confidence: decision.confidence,
-      strength: decision.strength,
-      price: signal.price ?? 1,
-      context: meta.context,
-      zone: meta.zone,
-      time: Date.now()
-    };
-  }
-}
-
-
-// ======================================================
-// EXECUTION GATE
-// ======================================================
-
-class ExecutionGate {
-  allow(decision, safety) {
-    if (safety.safeMode) return false;
-    if (decision.confidence < 0.2) return false;
-    if (decision.action === "HOLD") return false;
-    return true;
-  }
-}
-
-
-// ======================================================
-// OBSERVABILITY
-// ======================================================
-
-class TraceLogger {
-  constructor() { this.logs = []; }
-  record(e) { this.logs.push({ ...e, t: Date.now() }); }
-  getLogs() { return this.logs; }
-}
-
-class SnapshotEngine {
-  constructor() { this.snapshots = []; }
-  save(s) { this.snapshots.push({ ...s, t: Date.now() }); }
-  latest() { return this.snapshots.at(-1); }
-}
-
-class EventClassifier {
-  classify(d, e, s) {
-    if (s.safeMode) return "SAFE_MODE";
-    if (d.action === "HOLD") return "HOLD";
-    if (e) return "EXECUTED";
-    return "DECISION";
-  }
-}
-
-class ObservabilityController {
-  constructor(t, s, c) {
-    this.t = t;
-    this.s = s;
-    this.c = c;
-  }
-
-  record(signal, decision, execution, safety) {
-    this.t.record({
-      type: this.c.classify(decision, execution, safety),
-      action: decision.action,
-      confidence: decision.confidence
-    });
-
-    this.s.save({ signal, decision, execution, safety });
-  }
-}
-
-
-// ======================================================
-// META BRAIN ORCHESTRATOR
+// META BRAIN (FINAL ORCHESTRATOR)
 // ======================================================
 
 class MetaBrain {
@@ -439,23 +275,17 @@ class MetaBrain {
     this.zoneEngine = new ZoneEngine();
     this.memoryEngine = new MemoryEngine();
     this.contextEngine = new ContextEngine(this.memoryEngine);
+
+    this.coreEngine = new CoreEngine(this.learning, this.zoneEngine);
+
+    this.swarmEngine = new SwarmEngine(
+      this.coreEngine.evaluate.bind(this.coreEngine)
+    );
+
     this.reactionEngine = new ReactionEngine();
-
     this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
-    this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
-    this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
-
-    this.firewall = new PolicyFirewall();
-    this.anomaly = new AnomalyDetector();
-    this.governor = new SystemGovernor();
-
-    this.executionEngine = new ExecutionEngine();
-    this.intentBuilder = new IntentBuilder();
-    this.executionGate = new ExecutionGate();
-
-    this.trace = new TraceLogger();
-    this.snapshot = new SnapshotEngine();
-    this.obs = new ObservabilityController(this.trace, this.snapshot, new EventClassifier());
+    this.calibrationEngine = new CalibrationEngine(this.learning);
+    this.evolutionEngine = new EvolutionEngine();
 
     this.syncEngine = new SyncEngine();
     this.healthEngine = new HealthEngine();
@@ -464,79 +294,57 @@ class MetaBrain {
   evaluate(signal) {
     const context = this.contextEngine.classify(signal);
     const reaction = this.reactionEngine.getProfile(context);
-    const sync = this.syncEngine.getReport();
 
-    const raw = this.decisionEngine.evaluate(signal);
+    const core = this.coreEngine.evaluate(signal);
+    const swarm = this.swarmEngine.evaluate(signal);
 
-    let confidence = this.calibrationEngine.calibrate(
-      Math.abs(raw.score),
-      signal,
+    const confidence = this.calibrationEngine.calibrate(
+      Math.abs(core.score),
       reaction
     );
 
-    const zone = this.zoneEngine.classify(signal);
+    const action =
+      core.score > reaction.buy
+        ? "BUY"
+        : core.score < reaction.sell
+        ? "SELL"
+        : "HOLD";
 
-    const decision = {
-      action:
-        raw.score > reaction.buy ? "BUY" :
-        raw.score < reaction.sell ? "SELL" :
-        "HOLD",
+    this.evolutionEngine.adjust(this.learning, swarm);
 
+    const output = {
+      action,
       confidence,
-      strength: raw.score,
-
-      meta: { context, zone, reaction: reaction.mode, drift: sync.driftScore }
+      strength: core.score,
+      meta: {
+        context,
+        swarmScore: swarm.swarmScore,
+        dispersion: swarm.dispersion
+      }
     };
 
-    const firewall = this.firewall.validate(signal, decision, context);
-    const anomaly = this.anomaly.detect();
-    const safety = this.governor.evaluate(firewall, anomaly);
+    this.memoryEngine.store(signal, output);
 
-    this.anomaly.track(signal, decision);
-
-    const hardBlock =
-      this.governor.shouldBlock() ||
-      anomaly.anomaly ||
-      !firewall.allowed;
-
-    let execution = null;
-
-    if (!hardBlock) {
-      const intent = this.intentBuilder.build(signal, decision, decision.meta);
-      const allowed = this.executionGate.allow(decision, safety);
-
-      if (allowed) {
-        execution = this.executionEngine.execute(intent);
-      }
-    } else {
-      decision.action = "HOLD";
-      decision.confidence = 0;
-      decision.strength = 0;
-      decision.meta.blocked = true;
-    }
-
-    this.memoryEngine.store(signal, decision);
-    this.obs.record(signal, decision, execution, safety);
-
-    return { ...decision, execution, meta: { ...decision.meta, safeMode: safety.safeMode, executed: !!execution } };
+    return output;
   }
 
   learn(results = []) {
-    this.learningEngine.apply(results);
+    for (const r of results) {
+      const delta = r.correct ? 0.005 : -0.005;
+      this.learning.trendBias += delta;
+      this.learning.riskBias += delta;
+      this.learning.volatilityBias += delta;
+    }
   }
-
-  recordSimulationOutcome(c) { this.syncEngine.recordSimulation(c); }
-  recordLiveOutcome(c) { this.syncEngine.recordLive(c); }
 
   getSystemHealth() {
-    const sync = this.syncEngine.getReport();
-    return this.healthEngine.calculate(sync);
+    return this.healthEngine.calculate(this.learning);
   }
 }
-
 
 // ======================================================
 // EXPORT
 // ======================================================
 
 export const metaBrain = new MetaBrain();
+    
