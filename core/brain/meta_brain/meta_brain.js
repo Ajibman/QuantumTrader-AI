@@ -1,6 +1,6 @@
  // ======================================================
 // META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 11 — POLICY FIREWALL + ANOMALY + GOVERNOR
+// STAGE 12 — EXECUTION LAYER INTEGRATION
 // ======================================================
 
 import { SyncEngine } from "./engines/sync_engine.js";
@@ -234,30 +234,22 @@ class LearningEngine {
 }
 
 
-// ======================================================
-// STAGE 11 — SAFETY LAYER
-// ======================================================
-
-
 // ------------------------------------------------------
-// POLICY FIREWALL
+// STAGE 11 — SAFETY LAYER
 // ------------------------------------------------------
 
 class PolicyFirewall {
   validate(signal, decision, context) {
     const issues = [];
 
-    if (decision.confidence > 0.95 || decision.confidence < 0.05) {
+    if (decision.confidence > 0.95 || decision.confidence < 0.05)
       issues.push("CONFIDENCE_OUT_OF_RANGE");
-    }
 
-    if (context === "BREAKDOWN") {
+    if (context === "BREAKDOWN")
       issues.push("DANGEROUS_CONTEXT");
-    }
 
-    if ((signal.volatility ?? 0) > 0.95) {
+    if ((signal.volatility ?? 0) > 0.95)
       issues.push("EXTREME_VOLATILITY");
-    }
 
     return {
       allowed: issues.length === 0,
@@ -267,8 +259,6 @@ class PolicyFirewall {
 }
 
 
-// ------------------------------------------------------
-// ANOMALY DETECTOR
 // ------------------------------------------------------
 
 class AnomalyDetector {
@@ -288,9 +278,8 @@ class AnomalyDetector {
   }
 
   detect() {
-    if (this.history.length < 10) {
+    if (this.history.length < 10)
       return { anomaly: false };
-    }
 
     const avg =
       this.history.reduce((s, h) => s + h.score, 0) /
@@ -308,8 +297,6 @@ class AnomalyDetector {
 }
 
 
-// ------------------------------------------------------
-// SYSTEM GOVERNOR
 // ------------------------------------------------------
 
 class SystemGovernor {
@@ -339,6 +326,71 @@ class SystemGovernor {
 
 
 // ------------------------------------------------------
+// STAGE 12 — EXECUTION LAYER
+// ------------------------------------------------------
+
+class ExecutionEngine {
+  constructor() {
+    this.paperMode = true;
+    this.slippage = 0.0005;
+  }
+
+  execute(intent) {
+    if (this.paperMode) return this.paper(intent);
+
+    return this.live(intent);
+  }
+
+  paper(intent) {
+    const fill = intent.price * (1 + (Math.random() - 0.5) * this.slippage);
+
+    return {
+      status: "FILLED_PAPER",
+      ...intent,
+      fillPrice: fill
+    };
+  }
+
+  live(intent) {
+    return {
+      status: "SENT_LIVE",
+      ...intent
+    };
+  }
+}
+
+
+// ------------------------------------------------------
+
+class IntentBuilder {
+  build(signal, decision, meta) {
+    return {
+      symbol: signal.symbol || "UNKNOWN",
+      side: decision.action,
+      confidence: decision.confidence,
+      strength: decision.strength,
+      price: signal.price ?? 1,
+      context: meta.context,
+      zone: meta.zone,
+      time: Date.now()
+    };
+  }
+}
+
+
+// ------------------------------------------------------
+
+class ExecutionGate {
+  allow(decision, safety) {
+    if (safety.safeMode) return false;
+    if (decision.confidence < 0.2) return false;
+    if (decision.action === "HOLD") return false;
+    return true;
+  }
+}
+
+
+// ------------------------------------------------------
 // META BRAIN ORCHESTRATOR
 // ------------------------------------------------------
 
@@ -363,6 +415,10 @@ class MetaBrain {
     this.firewall = new PolicyFirewall();
     this.anomaly = new AnomalyDetector();
     this.governor = new SystemGovernor();
+
+    this.executionEngine = new ExecutionEngine();
+    this.intentBuilder = new IntentBuilder();
+    this.executionGate = new ExecutionGate();
 
     this.syncEngine = new SyncEngine();
     this.healthEngine = new HealthEngine();
@@ -408,22 +464,30 @@ class MetaBrain {
         action: "HOLD",
         confidence: 0,
         strength: 0,
-        meta: {
-          blocked: true,
-          reason: "SAFE_MODE_ACTIVE"
-        }
+        meta: { blocked: true }
       };
+    }
+
+    const intent = this.intentBuilder.build(signal, decision, decision.meta);
+    const allowed = this.executionGate.allow(decision, safety);
+
+    let execution = null;
+
+    if (allowed) {
+      execution = this.executionEngine.execute(intent);
     }
 
     this.memoryEngine.store(signal, decision);
 
     return {
       ...decision,
+      execution,
       meta: {
         ...decision.meta,
         firewall: firewall.allowed,
         anomaly: anomaly.anomaly,
-        safeMode: safety.safeMode
+        safeMode: safety.safeMode,
+        executed: !!execution
       }
     };
   }
