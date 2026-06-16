@@ -1,407 +1,108 @@
- // ======================================================
-// META BRAIN — SINGLE COGNITIVE ORCHESTRATION KERNEL
-// STAGE 5 FULL EVOLUTION BUILD (PRODUCTION READY)
-// ======================================================
-
-import { SyncEngine } from "./engines/sync_engine.js";
-import { HealthEngine } from "./engines/health_engine.js";
-
-// ------------------------------------------------------
-// ZONE ENGINE
+ // ------------------------------------------------------
+// POLICY SELF-OPTIMIZATION ENGINE (PRODUCTION SAFE)
 // ------------------------------------------------------
 
-class ZoneEngine {
+class PolicyOptimizer {
   constructor() {
-    this.zones = {
-      profit: { strong: 0, weak: 0 },
-      danger: { strong: 0, weak: 0 },
-      neutral: { strong: 0, weak: 0 }
+    this.state = {
+      TRENDING: this._init(),
+      VOLATILE: this._init(),
+      RANGING: this._init(),
+      RECOVERY: this._init(),
+      BREAKDOWN: this._init()
     };
   }
 
-  classify(signal) {
-    const trend = signal.trendStrength ?? 0;
-    const vol = signal.volatility ?? 0;
-    const risk = signal.riskLevel;
+  _init() {
+    return {
+      buy: 0.35,
+      sell: -0.35,
+      confidence: 1.0,
 
-    if (trend > 0.6 && vol < 0.5 && risk !== "high") return "profit";
-    if (vol > 0.8 || risk === "high") return "danger";
-    return "neutral";
+      // stability memory (prevents overreaction)
+      scoreEMA: 0,
+      updateCount: 0
+    };
   }
 
-  getZoneBias(signal) {
-    const zone = this.classify(signal);
-    if (zone === "profit") return 0.1;
-    if (zone === "danger") return -0.1;
-    return 0;
-  }
+  // -----------------------------
+  // PUBLIC UPDATE ENTRY
+  // -----------------------------
+  update(context, score, wasCorrect) {
+    const p = this.state[context];
+    if (!p) return;
 
-  record(zone, correct) {
-    if (!this.zones[zone]) return;
-    correct ? this.zones[zone].strong++ : this.zones[zone].weak++;
-  }
-
-  reliability(zone) {
-    const z = this.zones[zone];
-    const total = z.strong + z.weak;
-    if (total < 5) return 0.5;
-    return z.strong / total;
-  }
-}
-
-// ------------------------------------------------------
-// MEMORY ENGINE
-// ------------------------------------------------------
-
-class MemoryEngine {
-  constructor() {
-    this.lastSignals = [];
-    this.lastDecisions = [];
-  }
-
-  store(signal, decision) {
-    this.lastSignals.push(signal);
-    this.lastDecisions.push(decision);
-
-    if (this.lastSignals.length > 50) {
-      this.lastSignals.shift();
-      this.lastDecisions.shift();
-    }
-  }
-
-  getRecentSignals(count = 10) {
-    return this.lastSignals.slice(-count);
-  }
-}
-
-// ------------------------------------------------------
-// CONTEXT ENGINE
-// ------------------------------------------------------
-
-class ContextEngine {
-  constructor(memoryEngine) {
-    this.memoryEngine = memoryEngine;
-  }
-
-  classify(signal) {
-    const history = this.memoryEngine.getRecentSignals(10);
-
-    const trend = signal.trendStrength ?? 0;
-    const vol = signal.volatility ?? 0;
-
-    if (history.length < 3) return "RANGING";
-
-    const avgTrend =
-      history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
-      history.length;
-
-    const avgVol =
-      history.reduce((s, x) => s + (x.volatility ?? 0), 0) /
-      history.length;
-
-    if (avgTrend > 0.7 && avgVol < 0.5) return "TRENDING";
-    if (avgVol > 0.75) return "VOLATILE";
-    if (avgTrend < 0.35) return "RANGING";
-
-    if (trend > avgTrend && vol < avgVol) return "RECOVERY";
-    if (trend < avgTrend && vol > avgVol) return "BREAKDOWN";
-
-    return "RANGING";
-  }
-}
-
-// ------------------------------------------------------
-// REACTION ENGINE
-// ------------------------------------------------------
-
-class ReactionEngine {
-  getProfile(context) {
-    switch (context) {
-      case "TRENDING":
-        return { mode: "AGGRESSIVE", buy: 0.25, sell: -0.25, mult: 1.15 };
-      case "RECOVERY":
-        return { mode: "OPTIMISTIC", buy: 0.30, sell: -0.30, mult: 1.05 };
-      case "VOLATILE":
-        return { mode: "DEFENSIVE", buy: 0.60, sell: -0.60, mult: 0.85 };
-      case "RANGING":
-      default:
-        return { mode: "BALANCED", buy: 0.35, sell: -0.35, mult: 1.0 };
-    }
-  }
-}
-
-// ------------------------------------------------------
-// MULTI-SIGNAL FUSION ENGINE (STAGE 4B)
-// ------------------------------------------------------
-
-class MultiSignalFusionEngine {
-  constructor(memoryEngine) {
-    this.memoryEngine = memoryEngine;
-  }
-
-  fuse(signal) {
-    const history = this.memoryEngine.getRecentSignals(10);
-
-    if (history.length < 3) {
-      return {
-        alignment: 0.5,
-        stability: 0.5,
-        fusedTrend: signal.trendStrength ?? 0
-      };
+    // ignore noise early
+    if (p.updateCount < 10) {
+      p.updateCount++;
+      return;
     }
 
-    const avgTrend =
-      history.reduce((s, x) => s + (x.trendStrength ?? 0), 0) /
-      history.length;
+    const reward = wasCorrect ? 1 : -1;
 
-    const avgVol =
-      history.reduce((s, x) => s + (x.volatility ?? 0), 0) /
-      history.length;
+    // EMA smoothing (slow perception of system quality)
+    const alpha = 0.05;
+    p.scoreEMA = (alpha * score) + ((1 - alpha) * p.scoreEMA);
 
-    const current = signal.trendStrength ?? 0;
+    // only adjust if signal is consistent over time
+    if (Math.abs(p.scoreEMA) < 0.15) {
+      return; // neutral zone → no policy movement
+    }
 
-    const alignment = 1 - Math.abs(current - avgTrend);
+    // tiny step size (critical for stability)
+    const step = 0.0025;
 
-    let stability = avgVol > 0.75 ? 0.7 : avgVol < 0.4 ? 1.1 : 1.0;
+    // -----------------------------
+    // BUY THRESHOLD ADJUSTMENT
+    // -----------------------------
+    if (p.scoreEMA > 0.2 && reward > 0) {
+      p.buy = this._clamp(p.buy + step, 0.25, 0.60);
+    }
 
-    const fusedTrend = ((current * 0.6) + (avgTrend * 0.4)) * stability;
+    if (p.scoreEMA < -0.2 && reward < 0) {
+      p.buy = this._clamp(p.buy - step, 0.25, 0.60);
+    }
+
+    // -----------------------------
+    // SELL THRESHOLD ADJUSTMENT
+    // -----------------------------
+    if (p.scoreEMA < -0.2 && reward > 0) {
+      p.sell = this._clamp(p.sell - step, -0.60, -0.25);
+    }
+
+    if (p.scoreEMA > 0.2 && reward < 0) {
+      p.sell = this._clamp(p.sell + step, -0.60, -0.25);
+    }
+
+    // -----------------------------
+    // CONFIDENCE ADJUSTMENT
+    // -----------------------------
+    if (reward > 0) {
+      p.confidence = this._clamp(p.confidence + 0.001, 0.8, 1.2);
+    } else {
+      p.confidence = this._clamp(p.confidence - 0.001, 0.8, 1.2);
+    }
+
+    p.updateCount++;
+  }
+
+  // -----------------------------
+  // GET CURRENT POLICY
+  // -----------------------------
+  get(context) {
+    const p = this.state[context] || this.state.RANGING;
 
     return {
-      alignment: Math.max(0, Math.min(1, alignment)),
-      stability,
-      fusedTrend
-    };
-  }
-}
-
-// ------------------------------------------------------
-// RISK DOMINANCE ENGINE (STAGE 4C)
-// ------------------------------------------------------
-
-class RiskDominanceEngine {
-  evaluate(syncReport, confidence, fusion) {
-    const drift = syncReport.driftScore ?? 0;
-    const sim = syncReport.simulationWinRate ?? 0;
-    const live = syncReport.liveWinRate ?? 0;
-    const alignment = fusion?.alignment ?? 0.5;
-
-    let riskPressure = 0;
-
-    if (drift > 0.7) riskPressure += 0.4;
-    if (sim < 0.45) riskPressure += 0.2;
-    if (live < 0.45) riskPressure += 0.2;
-    if (alignment < 0.4) riskPressure += 0.2;
-    if (confidence < 0.3) riskPressure += 0.2;
-
-    return {
-      riskPressure,
-      override: riskPressure > 0.6
-    };
-  }
-}
-
-// ------------------------------------------------------
-// STRATEGY EVOLUTION ENGINE (STAGE 5)
-// ------------------------------------------------------
-
-class StrategyEvolutionEngine {
-  constructor() {
-    this.stats = {
-      TRENDING: { win: 0, loss: 0 },
-      VOLATILE: { win: 0, loss: 0 },
-      RANGING: { win: 0, loss: 0 },
-      RECOVERY: { win: 0, loss: 0 },
-      BREAKDOWN: { win: 0, loss: 0 }
+      buyThreshold: p.buy,
+      sellThreshold: p.sell,
+      confidenceMultiplier: p.confidence
     };
   }
 
-  record(context, correct) {
-    if (!this.stats[context]) return;
-    correct ? this.stats[context].win++ : this.stats[context].loss++;
-  }
-
-  bias(context) {
-    const s = this.stats[context];
-    if (!s) return 0;
-
-    const total = s.win + s.loss;
-    if (total < 5) return 0;
-
-    const p = s.win / total;
-
-    if (p > 0.65) return 0.15;
-    if (p < 0.4) return -0.15;
-
-    return 0;
+  // -----------------------------
+  // SAFETY GUARD
+  // -----------------------------
+  _clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
   }
 }
-
-// ------------------------------------------------------
-// DECISION ENGINE
-// ------------------------------------------------------
-
-class DecisionEngine {
-  constructor(learning, zoneEngine) {
-    this.learning = learning;
-    this.zoneEngine = zoneEngine;
-  }
-
-  evaluate(signal) {
-    const trend = (signal.trendStrength ?? 0) + this.learning.trendBias;
-    const risk =
-      (signal.riskLevel === "high"
-        ? -0.4
-        : signal.riskLevel === "medium"
-        ? -0.2
-        : 0.1) + this.learning.riskBias;
-
-    const volatility =
-      (signal.volatility > 0.7 ? -0.3 : 0.2) + this.learning.volatilityBias;
-
-    const zoneBias = this.zoneEngine.getZoneBias(signal);
-
-    const score = trend + risk + volatility + zoneBias;
-
-    return {
-      score: Math.max(-1, Math.min(1, score)),
-      trend,
-      risk,
-      volatility
-    };
-  }
-}
-
-// ------------------------------------------------------
-// CALIBRATION ENGINE
-// ------------------------------------------------------
-
-class CalibrationEngine {
-  constructor(learning, zoneEngine) {
-    this.learning = learning;
-    this.zoneEngine = zoneEngine;
-  }
-
-  calibrate(confidence, signal) {
-    const zone = this.zoneEngine.classify(signal);
-    const rel = this.zoneEngine.reliability(zone);
-
-    let adjusted = confidence * this.learning.confidenceCalibrator;
-    adjusted *= (0.3 + rel);
-
-    return Math.max(0, Math.min(1, adjusted));
-  }
-}
-
-// ------------------------------------------------------
-// LEARNING ENGINE
-// ------------------------------------------------------
-
-class LearningEngine {
-  constructor(learning, zoneEngine) {
-    this.learning = learning;
-    this.zoneEngine = zoneEngine;
-  }
-
-  apply(results = []) {
-    for (const r of results) {
-      const zone = r.decision?.meta?.zone;
-      const correct = r.evaluation?.actionCorrect;
-      if (!zone) continue;
-
-      this.zoneEngine.record(zone, correct);
-
-      const delta = correct ? 0.005 : -0.005;
-
-      this.learning.trendBias += delta;
-      this.learning.riskBias += delta;
-      this.learning.volatilityBias += delta;
-      this.learning.confidenceCalibrator += correct ? 0.001 : -0.001;
-    }
-
-    this.learning.trendBias = Math.max(-0.5, Math.min(0.5, this.learning.trendBias));
-    this.learning.riskBias = Math.max(-0.5, Math.min(0.5, this.learning.riskBias));
-    this.learning.volatilityBias = Math.max(-0.5, Math.min(0.5, this.learning.volatilityBias));
-    this.learning.confidenceCalibrator = Math.max(0.5, Math.min(1.5, this.learning.confidenceCalibrator));
-  }
-}
-
-// ------------------------------------------------------
-// META BRAIN ORCHESTRATOR
-// ------------------------------------------------------
-
-export class MetaBrain {
-  constructor() {
-    this.learning = {
-      trendBias: 0,
-      riskBias: 0,
-      volatilityBias: 0,
-      confidenceCalibrator: 1
-    };
-
-    this.zoneEngine = new ZoneEngine();
-    this.memoryEngine = new MemoryEngine();
-    this.contextEngine = new ContextEngine(this.memoryEngine);
-    this.reactionEngine = new ReactionEngine();
-    this.fusionEngine = new MultiSignalFusionEngine(this.memoryEngine);
-    this.riskEngine = new RiskDominanceEngine();
-    this.strategyEngine = new StrategyEvolutionEngine();
-
-    this.decisionEngine = new DecisionEngine(this.learning, this.zoneEngine);
-    this.calibrationEngine = new CalibrationEngine(this.learning, this.zoneEngine);
-    this.learningEngine = new LearningEngine(this.learning, this.zoneEngine);
-
-    this.syncEngine = new SyncEngine();
-    this.healthEngine = new HealthEngine();
-  }
-
-  evaluate(signal) {
-    const context = this.contextEngine.classify(signal);
-    const reaction = this.reactionEngine.getProfile(context);
-    const fusion = this.fusionEngine.fuse(signal);
-
-    const base = this.decisionEngine.evaluate(signal);
-
-    const score = base.score + this.strategyEngine.bias(context);
-
-    let confidence = this.calibrationEngine.calibrate(Math.abs(score), signal);
-    confidence *= reaction.mult;
-    confidence = Math.max(0, Math.min(1, confidence));
-
-    const sync = this.syncEngine.getReport();
-
-    const risk = this.riskEngine.evaluate(sync, confidence, fusion);
-
-    if (risk.override) {
-      return {
-        action: "HOLD",
-        confidence: confidence * 0.25,
-        strength: score,
-        reasoning: "Risk Dominance Override Activated",
-        meta: { context, reactionMode: reaction.mode, fusion, risk }
-      };
-    }
-
-    const action =
-      score > reaction.buy ? "BUY" :
-      score < reaction.sell ? "SELL" : "HOLD";
-
-    return {
-      action,
-      confidence,
-      strength: score,
-      reasoning: this._reason(score),
-      meta: {
-        context,
-        reactionMode: reaction.mode,
-        fusion,
-        risk
-      }
-    };
-  }
-
-  _reason(score) {
-    if (score > 0.35) return "Bullish alignment across system layers";
-    if (score < -0.35) return "Bearish pressure dominates structure";
-    return "Neutral equilibrium state";
-  }
-       }
