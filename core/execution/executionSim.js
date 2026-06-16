@@ -1,4 +1,6 @@
- import { metaBrain } from "../brain/meta_brain/meta_brain.js";
+ // core/engine/executionSim.js
+
+import { metaBrain } from "../brain/meta_brain/meta_brain.js";
 import { AutoTraderOrchestrator } from "../autotrader/autotrader_orchestrator.js";
 
 const orchestrator = new AutoTraderOrchestrator();
@@ -21,22 +23,29 @@ function normalizeTrade(trade) {
 }
 
 // ------------------------------------------------------
-// CORE EXECUTION PIPELINE
+// EXECUTION CORE
 // ------------------------------------------------------
 
-function executeThroughOrchestrator(trade, signal, mode = "SIMULATION") {
+function executeThroughOrchestrator(trade, signal) {
 
-  const control = orchestrator.evaluate(signal);
+  // 1. MetaBrain evaluation FIRST (new core wiring)
+  const brainDecision = metaBrain.evaluate(signal);
+
+  // 2. Orchestrator control layer
+  const control = orchestrator.evaluate({
+    ...signal,
+    brain: brainDecision
+  });
 
   // --------------------------
-  // GLOBAL GATE
+  // HARD GATE
   // --------------------------
 
   if (!control.allowTrade) {
     return {
       status: "BLOCKED",
-      mode,
       reason: control.mode,
+      brainDecision,
       trade: null
     };
   }
@@ -53,24 +62,20 @@ function executeThroughOrchestrator(trade, signal, mode = "SIMULATION") {
   const result = normalizeTrade(adjustedTrade);
 
   // --------------------------
-  // FEEDBACK LOOP (META BRAIN)
+  // FEEDBACK LOOP (META BRAIN LEARNING)
   // --------------------------
 
-  const success = result.success;
+  metaBrain.recordLiveOutcome(result.success);
 
-  if (mode === "SIMULATION") {
-    metaBrain.recordSimulationOutcome(success);
-  } else {
-    metaBrain.recordLiveOutcome(success);
+  // optional simulation hook if running backtests
+  if (signal.__simulation === true) {
+    metaBrain.recordSimulationOutcome(result.success);
   }
-
-  // --------------------------
-  // RETURN STANDARDIZED OUTPUT
-  // --------------------------
 
   return {
     status: "EXECUTED",
-    mode,
+    mode: control.mode,
+    brainDecision,
     control,
     result
   };
@@ -81,23 +86,31 @@ function executeThroughOrchestrator(trade, signal, mode = "SIMULATION") {
 // ------------------------------------------------------
 
 export function executeSimulationTrade(trade, signal) {
-  const output = executeThroughOrchestrator(trade, signal, "SIMULATION");
 
-  console.log("[SIM]", output.status);
+  const output = executeThroughOrchestrator(trade, {
+    ...signal,
+    __simulation: true
+  });
+
+  console.log("[SIM]", output.status, output.mode || "");
 
   return output;
 }
 
 export function executeLiveTrade(trade, signal) {
-  const output = executeThroughOrchestrator(trade, signal, "LIVE");
 
-  console.log("[LIVE]", output.status);
+  const output = executeThroughOrchestrator(trade, {
+    ...signal,
+    __simulation: false
+  });
+
+  console.log("[LIVE]", output.status, output.mode || "");
 
   return output;
 }
 
 // ------------------------------------------------------
-// BATCH SIMULATION
+// BACKTEST BATCH
 // ------------------------------------------------------
 
 export function runSimulationBatch(trades = [], signals = []) {
@@ -109,6 +122,14 @@ export function runSimulationBatch(trades = [], signals = []) {
       executeSimulationTrade(trades[i], signals[i] || {})
     );
   }
+
+  // optional learning consolidation after batch
+  metaBrain.learnFromSimulation(
+    results.map(r => ({
+      evaluation: { actionCorrect: r.result?.success },
+      decision: { meta: r.brainDecision?.meta || {} }
+    }))
+  );
 
   return results;
 }
