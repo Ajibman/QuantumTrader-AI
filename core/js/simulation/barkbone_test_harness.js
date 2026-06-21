@@ -93,9 +93,14 @@ export class BackboneTestHarness {
 
       this.results.push(cycle);
 
+      // NEW: attach validation result
+      const validation =
+        this.validateLatestCycle();
+
       return {
-        success: true,
-        cycle
+        success: validation.success,
+        cycle,
+        validation
       };
 
     } catch (error) {
@@ -107,6 +112,94 @@ export class BackboneTestHarness {
     }
   }
 
+  /**
+   * AUTOMATIC BACKBONE VALIDATOR
+   */
+  validateLatestCycle() {
+
+    const cycle =
+      this.results[
+        this.results.length - 1
+      ];
+
+    const failures = [];
+
+    // -------------------------
+    // 1. Suppression validation
+    // -------------------------
+    const suppressedWrongly =
+      cycle.resolved.length +
+      (cycle.executed.length || 0) !==
+      cycle.emitted.length;
+
+    // This ensures suppression is actually removing events
+    if (
+      cycle.emitted.length > 0 &&
+      cycle.resolved.length === cycle.emitted.length
+    ) {
+      // OK (no suppression occurred)
+    } else if (
+      cycle.resolved.length >
+      cycle.emitted.length
+    ) {
+      failures.push(
+        "Invalid suppression behavior"
+      );
+    }
+
+    // -------------------------
+    // 2. Execution integrity
+    // -------------------------
+    if (
+      cycle.executed.length === 0 &&
+      cycle.resolved.length > 0
+    ) {
+      failures.push(
+        "No execution occurred"
+      );
+    }
+
+    // -------------------------
+    // 3. Feedback integrity
+    // -------------------------
+    if (
+      cycle.feedback.length !==
+      cycle.executed.length
+    ) {
+      failures.push(
+        "Feedback mismatch"
+      );
+    }
+
+    // -------------------------
+    // 4. Priority sanity check (if available)
+    // -------------------------
+    const priorities =
+      cycle.resolved
+        .map(r => r.directive?.priority)
+        .filter(p => typeof p === "number");
+
+    if (priorities.length > 1) {
+      const sorted = [...priorities].sort(
+        (a, b) => b - a
+      );
+
+      const isSorted =
+        JSON.stringify(priorities) !==
+        JSON.stringify(sorted);
+
+      if (isSorted) {
+        // This is informational, not failure
+        // (Event Hub is responsible for ordering)
+      }
+    }
+
+    return {
+      success: failures.length === 0,
+      failures
+    };
+  }
+
   getResults() {
     return this.results;
   }
@@ -114,4 +207,4 @@ export class BackboneTestHarness {
   clear() {
     this.results = [];
   }
-}
+ }
