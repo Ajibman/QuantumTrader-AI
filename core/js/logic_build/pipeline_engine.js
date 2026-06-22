@@ -58,6 +58,8 @@ export class PipelineEngine {
 const directive =
   this.cclm.evaluate(event);
       
+      steps.directive = directive;
+      
       // =====================================
       // STEP 3 — INFLUENCE
       // =====================================
@@ -102,7 +104,21 @@ const directive =
       // STEP 5 — EVENT HUB
       // =====================================
 
-      const routed =
+      // =====================================
+// STEP 5 — EVENT HUB
+// =====================================
+
+if (
+  !this.eventHub ||
+  typeof this.eventHub.resolve !==
+  "function"
+) {
+  throw new Error(
+    "EventHub resolve() unavailable"
+  );
+}
+
+const routed =
   this.eventHub.resolve([
     enriched
   ]);
@@ -117,7 +133,7 @@ if (
     "EventHub returned no executable route"
   );
 }
-  
+      
       // =====================================
       // STEP 6 — EXECUTOR
       // =====================================
@@ -156,12 +172,14 @@ if (
     "cpilot observe() unavailable"
   );
 }
-
+      
 const feedback =
   this.cpilot.observe(
     outcome
   );
 
+  steps.feedback = feedback;
+      
       // =====================================
       // STEP 9 — FEEDBACK VALIDATION
       // =====================================
