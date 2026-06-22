@@ -45,11 +45,19 @@ export class PipelineEngine {
       // STEP 2 — CCLMⁿ
       // =====================================
 
-      const directive =
-        this.cclm.evaluate(event);
+      if (
+  !this.cclm ||
+  typeof this.cclm.evaluate !==
+  "function"
+) {
+  throw new Error(
+    "CCLM evaluate() unavailable"
+  );
+}
 
-      steps.directive = directive;
-
+const directive =
+  this.cclm.evaluate(event);
+      
       // =====================================
       // STEP 3 — INFLUENCE
       // =====================================
@@ -95,12 +103,21 @@ export class PipelineEngine {
       // =====================================
 
       const routed =
-        this.eventHub.resolve([
-          enriched
-        ]);
+  this.eventHub.resolve([
+    enriched
+  ]);
 
-      steps.routed = routed;
+steps.routed = routed;
 
+if (
+  !Array.isArray(routed) ||
+  routed.length === 0
+) {
+  throw new Error(
+    "EventHub returned no executable route"
+  );
+}
+  
       // =====================================
       // STEP 6 — EXECUTOR
       // =====================================
@@ -130,12 +147,20 @@ export class PipelineEngine {
       // STEP 8 — CPILOT
       // =====================================
 
-      const feedback =
-        this.cpilot.observe(
-          outcome
-        );
+      if (
+  !this.cpilot ||
+  typeof this.cpilot.observe !==
+  "function"
+) {
+  throw new Error(
+    "cpilot observe() unavailable"
+  );
+}
 
-      steps.feedback = feedback;
+const feedback =
+  this.cpilot.observe(
+    outcome
+  );
 
       // =====================================
       // STEP 9 — FEEDBACK VALIDATION
