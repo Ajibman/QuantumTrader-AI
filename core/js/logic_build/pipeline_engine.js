@@ -1,4 +1,4 @@
-// core/js/logic_build/pipeline_engine.js
+ // core/js/logic_build/pipeline_engine.js
 // QuantumTrader-AI — Pipeline Engine (Contract Hardened)
 
 import { PipelineContracts }
@@ -46,20 +46,20 @@ export class PipelineEngine {
       // =====================================
 
       if (
-  !this.cclm ||
-  typeof this.cclm.evaluate !==
-  "function"
-) {
-  throw new Error(
-    "CCLM evaluate() unavailable"
-  );
-}
+        !this.cclm ||
+        typeof this.cclm.evaluate !==
+        "function"
+      ) {
+        throw new Error(
+          "CCLM evaluate() unavailable"
+        );
+      }
 
-const directive =
-  this.cclm.evaluate(event);
-      
+      const directive =
+        this.cclm.evaluate(event);
+
       steps.directive = directive;
-      
+
       // =====================================
       // STEP 3 — INFLUENCE
       // =====================================
@@ -94,8 +94,7 @@ const directive =
 
         return {
           success: true,
-          status:
-            "suppressed_by_cclm",
+          status: "suppressed_by_cclm",
           steps
         };
       }
@@ -104,43 +103,39 @@ const directive =
       // STEP 5 — EVENT HUB
       // =====================================
 
-      // =====================================
-// STEP 5 — EVENT HUB
-// =====================================
+      if (
+        !this.eventHub ||
+        typeof this.eventHub.resolve !==
+        "function"
+      ) {
+        throw new Error(
+          "EventHub resolve() unavailable"
+        );
+      }
 
-if (
-  !this.eventHub ||
-  typeof this.eventHub.resolve !==
-  "function"
-) {
-  throw new Error(
-    "EventHub resolve() unavailable"
-  );
-}
+      const routed =
+        this.eventHub.resolve([
+          enriched
+        ]);
 
-const routed =
-  this.eventHub.resolve([
-    enriched
-  ]);
+      if (
+        !Array.isArray(routed) ||
+        routed.length === 0
+      ) {
+        throw new Error(
+          "EventHub returned no executable route"
+        );
+      }
 
-steps.routed = routed;
+      steps.routed = routed;
 
-if (
-  !Array.isArray(routed) ||
-  routed.length === 0
-) {
-  throw new Error(
-    "EventHub returned no executable route"
-  );
-}
-      
       // =====================================
       // STEP 6 — EXECUTOR
       // =====================================
 
       const outcome =
         await this.executor.execute(
-          routed[0]
+          routed?.[0]
         );
 
       steps.outcome = outcome;
@@ -164,22 +159,22 @@ if (
       // =====================================
 
       if (
-  !this.cpilot ||
-  typeof this.cpilot.observe !==
-  "function"
-) {
-  throw new Error(
-    "cpilot observe() unavailable"
-  );
-}
-      
-const feedback =
-  this.cpilot.observe(
-    outcome
-  );
+        !this.cpilot ||
+        typeof this.cpilot.observe !==
+        "function"
+      ) {
+        throw new Error(
+          "cpilot observe() unavailable"
+        );
+      }
 
-  steps.feedback = feedback;
-      
+      const feedback =
+        this.cpilot.observe(
+          outcome
+        );
+
+      steps.feedback = feedback;
+
       // =====================================
       // STEP 9 — FEEDBACK VALIDATION
       // =====================================
@@ -227,4 +222,4 @@ const feedback =
       };
     }
   }
-        }
+}
