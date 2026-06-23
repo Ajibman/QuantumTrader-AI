@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+
+    namespace "com.qonexai.quantumtraderai"
+
+    compileSdk 35
+
+    defaultConfig {
+
+        applicationId
+            "com.qonexai.quantumtraderai"
+
+        minSdk 26
+        targetSdk 35
+
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+
+        release {
+
+            minifyEnabled true
+
+            shrinkResources true
+
+            proguardFiles(
+                getDefaultProguardFile(
+                    'proguard-android-optimize.txt'
+                ),
+                'proguard-rules.pro'
+            )
+        }
+    }
+}
+
+dependencies {
+
+    implementation
+        'androidx.appcompat:appcompat:1.7.0'
+}
