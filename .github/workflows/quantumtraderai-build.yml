@@ -1,0 +1,29 @@
+name: QuantumTrader Release Candidate
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Build Release Bundle
+        run: ./gradlew bundleRelease
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quantumtrader-release
+          path: app/build/outputs/**/*.aab
