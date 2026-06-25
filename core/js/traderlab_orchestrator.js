@@ -1,11 +1,19 @@
-// TraderLab Orchestrator — System Coordinator Layer
+ // TraderLab Orchestrator — System Coordinator Layer
 
 import { getBestStrategy } from "./strategy_memory.js";
 import { getStrategyMemory } from "./strategy_memory.js";
 import { getMemorySnapshot } from "../cpilot/cpilot_memory.js";
+import eventHub from "../brain/meta_brain/engines/event_hub.js";
 
 let activeSession = null;
 let sessions = [];
+
+eventHub.registerModule(
+  "traderlab_orchestrator",
+  {
+    engine: "traderlab_orchestrator"
+  }
+);
 
 /**
  * CREATE SESSION
@@ -71,6 +79,13 @@ export function startSession(sessionId, { getMarketData }) {
       marketData,
       timestamp: Date.now()
     };
+
+    eventHub.emit({
+      type: "traderlab:cycle",
+      source: "traderlab_orchestrator",
+      priority: "normal",
+      payload: orchestration
+    });
 
     /**
      * EVENT HOOK (future Meta-Brain entry point)
