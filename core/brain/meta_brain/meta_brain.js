@@ -5,6 +5,7 @@
 
 import { SyncEngine } from "./engines/sync_engine.js";
 import { HealthEngine } from "./engines/health_engine.js";
+import eventHub from "./engines/event_hub.js";
 
 // ======================================================
 // INTERNAL MARKET ACCESS GATEWAY (SELF-CONTAINED)
@@ -299,6 +300,9 @@ export class MetaBrain {
 
   constructor() {
 
+    this.lastCPilotSignal = null;
+    this.lastIntelligence = null;
+
     this.learning = {
       trendBias: 0,
       riskBias: 0,
@@ -326,16 +330,61 @@ export class MetaBrain {
     this.sync = new SyncEngine();
     this.health = new HealthEngine();
 
-    // FULL SELF-CONTAINED INTEGRATION MAPPER
     this.integrationMapper = new IntegrationMapper();
+
+    // Event Hub Registration
+    eventHub.registerModule(
+      "meta_brain",
+      {
+        engine: "meta_brain"
+      }
+    );
+
+    // CPilot Signal Stream
+    eventHub.subscribe(
+      "trade:signal",
+      (event) => {
+        this.lastCPilotSignal =
+          event.payload;
+      }
+    );
+
+    // CPilot Intelligence Stream
+    eventHub.subscribe(
+      "cpilot:intelligence",
+      (event) => {
+
+        const intelligence =
+          event.payload?.intelligence;
+
+        if (!intelligence) return;
+
+        this.lastIntelligence =
+          intelligence;
+      }
+    );
   }
 
   evaluate(signal) {
 
-    const raw = this.decision.evaluate(signal);
+    const raw =
+      this.decision.evaluate(signal);
+
+    // CPilot advisory influence
+    if (
+      this.lastCPilotSignal &&
+      this.lastCPilotSignal.confidence > 0.7
+    ) {
+      raw.score +=
+        this.lastCPilotSignal.suggestion === "ALLOW"
+          ? 0.05
+          : -0.05;
+    }
 
     const confidence =
-      this.calibration.calibrate(Math.abs(raw.score));
+      this.calibration.calibrate(
+        Math.abs(raw.score)
+      );
 
     const decision = {
       action:
@@ -345,28 +394,44 @@ export class MetaBrain {
       confidence,
       strength: raw.score,
 
-      meta: { context: "RANGING" }
+      meta: {
+        context: "RANGING"
+      }
     };
 
     if (this.governor.shouldBlock()) {
-      return { ...decision, execution: null };
+      return {
+        ...decision,
+        execution: null
+      };
     }
 
-    const pipeline = this.integrationMapper.process({
-      signal,
-      decision,
-      order: {
-        urgency: signal.urgency ?? 0.5,
-        risk: signal.riskLevel === "high" ? 0.8 : 0.3,
-        size: signal.size ?? 1
-      }
-    });
+    const pipeline =
+      this.integrationMapper.process({
+        signal,
+        decision,
+        order: {
+          urgency:
+            signal.urgency ?? 0.5,
+
+          risk:
+            signal.riskLevel === "high"
+              ? 0.8
+              : 0.3,
+
+          size:
+            signal.size ?? 1
+        }
+      });
 
     const execution =
       pipeline.success
         ? pipeline.execution
         : this.execution.execute(
-            this.intent.build(signal, decision)
+            this.intent.build(
+              signal,
+              decision
+            )
           );
 
     return {
@@ -375,4 +440,4 @@ export class MetaBrain {
       pipeline
     };
   }
-         }
+     }
