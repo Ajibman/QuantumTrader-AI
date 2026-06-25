@@ -1,0 +1,53 @@
+// QuantumTrader-AI
+// android/build/copy_web_assets.gradle
+//
+// Copies the web application into Android assets
+// before APK/AAB generation.
+
+def webRoot = file("${rootDir}/../")
+
+def androidAssets =
+file("${rootDir}/app/src/main/assets")
+
+tasks.register("copyWebAssets", Copy) {
+
+doFirst {
+
+    androidAssets.mkdirs()
+
+    println(
+        "QuantumTrader-AI: Packaging web assets..."
+    )
+}
+
+from("${webRoot}/index.html")
+
+into(androidAssets)
+
+// Core Runtime
+from("${webRoot}/core") {
+    into("core")
+}
+
+// Mobile Runtime
+from("${webRoot}/mobile") {
+    into("mobile")
+}
+
+// Images, icons, static resources
+from("${webRoot}/assets") {
+    into("assets")
+}
+
+includeEmptyDirs = true
+
+duplicatesStrategy =
+    DuplicatesStrategy.INCLUDE
+
+}
+
+tasks.register("cleanWebAssets", Delete) {
+
+delete androidAssets
+
+}
