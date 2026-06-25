@@ -5,6 +5,7 @@ import { simulationFeed } from "../simulation/simulation_feed.js";
 import { getBestStrategy } from "../strategy_memory.js";
 import { getContextStrength } from "./cpilot_memory.js";
 import { getMetaInfluence, recordMetaStrategyOutcome } from "../traderlab/meta_brain.js";
+import eventHub from "../../brain/meta_brain/engines/event_hub.js";
 
 /**
  * CPilot Engine
@@ -26,7 +27,8 @@ const CPilotEngine = {
     running: false,
     timing: { unit: "seconds", value: 15 },
     lastTick: null,
-    subscribers: []
+    subscribers: [],
+    eventHubRegistered: false
   },
 
   /* =============================
@@ -41,6 +43,19 @@ const CPilotEngine = {
       this.state.timing = timing;
     }
 
+    // Register CPilot with Event Hub once
+    if (!this.state.eventHubRegistered) {
+
+      eventHub.registerModule(
+        "cpilot",
+        {
+          engine: "cpilot_engine"
+        }
+      );
+
+      this.state.eventHubRegistered = true;
+    }
+
     simulationFeed.start(
       this.state.timing,
       (tick) => {
@@ -51,6 +66,15 @@ const CPilotEngine = {
           this.analyzeTick(tick);
 
         this.dispatchTick(enriched);
+
+        // Publish intelligence stream
+        eventHub.emit({
+          type: "cpilot:intelligence",
+          source: "cpilot",
+          target: "meta_brain",
+          priority: "normal",
+          payload: enriched
+        });
 
         // =============================
         // META-BRAIN FEEDBACK LOOP
@@ -132,6 +156,24 @@ const CPilotEngine = {
     const confidence = hold
       ? 0.4 / influence.cpilotSensitivity
       : 0.7 * (2 - influence.cpilotSensitivity);
+
+    // Publish signal to Meta-Brain
+    eventHub.emit({
+      type: "trade:signal",
+      source: "cpilot",
+      target: "meta_brain",
+      priority: hold ? "normal" : "high",
+      payload: {
+        suggestion,
+        confidence,
+        context: context.context,
+        contextWeight: context.weight,
+        strategy:
+          strategy?.bestStrategy || null,
+        combinedSignal,
+        volatility: marketData.volatility
+      }
+    });
 
     return {
 
