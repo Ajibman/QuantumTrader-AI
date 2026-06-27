@@ -411,9 +411,7 @@ this.incrementRequestCounter(providerName);
 
 try {
 
-    const result = await provider.getPrice(symbol);
- 
-            try {
+    const result = await provider.getPrice(symbol);           
            
                 const latency = performance.now() - started;
 
@@ -509,6 +507,9 @@ try {
         if (typeof this.eventHub.emit === "function") {
 
             this.eventHub.emit("market:status", status);
+        }
+
+    }
 
         // =====================================================
     // SECTION 10 — REQUEST STATISTICS
