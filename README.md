@@ -1,4 +1,4 @@
-🌹🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️
+🌻🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️
 QuantumTrader-AI 
 Translate this README:
 
