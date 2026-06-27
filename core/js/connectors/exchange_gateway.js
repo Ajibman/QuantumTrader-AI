@@ -349,11 +349,14 @@ export class ExchangeGateway {
         this.executionStats.live++;
 
         return await this.executeLiveOrder(order);
+        submitOrder()
 
-        // ============================================================
+     }
+
+    // ============================================================
     // SECTION 7 — PAPER EXECUTION
     // ============================================================
-
+             
     async executePaperOrder(order) {
 
         const orderId = this.generateOrderId();
