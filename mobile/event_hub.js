@@ -230,42 +230,58 @@ hasEvent(eventName) {
 
         return this;
     }
- 
-    // ============================================================
-    // SECTION 7 — DIAGNOSTICS
-    // ============================================================
+  
+// ============================================================
+// SECTION 7 — DIAGNOSTICS
+// ============================================================
 
-    getStatistics() {
-        return { ...this.statistics };
+getEventHubStatus() {
+
+    return {
+
+        uptime: Date.now() - this.startedAt,
+
+        totalListeners: this.listeners.size,
+
+        registeredEvents: this.statistics.registeredEvents,
+
+        emittedEvents: this.statistics.emitted,
+
+        deliveredEvents: this.statistics.delivered,
+
+        historySize: this.eventHistory.length,
+
+        maxHistory: this.maxHistory,
+
+        debug: this.debug
+
+    };
+
+}
+
+getEventHistory(limit = 50) {
+
+    return this.eventHistory.slice(-limit);
+
+}
+
+getListenersSnapshot() {
+
+    const snapshot = {};
+
+    for (const [event, listeners] of this.listeners) {
+
+        snapshot[event] = listeners.length;
+
     }
 
-    getHistory() {
-        return [...this.eventHistory];
-    }
+    return snapshot;
 
-    getStatus() {
-
-        return {
-
-            uptime: Date.now() - this.startedAt,
-
-            registeredEvents: this.statistics.registeredEvents,
-
-            emitted: this.statistics.emitted,
-
-            delivered: this.statistics.delivered,
-
-            historySize: this.eventHistory.length,
-
-            maxHistory: this.maxHistory,
-
-            debug: this.debug
-        };
-    }
-
-    // ============================================================
-    // SECTION 8 — UTILITIES
-    // ============================================================
+}
+        
+// ============================================================
+// SECTION 8 — UTILITIES
+// ============================================================
 
     log(...args) {
 
@@ -274,9 +290,9 @@ hasEvent(eventName) {
         console.log("[EventHub]", ...args);
     }
 
-    // ============================================================
-    // SECTION 9 — LIFECYCLE
-    // ============================================================
+// ============================================================
+// SECTION 9 — LIFECYCLE
+// ============================================================
 
     shutdown() {
 
