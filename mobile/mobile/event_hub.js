@@ -253,30 +253,33 @@ export class EventHub {
     } 
 
 // ============================================================
-    // SECTION 5 — ONE-TIME EVENTS
-    // ============================================================
+// SECTION 5 — ONE-TIME EVENTS
+// ============================================================
 
-    once(eventName, listener) {
+once(eventName, listener) {
 
-        if (typeof listener !== "function") {
+    if (typeof listener !== "function") {
 
-            throw new Error(
-                "Listener must be a function."
-            );
-
-        }
-
-        const wrapper = (payload) => {
-
-            this.off(eventName, wrapper);
-
-            listener(payload);
-
-        };
-
-        return this.on(
-            eventName,
-            wrapper
+        throw new Error(
+            "Listener must be a function."
         );
 
     }
+
+    const wrapper = (payload) => {
+
+        try {
+
+            listener(payload);
+
+        } finally {
+
+            this.off(eventName, wrapper);
+
+        }
+
+    };
+
+    return this.on(eventName, wrapper);
+
+}
