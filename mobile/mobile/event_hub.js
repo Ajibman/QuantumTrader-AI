@@ -288,14 +288,6 @@ once(eventName, listener) {
     // SECTION 6 — EVENT REMOVAL
     // ============================================================
 
-    off(eventName, listener) {
-
-        if (!this.listeners.has(eventName)) {
-
-            return this;
-
-        }
-
         const remaining =
             this.listeners
                 .get(eventName)
