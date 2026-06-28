@@ -192,69 +192,71 @@ export class EventHub {
 
 }
 
-    // ============================================================
-    // SECTION 4 — EVENT PUBLISHING
-    // ============================================================
+// ============================================================
+// SECTION 4 — EVENT PUBLISHING
+// ============================================================
 
-    emit(eventName, payload = {}) {
+emit(eventName, payload = {}) {
 
-        const listeners =
-            this.listeners.get(eventName);
+    const listeners =
+        this.listeners.get(eventName);
 
-        this.statistics.emitted++;
+    this.statistics.emitted++;
 
-        const event = {
+    const event = {
 
-            name: eventName,
+        name: eventName,
+        payload,
+        timestamp: Date.now()
 
-            payload,
+    };
 
-            timestamp: Date.now()
+    this.eventHistory.push(event);
 
-        };
+    if (
+        this.eventHistory.length >
+        this.maxHistory
+    ) {
 
-        this.eventHistory.push(event);
+        this.eventHistory.shift();
 
-        if (
-            this.eventHistory.length >
-            this.maxHistory
-        ) {
+    }
 
-            this.eventHistory.shift();
+    if (!listeners) {
 
-        }
+        return false;
 
-        if (!listeners) {
+    }
 
-            return false;
+    for (const listener of listeners) {
 
-        }
+        try {
 
-        for (const listener of listeners) {
-
-            try {
-
-                listener(payload);
-
-                this.statistics.delivered++;
-
-            } catch (error) {
-
-                this.log(
-                    "Listener error:",
-                    eventName,
-                    error
-                );
-
+            if (typeof listener !== "function") {
+                continue;
             }
 
+    
+            listener(event);
+
+            this.statistics.delivered++;
+
+        } catch (error) {
+
+            this.log(
+                "Listener error:",
+                eventName,
+                error
+            );
+
         }
 
-        return true;
+    }
 
-    } 
+    return true;
 
 }
+    
 // ============================================================
 // SECTION 5 — ONE-TIME EVENTS
 // ============================================================
