@@ -63,56 +63,49 @@ export class EventHub {
         return this;
     }
 
-    // ============================================================
-    // SECTION 3 — EVENT REGISTRATION
-    // ============================================================
+// ============================================================
+// SECTION 3 — EVENT REGISTRATION
+// ============================================================
 
-    on(eventName, listener) {
-
-        if (typeof listener !== "function") {
-            throw new Error("Listener must be a function.");
-        }
-
-        if (!this.listeners.has(eventName)) {
-            this.listeners.set(eventName, []);
-            this.statistics.registeredEvents++;
-        }
-
-        this.listeners.get(eventName).push(listener);
-        return this;
+on(eventName, listener) {
+    if (typeof listener !== "function") {
+        throw new Error("Listener must be a function.");
     }
 
-    off(eventName, listener) {
-
-        if (!this.listeners.has(eventName)) return this;
-
-        const remaining = this.listeners
-            .get(eventName)
-            .filter(fn => fn !== listener);
-
-        if (remaining.length === 0) {
-            this.listeners.delete(eventName);
-            this.statistics.registeredEvents =
-                Math.max(0, this.statistics.registeredEvents - 1);
-        } else {
-            this.listeners.set(eventName, remaining);
-        }
-
-        return this;
+    if (!this.listeners.has(eventName)) {
+        this.listeners.set(eventName, []);
+        this.statistics.registeredEvents++;
     }
 
-    hasEvent(eventName) {
-        return this.listeners.has(eventName);
+    this.listeners.get(eventName).push(listener);
+    return this;
+}
+
+off(eventName, listener) {
+    if (!this.listeners.has(eventName)) return this;
+
+    const remaining = this.listeners
+        .get(eventName)
+        .filter(fn => fn !== listener);
+
+    if (remaining.length === 0) {
+        this.listeners.delete(eventName);
+        this.statistics.registeredEvents--;
+    } else {
+        this.listeners.set(eventName, remaining);
     }
 
-    listenerCount(eventName) {
-        return this.listeners.get(eventName)?.length ?? 0;
-    }
+    return this;
+}
 
-    getRegisteredEvents() {
-        return [...this.listeners.keys()];
-    }
+listenersFor(eventName) {
+    return this.listeners.get(eventName) ?? [];
+}
 
+hasEvent(eventName) {
+    return this.listeners.has(eventName);
+}
+          
     // ============================================================
     // SECTION 4 — EVENT PUBLISHING
     // ============================================================
