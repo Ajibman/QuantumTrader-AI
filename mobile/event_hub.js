@@ -278,16 +278,74 @@ getListenersSnapshot() {
     return snapshot;
 
 }
-        
-// ============================================================
-// SECTION 8 — UTILITIES
-// ============================================================
+            
+    // ============================================================
+    // SECTION 8 — UTILITIES
+    // ============================================================
 
     log(...args) {
 
         if (!this.debug) return;
 
-        console.log("[EventHub]", ...args);
+        console.log(
+            "[EventHub]",
+            ...args
+        );
+
+    }
+
+    getListenerCount(eventName) {
+
+        if (!eventName) {
+
+            let total = 0;
+
+            for (const listeners of this.listeners.values()) {
+                total += listeners.length;
+            }
+
+            return total;
+        }
+
+        return (this.listeners.get(eventName) ?? []).length;
+
+    }
+
+    getEventNames() {
+
+        return [...this.listeners.keys()];
+
+    }
+
+    flushListeners(eventName) {
+
+        if (eventName) {
+
+            this.listeners.delete(eventName);
+
+            return this;
+        }
+
+        this.listeners.clear();
+
+        return this;
+
+    }
+
+    getStatistics() {
+
+        return {
+
+            ...this.statistics,
+
+            uptime: Date.now() - this.startedAt,
+
+            activeEvents: this.listeners.size,
+
+            totalListeners: this.getListenerCount()
+
+        };
+
     }
 
 // ============================================================
