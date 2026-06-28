@@ -283,3 +283,69 @@ once(eventName, listener) {
     return this.on(eventName, wrapper);
 
 }
+
+    // ============================================================
+    // SECTION 6 — EVENT REMOVAL
+    // ============================================================
+
+    off(eventName, listener) {
+
+        if (!this.listeners.has(eventName)) {
+
+            return this;
+
+        }
+
+        const remaining =
+            this.listeners
+                .get(eventName)
+                .filter(fn => fn !== listener);
+
+        if (remaining.length === 0) {
+
+            this.listeners.delete(eventName);
+
+            this.statistics.registeredEvents = Math.max(
+                0,
+                this.statistics.registeredEvents - 1
+            );
+
+        } else {
+
+            this.listeners.set(
+                eventName,
+                remaining
+            );
+
+        }
+
+        return this;
+
+    }
+
+    removeAllListeners(eventName = null) {
+
+        if (eventName === null) {
+
+            this.listeners.clear();
+
+            this.statistics.registeredEvents = 0;
+
+            return this;
+
+        }
+
+        if (this.listeners.delete(eventName)) {
+
+            this.statistics.registeredEvents = Math.max(
+                0,
+                this.statistics.registeredEvents - 1
+            );
+
+        }
+
+        return this;
+
+    }
+
+    
