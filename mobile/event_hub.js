@@ -105,47 +105,48 @@ listenersFor(eventName) {
 hasEvent(eventName) {
     return this.listeners.has(eventName);
 }
-          
-    // ============================================================
-    // SECTION 4 — EVENT PUBLISHING
-    // ============================================================
+
+// ============================================================
+// SECTION 4 — EVENT PUBLISHING
+// ============================================================
 
     emit(eventName, payload = {}) {
 
+        if (!this.listeners.has(eventName)) {
+            return this;
+        }
+
         const listeners = this.listeners.get(eventName);
-
-        this.statistics.emitted++;
-
-        const event = {
-            name: eventName,
-            payload,
-            timestamp: Date.now()
-        };
-
-        this.eventHistory.push(event);
-
-        if (this.eventHistory.length > this.maxHistory) {
-            this.eventHistory.shift();
-        }
-
-        if (!listeners || listeners.length === 0) {
-            return false;
-        }
 
         for (const listener of listeners) {
 
             try {
 
-                listener(event);
-                this.statistics.delivered++;
+                const result = listener(payload);
+
+                this.statistics.emitted++;
+
+                // Support async listeners
+                if (result instanceof Promise) {
+                    result
+                        .then(() => {
+                            this.statistics.delivered++;
+                        })
+                        .catch((err) => {
+                            this.logError(eventName, err);
+                        });
+                } else {
+                    this.statistics.delivered++;
+                }
 
             } catch (error) {
 
-                this.log("Listener error:", eventName, error);
+                this.logError(eventName, error);
+
             }
         }
 
-        return true;
+        return this;
     }
 
     // ============================================================
