@@ -147,9 +147,9 @@ hasEvent(eventName) {
         }
 
         return this;
-    }
-
-    // ============================================================
+    } 
+ 
+ // ============================================================
     // SECTION 5 — ONE-TIME EVENTS
     // ============================================================
 
@@ -164,12 +164,20 @@ hasEvent(eventName) {
             try {
                 listener(event);
             } finally {
-                this.off(eventName, wrapper);
+                try {
+                    this.off(eventName, wrapper);
+                } catch (e) {
+                    if (this.debug) {
+                        console.warn(
+                            "[EventHub] Failed to remove once listener:",
+                            e
+                        );
+                    }
+                }
             }
         };
 
         return this.on(eventName, wrapper);
-    }
 
     // ============================================================
     // SECTION 6 — EVENT REMOVAL
