@@ -244,4 +244,22 @@ const CPilotEngine = {
 
 };
 
+/**
+ * ==========================================
+ * APPLICATION BOOTSTRAP
+ * ==========================================
+ * Initializes the CPilot engine for the
+ * application startup lifecycle.
+ */
+export async function initializeCPilot() {
+
+  if (CPilotEngine.state.running) {
+    return CPilotEngine;
+  }
+
+  CPilotEngine.startSimulation();
+
+  return CPilotEngine;
+}
+
 export default CPilotEngine;
