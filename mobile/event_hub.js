@@ -351,25 +351,83 @@ getListenersSnapshot() {
 // ============================================================
 // SECTION 9 — LIFECYCLE
 // ============================================================
-
-    shutdown() {
-
-        this.removeAllListeners();
-        this.clearHistory();
-
-        this.log("EventHub shutdown complete.");
-
-        return this;
-    }
-
+        
     destroy() {
 
-        this.shutdown();
+        // Clear all listeners
+        this.listeners.clear();
 
-        this.listeners = new Map();
-        this.eventHistory = [];
-        this.debug = false;
+        // Clear history
+        this.eventHistory.length = 0;
 
-        return null;
+        // Reset statistics
+        this.resetStatistics();
+
+        // Optional debug log
+        if (this.debug) {
+            console.log("[EventHub] Destroyed successfully");
+        }
+
     }
+
+    emit(eventName, payload = {}) {
+
+        if (!this.listeners.has(eventName)) return;
+
+        const listeners = this.listeners.get(eventName);
+
+        const event = {
+            name: eventName,
+            payload,
+            timestamp: Date.now()
+        };
+
+        // Store history (bounded)
+        this.eventHistory.push(event);
+
+        if (this.eventHistory.length > this.maxHistory) {
+            this.eventHistory.shift();
+        }
+
+        this.statistics.emitted++;
+
+        for (const listener of listeners) {
+
+            try {
+
+                listener(payload, event);
+
+                this.statistics.delivered++;
+
+            } catch (error) {
+
+                if (this.debug) {
+                    console.error(
+                        `[EventHub] Error in listener for ${eventName}:`,
+                        error
+                    );
+                }
+
+            }
+
+        }
+
+    }
+
+    once(eventName, listener) {
+
+        const wrapper = (payload, event) => {
+
+            this.off(eventName, wrapper);
+
+            listener(payload, event);
+
+        };
+
+        this.on(eventName, wrapper);
+
+        return this;
+
+    }
+
 }
