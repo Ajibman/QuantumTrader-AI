@@ -483,3 +483,63 @@ once(eventName, listener) {
         return this;
 
     }
+
+    // ============================================================
+    // SECTION 9 — LIFECYCLE
+    // ============================================================
+
+    removeAllListeners(eventName = null) {
+
+        if (eventName === null) {
+
+            this.listeners.clear();
+
+            this.statistics.registeredEvents = 0;
+
+            return this;
+
+        }
+
+        if (this.listeners.has(eventName)) {
+
+            this.listeners.delete(eventName);
+
+            this.statistics.registeredEvents =
+                Math.max(
+                    0,
+                    this.statistics.registeredEvents - 1
+                );
+
+        }
+
+        return this;
+
+    }
+
+    shutdown() {
+
+        this.removeAllListeners();
+
+        this.clearHistory();
+
+        this.log("EventHub shutdown complete.");
+
+        return this;
+
+    }
+
+    destroy() {
+
+        this.shutdown();
+
+        this.listeners = new Map();
+
+        this.eventHistory = [];
+
+        this.debug = false;
+
+        return null;
+
+    }
+
+}
