@@ -348,4 +348,138 @@ once(eventName, listener) {
 
     }
 
-    
+    // ============================================================
+    // SECTION 7 — DIAGNOSTICS
+    // ============================================================
+
+    getStatistics() {
+
+        return {
+
+            ...this.statistics
+
+        };
+
+    }
+
+    getHistory() {
+
+        return [...this.eventHistory];
+
+    }
+
+    getRegisteredEvents() {
+
+        return [...this.listeners.keys()];
+
+    }
+
+    getListenerCount(eventName) {
+
+        if (!this.listeners.has(eventName)) {
+
+            return 0;
+
+        }
+
+        return this.listeners
+            .get(eventName)
+            .length;
+
+    }
+
+    getStatus() {
+
+        return {
+
+            uptime:
+
+                Date.now() - this.startedAt,
+
+            registeredEvents:
+
+                this.statistics.registeredEvents,
+
+            emitted:
+
+                this.statistics.emitted,
+
+            delivered:
+
+                this.statistics.delivered,
+
+            historySize:
+
+                this.eventHistory.length,
+
+            maxHistory:
+
+                this.maxHistory,
+
+            debug:
+
+                this.debug
+
+        };
+
+    }
+
+    // ============================================================
+    // SECTION 8 — UTILITIES
+    // ============================================================
+
+    log(...args) {
+
+        if (!this.debug) {
+
+            return;
+
+        }
+
+        console.log(
+
+            "[EventHub]",
+
+            ...args
+
+        );
+
+    }
+
+    getListenerCount(eventName) {
+
+        return this.listeners.has(eventName)
+
+            ? this.listeners.get(eventName).length
+
+            : 0;
+
+    }
+
+    getRegisteredEvents() {
+
+        return [
+
+            ...this.listeners.keys()
+
+        ];
+
+    }
+
+    clearEvent(eventName) {
+
+        this.listeners.delete(eventName);
+
+        return this;
+
+    }
+
+    clearAllEvents() {
+
+        this.listeners.clear();
+
+        this.statistics.registeredEvents = 0;
+
+        return this;
+
+    }
