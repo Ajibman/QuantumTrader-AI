@@ -149,7 +149,7 @@ hasEvent(eventName) {
         return this;
     } 
  
- // ============================================================
+    // ============================================================
     // SECTION 5 — ONE-TIME EVENTS
     // ============================================================
 
@@ -178,42 +178,59 @@ hasEvent(eventName) {
         };
 
         return this.on(eventName, wrapper);
-
+     
     // ============================================================
     // SECTION 6 — EVENT REMOVAL
     // ============================================================
+   
+    removeAllListeners(eventName) {
 
-    removeAllListeners(eventName = null) {
-
-        if (eventName === null) {
-
+        if (!eventName) {
             this.listeners.clear();
             this.statistics.registeredEvents = 0;
             return this;
         }
 
         if (this.listeners.has(eventName)) {
-
             this.listeners.delete(eventName);
-
-            this.statistics.registeredEvents =
-                Math.max(0, this.statistics.registeredEvents - 1);
+            this.statistics.registeredEvents--;
         }
 
         return this;
     }
 
-    clearEvent(eventName) {
-        this.listeners.delete(eventName);
+    removeListener(eventName, listener) {
+
+        if (!this.listeners.has(eventName)) {
+            return this;
+        }
+
+        const updatedListeners = this.listeners
+            .get(eventName)
+            .filter(fn => fn !== listener);
+
+        if (updatedListeners.length === 0) {
+            this.listeners.delete(eventName);
+            this.statistics.registeredEvents--;
+        } else {
+            this.listeners.set(eventName, updatedListeners);
+        }
+
         return this;
     }
 
-    clearAllEvents() {
+    clearAll() {
+
         this.listeners.clear();
+        this.eventHistory.length = 0;
+
         this.statistics.registeredEvents = 0;
+        this.statistics.emitted = 0;
+        this.statistics.delivered = 0;
+
         return this;
     }
-
+ 
     // ============================================================
     // SECTION 7 — DIAGNOSTICS
     // ============================================================
