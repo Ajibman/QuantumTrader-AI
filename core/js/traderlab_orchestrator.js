@@ -4,6 +4,10 @@ import { getBestStrategy } from "./strategy_memory.js";
 import { getStrategyMemory } from "./strategy_memory.js";
 import { getMemorySnapshot } from "../cpilot/cpilot_memory.js";
 import eventHub from "../brain/meta_brain/engines/event_hub.js";
+import eventHub from "../brain/meta_brain/engines/event_hub.js";
+import {
+  buildSessionConfig
+} from "./meta_brain.js";
 
 let activeSession = null;
 let sessions = [];
@@ -14,6 +18,36 @@ eventHub.registerModule(
     engine: "traderlab_orchestrator"
   }
 );
+
+// ======================================================
+// RUNTIME REGISTRATION
+// ======================================================
+
+eventHub.registerModule("traderlab_orchestrator", {
+  role: "runtime_orchestrator",
+  runtime: "production"
+});
+
+// ======================================================
+// RUNTIME EVENT SUBSCRIPTIONS
+// ======================================================
+
+eventHub.subscribe("trade:signal", () => {
+
+  try {
+
+    buildSessionConfig();
+
+  } catch (error) {
+
+    console.error(
+      "[TraderLab] Meta-Brain refresh failed",
+      error
+    );
+
+  }
+
+});
 
 /**
  * CREATE SESSION
@@ -67,6 +101,23 @@ export function startSession(sessionId, { getMarketData }) {
     const cpilotMemory = getMemorySnapshot();
     const strategyMemory = getStrategyMemory();
 
+   eventHub.emit({
+
+  type: "session:started",
+
+  source: "traderlab_orchestrator",
+
+  target: "runtime",
+
+  priority: "normal",
+
+  payload: {
+    sessionId: session.id,
+    mode: session.mode
+  }
+
+});
+   
     /**
      * ORCHESTRATION DECISION
      */
@@ -115,6 +166,22 @@ export function stopSession(sessionId) {
   session.status = "stopped";
   session.loop = null;
 }
+
+eventHub.emit({
+
+  type: "session:stopped",
+
+  source: "traderlab_orchestrator",
+
+  target: "runtime",
+
+  priority: "normal",
+
+  payload: {
+    sessionId: session.id
+  }
+
+});
 
 /**
  * GET ACTIVE SESSION
