@@ -19,11 +19,16 @@
 import { createSession, startSession } from "./traderlab_orchestrator.js";
 import { getStrategyMemory } from "./strategy_memory.js";
 import { getMemorySnapshot } from "./cpilot_memory.js";
+import eventHub from "../brain/meta_brain/engines/event_hub.js";
 
 const metaState = {
   lastSessionConfig: null,
   sessionHistory: []
 };
+eventHub.registerModule("meta_brain", {
+  role: "session_manager",
+  runtime: "production"
+});
 
 /**
  * 🧠 GENERATE STRATEGY CONFIGURATION
