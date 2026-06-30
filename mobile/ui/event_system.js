@@ -42,9 +42,6 @@ export function off(eventName, callback) {
   listeners.set(eventName, updatedListeners);
 }
 
-/**
- * Emit an event
- */
 export function emit(eventName, payload = {}) {
 
   if (!listeners.has(eventName)) return;
@@ -65,6 +62,35 @@ export function emit(eventName, payload = {}) {
     }
 
   });
+
+  // ======================================================
+  // Forward UI events into the Core Runtime Event Hub
+  // ======================================================
+
+  try {
+
+    eventHub.emit({
+
+      type: eventName,
+
+      source: "mobile_ui",
+
+      target: "runtime",
+
+      priority: "normal",
+
+      payload
+
+    });
+
+  } catch (error) {
+
+    console.warn(
+      "[EventSystem] EventHub bridge failed",
+      error
+    );
+
+  }
 
 }
 
