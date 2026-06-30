@@ -89,17 +89,20 @@ export function startSession(sessionId, { getMarketData }) {
 
   eventHub.emit({
 
-  type: "traderlab:cycle",
+    type: "session:started",
 
-  source: "traderlab_orchestrator",
+    source: "traderlab_orchestrator",
 
-  target: "runtime",
+    target: "runtime",
 
-  priority: "normal",
+    priority: "normal",
 
-  payload: orchestration
+    payload: {
+      sessionId: session.id,
+      mode: session.mode
+    }
 
-});
+  });
 
   const marketDataProvider = getMarketData || (() => ({}));
 
@@ -133,6 +136,8 @@ export function startSession(sessionId, { getMarketData }) {
       type: "traderlab:cycle",
 
       source: "traderlab_orchestrator",
+
+      target: "runtime",
 
       priority: "normal",
 
@@ -202,4 +207,4 @@ export function getActiveSession() {
  */
 export function listSessions() {
   return sessions;
-   }
+}
