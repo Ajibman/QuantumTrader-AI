@@ -11,6 +11,8 @@
  * - Event lifecycle control
  */
 
+import eventHub from "../../core/brain/meta_brain/engines/event_hub.js";
+
 const listeners = new Map();
 
 /**
