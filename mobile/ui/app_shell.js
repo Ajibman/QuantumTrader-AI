@@ -178,7 +178,7 @@ export function shutdownApplication() {
 
   appState.initialized = false;
   appState.starting = false;
-
+  appState.shuttingDown = false;
 }
 
 export default {
