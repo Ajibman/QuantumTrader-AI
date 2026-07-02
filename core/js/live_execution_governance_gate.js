@@ -52,60 +52,139 @@ this.state = {
 
 }
 
+this.eventHub = null;
+
+this.emergencyStop = false;
+
+this.auditHistory = [];
+
+this.maxAuditHistory = 500;
+
+}
+
+ // =====================================================
+// EVENT HUB
+// =====================================================
+
+attachEventHub(eventHub) {
+
+    this.eventHub = eventHub;
+
+    return this;
+
+}
+
+ // =====================================================
+// EMERGENCY CONTROL
+// =====================================================
+
+enableEmergencyStop() {
+
+    this.emergencyStop = true;
+
+}
+
+disableEmergencyStop() {
+
+    this.emergencyStop = false;
+
+}
+
+isEmergencyStopped() {
+
+    return this.emergencyStop;
+
+}
+ 
 // =====================================================
 // MAIN GOVERNANCE CHECK
 // =====================================================
 
 evaluate({
 
-strategy,
-simulationResult,
-portfolio,
-signal,
-risk
+    strategy,
+    simulationResult,
+    portfolio,
+    signal,
+    risk
 
 }) {
 
-const violations = [];
+    if (this.emergencyStop) {
 
-// -------------------------------------------------
-// STRATEGY VALIDATION
-// -------------------------------------------------
+        return {
 
-if (
-  !simulationResult?.approved ||
-  simulationResult?.score < this.config.minStrategyScore
-) {
-  violations.push("STRATEGY_NOT_VALIDATED");
-}
+            approved: false,
 
-// -------------------------------------------------
-// MARKET SAFETY CHECK
-// -------------------------------------------------
+            violations: ["EMERGENCY_STOP"],
 
-if ((signal.volatility ?? 0) > this.config.volatilityCutoff) {
-  violations.push("EXTREME_VOLATILITY");
-}
+            mode: "LOCKDOWN",
 
-// -------------------------------------------------
-// PORTFOLIO RISK CHECK
-// -------------------------------------------------
+            confidenceGate: 0
 
-if ((portfolio?.exposure ?? 0) > this.config.maxRiskExposure) {
-  violations.push("EXCESS_EXPOSURE");
-}
+        };
 
-if ((portfolio?.dailyLoss ?? 0) > this.config.maxDailyLoss) {
-  violations.push("DAILY_LOSS_LIMIT");
-}
+    }
 
-// -------------------------------------------------
-// RISK ENGINE CHECK
-// -------------------------------------------------
+    const violations = [];
 
-if (risk && !risk.approved) {
-  violations.push("RISK_ENGINE_BLOCK");
-}
+    // -------------------------------------------------
+    // STRATEGY VALIDATION
+    // -------------------------------------------------
+
+    if (
+        !simulationResult?.approved ||
+        simulationResult?.score < this.config.minStrategyScore
+    ) {
+
+        violations.push("STRATEGY_NOT_VALIDATED");
+
+    }
+
+    // -------------------------------------------------
+    // MARKET SAFETY CHECK
+    // -------------------------------------------------
+
+    if (
+        (signal?.volatility ?? 0) >
+        this.config.volatilityCutoff
+    ) {
+
+        violations.push("EXTREME_VOLATILITY");
+
+    }
+
+    // -------------------------------------------------
+    // PORTFOLIO RISK CHECK
+    // -------------------------------------------------
+
+    if (
+        (portfolio?.exposure ?? 0) >
+        this.config.maxRiskExposure
+    ) {
+
+        violations.push("EXCESS_EXPOSURE");
+
+    }
+
+    if (
+        (portfolio?.dailyLoss ?? 0) >
+        this.config.maxDailyLoss
+    ) {
+
+        violations.push("DAILY_LOSS_LIMIT");
+
+    }
+
+    // -------------------------------------------------
+    // RISK ENGINE CHECK
+    // -------------------------------------------------
+
+    if (risk && !risk.approved) {
+
+        violations.push("RISK_ENGINE_BLOCK");
+
+    }
 
 // -------------------------------------------------
 // FINAL DECISION
@@ -114,26 +193,62 @@ if (risk && !risk.approved) {
 const approved = violations.length === 0;
 
 if (approved) {
-  this.state.approvedTrades++;
+
+    this.state.approvedTrades++;
+
 } else {
-  this.state.blockedTrades++;
+
+    this.state.blockedTrades++;
+
+}
+
+const audit = {
+
+    timestamp: Date.now(),
+
+    approved,
+
+    violations: [...violations],
+
+    mode: this.getMode(),
+
+    confidenceGate:
+        simulationResult?.score ?? 0
+
+};
+
+this.auditHistory.push(audit);
+
+if (this.auditHistory.length > this.maxAuditHistory) {
+
+    this.auditHistory.shift();
+
+}
+
+if (this.eventHub?.emit) {
+
+    this.eventHub.emit(
+        "governance:evaluated",
+        audit
+    );
+
 }
 
 return {
 
-  approved,
+    approved,
 
-  violations,
+    violations,
 
-  mode:
-    this.getMode(),
+    mode: this.getMode(),
 
-  confidenceGate:
-    simulationResult?.score ?? 0
+    confidenceGate:
+        simulationResult?.score ?? 0
+
 };
 
-}
-
+} 
+ 
 // =====================================================
 // REAL-TIME UPDATE TRACKING
 // =====================================================
@@ -212,4 +327,5 @@ return {
 };
 
 }
-         }
+}
+ 
