@@ -1,268 +1,470 @@
-/**
-
-* =====================================================
-* QuantumTrader-AI
-* STAGE 30 — FULL SYSTEM ORCHESTRATION LAYER
-* =====================================================
-* 
-* Purpose:
-* Unify ALL system layers into a single autonomous loop.
-* 
-* This is the “brain of the brain”.
-* 
-* It coordinates:
-* - MetaBrain (decision intelligence)
-* - Portfolio Intelligence
-* - Capital Allocation Engine
-* - Risk Governor
-* - Multi-Asset Strategy Coordinator
-* - Global Logistics Intelligence
-* - Cross-Market Correlation Engine
-* - Execution Intelligence Optimizer
-* 
-* =====================================================
-  */
+ /**
+ * ====================================================
+ * QuantumTrader-AI
+ * STAGE 30 — FULL SYSTEM ORCHESTRATION LAYER
+ * Version: 2.0 Production
+ * =====================================================
+ *
+ * Purpose:
+ * Unify ALL major intelligence and execution layers into
+ * a single autonomous orchestration loop.
+ *
+ * This is the "brain of the brain".
+ *
+ * Coordinates:
+ * • MetaBrain
+ * • Portfolio Intelligence
+ * • Capital Allocation Engine
+ * • Risk Governor
+ * • Strategy Coordinator
+ * • Logistics Intelligence
+ * • Correlation Engine
+ * • Execution Optimizer
+ * • Market Connectivity Layer
+ * • Exchange Gateway
+ * • Live Execution Governance Gate
+ * • Event Hub
+ *
+ * =====================================================
+ */
 
 export class MetaSystemOrchestrator {
 
-constructor({
-metaBrain,
-portfolioEngine,
-capitalEngine,
-riskGovernor,
-strategyCoordinator,
-logisticsEngine,
-correlationEngine,
-executionOptimizer
-}) {
+    // =====================================================
+    // SECTION 1 — CONSTRUCTOR
+    // =====================================================
 
-this.metaBrain = metaBrain;
-this.portfolioEngine = portfolioEngine;
-this.capitalEngine = capitalEngine;
-this.riskGovernor = riskGovernor;
-this.strategyCoordinator = strategyCoordinator;
-this.logisticsEngine = logisticsEngine;
-this.correlationEngine = correlationEngine;
-this.executionOptimizer = executionOptimizer;
+    constructor({
 
-this.state = {
-  cycle: 0,
-  lastSignal: null,
-  lastDecision: null,
-  systemMode: "ACTIVE"
+        metaBrain,
+
+        portfolioEngine,
+
+        capitalEngine,
+
+        riskGovernor,
+
+        strategyCoordinator,
+
+        logisticsEngine,
+
+        correlationEngine,
+
+        executionOptimizer,
+
+        eventHub = null,
+
+        marketConnectivity = null,
+
+        exchangeGateway = null,
+
+        governanceGate = null,
+
+        mode = "PAPER",
+
+        debug = false
+
+    } = {}) {
+
+        this.metaBrain = metaBrain;
+
+        this.portfolioEngine = portfolioEngine;
+
+        this.capitalEngine = capitalEngine;
+
+        this.riskGovernor = riskGovernor;
+
+        this.strategyCoordinator = strategyCoordinator;
+
+        this.logisticsEngine = logisticsEngine;
+
+        this.correlationEngine = correlationEngine;
+
+        this.executionOptimizer = executionOptimizer;
+
+        this.eventHub = eventHub;
+
+        this.marketConnectivity = marketConnectivity;
+
+        this.exchangeGateway = exchangeGateway;
+
+        this.governanceGate = governanceGate;
+
+        this.mode = mode;
+
+        this.debug = debug;
+
+        this.startedAt = Date.now();
+
+     this.metrics = {
+
+    completedCycles: 0,
+
+    blockedCycles: 0,
+
+    successfulCycles: 0
+
 };
 
-}
+        this.state = {
 
-// =====================================================
-// MAIN ORCHESTRATION LOOP
-// =====================================================
+            cycle: 0,
 
-run(signal, portfolio = {}) {
+            lastSignal: null,
 
-this.state.cycle++;
+            lastDecision: null,
 
-// ---------------------------------------------
-// 1. META INTELLIGENCE DECISION
-// ---------------------------------------------
+            systemMode: "ACTIVE"
 
-const decision =
-  this.metaBrain.evaluate(signal);
+        };
 
-this.state.lastDecision = decision;
+    }
 
-// ---------------------------------------------
-// 2. PORTFOLIO ANALYSIS
-// ---------------------------------------------
+    // =====================================================
+    // SECTION 2 — MAIN ORCHESTRATION LOOP
+    // =====================================================
 
-const portfolioState =
-  this.portfolioEngine?.analyze?.(portfolio) ?? {
-    exposure: 0,
-    health: 100
-  };
+    async run(signal, portfolio = {}) {
 
-// ---------------------------------------------
-// 3. CAPITAL ALLOCATION
-// ---------------------------------------------
+        this.state.cycle++;
 
-const allocation =
-  this.capitalEngine.allocate({
+        // ---------------------------------------------
+        // ORCHESTRATION CYCLE START
+        // ---------------------------------------------
 
-    capital:
-      portfolio.cash ?? 0,
+        if (this.eventHub?.emit) {
 
-    confidence:
-      decision.confidence,
+            this.eventHub.emit(
+                "orchestrator:cycle:start",
+                {
+                    cycle: this.state.cycle,
+                    mode: this.mode,
+                    timestamp: Date.now()
+                }
+            );
 
-    riskLevel:
-      signal.riskLevel,
+        }
 
-    portfolio,
-    existingExposure:
-      portfolioState.exposure
-  });
+        // ---------------------------------------------
+        // MARKET CONNECTIVITY
+        // ---------------------------------------------
 
-// ---------------------------------------------
-// 4. RISK GOVERNANCE CHECK
-// ---------------------------------------------
+        const connectivity =
+            this.marketConnectivity?.getStatus?.() ?? null;
 
-const risk =
-  this.riskGovernor.evaluate({
+        // ---------------------------------------------
+        // 1. META INTELLIGENCE DECISION
+        // ---------------------------------------------
 
-    portfolio,
-    allocation: {
-      equity: allocation.allocationPercent
-    },
-    drawdown:
-      portfolioState.drawdown ?? 0
-  });
+        const decision =
+            this.metaBrain?.evaluate?(signal);
 
-if (!risk.approved) {
+        this.state.lastDecision = decision;
 
-  return {
+        // ---------------------------------------------
+        // 2. PORTFOLIO ANALYSIS
+        // ---------------------------------------------
 
-    status: "BLOCKED_BY_RISK",
+        const portfolioState =
+            this.portfolioEngine?.analyze?.(portfolio) ?? {
 
-    risk,
+                exposure: 0,
 
-    decision,
+                health: 100
 
-    allocation,
+            };
 
-    execution: null
-  };
-}
+        // ---------------------------------------------
+        // 3. CAPITAL ALLOCATION
+        // ---------------------------------------------
 
-// ---------------------------------------------
-// 5. STRATEGY ROUTING
-// ---------------------------------------------
+        const allocation =
+            this.capitalEngine.allocate({
 
-const strategy =
-  this.strategyCoordinator.route({
+                capital:
+                    portfolio.cash ?? 0,
 
-    signal,
-    decision,
-    portfolio
-  });
+                confidence:
+                    decision.confidence,
 
-// ---------------------------------------------
-// 6. GLOBAL LOGISTICS BIAS
-// ---------------------------------------------
+                riskLevel:
+                    signal.riskLevel,
 
-const logistics =
-  this.logisticsEngine?.snapshot?.() ?? null;
+                portfolio,
 
-// ---------------------------------------------
-// 7. CORRELATION SHOCK CHECK
-// ---------------------------------------------
+                existingExposure:
+                    portfolioState.exposure
 
-const correlation =
-  this.correlationEngine?.snapshot?.() ?? null;
+            });
 
-// ---------------------------------------------
-// 8. EXECUTION OPTIMIZATION
-// ---------------------------------------------
+        // ---------------------------------------------
+        // 4. RISK GOVERNANCE CHECK
+        // ---------------------------------------------
 
-const execution =
-  this.executionOptimizer.optimize({
+        const risk =
+            this.riskGovernor.evaluate({
 
-    signal,
-    decision,
-    allocation,
-    market: signal.marketData ?? {},
-    routing: strategy
-  });
+                portfolio,
 
-// ---------------------------------------------
-// 9. FINAL EXECUTION GATE
-// ---------------------------------------------
+                allocation: {
 
-const approved =
-  execution.approved &&
-  risk.approved &&
-  strategy.assetRoute !== null;
+                    equity:
+                        allocation.allocationPercent
 
-this.state.lastSignal = signal;
+                },
 
-return {
+                drawdown:
+                    portfolioState.drawdown ?? 0
 
-  cycle: this.state.cycle,
+            });
 
-  decision,
+        if (!risk.approved) {
 
-  allocation,
+            this.metrics.blockedCycles++;
 
-  risk,
+            return {
 
-  strategy,
+                status: "BLOCKED_BY_RISK",
 
-  logistics,
+                risk,
 
-  correlation,
+                decision,
 
-  execution,
+                allocation,
 
-  approved,
+                execution: null
 
-  systemMode: this.state.systemMode,
+            };
 
-  summary: {
+        }
 
-    action:
-      decision.action,
+        // ---------------------------------------------
+        // 5. STRATEGY ROUTING
+        // ---------------------------------------------
 
-    assetRoute:
-      strategy.assetRoute,
+        const strategy =
+            this.strategyCoordinator.route({
 
-    executionMode:
-      execution.mode,
+                signal,
 
-    confidence:
-      decision.confidence
-  }
-};
+                decision,
 
-}
+                portfolio
 
-// =====================================================
-// SYSTEM HEALTH MONITOR
-// =====================================================
+            });
 
-healthCheck() {
+        // ---------------------------------------------
+        // 6. GLOBAL LOGISTICS
+        // ---------------------------------------------
 
-return {
+        const logistics =
+            this.logisticsEngine?.snapshot?.() ?? null;
 
-  systemMode:
-    this.state.systemMode,
+        // ---------------------------------------------
+        // 7. CORRELATION ANALYSIS
+        // ---------------------------------------------
 
-  cycle:
-    this.state.cycle,
+        const correlation =
+            this.correlationEngine?.snapshot?.() ?? null;
 
-  lastSignal:
-    this.state.lastSignal,
+        // ---------------------------------------------
+        // 8. EXECUTION OPTIMIZATION
+        // ---------------------------------------------
 
-  lastDecision:
-    this.state.lastDecision
-};
+        const execution =
+            this.executionOptimizer.optimize({
 
-}
+                signal,
 
-// =====================================================
-// RESET CONTROL
-// =====================================================
+                decision,
 
-reset() {
+                allocation,
 
-this.state = {
+                market:
+                    signal.marketData ?? {},
 
-  cycle: 0,
+                routing:
+                    strategy
 
-  lastSignal: null,
+            });
 
-  lastDecision: null,
+         // ---------------------------------------------
+        // 9. LIVE EXECUTION GOVERNANCE
+        // ---------------------------------------------
 
-  systemMode: "ACTIVE"
-};
+        const governance =
+            this.governanceGate?.evaluate?.({
 
-}
-}
+                strategy,
+
+                simulationResult: decision,
+
+                portfolio,
+
+                signal,
+
+                risk
+
+            }) ?? {
+
+                approved: true,
+
+                violations: []
+
+            };
+
+        if (!governance.approved) {
+
+            this.metrics.blockedCycles++;
+
+            return {
+
+                status: "BLOCKED_BY_GOVERNANCE",
+
+                governance,
+
+                decision,
+
+                allocation,
+
+                execution: null
+
+            };
+
+        }
+
+        // ---------------------------------------------
+        // 10. EXCHANGE EXECUTION
+        // ---------------------------------------------
+
+        let executionResult = null;
+
+        if (
+
+            this.mode === "LIVE" &&
+
+            this.exchangeGateway
+
+        ) {
+
+            executionResult =
+                await this.exchangeGateway.submitOrder({
+
+                    symbol:
+                        strategy.symbol,
+
+                    side:
+                        decision.action,
+
+                    quantity:
+                        
+                    allocation.quantity ??
+                    allocation.positionSize ??
+                    allocation.units ??
+                    0,
+
+                    price:
+                        signal.price ??
+                        signal.marketData?.price
+
+                });
+
+        }
+
+        // ---------------------------------------------
+        // 11. FINAL APPROVAL
+        // ---------------------------------------------
+
+        const approved =
+
+            execution.approved &&
+
+            risk.approved &&
+
+            governance.approved &&
+
+            strategy.assetRoute !== null;
+
+        this.state.lastSignal = signal;
+
+        this.metrics.completedCycles++;
+
+        if (approved) {
+
+            this.metrics.successfulCycles++;
+
+        }
+
+        // ---------------------------------------------
+        // ORCHESTRATION COMPLETE EVENT
+        // ---------------------------------------------
+
+        if (this.eventHub?.emit) {
+
+            this.eventHub.emit(
+
+                "orchestrator:cycle:complete",
+
+                {
+
+                    cycle: this.state.cycle,
+
+                    approved,
+
+                    mode: this.mode,
+
+                    timestamp: Date.now()
+
+                }
+
+            );
+
+        }
+
+        return {
+
+            cycle: this.state.cycle,
+
+            decision,
+
+            allocation,
+
+            risk,
+
+            governance,
+
+            strategy,
+
+            logistics,
+
+            correlation,
+
+            connectivity,
+
+            execution,
+
+            executionResult,
+
+            approved,
+
+            systemMode: this.state.systemMode,
+
+            summary: {
+
+                action:
+                    decision.action,
+
+                assetRoute:
+                    strategy.assetRoute,
+
+                executionMode:
+                    execution.mode,
+
+                confidence:
+                    decision.confidence
+
+            }
+
+        };
+
+    }
