@@ -292,3 +292,5 @@ export class MetaApiBridge {
     this.startedAt = null;
 
 }
+
+}
