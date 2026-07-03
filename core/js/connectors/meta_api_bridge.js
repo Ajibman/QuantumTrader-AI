@@ -128,12 +128,17 @@ export class MetaApiBridge {
 
     isReady() {
 
-        return (
-            this.marketLayer !== null &&
-            this.exchangeGateway !== null
-        );
+    return (
 
-    }
+        this.marketLayer &&
+        typeof this.marketLayer.getMarketData === "function" &&
+
+        this.exchangeGateway &&
+        typeof this.exchangeGateway.submitOrder === "function"
+
+    );
+
+}
 
     // ============================================================
     // SECTION 4 — MARKET DATA BRIDGE
@@ -276,12 +281,14 @@ export class MetaApiBridge {
 
     destroy() {
 
-        this.marketLayer = null;
+    this.marketLayer = null;
 
-        this.exchangeGateway = null;
+    this.exchangeGateway = null;
 
-        this.eventHub = null;
+    this.eventHub = null;
 
-    }
+    this.debug = false;
+
+    this.startedAt = null;
 
 }
