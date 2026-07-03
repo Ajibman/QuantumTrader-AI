@@ -1,194 +1,301 @@
-// ======================================================
-// QuantumTrader-AI
-// Mobile Application Shell
-// Section 1 — Imports & Application State
-// ======================================================
+ // ============================================================
+// QuantumTrader-AI™ (Qonexai™)
+// STAGE 32 — MOBILE APPLICATION SHELL
+// Production Version 2.0
+// ============================================================
+//
+// PURPOSE
+// -------
+// Runtime lifecycle manager.
+//
+// Responsibilities:
+// • Initialize application runtime
+// • Coordinate bootstrap lifecycle
+// • Register App Shell with Event Hub
+// • Verify runtime health
+// • Publish runtime events
+// • Expose application status
+//
+// NOTE
+// ----
+// This file DOES NOT:
+//
+// • create trading engines
+// • execute trading logic
+// • instantiate MetaSystemOrchestrator
+//
+// Those responsibilities belong exclusively to:
+//
+// core/js/bootstrap.js
+//
+// ============================================================
 
 import eventHub from "../../core/brain/meta_brain/engines/event_hub.js";
-import { initializeCPilot } from "../../core/js/cpilot/cpilot_engine.js";
-import { buildSessionConfig } from "../../core/js/meta_brain.js";
 
-/**
- * ======================================================
+import orchestrator, {
+    initializeSystem,
+    shutdownSystem,
+    getSystemStatus
+} from "../../core/js/bootstrap.js";
+
+/* ============================================================
+ * APPLICATION CONSTANTS
+ * ============================================================
+ */
+
+const APP_NAME = "QuantumTrader-AI";
+
+const APP_VERSION = "2.0.0";
+
+/* ============================================================
  * APPLICATION STATE
- * ======================================================
+ * ============================================================
  */
 
 const appState = {
 
-  initialized: false,
+    initialized: false,
 
-  starting: false,
+    starting: false,
 
-  shuttingDown: false,
+    shuttingDown: false,
 
-  startedAt: null,
+    startedAt: null,
 
-  version: "1.0.0"
+    version: APP_VERSION,
+
+    runtime: "BOOTING"
 
 };
 
-// ======================================================
-// APPLICATION BOOTSTRAP
-// ======================================================
+/* ============================================================
+ * INITIALIZE APPLICATION
+ * ============================================================
+ */
 
 export async function initializeApplication() {
 
-  if (appState.initialized || appState.starting) {
+    if (appState.initialized) {
 
-    return {
-      success: true,
-      state: appState
-    };
+        return {
 
-  }
+            success: true,
 
-  appState.starting = true;
+            state: getApplicationState()
 
-  try {
+        };
 
-    // ---------------------------------------------
-    // Register App Shell with Runtime
-    // ---------------------------------------------
+    }
 
-    eventHub.registerModule(
-      "app_shell",
-      {
-        role: "application_shell",
-        runtime: "production"
-      }
-    );
+    if (appState.starting) {
 
-    // ---------------------------------------------
-    // Initialize Meta-Brain Session
-    // ---------------------------------------------
+        return {
 
-    buildSessionConfig();
+            success: false,
 
-    // ---------------------------------------------
-    // Start CPilot Runtime
-    // ---------------------------------------------
+            message: "Application is already starting."
 
-    await initializeCPilot();
+        };
 
-    // ---------------------------------------------
-    // Runtime Ready
-    // ---------------------------------------------
+    }
 
-    appState.initialized = true;
-    appState.startedAt = Date.now();
+    appState.starting = true;
 
-    eventHub.emit({
+    try {
 
-      type: "app:ready",
+        // ----------------------------------------------------
+        // Register App Shell
+        // ----------------------------------------------------
 
-      source: "app_shell",
+        eventHub?.registerModule?.(
 
-      target: "runtime",
+            "app_shell",
 
-      priority: "high",
+            {
 
-      payload: {
-        startedAt: appState.startedAt
-      }
+                role: "application_shell",
 
-    });
+                version: APP_VERSION,
 
-    return {
-      success: true,
-      state: appState
-    };
+                runtime: "production"
 
-  } catch (error) {
+            }
 
-    eventHub.emit({
+        );
 
-      type: "app:error",
+        // ----------------------------------------------------
+        // Initialize Runtime
+        // ----------------------------------------------------
 
-      source: "app_shell",
+        initializeSystem();
 
-      priority: "high",
+        // ----------------------------------------------------
+        // Verify Runtime
+        // ----------------------------------------------------
 
-      payload: {
-        message: error.message
-      }
+        if (!orchestrator.isHealthy()) {
 
-    });
+            throw new Error(
 
-    throw error;
+                "Runtime health verification failed."
 
-  } finally {
+            );
 
-    appState.starting = false;
+        }
 
-  }
+        appState.initialized = true;
+
+        appState.startedAt = Date.now();
+
+        appState.runtime = "READY";
+
+        // ----------------------------------------------------
+        // Notify Runtime
+        // ----------------------------------------------------
+
+        eventHub?.emit?.(
+
+            "app:ready",
+
+            {
+
+                app: APP_NAME,
+
+                version: APP_VERSION,
+
+                startedAt: appState.startedAt
+
+            }
+
+        );
+
+        return {
+
+            success: true,
+
+            state: getApplicationState()
+
+        };
+
+    }
+
+    catch (error) {
+
+        appState.runtime = "ERROR";
+
+        eventHub?.emit?.(
+
+            "app:error",
+
+            {
+
+                app: APP_NAME,
+
+                message: error.message
+
+            }
+
+        );
+
+        throw error;
+
+    }
+
+    finally {
+
+        appState.starting = false;
+
+    }
 
 }
 
-// ======================================================
-// APPLICATION STATUS
-// ======================================================
+/* ============================================================
+ * STATUS
+ * ============================================================
+ */
 
 export function isApplicationReady() {
 
-  return appState.initialized;
+    return (
+
+        appState.initialized &&
+
+        orchestrator.isHealthy()
+
+    );
 
 }
 
 export function getApplicationState() {
 
-  return {
+    return {
 
-    ...appState,
+        ...appState,
 
-    runtime: eventHub.getHealth()
+        system: getSystemStatus()
 
-  };
+    };
 
 }
 
-// ======================================================
-// APPLICATION SHUTDOWN
-// ======================================================
+/* ============================================================
+ * SHUTDOWN
+ * ============================================================
+ */
 
 export function shutdownApplication() {
 
-  if (appState.shuttingDown) {
-    return;
-  }
+    if (
 
-  appState.shuttingDown = true;
+        appState.shuttingDown ||
 
-  eventHub.emit({
+        !appState.initialized
 
-    type: "app:shutdown",
+    ) {
 
-    source: "app_shell",
+        return;
 
-    target: "runtime",
-
-    priority: "high",
-
-    payload: {
-      startedAt: appState.startedAt,
-      shutdownAt: Date.now()
     }
 
-  });
+    appState.shuttingDown = true;
 
-  appState.initialized = false;
-  appState.starting = false;
-  appState.shuttingDown = false;
+    eventHub?.emit?.(
+
+        "app:shutdown",
+
+        {
+
+            app: APP_NAME,
+
+            shutdownAt: Date.now()
+
+        }
+
+    );
+
+    shutdownSystem();
+
+    appState.initialized = false;
+
+    appState.runtime = "STOPPED";
+
+    appState.shuttingDown = false;
+
 }
+
+/* ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
 
 export default {
 
-  initializeApplication,
+    initializeApplication,
 
-  shutdownApplication,
+    shutdownApplication,
 
-  isApplicationReady,
+    isApplicationReady,
 
-  getApplicationState
+    getApplicationState
 
 };
