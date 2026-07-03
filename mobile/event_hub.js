@@ -431,3 +431,173 @@ getListenersSnapshot() {
     }
 
 }
+ ====
+REBUILD STARTS FROM HERE
+ // ============================================================
+// SECTION 1 — CONSTRUCTOR
+// ============================================================
+
+constructor(config = {}) {
+
+    this.debug = config.debug ?? false;
+
+    this.listeners = new Map();
+
+    this.eventHistory = [];
+
+    this.maxHistory = config.maxHistory ?? 500;
+
+    this.statistics = {
+
+        emitted: 0,
+
+        delivered: 0,
+
+        registeredEvents: 0
+
+    };
+
+    this.startedAt = Date.now();
+
+}
+
+ // ============================================================
+// SECTION 2 — CONFIGURATION
+// ============================================================
+
+enableDebug() {
+
+    this.debug = true;
+
+    return this;
+
+}
+
+disableDebug() {
+
+    this.debug = false;
+
+    return this;
+
+}
+
+clearHistory() {
+
+    this.eventHistory.length = 0;
+
+    return this;
+
+}
+
+resetStatistics() {
+
+    this.statistics = {
+
+        emitted: 0,
+
+        delivered: 0,
+
+        registeredEvents: 0
+
+    };
+
+    return this;
+
+}
+
+ // ============================================================
+// SECTION 3 — EVENT REGISTRATION
+// ============================================================
+
+on(eventName, listener) {
+
+    if (typeof listener !== "function") {
+
+        throw new Error(
+            "Listener must be a function."
+        );
+
+    }
+
+    if (!this.listeners.has(eventName)) {
+
+        this.listeners.set(eventName, []);
+
+        this.statistics.registeredEvents++;
+
+    }
+
+    this.listeners.get(eventName).push(listener);
+
+    return this;
+
+}
+
+off(eventName, listener) {
+
+    if (!this.listeners.has(eventName)) {
+
+        return this;
+
+    }
+
+    const remaining =
+        this.listeners
+            .get(eventName)
+            .filter(fn => fn !== listener);
+
+    if (remaining.length === 0) {
+
+        this.listeners.delete(eventName);
+
+        this.statistics.registeredEvents--;
+
+    } else {
+
+        this.listeners.set(
+            eventName,
+            remaining
+        );
+
+    }
+
+    return this;
+
+}
+
+once(eventName, listener) {
+
+    if (typeof listener !== "function") {
+
+        throw new Error(
+            "Listener must be a function."
+        );
+
+    }
+
+    const wrapper = (payload, event) => {
+
+        this.off(eventName, wrapper);
+
+        listener(payload, event);
+
+    };
+
+    return this.on(eventName, wrapper);
+
+}
+
+listenersFor(eventName) {
+
+    return this.listeners.get(eventName) ?? [];
+
+}
+
+hasEvent(eventName) {
+
+    return this.listeners.has(eventName);
+
+}
+
+ 
+
