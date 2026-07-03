@@ -468,3 +468,191 @@ export class MetaSystemOrchestrator {
         };
 
     }
+
+    // =====================================================
+    // SECTION 3 — SYSTEM HEALTH & DIAGNOSTICS
+    // =====================================================
+
+    getSystemStatus() {
+
+        return {
+
+            mode: this.mode,
+
+            systemMode: this.state.systemMode,
+
+            uptime:
+                Date.now() - this.startedAt,
+
+            cycle:
+                this.state.cycle,
+
+            lastSignal:
+                this.state.lastSignal,
+
+            lastDecision:
+                this.state.lastDecision,
+
+            metrics: {
+
+                ...this.metrics
+
+            },
+
+            connectivity:
+
+                this.marketConnectivity?.getStatus?.()
+
+                ?? null,
+
+            exchangeGateway:
+
+                this.exchangeGateway?.getGatewayStatus?.()
+
+                ?? null,
+
+            governance:
+
+                this.governanceGate?.status?.()
+
+                ?? null,
+
+            debug:
+
+                this.debug
+
+        };
+
+    }
+
+    isHealthy() {
+
+        const gatewayHealthy =
+
+            this.exchangeGateway
+                ? this.exchangeGateway
+                    .getGatewayStatus?.() !== null
+                : true;
+
+        const governanceHealthy =
+
+            this.governanceGate
+                ? this.governanceGate
+                    .status?.() !== null
+                : true;
+
+        return (
+
+            gatewayHealthy &&
+
+            governanceHealthy &&
+
+            this.state.systemMode !== "LOCKDOWN"
+
+        );
+
+    }
+
+    log(...args) {
+
+        if (!this.debug) return;
+
+        console.log(
+
+            "[MetaSystemOrchestrator]",
+
+            ...args
+
+        );
+
+    }
+
+    // =====================================================
+    // SECTION 4 — LIFECYCLE MANAGEMENT
+    // =====================================================
+
+    setMode(mode = "PAPER") {
+
+        this.mode = mode;
+
+        return this;
+
+    }
+
+    enableDebug() {
+
+        this.debug = true;
+
+        return this;
+
+    }
+
+    disableDebug() {
+
+        this.debug = false;
+
+        return this;
+
+    }
+
+    reset() {
+
+        this.metrics = {
+
+            completedCycles: 0,
+
+            blockedCycles: 0,
+
+            successfulCycles: 0
+
+        };
+
+        this.state = {
+
+            cycle: 0,
+
+            lastSignal: null,
+
+            lastDecision: null,
+
+            systemMode: "ACTIVE"
+
+        };
+
+        this.startedAt = Date.now();
+
+        return this;
+
+    }
+
+    destroy() {
+
+        this.reset();
+
+        this.metaBrain = null;
+
+        this.portfolioEngine = null;
+
+        this.capitalEngine = null;
+
+        this.riskGovernor = null;
+
+        this.strategyCoordinator = null;
+
+        this.logisticsEngine = null;
+
+        this.correlationEngine = null;
+
+        this.executionOptimizer = null;
+
+        this.marketConnectivity = null;
+
+        this.exchangeGateway = null;
+
+        this.governanceGate = null;
+
+        this.eventHub = null;
+
+    }
+
+}
