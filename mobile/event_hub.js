@@ -599,5 +599,343 @@ hasEvent(eventName) {
 
 }
 
- 
+ // ============================================================
+// SECTION 4 — EVENT PUBLISHING
+// ============================================================
+
+emit(eventName, payload = {}) {
+
+    const listeners =
+        this.listeners.get(eventName) ?? [];
+
+    const event = {
+
+        name: eventName,
+
+        payload,
+
+        timestamp: Date.now()
+
+    };
+
+    // Store bounded history
+
+    this.eventHistory.push(event);
+
+    if (this.eventHistory.length > this.maxHistory) {
+
+        this.eventHistory.shift();
+
+    }
+
+    this.statistics.emitted++;
+
+    for (const listener of listeners) {
+
+        try {
+
+            listener(payload, event);
+
+            this.statistics.delivered++;
+
+        } catch (error) {
+
+            if (this.debug) {
+
+                console.error(
+
+                    `[EventHub] Error in listener for ${eventName}:`,
+
+                    error
+
+                );
+
+            }
+
+        }
+
+    }
+
+    return this;
+
+}
+
+ // ============================================================
+// SECTION 5 — ONE-TIME EVENTS
+// ============================================================
+
+once(eventName, listener) {
+
+    if (typeof listener !== "function") {
+
+        throw new Error("Listener must be a function.");
+
+    }
+
+    const wrapper = (payload, event) => {
+
+        this.off(eventName, wrapper);
+
+        listener(payload, event);
+
+    };
+
+    this.on(eventName, wrapper);
+
+    return this;
+
+}
+
+ // ============================================================
+// SECTION 6 — EVENT REMOVAL
+// ============================================================
+
+removeListener(eventName, listener) {
+
+    if (!this.listeners.has(eventName)) {
+
+        return this;
+
+    }
+
+    const updatedListeners =
+
+        this.listeners
+            .get(eventName)
+            .filter(fn => fn !== listener);
+
+    if (updatedListeners.length === 0) {
+
+        this.listeners.delete(eventName);
+
+        this.statistics.registeredEvents--;
+
+    } else {
+
+        this.listeners.set(eventName, updatedListeners);
+
+    }
+
+    return this;
+
+}
+
+removeAllListeners(eventName) {
+
+    if (!eventName) {
+
+        this.listeners.clear();
+
+        this.statistics.registeredEvents = 0;
+
+        return this;
+
+    }
+
+    if (this.listeners.has(eventName)) {
+
+        this.listeners.delete(eventName);
+
+        this.statistics.registeredEvents--;
+
+    }
+
+    return this;
+
+}
+
+clearAll() {
+
+    this.listeners.clear();
+
+    this.eventHistory.length = 0;
+
+    this.statistics = {
+
+        emitted: 0,
+
+        delivered: 0,
+
+        registeredEvents: 0
+
+    };
+
+    return this;
+
+}
+
+ // ============================================================
+// SECTION 7 — DIAGNOSTICS
+// ============================================================
+
+getEventHubStatus() {
+
+    return {
+
+        uptime:
+            Date.now() - this.startedAt,
+
+        totalListeners:
+            this.getListenerCount(),
+
+        registeredEvents:
+            this.statistics.registeredEvents,
+
+        emittedEvents:
+            this.statistics.emitted,
+
+        deliveredEvents:
+            this.statistics.delivered,
+
+        historySize:
+            this.eventHistory.length,
+
+        maxHistory:
+            this.maxHistory,
+
+        debug:
+            this.debug
+
+    };
+
+}
+
+getEventHistory(limit = 50) {
+
+    return this.eventHistory.slice(-limit);
+
+}
+
+getListenersSnapshot() {
+
+    const snapshot = {};
+
+    for (const [eventName, listeners] of this.listeners.entries()) {
+
+        snapshot[eventName] = listeners.length;
+
+    }
+
+    return snapshot;
+
+}
+
+ // ============================================================
+// SECTION 8 — UTILITIES
+// ============================================================
+
+log(...args) {
+
+    if (!this.debug) return;
+
+    console.log(
+
+        "[EventHub]",
+
+        ...args
+
+    );
+
+}
+
+getListenerCount(eventName) {
+
+    if (eventName) {
+
+        return (
+
+            this.listeners.get(eventName) ?? []
+
+        ).length;
+
+    }
+
+    let total = 0;
+
+    for (const listeners of this.listeners.values()) {
+
+        total += listeners.length;
+
+    }
+
+    return total;
+
+}
+
+getEventNames() {
+
+    return [...this.listeners.keys()];
+
+}
+
+flushListeners(eventName) {
+
+    if (eventName) {
+
+        this.listeners.delete(eventName);
+
+        return this;
+
+    }
+
+    this.listeners.clear();
+
+    this.statistics.registeredEvents = 0;
+
+    return this;
+
+}
+
+getStatistics() {
+
+    return {
+
+        ...this.statistics,
+
+        uptime:
+            Date.now() - this.startedAt,
+
+        activeEvents:
+            this.listeners.size,
+
+        totalListeners:
+            this.getListenerCount()
+
+    };
+
+}
+
+ // ============================================================
+// SECTION 9 — LIFECYCLE
+// ============================================================
+
+destroy() {
+
+    this.listeners.clear();
+
+    this.eventHistory.length = 0;
+
+    this.statistics = {
+
+        emitted: 0,
+
+        delivered: 0,
+
+        registeredEvents: 0
+
+    };
+
+    this.startedAt = null;
+
+    if (this.debug) {
+
+        console.log(
+
+            "[EventHub] Destroyed successfully"
+
+        );
+
+    }
+
+}
 
