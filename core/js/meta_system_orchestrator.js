@@ -96,13 +96,15 @@ export class MetaSystemOrchestrator {
 
         this.startedAt = Date.now();
 
-     this.metrics = {
+        this.metrics = {
 
     completedCycles: 0,
 
     blockedCycles: 0,
 
-    successfulCycles: 0
+    successfulCycles: 0,
+
+    failedCycles: 0
 
 };
 
