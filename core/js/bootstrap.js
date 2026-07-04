@@ -101,6 +101,63 @@ const orchestrator = new MetaSystemOrchestrator({
 
 let initialized = false;
 
+let startupTime = null;
+
+const BOOTSTRAP_VERSION = "2.0.0";
+
+/* ============================================================
+ * DEPENDENCY VALIDATION
+ * ============================================================
+ */
+
+function validateDependencies() {
+
+    const required = {
+
+        metaBrain,
+
+        portfolioEngine,
+
+        capitalEngine,
+
+        riskGovernor,
+
+        strategyCoordinator,
+
+        logisticsEngine,
+
+        correlationEngine,
+
+        executionOptimizer,
+
+        eventHub
+
+    };
+
+    const missing = [];
+
+    Object.entries(required).forEach(([name, dependency]) => {
+
+        if (!dependency) {
+
+            missing.push(name);
+
+        }
+
+    });
+
+    if (missing.length) {
+
+        throw new Error(
+
+            `Bootstrap dependency validation failed: ${missing.join(", ")}`
+
+        );
+
+    }
+
+}
+
 /* ============================================================
  * INITIALIZE APPLICATION
  * ============================================================
@@ -114,7 +171,11 @@ export function initializeSystem() {
 
     }
 
+    validateDependencies();
+
     initialized = true;
+
+    startupTime = Date.now();
 
     eventHub?.emit?.(
 
@@ -122,15 +183,25 @@ export function initializeSystem() {
 
         {
 
-            timestamp: Date.now(),
+            timestamp: startupTime,
 
             mode: orchestrator.mode,
 
-            version: "2.0"
+            version: BOOTSTRAP_VERSION
 
         }
 
     );
+
+    if (!orchestrator.isHealthy()) {
+
+        throw new Error(
+
+            "MetaSystemOrchestrator failed startup health verification."
+
+        );
+
+    }
 
     orchestrator.log("Application bootstrap complete.");
 
@@ -157,7 +228,11 @@ export function shutdownSystem() {
 
     );
 
+    if (initialized) {
+
     orchestrator.destroy();
+
+    }
 
     initialized = false;
 
@@ -176,7 +251,21 @@ export function getOrchestrator() {
 
 export function getSystemStatus() {
 
-    return orchestrator.getSystemStatus();
+    return {
+
+        ...orchestrator.getSystemStatus(),
+
+        bootstrap: {
+
+            initialized,
+
+            version: BOOTSTRAP_VERSION,
+
+            startupTime
+
+        }
+
+    };
 
 }
 
