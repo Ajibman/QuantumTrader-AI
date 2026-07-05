@@ -680,36 +680,32 @@ export class MetaSystemOrchestrator {
 
     destroy() {
 
-        this.reset();
+    this.reset();
 
-        this.metaBrain = null;
+    this.metaBrain = null;
 
-        this.portfolioEngine = null;
+    this.portfolioEngine = null;
 
-        this.capitalEngine = null;
+    this.capitalEngine = null;
 
-        this.riskGovernor = null;
+    this.riskGovernor = null;
 
-        this.strategyCoordinator = null;
+    this.strategyCoordinator = null;
 
-        this.logisticsEngine = null;
+    this.logisticsEngine = null;
 
-        this.correlationEngine = null;
+    this.correlationEngine = null;
 
-        this.executionOptimizer = null;
+    this.executionOptimizer = null;
 
-        this.marketConnectivity = null;
+    this.marketConnectivity = null;
 
-        this.exchangeGateway = null;
+    this.exchangeGateway = null;
 
-        this.governanceGate = null;
+    this.governanceGate = null;
 
-        this.eventHub = null;
+    this.eventHub = null;
 
-    }
+    return this;
 
-         }
-
-
-
-    
+}
