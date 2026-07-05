@@ -1,4 +1,4 @@
- /**
+/**
  * ====================================================
  * QuantumTrader-AI
  * STAGE 30 — FULL SYSTEM ORCHESTRATION LAYER
@@ -98,15 +98,15 @@ export class MetaSystemOrchestrator {
 
         this.metrics = {
 
-    completedCycles: 0,
+            completedCycles: 0,
 
-    blockedCycles: 0,
+            blockedCycles: 0,
 
-    successfulCycles: 0,
+            successfulCycles: 0,
 
-    failedCycles: 0
+            failedCycles: 0
 
-};
+        };
 
         this.state = {
 
@@ -115,6 +115,8 @@ export class MetaSystemOrchestrator {
             lastSignal: null,
 
             lastDecision: null,
+
+            lastCycleAt: null,
 
             systemMode: "ACTIVE"
 
@@ -131,18 +133,57 @@ export class MetaSystemOrchestrator {
         this.state.cycle++;
 
         // ---------------------------------------------
+        // Runtime Validation
+        // ---------------------------------------------
+
+        if (!signal || typeof signal !== "object") {
+
+            throw new Error(
+                "MetaSystemOrchestrator requires a valid signal object."
+            );
+
+        }
+
+        if (portfolio === null || typeof portfolio !== "object") {
+
+            throw new Error(
+                "MetaSystemOrchestrator requires a valid portfolio object."
+            );
+
+        }
+
+        if (this.state.systemMode === "LOCKDOWN") {
+
+            return {
+
+                status: "SYSTEM_LOCKDOWN",
+
+                approved: false
+
+            };
+
+        }
+
+        // ---------------------------------------------
         // ORCHESTRATION CYCLE START
         // ---------------------------------------------
 
         if (this.eventHub?.emit) {
 
             this.eventHub.emit(
+
                 "orchestrator:cycle:start",
+
                 {
+
                     cycle: this.state.cycle,
+
                     mode: this.mode,
+
                     timestamp: Date.now()
+
                 }
+
             );
 
         }
@@ -159,7 +200,7 @@ export class MetaSystemOrchestrator {
         // ---------------------------------------------
 
         const decision =
-            this.metaBrain?.evaluate?(signal);
+            this.metaBrain?.evaluate?.(signal);
 
         this.state.lastDecision = decision;
 
@@ -240,7 +281,7 @@ export class MetaSystemOrchestrator {
 
         }
 
-        // ---------------------------------------------
+                // ---------------------------------------------
         // 5. STRATEGY ROUTING
         // ---------------------------------------------
 
@@ -290,7 +331,7 @@ export class MetaSystemOrchestrator {
 
             });
 
-         // ---------------------------------------------
+        // ---------------------------------------------
         // 9. LIVE EXECUTION GOVERNANCE
         // ---------------------------------------------
 
@@ -359,13 +400,14 @@ export class MetaSystemOrchestrator {
                         decision.action,
 
                     quantity:
-                        
-                    allocation.quantity ??
-                    allocation.positionSize ??
-                    allocation.units ??
-                    0,
+
+                        allocation.quantity ??
+                        allocation.positionSize ??
+                        allocation.units ??
+                        0,
 
                     price:
+
                         signal.price ??
                         signal.marketData?.price
 
@@ -390,6 +432,8 @@ export class MetaSystemOrchestrator {
         this.state.lastSignal = signal;
 
         this.metrics.completedCycles++;
+
+        this.state.lastCycleAt = Date.now();
 
         if (approved) {
 
@@ -494,6 +538,9 @@ export class MetaSystemOrchestrator {
 
             lastDecision:
                 this.state.lastDecision,
+
+            lastCycleAt:
+                this.state.lastCycleAt,
 
             metrics: {
 
@@ -605,7 +652,9 @@ export class MetaSystemOrchestrator {
 
             blockedCycles: 0,
 
-            successfulCycles: 0
+            successfulCycles: 0,
+
+            failedCycles: 0
 
         };
 
@@ -616,6 +665,8 @@ export class MetaSystemOrchestrator {
             lastSignal: null,
 
             lastDecision: null,
+
+            lastCycleAt: null,
 
             systemMode: "ACTIVE"
 
@@ -657,4 +708,8 @@ export class MetaSystemOrchestrator {
 
     }
 
-}
+         }
+
+
+
+    
