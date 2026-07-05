@@ -1,24 +1,8 @@
  /**
  * ============================================================
  * QuantumTrader-AI™ (Qonexai™)
- * STAGE 34 — CPILOT RUN CONTROLLER
+ * STAGE 35 — CPILOT RUN CONTROLLER (HARDENED)
  * Production Version 2.0
- * ============================================================
- *
- * PURPOSE
- * -------
- * Controls CPilot execution.
- *
- * Responsibilities:
- * • Start autonomous simulation
- * • Submit signals to MetaSystemOrchestrator
- * • Publish runtime events
- * • Maintain CPilot runtime state
- *
- * NOTE
- * ----
- * CPilot never initializes the runtime.
- * It uses the singleton Bootstrap instance.
  * ============================================================
  */
 
@@ -42,6 +26,9 @@ const state = {
 
 };
 
+/**
+ * START CPILOT EXECUTION
+ */
 export async function startCPilot(signal = {}, portfolio = {}) {
 
     if (state.running) {
@@ -76,39 +63,15 @@ export async function startCPilot(signal = {}, portfolio = {}) {
 
     );
 
+    let result;
+
     try {
 
-        const result = await orchestrator.run(
+        result = await orchestrator.run(signal, portfolio);
 
-            signal,
+    } catch (e) {
 
-            portfolio
-
-        );
-
-        state.completedRuns++;
-
-        state.lastResult = result;
-
-        eventHub?.emit?.(
-
-            "cpilot:complete",
-
-            {
-
-                approved: result.approved,
-
-                cycle: result.cycle
-
-            }
-
-        );
-
-        return result;
-
-    }
-
-    catch (error) {
+        state.running = false;
 
         eventHub?.emit?.(
 
@@ -116,68 +79,92 @@ export async function startCPilot(signal = {}, portfolio = {}) {
 
             {
 
-                message: error.message
+                message: e.message
 
             }
 
         );
 
-        throw error;
+        return {
+
+            success: false,
+
+            error: e.message
+
+        };
 
     }
 
-    finally {
+    const safeResult = result || {
 
-        state.running = false;
+        approved: false,
 
-    }
+        cycle: null
+
+    };
+
+    state.completedRuns++;
+
+    state.lastResult = safeResult;
+
+    eventHub?.emit?.(
+
+        "cpilot:complete",
+
+        {
+
+            approved: !!safeResult.approved,
+
+            cycle: safeResult.cycle
+
+        }
+
+    );
+
+    state.running = false;
+
+    return safeResult;
 
 }
 
+/**
+ * PAUSE CPILOT
+ */
 export function pauseCPilot() {
 
     state.paused = true;
 
-    eventHub?.emit?.(
-
-        "cpilot:pause",
-
-        {}
-
-    );
+    eventHub?.emit?.("cpilot:pause", {});
 
 }
 
+/**
+ * RESUME CPILOT
+ */
 export function resumeCPilot() {
 
     state.paused = false;
 
-    eventHub?.emit?.(
-
-        "cpilot:resume",
-
-        {}
-
-    );
+    eventHub?.emit?.("cpilot:resume", {});
 
 }
 
+/**
+ * STOP CPILOT
+ */
 export function stopCPilot() {
 
     state.running = false;
 
     state.paused = false;
 
-    eventHub?.emit?.(
-
-        "cpilot:stop",
-
-        {}
-
-    );
+    eventHub?.emit?.("cpilot:stop", {});
 
 }
 
+/**
+ * STATUS
+ */
 export function getCPilotStatus() {
 
     return {
@@ -205,8 +192,3 @@ export default {
     getCPilotStatus
 
 };
-
-// ============================================================
-// AUTONOMOUS EXECUTION LOOP
-// (Stage 35)
-// ============================================================
