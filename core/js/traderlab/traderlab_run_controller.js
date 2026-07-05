@@ -1,8 +1,8 @@
- /**
+/**
  * ============================================================
  * QuantumTrader-AI™ (Qonexai™)
  * STAGE 33 — TRADERLAB RUN CONTROLLER
- * Production Version 2.0
+ * Production Version 2.1
  * ============================================================
  *
  * PURPOSE
@@ -49,6 +49,10 @@ const state = {
     startedAt: null,
 
     completedRuns: 0,
+
+    failedRuns: 0,
+
+    lastRunAt: null,
 
     lastResult: null
 
@@ -103,6 +107,8 @@ export async function startTraderLab(signal = {}, portfolio = {}) {
 
         state.completedRuns++;
 
+        state.lastRunAt = Date.now();
+
         state.lastResult = result;
 
         eventHub?.emit?.(
@@ -124,6 +130,8 @@ export async function startTraderLab(signal = {}, portfolio = {}) {
     }
 
     catch (error) {
+
+        state.failedRuns++;
 
         eventHub?.emit?.(
 
@@ -185,6 +193,12 @@ export function resetTraderLab() {
 
     state.startedAt = null;
 
+    state.completedRuns = 0;
+
+    state.failedRuns = 0;
+
+    state.lastRunAt = null;
+
     state.lastResult = null;
 
 }
@@ -205,3 +219,4 @@ export default {
     resetTraderLab
 
 };
+
