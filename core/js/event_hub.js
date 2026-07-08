@@ -1,14 +1,21 @@
-// ============================================================
+ // ============================================================
 // QuantumTrader-AI™
 // Event Hub
 // Central Runtime Event Bus
+// Version 1 - Shipping Manager Hardened
 // ============================================================
 
 class EventHub {
+
     constructor() {
+
         this.events = new Map();
         this.history = [];
         this.maxHistory = 250;
+
+        // Registered runtime modules
+        this.modules = new Map();
+
     }
 
     // --------------------------------------------------------
@@ -23,6 +30,7 @@ class EventHub {
         this.events.get(eventName).add(listener);
 
         return () => this.off(eventName, listener);
+
     }
 
     // --------------------------------------------------------
@@ -31,11 +39,15 @@ class EventHub {
     once(eventName, listener) {
 
         const wrapper = (payload) => {
+
             listener(payload);
+
             this.off(eventName, wrapper);
+
         };
 
         this.on(eventName, wrapper);
+
     }
 
     // --------------------------------------------------------
@@ -45,13 +57,47 @@ class EventHub {
 
         if (!this.events.has(eventName)) return;
 
-        this.events.get(eventName).delete(listener);
+        const listeners = this.events.get(eventName);
+
+        listeners.delete(listener);
+
+        if (listeners.size === 0) {
+            this.events.delete(eventName);
+        }
+
+    }
+
+    // --------------------------------------------------------
+    // Register Module
+    // --------------------------------------------------------
+    registerModule(name, metadata = {}) {
+
+        this.modules.set(name, {
+            ...metadata,
+            registeredAt: Date.now()
+        });
+
     }
 
     // --------------------------------------------------------
     // Emit Event
+    // Supports:
+    // emit("event", payload)
+    // emit({ type, payload })
     // --------------------------------------------------------
     emit(eventName, payload = {}) {
+
+        if (
+            typeof eventName === "object" &&
+            eventName !== null
+        ) {
+
+            payload = eventName.payload || {};
+            eventName = eventName.type;
+
+        }
+
+        if (!eventName) return;
 
         const event = {
             name: eventName,
@@ -72,6 +118,7 @@ class EventHub {
         listeners.forEach(fn => {
 
             try {
+
                 fn(payload);
 
             } catch (err) {
@@ -104,6 +151,7 @@ class EventHub {
 
         this.events.clear();
         this.history = [];
+        this.modules.clear();
 
     }
 
@@ -124,6 +172,15 @@ class EventHub {
 
     }
 
+    getRegisteredModules() {
+
+        return [...this.modules.entries()];
+
+    }
+
 }
 
-export const eventHub = new EventHub();
+const eventHub = new EventHub();
+
+export default eventHub;
+export { eventHub };
