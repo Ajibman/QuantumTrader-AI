@@ -19,12 +19,23 @@
 import { createSession, startSession } from "./traderlab_orchestrator.js";
 import { getStrategyMemory } from "./strategy_memory.js";
 import { getMemorySnapshot } from "./cpilot_memory.js";
-import eventHub from "../brain/meta_brain/engines/event_hub.js";
+import eventHub from "../brain/meta_brain/engines/event_hub.js"; 
 
 const metaState = {
   lastSessionConfig: null,
-  sessionHistory: []
+  sessionHistory: [],
+
+  // Runtime learning feedback
+  strategyOutcomes: [],
+
+  // Runtime influence exposed to CPilot
+  influence: {
+    riskBias: 1.0,
+    explorationRate: 0.25,
+    cpilotSensitivity: 1.0
+  }
 };
+
 eventHub.registerModule("meta_brain", {
   role: "session_manager",
   runtime: "production"
