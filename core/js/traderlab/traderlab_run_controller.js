@@ -110,7 +110,24 @@ export async function startTraderLab(signal = {}, portfolio = {}) {
         state.lastRunAt = Date.now();
 
         state.lastResult = result;
+        
+const qualified = !!result?.approved;
 
+eventHub?.emit?.(
+
+    "traderlab:qualification",
+
+    {
+
+        qualified,
+
+        cycle: result?.cycle ?? null,
+
+        timestamp: Date.now()
+
+    }
+
+);
         eventHub?.emit?.(
 
             "traderlab:complete",
