@@ -1,6 +1,13 @@
 // core/js/cpilot/cpilot_ui_gate.js
 
 import { buildCPilotSignal } from "./cpilot_entry.js";
+import eventHub from "../../brain/meta_brain/engines/event_hub.js";
+eventHub.subscribe(
+  "traderlab:qualification",
+  () => {
+    applyCPilotGate();
+  }
+);
 export function applyCPilotGate() {
   const signal = buildCPilotSignal();
 
