@@ -103,6 +103,7 @@ export function buildSessionConfig() {
 /**
  * 🧪 CREATE + START INTELLIGENT SESSION
  */
+
 export function launchIntelligentSession({
   name = "meta-session",
   mode = "simulation",
@@ -136,6 +137,20 @@ export function launchIntelligentSession({
 }
 
 /**
+ * 🧠 META-BRAIN INFLUENCE
+ *
+ * Provides runtime guidance to CPilot.
+ * Version 1 returns a stable influence profile.
+ */
+export function getMetaInfluence() {
+
+  return {
+    ...metaState.influence
+  };
+
+}
+
+/**
  * 🧠 EVOLVE NEXT SESSION STRATEGY
  */
 export function evolveMetaBrain() {
@@ -151,11 +166,64 @@ export function evolveMetaBrain() {
 }
 
 /**
+ * 🧠 RECORD STRATEGY OUTCOME
+ *
+ * Receives runtime feedback from CPilot.
+ * Stores a bounded history and lightly adjusts
+ * Meta-Brain sensitivity for future cycles.
+ */
+export function recordMetaStrategyOutcome(outcome = {}) {
+
+  metaState.strategyOutcomes.push({
+    ...outcome,
+    recordedAt: Date.now()
+  });
+
+  // Prevent unlimited memory growth
+  if (metaState.strategyOutcomes.length > 500) {
+    metaState.strategyOutcomes.shift();
+  }
+
+  const pnl = Number(outcome.pnl || 0);
+
+  if (pnl > 0) {
+
+    metaState.influence.cpilotSensitivity =
+      Math.max(
+        0.8,
+        metaState.influence.cpilotSensitivity - 0.01
+      );
+
+  } else if (pnl < 0) {
+
+    metaState.influence.cpilotSensitivity =
+      Math.min(
+        1.2,
+        metaState.influence.cpilotSensitivity + 0.01
+      );
+
+  }
+
+  }
+
+/**
  * 📊 META-BRAIN STATUS
  */
 export function getMetaBrainStatus() {
+
   return {
-    lastSessionConfig: metaState.lastSessionConfig,
-    sessionCount: metaState.sessionHistory.length
-  };
+
+  lastSessionConfig: metaState.lastSessionConfig,
+
+  sessionCount: metaState.sessionHistory.length,
+
+  recordedOutcomes:
+    metaState.strategyOutcomes.length,
+
+  influence: {
+    ...metaState.influence
+  }
+
+};
+
 }
