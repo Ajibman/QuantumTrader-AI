@@ -76,7 +76,16 @@ export async function startCPilot(signal = {}, portfolio = {}) {
 
     try {
         initializeSystem();
+     
+     await initializeCPilot();
 
+const metaBrain = getMetaBrainStatus();
+
+eventHub?.emit?.("cpilot:meta_brain_ready", {
+    timestamp: Date.now(),
+    metaBrain
+});
+     
         state.running = true;
         state.paused = false;
         state.startedAt = Date.now();
@@ -155,8 +164,9 @@ export function stopCPilot() {
 export function getCPilotStatus() {
     return {
         ...state,
-        orchestrator: orchestrator.getSystemStatus(),
-        health: {
+        orchestrator: orchestrator.getSystemStatus?.(),
+        metaBrain: getMetaBrainStatus(),
+     health: {
             running: state.running,
             hasError: !!state.lastError,
             lastError: state.lastError
