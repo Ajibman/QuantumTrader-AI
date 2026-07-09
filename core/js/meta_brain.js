@@ -41,6 +41,24 @@ eventHub.registerModule("meta_brain", {
   runtime: "production"
 });
 
+// Listen for intelligence from CPilot
+eventHub.on("cpilot:intelligence", ({ payload }) => {
+
+  if (!payload?.intelligence) return;
+
+  recordMetaStrategyOutcome({
+    strategyName:
+      payload.intelligence.strategy?.name || "default",
+
+    pnl:
+      payload.intelligence.pnl || 0,
+
+    context:
+      payload.intelligence.context || "unknown"
+  );
+
+});
+
 /**
  * 🧠 GENERATE STRATEGY CONFIGURATION
  */
