@@ -16,7 +16,7 @@
  */
 
 import { applyTraderLabGate } from "./traderlab_ui_gate.js";
-import { applyCPilotGate } from "./cpilot_ui_gate.js";
+import { applyCPilotGate } from "./cpilot/cpilot_ui_gate.js";
 import { applyTradingFloorGate } from "./tradingfloor_ui_gate.js";
 
 import { startTraderLab } from "./traderlab/traderlab_run_controller.js";
