@@ -1,7 +1,6 @@
 // core/js/cpilot/cpilot_ui_gate.js
 
 import { buildCPilotSignal } from "./cpilot_entry.js";
-
 export function applyCPilotGate() {
   const signal = buildCPilotSignal();
 
