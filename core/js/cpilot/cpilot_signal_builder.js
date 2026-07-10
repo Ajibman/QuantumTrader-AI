@@ -11,9 +11,11 @@ export function prepareCPilotSignal() {
     document.querySelector('input[name="trade-mode"]:checked')?.value ||
     "manual";
 
-  const timingRaw = document.getElementById("tp-timing")?.value;
-  const [value, unit, label] = timingRaw.split("|");
+  const timingRaw =
+  document.getElementById("tp-timing")?.value ||
+  "15|seconds|15 Seconds";
 
+  const [value, unit, label] = timingRaw.split("|");
   return createFullSignal({
     permission: baseSignal.permission,
     context: baseSignal.context,
