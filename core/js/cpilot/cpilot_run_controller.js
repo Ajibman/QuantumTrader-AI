@@ -28,6 +28,8 @@ const state = {
     lastError: null
 };
 
+let armedSignal = null;
+
 /**
  * ============================================================
  * VALIDATION HELPERS
@@ -48,13 +50,39 @@ function validatePortfolio(portfolio) {
     return { ok: true };
 }
 
+export function armCPilot(signal) {
+
+    const check = validateSignal(signal);
+
+    if (!check.ok) {
+        throw new Error(check.message);
+    }
+
+    armedSignal = signal;
+
+    eventHub?.emit?.("cpilot:armed", {
+        timestamp: Date.now()
+    });
+
+    return true;
+}
+
 /**
  * ============================================================
  * START CPILOT EXECUTION
  * ============================================================
  */
 
-export async function startCPilot(signal = {}, portfolio = {}) {
+export async function startCPilot(signal = null, portfolio = {}) {
+
+    signal = signal || armedSignal;
+
+    if (!signal) {
+        return {
+            success: false,
+            error: "CPilot has not been armed."
+        };
+    }
 
     // Prevent double execution
     if (state.running) {
@@ -149,12 +177,6 @@ export function resumeCPilot() {
     eventHub?.emit?.("cpilot:resume", { timestamp: Date.now() });
 }
 
-export function stopCPilot() {
-    state.running = false;
-    state.paused = false;
-    eventHub?.emit?.("cpilot:stop", { timestamp: Date.now() });
-}
-
 /**
  * ============================================================
  * STATUS
@@ -187,3 +209,4 @@ export default {
     stopCPilot,
     getCPilotStatus
 };
+ 
