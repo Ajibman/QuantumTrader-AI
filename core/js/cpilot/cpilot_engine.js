@@ -241,10 +241,22 @@ const CPilotEngine = {
 
   dispatchTick(tick) {
 
-    this.state.subscribers.forEach(
-      fn => fn(tick)
-    );
-  }
+  this.state.subscribers.forEach(fn => {
+
+    try {
+      fn(tick);
+
+    } catch (err) {
+
+      console.error(
+        "[CPilot] Subscriber failed:",
+        err
+      );
+    }
+
+  });
+
+}
 
 };
 
@@ -267,3 +279,4 @@ export async function initializeCPilot() {
 }
 
 export default CPilotEngine;
+     
