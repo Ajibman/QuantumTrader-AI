@@ -157,8 +157,10 @@ eventHub?.emit?.("cpilot:meta_brain_ready", {
 
     } finally {
 
-        state.running = false;
-    }
+    state.running = false;
+    armedSignal = null;
+}
+
 }
 
 /**
@@ -175,6 +177,18 @@ export function pauseCPilot() {
 export function resumeCPilot() {
     state.paused = false;
     eventHub?.emit?.("cpilot:resume", { timestamp: Date.now() });
+}
+
+export function stopCPilot() {
+
+    state.running = false;
+    state.paused = false;
+
+    armedSignal = null;
+
+    eventHub?.emit?.("cpilot:stop", {
+        timestamp: Date.now()
+    });
 }
 
 /**
@@ -201,12 +215,13 @@ export function getCPilotStatus() {
  * EXPORT
  * ============================================================
  */
-
-export default {
+    export default {
+    armCPilot,
     startCPilot,
     pauseCPilot,
     resumeCPilot,
     stopCPilot,
     getCPilotStatus
 };
- 
+
+         
