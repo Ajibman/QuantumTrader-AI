@@ -128,7 +128,11 @@ const CPilotEngine = {
       getBestStrategy(marketData);
 
     const influence =
-      getMetaInfluence();
+  getMetaInfluence?.() || {
+    riskBias: 1,
+    explorationRate: 1,
+    cpilotSensitivity: 1
+  };
 
     /**
      * Meta-Brain adjusted signal
