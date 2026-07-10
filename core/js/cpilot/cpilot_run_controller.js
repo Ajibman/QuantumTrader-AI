@@ -9,7 +9,7 @@
 import eventHub from "../event_hub.js";
 import orchestrator, { initializeSystem } from "../bootstrap.js";
 
-import { initializeCPilot } from "./cpilot_engine.js";
+import { initializeCPilot } from "../connectors/cpilot_engine.js";
 import { getMetaBrainStatus } from "../meta_brain.js";
 
 /**
