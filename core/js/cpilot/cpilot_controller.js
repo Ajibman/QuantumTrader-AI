@@ -49,15 +49,26 @@ const CPilotController = (() => {
     }
 
     ui.startBtn.addEventListener("click", () => {
-      try {
-        prepareAndArm();
-        startCPilot();
-        setRunningState();
-        if (ui.status) ui.status.textContent = "CPilot running (simulation)";
-      } catch (err) {
-        alert(err.message);
-      }
-    });
+  try {
+    prepareAndArm();
+    startCPilot();
+    setRunningState();
+
+    if (ui.status) {
+      ui.status.textContent = "CPilot running (simulation)";
+    }
+
+  } catch (err) {
+
+    console.error("[CPilot]", err);
+
+    if (ui.status) {
+      ui.status.textContent = "Failed to start CPilot";
+    }
+
+    alert(err.message);
+  }
+});
 
     ui.stopBtn.addEventListener("click", () => {
       stopCPilot();
