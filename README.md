@@ -1,8 +1,8 @@
 🌻🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️
 QuantumTrader-AI 
-Translate this README:
+Translate this UPDATES:
 
-https://translate.google.com/translate?sl=auto&tl=en&u=https://raw.githubusercontent.com/ajibman/QuantumTrader-AI/main/README.md
+https://translate.google.com/translate?sl=auto&tl=en&u=https://raw.githubusercontent.com/ajibman/QuantumTrader-AI/main/PROJECT_UPDATES.md
 
 📌 How it works:
 sl=auto → auto-detect source language
