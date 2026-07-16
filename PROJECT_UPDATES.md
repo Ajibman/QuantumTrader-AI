@@ -15,6 +15,19 @@ https://translate.google.com/translate?sl=auto&tl=en&u=https://raw.githubusercon
 
 The project's documentation has been reorganized to improve clarity and long-term maintainability.
 
+### LC-001 Resolution
+
+Status: ✅ CLOSED
+
+Verification completed.
+
+`eventHub.subscribe()` is implemented within the project runtime and is a supported subscription API.
+
+No code changes were required.
+
+Impact:
+None. TraderLab Orchestrator is fully compatible with the Event Hub integration layer.
+
 #### README.md
 README.md now serves as the project's **current state document**. It reflects:
 
