@@ -1,0 +1,1 @@
+liftbridge_adapter.js
