@@ -31,7 +31,9 @@
  */
 
 import eventHub from "../event_hub.js";
-
+import {
+    assessRisk
+} from "../../risk/risk_governor.js";
 import orchestrator, {
     initializeSystem
 } from "../bootstrap.js";
@@ -139,18 +141,80 @@ export async function startTradingFloor(
 
     try {
 
-        initializeSystem();
+                 initializeSystem();
+
+        // ====================================================
+        // SERIAL 1.9.1 — RISK GOVERNOR ENFORCEMENT GATE
+        // ====================================================
+
+        const riskAssessment =
+            assessRisk({
+
+                confidence:
+                    signal?.confidence ?? 0,
+
+                volatility:
+                    signal?.volatility ?? 1,
+
+                capital:
+                    portfolio?.capital ?? 0,
+
+                mode:
+                    signal?.mode ||
+                    portfolio?.mode ||
+                    "simulation",
+
+                authorization:
+                    signal?.authorization ??
+                    portfolio?.authorization ??
+                    false,
+
+                connectivity:
+                    signal?.connectivity ??
+                    portfolio?.connectivity ??
+                    false
+
+            });
+
+        // ====================================================
+        // ABSOLUTE SAFETY STOP
+        // ====================================================
+
+        if (
+            riskAssessment.decision === "DENY"
+        ) {
+
+            eventHub?.emit?.(
+                "tradingfloor:risk_denied",
+                riskAssessment
+            );
+
+            state.lastResult =
+                riskAssessment;
+
+            state.lastRunAt =
+                Date.now();
+
+            return {
+
+                success: false,
+
+                approved: false,
+
+                stage:
+                    "risk_governor",
+
+                riskAssessment
+
+            };
+
+        }
+
+        // ====================================================
+        // RISK APPROVED — CONTINUE
+        // ====================================================
 
         state.running = true;
-
-        state.startedAt = Date.now();
-
-        eventHub?.emit?.(
-            "tradingfloor:start",
-            {
-                timestamp: state.startedAt
-            }
-        );
 
         const result =
             await orchestrator.run(
