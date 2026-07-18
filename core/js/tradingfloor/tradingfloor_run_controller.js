@@ -225,9 +225,81 @@ export async function startTradingFloor(
                     state.startedAt
             }
         );
+                const result =
+                    await orchestrator.run(
+                        signal,
+                portfolio
+                    );
 
-        const result =
-            await orchestrator.run(
+        const safeResult =
+            result ?? {
+
+                approved: false,
+
+                cycle: null
+
+            };
+
+        state.completedRuns++;
+
+        state.lastRunAt = Date.now();
+
+        state.lastResult = safeResult;
+
+        eventHub?.emit?.(
+            "tradingfloor:complete",
+            {
+
+                approved:
+                    !!safeResult.approved,
+
+                cycle:
+                    safeResult.cycle,
+
+                timestamp:
+                    Date.now()
+
+            }
+        );
+
+        return safeResult;
+
+    } catch (error) {
+
+        state.failedRuns++;
+
+        state.lastError =
+            error.message;
+
+        eventHub?.emit?.(
+            "tradingfloor:error",
+            {
+
+                message:
+                    error.message,
+
+                timestamp:
+                    Date.now()
+
+            }
+        );
+
+        return {
+
+            success: false,
+
+            error:
+                error.message
+
+        };
+
+    } finally {
+
+        state.running = false;
+
+    }
+
+}
         
 /* ============================================================
  * STATUS
