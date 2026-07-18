@@ -1,4 +1,4 @@
-/**
+ /**
  * ============================================================
  * QuantumTrader-AI™ (Qonexai™)
  * STAGE 36 — TRADING FLOOR RUN CONTROLLER
@@ -365,4 +365,5 @@ export default {
 
 };
 
-                
+
+                    
