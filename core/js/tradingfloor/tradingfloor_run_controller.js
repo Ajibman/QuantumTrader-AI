@@ -148,7 +148,9 @@ export async function startTradingFloor(
 
     try {
 
-                 initializeSystem();
+         initializeSystem();
+     
+         initializeExecution();
 
         // ====================================================
         // SERIAL 1.9.1 — RISK GOVERNOR ENFORCEMENT GATE
@@ -216,7 +218,7 @@ export async function startTradingFloor(
             };
 
         }
-
+     
         // ====================================================
         // RISK APPROVED — CONTINUE
         // ====================================================
@@ -232,11 +234,22 @@ export async function startTradingFloor(
                     state.startedAt
             }
         );
-                const result =
-                    await orchestrator.run(
-                        signal,
-                portfolio
-                    );
+                 const execution =
+    prepareExecution(
+        signal,
+        portfolio
+    );
+
+if (!execution.success) {
+
+    return execution;
+
+}
+
+const result =
+    await orchestrator.run(
+        execution.execution
+    );
 
         const safeResult =
             result ?? {
