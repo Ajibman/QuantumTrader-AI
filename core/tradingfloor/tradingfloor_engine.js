@@ -163,20 +163,46 @@ export function buildExecutionPackage(
 
     const executionPackage = {
 
-        executionId:
-            `EXEC-${Date.now()}`,
+    executionId:
+        `EXEC-${Date.now()}`,
 
-        signal,
+    version:
+        engineState.version,
 
-        portfolio,
+    source:
+        "TradingFloorEngine",
 
-        approved: true,
+    stage:
+        "prepared",
 
-        status: "prepared",
+    approved: true,
 
-        timestamp: Date.now()
+    status:
+        "prepared",
 
-    };
+    signal,
+
+    portfolio,
+
+    metadata: {
+
+        createdAt:
+            Date.now(),
+
+        environment:
+            signal?.mode ||
+            portfolio?.mode ||
+            "simulation",
+
+        controller:
+            "TradingFloorController",
+
+        engine:
+            "TradingFloorEngine"
+
+    }
+
+};
 
     engineState.lastExecution =
         executionPackage;
