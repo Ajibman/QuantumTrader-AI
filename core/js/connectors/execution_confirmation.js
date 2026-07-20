@@ -249,6 +249,21 @@ export function publishConfirmation(
 }
 
 /* ============================================================
+ * CONFIRM EXECUTION
+ * ============================================================
+ */
+
+export function confirmExecution(
+    execution
+) {
+
+    return publishConfirmation(
+        execution
+    );
+
+}
+
+/* ============================================================
  * RESET
  * ============================================================
  */
@@ -281,6 +296,8 @@ export default {
     buildConfirmationContract,
 
     publishConfirmation,
+
+    confirmExecution,
 
     getConfirmationStatus,
 
