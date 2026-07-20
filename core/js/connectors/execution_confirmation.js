@@ -2,7 +2,7 @@
  * ============================================================
  * QuantumTrader-AI™ (Qonexai™)
  * TITLE: EXECUTION CONFIRMATION LAYER
- * Serial 3.5.1 — Execution Confirmation
+ * Serial 3.5 — Execution Confirmation Layer 
  * Production Version 1.0
  * ============================================================
  *
@@ -21,13 +21,14 @@
  * • Build confirmation contracts
  * • Publish confirmation events
  * • Return standardized confirmations
- * THIS LAYER NEVER:
  *
- • executes trades
- • calculates risk
- • selects strategies
- • authorizes businesses
- • communicates with exchanges
+ * THIS LAYER NEVER
+ * ----------------
+ * • executes trades
+ * • calculates risk
+ * • selects strategies
+ * • authorizes businesses
+ * • communicates with exchanges
  *
  * ============================================================
  */
@@ -266,3 +267,23 @@ export function resetConfirmation() {
 
 }
 
+/* ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+export default {
+
+    initializeConfirmation,
+
+    validateConfirmation,
+
+    buildConfirmationContract,
+
+    publishConfirmation,
+
+    getConfirmationStatus,
+
+    resetConfirmation
+
+};
