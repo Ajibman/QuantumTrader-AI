@@ -366,6 +366,108 @@ export function buildTransportContract(
 } 
 
 /* ============================================================
+ * DISPATCH TRANSPORT
+ * ============================================================
+ */
+
+export default {
+
+    initializeAdapter,
+
+    validateProviderRequest,
+
+    buildProviderRequest,
+
+    validateTransport,
+
+    buildTransportContract,
+
+    dispatchTransport,
+
+    getAdapterStatus,
+
+    resetAdapter
+
+};
+
+    if (
+        !transport ||
+        typeof transport !== "object"
+    ) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid transport contract."
+
+        };
+
+    }
+
+    eventHub.emit(
+        "liftbridge:transport_dispatched",
+        transport
+    );
+
+    return {
+
+        success: true,
+
+        nextLayer:
+            "ExchangeGateway",
+
+        transport
+
+    };
+
+        }
+
+/* ============================================================
+ * DISPATCH TRANSPORT
+ * ============================================================
+ */
+
+export function dispatchTransport(
+    transport
+) {
+
+    if (
+        !transport ||
+        typeof transport !== "object"
+    ) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid transport contract."
+
+        };
+
+    }
+
+    eventHub.emit(
+        "liftbridge:transport_dispatched",
+        transport
+    );
+
+    return {
+
+        success: true,
+
+        nextLayer:
+            "ExchangeGateway",
+
+        transport
+
+    };
+
+}
+
+/* ============================================================
  * STATUS
  * ============================================================
  */
