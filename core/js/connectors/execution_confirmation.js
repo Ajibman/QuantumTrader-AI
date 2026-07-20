@@ -31,6 +31,7 @@
  *
  * ============================================================
  */
+import eventHub from "../event_hub.js";
 
 const confirmationState = {
 
@@ -47,3 +48,221 @@ const confirmationState = {
     lastConfirmation: null
 
 };
+
+/* ============================================================
+ * INITIALIZE CONFIRMATION LAYER
+ * ============================================================
+ */
+
+export function initializeConfirmation() {
+
+    confirmationState.initialized = true;
+
+    confirmationState.ready = true;
+
+    return getConfirmationStatus();
+
+}
+
+/* ============================================================
+ * STATUS
+ * ============================================================
+ */
+
+export function getConfirmationStatus() {
+
+    return {
+
+        ...confirmationState
+
+    };
+
+}
+
+/* ============================================================
+ * VALIDATE EXECUTION CONFIRMATION
+ * ============================================================
+ */
+
+export function validateConfirmation(
+    execution = {}
+) {
+
+    if (!confirmationState.ready) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Execution Confirmation Layer is not initialized."
+
+        };
+
+    }
+
+    if (
+        !execution ||
+        typeof execution !== "object"
+    ) {
+
+        confirmationState.rejectedConfirmations++;
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid execution result."
+
+        };
+
+    }
+
+    if (!execution.orderId) {
+
+        confirmationState.rejectedConfirmations++;
+
+        return {
+
+            success: false,
+
+            message:
+                "Execution result has no order ID."
+
+        };
+
+    }
+
+    return {
+
+        success: true
+
+    };
+
+}
+
+/* ============================================================
+ * BUILD CONFIRMATION CONTRACT
+ * ============================================================
+ */
+
+export function buildConfirmationContract(
+    execution
+) {
+
+    const validation =
+        validateConfirmation(
+            execution
+        );
+
+    if (!validation.success) {
+
+        return validation;
+
+    }
+
+    const confirmation = {
+
+        confirmationId:
+            `CONFIRM-${Date.now()}`,
+
+        executionId:
+            execution.metadata?.executionId ??
+            null,
+
+        orderId:
+            execution.orderId,
+
+        status:
+            execution.status,
+
+        exchange:
+            execution.exchange,
+
+        mode:
+            execution.mode,
+
+        timestamp:
+            Date.now(),
+
+        execution,
+
+        metadata: {
+
+            confirmedBy:
+                "ExecutionConfirmationLayer",
+
+            version:
+                confirmationState.version,
+
+            confirmedAt:
+                Date.now()
+
+        }
+
+    };
+
+    confirmationState.totalConfirmations++;
+
+    confirmationState.lastConfirmation =
+        confirmation;
+
+    return {
+
+        success: true,
+
+        confirmation
+
+    };
+
+}
+
+/* ============================================================
+ * PUBLISH CONFIRMATION EVENT
+ * ============================================================
+ */
+
+export function publishConfirmation(
+    execution
+) {
+
+    const result =
+        buildConfirmationContract(
+            execution
+        );
+
+    if (!result.success) {
+
+        return result;
+
+    }
+
+    eventHub.emit(
+        "execution:confirmed",
+        result.confirmation
+    );
+
+    return result;
+
+}
+
+/* ============================================================
+ * RESET
+ * ============================================================
+ */
+
+export function resetConfirmation() {
+
+    confirmationState.initialized = false;
+
+    confirmationState.ready = false;
+
+    confirmationState.totalConfirmations = 0;
+
+    confirmationState.rejectedConfirmations = 0;
+
+    confirmationState.lastConfirmation = null;
+
+}
+
