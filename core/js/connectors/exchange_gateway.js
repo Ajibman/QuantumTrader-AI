@@ -309,6 +309,68 @@ export class ExchangeGateway {
 
     }
 
+acceptTransportContract(
+    transport
+) {
+
+    if (!transport) {
+
+        throw new Error(
+            "Transport contract is required."
+        );
+
+    }
+
+    if (!transport.route) {
+
+        throw new Error(
+            "Transport route is missing."
+        );
+
+    }
+
+    const execution =
+        transport.route.execution;
+
+    if (!execution) {
+
+        throw new Error(
+            "Execution package is missing."
+        );
+
+    }
+
+    return {
+
+        symbol:
+            execution.signal?.symbol,
+
+        side:
+            execution.signal?.side,
+
+        quantity:
+            execution.signal?.quantity,
+
+        price:
+            execution.signal?.price,
+
+        metadata: {
+
+            executionId:
+                execution.executionId,
+
+            transportId:
+                transport.transportId,
+
+            routeId:
+                transport.route.routeId
+
+        }
+
+    };
+
+}
+    
     // ============================================================
     // SECTION 6 — ORDER ROUTING
     // ============================================================
