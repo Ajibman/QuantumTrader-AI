@@ -330,7 +330,7 @@ acceptTransportContract(
     }
 
     const execution =
-        transport.route.execution;
+    transport.route?.execution;
 
     if (!execution) {
 
@@ -368,6 +368,21 @@ acceptTransportContract(
         }
 
     };
+
+}
+
+async processTransportContract(
+    transport
+) {
+
+    const order =
+        this.acceptTransportContract(
+            transport
+        );
+
+    return await this.submitOrder(
+        order
+    );
 
 }
     
