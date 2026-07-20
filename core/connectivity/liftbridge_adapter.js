@@ -51,7 +51,13 @@ const adapterState = {
 
     rejectedRequests: 0,
 
-    lastRequest: null
+    lastRequest: null,
+
+    totalTranslations: 0,
+
+    rejectedTranslations: 0,
+
+    lastTranslation: null
 
 };
 
@@ -228,6 +234,138 @@ export function buildProviderRequest(
 }
 
 /* ============================================================
+ * VALIDATE TRANSPORT
+ * ============================================================
+ */
+
+export function validateTransport(
+    route = {}
+) {
+
+    if (!adapterState.ready) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Liftbridge Adapter is not initialized."
+
+        };
+
+    }
+
+    if (
+        !route ||
+        typeof route !== "object"
+    ) {
+
+        adapterState.rejectedTranslations++;
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid routing contract."
+
+        };
+
+    }
+
+    if (!route.routeId) {
+
+        adapterState.rejectedTranslations++;
+
+        return {
+
+            success: false,
+
+            message:
+                "Routing contract has no route ID."
+
+        };
+
+    }
+
+    return {
+
+        success: true
+
+    };
+
+}
+
+/* ============================================================
+ * BUILD TRANSPORT CONTRACT
+ * ============================================================
+ */
+
+export function buildTransportContract(
+    route
+) {
+
+    const validation =
+        validateTransport(
+            route
+        );
+
+    if (!validation.success) {
+
+        return validation;
+
+    }
+
+    const transportContract = {
+
+        transportId:
+            `TRANSPORT-${Date.now()}`,
+
+        adapter:
+            "LiftbridgeAdapter",
+
+        protocol:
+            "Liftbridge",
+
+        status:
+            "ready",
+
+        route,
+
+        metadata: {
+
+            createdAt:
+                Date.now(),
+
+            version:
+                adapterState.version
+
+        }
+
+    };
+
+    adapterState.lastTranslation =
+        transportContract;
+
+    adapterState.totalTranslations++;
+
+    eventHub.emit(
+        "liftbridge:transport_ready",
+        transportContract
+    );
+
+    return {
+
+        success: true,
+
+        transport:
+            transportContract
+
+    };
+
+} 
+
+/* ============================================================
  * STATUS
  * ============================================================
  */
@@ -259,13 +397,18 @@ export function resetAdapter() {
 
     adapterState.lastRequest = null;
 
+    adapterState.totalTranslations = 0;
+
+    adapterState.rejectedTranslations = 0;
+
+    adapterState.lastTranslation = null;
 }
 
 /* ============================================================
  * DEFAULT EXPORT
  * ============================================================
  */
-
+ 
 export default {
 
     initializeAdapter,
@@ -273,6 +416,10 @@ export default {
     validateProviderRequest,
 
     buildProviderRequest,
+
+    validateTransport,
+
+    buildTransportContract,
 
     getAdapterStatus,
 
