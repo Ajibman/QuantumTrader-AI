@@ -35,9 +35,6 @@
 
 import eventHub from "../event_hub.js";
 
-import {
-    confirmExecution
-} from "./execution_confirmation.js";
 
 /* ============================================================
  * CONFIRMATION INTAKE
@@ -134,7 +131,7 @@ export function initializeFeedbackLayer() {
 
 /**
  * Prepare a validated execution confirmation
- *for downstream feedback standardization.
+ * for downstream feedback standardization.
  *
  * This function accepts only a structurally valid
  * execution confirmation and prepares it for the
@@ -279,10 +276,10 @@ export function publishExecutionFeedback(
 
 }
 
- /* ============================================================
-  * STRUCTURED FEEDBACK RETURN
-  * ============================================================
-  */
+/* ============================================================
+ * STRUCTURED FEEDBACK RETURN
+ * ============================================================
+ */
 
  /**
   * Return structured execution feedback after publication.
@@ -304,27 +301,29 @@ export function publishExecutionFeedback(
   * @returns {Object}
   */
  export function returnExecutionFeedback(
-     execution
- ) {
+    execution
+) {
 
-     const publicationResult =
-         publishExecutionFeedback(
-             execution
-         );
+    const publicationResult =
+        publishExecutionFeedback(
+            execution
+        );
 
-     if (
-         !publicationResult.valid
-     ) {
+    if (
+        !publicationResult.valid
+    ) {
 
-         return publicationResult;
+        return publicationResult;
 
-     }
+    }
 
-     return {
-         valid: true,
-         published: publicationResult.published,
-         feedback: publicationResult.feedback
-     };
+    return {
+        valid: true,
+        published: publicationResult.published,
+        feedback: publicationResult.feedback
+    };
 
- }
+}
+
+ 
 
