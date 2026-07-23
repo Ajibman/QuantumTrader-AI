@@ -429,47 +429,54 @@ async processTransportContract(
 
      }
 
-    // ============================================================
-    // SECTION 7 — PAPER EXECUTION
-    // ============================================================
-             
-    async executePaperOrder(order) {
+  // ============================================================
+  // SECTION 7 — PAPER EXECUTION
+  // ============================================================
 
-        const orderId = this.generateOrderId();
+async executePaperOrder(order) {
 
-        const execution = {
+    const orderId = this.generateOrderId();
 
-            orderId,
+    const execution = {
 
-            mode: "PAPER",
+        orderId,
 
-            exchange: "SIMULATOR",
+        mode: "PAPER",
 
-            status: "FILLED",
+        exchange: "SIMULATOR",
 
-            symbol: order.symbol,
+        status: "FILLED",
 
-            side: order.side.toUpperCase(),
+        symbol: order.symbol,
 
-            quantity: order.quantity,
+        side: order.side.toUpperCase(),
 
-            price: order.price ?? null,
+        quantity: order.quantity,
 
-            timestamp: Date.now()
+        price: order.price ?? null,
 
-        };
+        timestamp: Date.now()
 
-        this.completedOrders.set(orderId, execution);
+    };
 
-        this.executionHistory.push(execution);
+    this.completedOrders.set(
+        orderId,
+        execution
+    );
 
-        this.executionStats.successful++;
+    this.executionHistory.push(
+        execution
+    );
 
-        this.broadcastExecution(execution);
+    this.executionStats.successful++;
 
-        return execution;
+    this.broadcastExecution(
+        execution
+    );
 
-    }
+    return execution;
+
+}
 
     // ============================================================
     // SECTION 8 — LIVE EXECUTION
@@ -597,7 +604,7 @@ async processTransportContract(
         }
 
     }
-         
+
     broadcastExecutionFailure(error, order = null) {
 
         if (!this.eventHub) return;
