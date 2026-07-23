@@ -583,21 +583,21 @@ async processTransportContract(
     // SECTION 10 — EVENT BROADCASTING
     // ============================================================
 
-    broadcastExecution(execution) {
+    broadcastExecutionConfirmation(execution) {
 
         if (!this.eventHub) return;
 
         if (typeof this.eventHub.emit === "function") {
 
             this.eventHub.emit(
-                "execution:completed",
+                "execution:confirmed",
                 execution
             );
 
         }
 
     }
-
+         
     broadcastExecutionFailure(error, order = null) {
 
         if (!this.eventHub) return;
