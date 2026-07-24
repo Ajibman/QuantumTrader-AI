@@ -1,6 +1,6 @@
-/**
+ /**
  * ============================================================
- * QuantumTrader-AI™ (Qonexai™)
+ * QuantumTrader-AI (Qonexai)
  * TITLE: ORDER ROUTER
  * Serial 3.6.2 — Order Routing Layer
  * Production Version 1.0
@@ -8,148 +8,246 @@
  *
  * PURPOSE
  * -------
- * The Order Router is the controlled routing boundary between
- * validated execution requests and the appropriate execution
- * gateway.
+ * Controlled routing boundary between validated execution
+ * requests and the Exchange Gateway.
  *
  * The Order Router does NOT:
  *
- * • create trading strategies
+ * • generate trading decisions
  * • select trading strategies
  * • calculate risk
- * • approve or authorize trades
+ * • authorize trades
  * • override governance decisions
  * • communicate directly with exchanges
  * • execute orders directly
- * • modify execution confirmations
- * • modify execution feedback
+ * • perform paper execution
+ * • perform live execution
+ * • manage exchange connections
+ * • duplicate execution confirmation
+ * • duplicate execution failure handling
  *
- * Its responsibility is to:
+ * The Order Router is responsible for:
  *
- * 1. Receive a validated order-routing request.
- * 2. Validate routing prerequisites.
- * 3. Resolve the intended execution gateway.
- * 4. Route the request to the registered gateway.
- * 5. Publish routing lifecycle events.
- * 6. Return a standardized routing result.
- * 7. Preserve traceability across the execution lifecycle.
+ * 1. Receiving an approved execution-routing request.
+ * 2. Validating the routing envelope.
+ * 3. Resolving the configured Exchange Gateway.
+ * 4. Routing a normalized order to ExchangeGateway.submitOrder().
+ * 5. Routing a transport contract to
+ *    ExchangeGateway.processTransportContract().
+ * 6. Publishing router-level lifecycle events.
+ * 7. Returning a standardized routing result.
+ * 8. Preserving execution traceability.
  *
+ * ============================================================
  * ARCHITECTURAL POSITION
- * ----------------------
+ * ============================================================
  *
  * Strategy / Decision Layer
  *          ↓
  * Risk / Governance Layer
  *          ↓
- * Execution Request
+ * Execution Request / Transport Contract
  *          ↓
- * Order Router  ← THIS MODULE
+ * ------------------------------------------------
+ *              ORDER ROUTER
+ *                 3.6.2
+ * ------------------------------------------------
  *          ↓
- * Exchange Gateway
+ * ExchangeGateway.submitOrder()
+ *          OR
+ * ExchangeGateway.processTransportContract()
+ *          ↓
+ * Exchange Gateway Execution
  *          ↓
  * Execution Confirmation
  *          ↓
  * Execution Feedback Layer
  *
- * The Order Router is therefore a routing boundary,
- * not an execution authority.
+ * ============================================================
+ * IMPORTANT EXCHANGE GATEWAY CONTRACT
+ * ============================================================
  *
- * EVENT HUB INTEGRATION
- * ---------------------
- * The Event Hub is used only for lifecycle publication.
+ * This router is explicitly aligned with the current
+ * ExchangeGateway implementation.
  *
- * This module does not assume that EventHub is globally available.
- * An EventHub-compatible instance may be injected through
- * configureOrderRouter().
+ * Supported gateway methods:
  *
- * This prevents hidden global dependencies and supports:
+ * • submitOrder(order)
+ * • processTransportContract(transport)
+ * • acceptTransportContract(transport)
  *
- * • Runtime wiring
- * • Testing
- * • Simulation
- * • Production deployment
- * • Mobile application packaging
+ * Primary routing methods used by this router:
+ *
+ * • submitOrder(order)
+ * • processTransportContract(transport)
+ *
+ * The router does NOT call:
+ *
+ * • routeOrder()
+ * • executeOrder()
+ *
+ * because those are not public routing methods exposed by the
+ * supplied ExchangeGateway implementation.
+ *
+ * ============================================================
+ * GOVERNANCE BOUNDARY
+ * ============================================================
+ *
+ * Governance approval is owned by ExchangeGateway.
+ *
+ * ExchangeGateway.submitOrder() internally calls:
+ *
+ * requestExecutionApproval(order)
+ *
+ * Therefore this router does NOT:
+ *
+ * • perform governance approval
+ * • duplicate governance approval
+ * • override governance approval
+ *
+ * The router only forwards the request to the gateway.
+ *
+ * ============================================================
+ * EVENT HUB BOUNDARY
+ * ============================================================
+ *
+ * ExchangeGateway already publishes:
+ *
+ * • execution:confirmed
+ * • execution:failed
+ *
+ * Therefore this router publishes only router lifecycle events.
+ *
+ * Router events:
+ *
+ * • order_router:ready
+ * • order_router:routing
+ * • order_router:routed
+ * • order_router:rejected
+ * • order_router:failed
+ *
+ * The router must not duplicate:
+ *
+ * • execution:confirmed
+ * • execution:failed
+ *
+ * Those remain owned by ExchangeGateway.
  *
  * ============================================================
  */
 
 /* ============================================================
- * CONSTANTS
+ * SECTION 1 — CONSTANTS
  * ============================================================
  */
 
-const ROUTER_NAME = "order_router";
-const ROUTER_VERSION = "1.0.0";
+const ROUTER_NAME =
+    "order_router";
+
+const ROUTER_VERSION =
+    "1.0.0";
 
 const ROUTER_STATUS = Object.freeze({
-    READY: "READY",
-    ROUTING: "ROUTING",
-    COMPLETED: "COMPLETED",
-    FAILED: "FAILED",
-    UNAVAILABLE: "UNAVAILABLE"
+
+    UNAVAILABLE:
+        "UNAVAILABLE",
+
+    READY:
+        "READY",
+
+    ROUTING:
+        "ROUTING",
+
+    COMPLETED:
+        "COMPLETED",
+
+    FAILED:
+        "FAILED"
+
 });
 
 const ROUTING_DECISION = Object.freeze({
-    ROUTE: "ROUTE",
-    REJECT: "REJECT"
+
+    ROUTE:
+        "ROUTE",
+
+    REJECT:
+        "REJECT"
+
+});
+
+const ROUTING_TYPE = Object.freeze({
+
+    ORDER:
+        "ORDER",
+
+    TRANSPORT:
+        "TRANSPORT"
+
 });
 
 /* ============================================================
- * INTERNAL RUNTIME STATE
+ * SECTION 2 — INTERNAL RUNTIME STATE
  * ============================================================
  */
 
 const routerState = {
-    initialized: false,
-    status: ROUTER_STATUS.UNAVAILABLE,
 
-    eventHub: null,
+    initialized:
+        false,
 
-    gateways: new Map(),
+    status:
+        ROUTER_STATUS.UNAVAILABLE,
 
-    totalRequests: 0,
-    successfulRoutes: 0,
-    failedRoutes: 0,
-    rejectedRequests: 0,
+    eventHub:
+        null,
 
-    lastRequestId: null,
-    lastRoute: null,
-    lastResult: null,
+    exchangeGateway:
+        null,
 
-    updatedAt: null
+    totalRequests:
+        0,
+
+    successfulRoutes:
+        0,
+
+    failedRoutes:
+        0,
+
+    rejectedRequests:
+        0,
+
+    lastRoutingId:
+        null,
+
+    lastOrderId:
+        null,
+
+    lastRoute:
+        null,
+
+    lastResult:
+        null,
+
+    updatedAt:
+        null
+
 };
 
 /* ============================================================
- * INTERNAL UTILITIES
+ * SECTION 3 — INTERNAL UTILITIES
  * ============================================================
  */
 
 /**
- * Generate a local routing request identifier.
- *
- * This identifier is used only when the upstream request does
- * not already provide one.
- *
- * @returns {string}
- */
-function generateRoutingId() {
-
-    return (
-        "route_" +
-        Date.now().toString(36) +
-        "_" +
-        Math.random().toString(36).slice(2, 10)
-    );
-}
-
-/**
- * Return a safe timestamp.
+ * Return the current timestamp.
  *
  * @returns {string}
  */
 function now() {
 
     return new Date().toISOString();
+
 }
 
 /**
@@ -161,716 +259,938 @@ function now() {
 function isNonEmptyString(value) {
 
     return (
-        typeof value === "string" &&
-        value.trim().length > 0
+
+        typeof value ===
+        "string"
+
+        &&
+
+        value.trim().length >
+        0
+
     );
+
 }
 
 /**
- * Publish an event through the configured Event Hub.
+ * Generate a routing identifier.
  *
- * The router remains operational if an Event Hub has not yet
- * been connected. Event publication must never silently become
- * a hidden dependency for routing.
+ * @returns {string}
+ */
+function generateRoutingId() {
+
+    return (
+
+        "route_" +
+
+        Date.now().toString(36) +
+
+        "_" +
+
+        Math.random()
+            .toString(36)
+            .slice(2, 10)
+
+    );
+
+}
+
+/**
+ * Publish a router lifecycle event.
+ *
+ * Event publication failure does not alter the routing result.
  *
  * @param {string} eventName
  * @param {Object} payload
  * @returns {boolean}
  */
-function publishEvent(eventName, payload = {}) {
+function publishEvent(
+    eventName,
+    payload = {}
+) {
 
-    if (!routerState.eventHub) {
+    if (
+        !routerState.eventHub
+    ) {
+
         return false;
+
+    }
+
+    if (
+        typeof routerState.eventHub.emit !==
+        "function"
+    ) {
+
+        return false;
+
     }
 
     try {
 
-        if (typeof routerState.eventHub.emit === "function") {
+        routerState.eventHub.emit(
 
-            routerState.eventHub.emit(
-                eventName,
-                payload
-            );
+            eventName,
 
-            return true;
-        }
+            payload
+
+        );
+
+        return true;
 
     } catch (error) {
 
         /*
-         * Event publication failure must not alter the routing
-         * result after the routing operation itself has already
-         * been determined.
+         * Event publication failure is recorded as diagnostic
+         * information only.
          *
-         * The router therefore records the event failure but
-         * does not throw it upstream.
+         * It must not convert an otherwise successful gateway
+         * routing operation into a failed execution.
          */
 
-        routerState.lastResult = {
-            ...(routerState.lastResult || {}),
-            eventPublicationError: error.message
-        };
+        return false;
+
     }
 
-    return false;
 }
 
 /**
- * Build a standardized rejection result.
+ * Resolve an order identifier.
  *
- * @param {string} reason
- * @param {Object} metadata
- * @returns {Object}
+ * @param {Object} order
+ * @returns {string|null}
  */
-function buildRejection(reason, metadata = {}) {
+function resolveOrderId(order) {
 
-    routerState.rejectedRequests += 1;
-    routerState.failedRoutes += 1;
+    if (
+        !order ||
+        typeof order !== "object"
+    ) {
 
-    routerState.status = ROUTER_STATUS.FAILED;
-    routerState.updatedAt = now();
-
-    return {
-
-        success: false,
-
-        decision: ROUTING_DECISION.REJECT,
-
-        routed: false,
-
-        status: ROUTER_STATUS.FAILED,
-
-        router: ROUTER_NAME,
-
-        version: ROUTER_VERSION,
-
-        reason,
-
-        ...metadata,
-
-        timestamp: routerState.updatedAt
-
-    };
-}
-
-/**
- * Resolve a registered gateway.
- *
- * @param {string} gatewayName
- * @returns {Object|null}
- */
-function resolveGateway(gatewayName) {
-
-    if (!isNonEmptyString(gatewayName)) {
         return null;
+
     }
 
     return (
-        routerState.gateways.get(
-            gatewayName.trim()
-        ) || null
+
+        order.orderId ??
+
+        order.requestId ??
+
+        order.executionId ??
+
+        null
+
     );
+
 }
 
 /**
- * Validate the routing request.
+ * Resolve a transport identifier.
  *
- * The router validates routing integrity only.
- * It does NOT perform risk or governance validation.
- *
- * @param {Object} request
- * @returns {Object}
+ * @param {Object} transport
+ * @returns {string|null}
  */
-function validateRoutingRequest(request) {
-
-    if (!request || typeof request !== "object") {
-
-        return {
-            valid: false,
-            reason: "INVALID_ROUTING_REQUEST"
-        };
-    }
+function resolveTransportId(
+    transport
+) {
 
     if (
-        !isNonEmptyString(request.orderId) &&
-        !isNonEmptyString(request.requestId)
+        !transport ||
+        typeof transport !== "object"
     ) {
 
-        return {
-            valid: false,
-            reason: "MISSING_ORDER_OR_REQUEST_ID"
-        };
+        return null;
+
     }
 
-    if (!isNonEmptyString(request.gateway)) {
+    return (
 
-        return {
-            valid: false,
-            reason: "MISSING_EXECUTION_GATEWAY"
-        };
-    }
+        transport.transportId ??
 
-    /*
-     * The router requires an upstream authorization state
-     * to be explicitly supplied.
-     *
-     * The router does not decide authorization.
-     * It only prevents accidental routing of a request where
-     * the upstream authorization state is absent.
-     */
+        transport.route?.routeId ??
 
-    if (
-        request.authorization !== undefined &&
-        typeof request.authorization !== "object"
-    ) {
+        transport.route?.execution?.executionId ??
 
-        return {
-            valid: false,
-            reason: "INVALID_AUTHORIZATION_CONTEXT"
-        };
-    }
+        null
 
-    return {
-        valid: true
-    };
+    );
+
 }
 
 /* ============================================================
- * CONFIGURATION
+ * SECTION 4 — GATEWAY CONTRACT VALIDATION
  * ============================================================
  */
 
 /**
- * Configure the Order Router runtime.
+ * Validate that the supplied object conforms to the actual
+ * ExchangeGateway contract.
  *
- * @param {Object} config
- * @param {Object} config.eventHub
- * @returns {Object}
- */
-function configureOrderRouter(config = {}) {
-
-    if (!config || typeof config !== "object") {
-
-        return {
-            success: false,
-            status: ROUTER_STATUS.UNAVAILABLE,
-            reason: "INVALID_ROUTER_CONFIGURATION"
-        };
-    }
-
-    if (config.eventHub) {
-
-        if (
-            typeof config.eventHub.emit !== "function"
-        ) {
-
-            return {
-                success: false,
-                status: ROUTER_STATUS.UNAVAILABLE,
-                reason: "INVALID_EVENT_HUB"
-            };
-        }
-
-        routerState.eventHub = config.eventHub;
-    }
-
-    routerState.initialized = true;
-    routerState.status = ROUTER_STATUS.READY;
-    routerState.updatedAt = now();
-
-    publishEvent(
-        "order_router:ready",
-        {
-            router: ROUTER_NAME,
-            version: ROUTER_VERSION,
-            timestamp: routerState.updatedAt
-        }
-    );
-
-    return {
-
-        success: true,
-
-        status: ROUTER_STATUS.READY,
-
-        router: ROUTER_NAME,
-
-        version: ROUTER_VERSION,
-
-        timestamp: routerState.updatedAt
-
-    };
-}
-
-/* ============================================================
- * GATEWAY REGISTRATION
- * ============================================================
- */
-
-/**
- * Register an execution gateway.
+ * Supported routing contracts:
  *
- * The gateway must expose a supported execution method.
+ * 1. submitOrder(order)
+ * 2. processTransportContract(transport)
  *
- * The router does not care how the gateway communicates with
- * an exchange. That responsibility belongs entirely to the
- * Exchange Gateway layer.
- *
- * @param {string} gatewayName
  * @param {Object} gateway
  * @returns {Object}
  */
-function registerGateway(gatewayName, gateway) {
+function validateGatewayContract(
+    gateway
+) {
 
-    if (!isNonEmptyString(gatewayName)) {
-
-        return {
-            success: false,
-            reason: "INVALID_GATEWAY_NAME"
-        };
-    }
-
-    if (!gateway || typeof gateway !== "object") {
+    if (
+        !gateway ||
+        typeof gateway !== "object"
+    ) {
 
         return {
-            success: false,
-            reason: "INVALID_GATEWAY"
+
+            valid:
+                false,
+
+            reason:
+                "EXCHANGE_GATEWAY_REQUIRED"
+
         };
+
     }
 
-    const hasSupportedMethod =
-        typeof gateway.executeOrder === "function" ||
-        typeof gateway.submitOrder === "function" ||
-        typeof gateway.routeOrder === "function";
+    const supportsOrderSubmission =
 
-    if (!hasSupportedMethod) {
+        typeof gateway.submitOrder ===
+        "function";
+
+    const supportsTransportContract =
+
+        typeof gateway.processTransportContract ===
+        "function";
+
+    if (
+        !supportsOrderSubmission &&
+        !supportsTransportContract
+    ) {
 
         return {
-            success: false,
-            reason: "GATEWAY_HAS_NO_SUPPORTED_EXECUTION_METHOD"
-        };
-    }
 
-    routerState.gateways.set(
-        gatewayName.trim(),
-        gateway
-    );
+            valid:
+                false,
+
+            reason:
+                "INVALID_EXCHANGE_GATEWAY_CONTRACT"
+
+        };
+
+    }
 
     return {
 
-        success: true,
+        valid:
+            true,
 
-        registered: true,
+        supportsOrderSubmission,
 
-        gateway: gatewayName.trim(),
-
-        timestamp: now()
-
-    };
-}
-
-/**
- * Unregister an execution gateway.
- *
- * @param {string} gatewayName
- * @returns {Object}
- */
-function unregisterGateway(gatewayName) {
-
-    if (!isNonEmptyString(gatewayName)) {
-
-        return {
-            success: false,
-            reason: "INVALID_GATEWAY_NAME"
-        };
-    }
-
-    const removed =
-        routerState.gateways.delete(
-            gatewayName.trim()
-        );
-
-    return {
-
-        success: removed,
-
-        unregistered: removed,
-
-        gateway: gatewayName.trim(),
-
-        timestamp: now()
+        supportsTransportContract
 
     };
+
 }
 
 /* ============================================================
- * ORDER ROUTING
+ * SECTION 5 — REQUEST VALIDATION
  * ============================================================
  */
 
 /**
- * Route an approved execution request.
+ * Validate a normalized order-routing request.
  *
- * IMPORTANT:
- * This function does not execute trades itself.
+ * This validation checks only routing integrity.
  *
- * It delegates the request to the registered execution gateway.
+ * It does NOT replace ExchangeGateway.validateOrder().
  *
- * @param {Object} request
- * @returns {Promise<Object>}
+ * ExchangeGateway remains responsible for actual order
+ * validation before execution.
+ *
+ * @param {Object} order
+ * @returns {Object}
  */
-async function routeOrder(request = {}) {
+function validateOrderRoute(
+    order
+) {
 
-    routerState.totalRequests += 1;
+    if (
+        !order ||
+        typeof order !== "object"
+    ) {
 
-    const validation =
-        validateRoutingRequest(request);
+        return {
 
-    if (!validation.valid) {
+            valid:
+                false,
 
-        const rejection =
-            buildRejection(
-                validation.reason
-            );
-
-        publishEvent(
-            "order_router:rejected",
-            rejection
-        );
-
-        return rejection;
-    }
-
-    const routingId =
-        request.routingId ||
-        generateRoutingId();
-
-    const orderId =
-        request.orderId ||
-        request.requestId;
-
-    const gatewayName =
-        request.gateway.trim();
-
-    const gateway =
-        resolveGateway(gatewayName);
-
-    routerState.lastRequestId = routingId;
-
-    if (!gateway) {
-
-        const rejection =
-            buildRejection(
-                "EXECUTION_GATEWAY_NOT_REGISTERED",
-                {
-                    routingId,
-                    orderId,
-                    gateway: gatewayName
-                }
-            );
-
-        publishEvent(
-            "order_router:rejected",
-            rejection
-        );
-
-        return rejection;
-    }
-
-    routerState.status =
-        ROUTER_STATUS.ROUTING;
-
-    routerState.lastRoute = {
-
-        routingId,
-
-        orderId,
-
-        gateway: gatewayName,
-
-        startedAt: now()
-
-    };
-
-    publishEvent(
-        "order_router:routing",
-        {
-            routingId,
-            orderId,
-            gateway: gatewayName,
-            timestamp: now()
-        }
-    );
-
-    try {
-
-        let gatewayResult;
-
-        /*
-         * The router supports multiple gateway contract names
-         * to allow controlled integration with existing runtime
-         * components.
-         */
-
-        if (
-            typeof gateway.routeOrder === "function"
-        ) {
-
-            gatewayResult =
-                await gateway.routeOrder(
-                    request
-                );
-
-        } else if (
-            typeof gateway.submitOrder === "function"
-        ) {
-
-            gatewayResult =
-                await gateway.submitOrder(
-                    request
-                );
-
-        } else if (
-            typeof gateway.executeOrder === "function"
-        ) {
-
-            gatewayResult =
-                await gateway.executeOrder(
-                    request
-                );
-
-        } else {
-
-            throw new Error(
-                "NO_SUPPORTED_GATEWAY_METHOD"
-            );
-        }
-
-        routerState.successfulRoutes += 1;
-
-        routerState.status =
-            ROUTER_STATUS.COMPLETED;
-
-        routerState.updatedAt = now();
-
-        const result = {
-
-            success: true,
-
-            decision: ROUTING_DECISION.ROUTE,
-
-            routed: true,
-
-            status: ROUTER_STATUS.COMPLETED,
-
-            router: ROUTER_NAME,
-
-            version: ROUTER_VERSION,
-
-            routingId,
-
-            orderId,
-
-            gateway: gatewayName,
-
-            gatewayResult,
-
-            timestamp: routerState.updatedAt
+            reason:
+                "INVALID_ORDER_REQUEST"
 
         };
 
-        routerState.lastResult = result;
+    }
 
-        publishEvent(
-            "order_router:routed",
-            result
+    if (
+        !isNonEmptyString(
+            order.symbol
+        )
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "MISSING_ORDER_SYMBOL"
+
+        };
+
+    }
+
+    if (
+        !isNonEmptyString(
+            order.side
+        )
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "MISSING_ORDER_SIDE"
+
+        };
+
+    }
+
+    if (
+        typeof order.quantity !==
+        "number"
+        ||
+        order.quantity <=
+        0
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "INVALID_ORDER_QUANTITY"
+
+        };
+
+    }
+
+    return {
+
+        valid:
+            true
+
+    };
+
+}
+
+/**
+ * Validate an ExchangeGateway transport contract.
+ *
+ * The gateway itself performs the definitive transport
+ * contract validation through acceptTransportContract().
+ *
+ * This router performs only enough validation to prevent
+ * obviously malformed routing requests.
+ *
+ * @param {Object} transport
+ * @returns {Object}
+ */
+function validateTransportRoute(
+    transport
+) {
+
+    if (
+        !transport ||
+        typeof transport !== "object"
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "INVALID_TRANSPORT_CONTRACT"
+
+        };
+
+    }
+
+    if (
+        !transport.route
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "MISSING_TRANSPORT_ROUTE"
+
+        };
+
+    }
+
+    if (
+        !transport.route.execution
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "MISSING_EXECUTION_PACKAGE"
+
+        };
+
+    }
+
+    return {
+
+        valid:
+            true
+
+    };
+
+}
+
+/* ============================================================
+ * SECTION 6 — ROUTER CONFIGURATION
+ * ============================================================
+ */
+
+/**
+ * Configure the Order Router.
+ *
+ * Expected configuration:
+ *
+ * {
+ *     eventHub,
+ *     exchangeGateway
+ * }
+ *
+ * @param {Object} config
+ * @returns {Object}
+ */
+function configureOrderRouter(
+    config = {}
+) {
+
+    if (
+        !config ||
+        typeof config !== "object"
+    ) {
+
+        return {
+
+            success:
+                false,
+
+            status:
+                ROUTER_STATUS.UNAVAILABLE,
+
+            reason:
+                "INVALID_ROUTER_CONFIGURATION"
+
+        };
+
+    }
+
+    if (
+        config.eventHub
+    ) {
+
+        if (
+            typeof config.eventHub.emit !==
+            "function"
+        ) {
+
+            return {
+
+                success:
+                    false,
+
+                status:
+                    ROUTER_STATUS.UNAVAILABLE,
+
+                reason:
+                    "INVALID_EVENT_HUB"
+
+            };
+
+        }
+
+        routerState.eventHub =
+            config.eventHub;
+
+    }
+
+    if (
+        config.exchangeGateway
+    ) {
+
+        const contract =
+            validateGatewayContract(
+                config.exchangeGateway
+            );
+
+        if (
+            !contract.valid
+        ) {
+
+            return {
+
+                success:
+                    false,
+
+                status:
+                    ROUTER_STATUS.UNAVAILABLE,
+
+                reason:
+                    contract.reason
+
+            };
+
+        }
+
+        routerState.exchangeGateway =
+            config.exchangeGateway;
+
+    }
+
+    if (
+        !routerState.exchangeGateway
+    ) {
+
+        routerState.initialized =
+            false;
+
+        routerState.status =
+            ROUTER_STATUS.UNAVAILABLE;
+
+        return {
+
+            success:
+                false,
+
+            status:
+                ROUTER_STATUS.UNAVAILABLE,
+
+            reason:
+                "EXCHANGE_GATEWAY_NOT_CONFIGURED"
+
+        };
+
+    }
+
+    routerState.initialized =
+        true;
+
+    routerState.status =
+        ROUTER_STATUS.READY;
+
+    routerState.updatedAt =
+        now();
+
+    publishEvent(
+
+        "order_router:ready",
+
+        {
+
+            router:
+                ROUTER_NAME,
+
+            version:
+                ROUTER_VERSION,
+
+            timestamp:
+                routerState.updatedAt
+
+        }
+
+    );
+
+    return {
+
+        success:
+            true,
+
+        status:
+            ROUTER_STATUS.READY,
+
+        router:
+            ROUTER_NAME,
+
+        version:
+            ROUTER_VERSION,
+
+        timestamp:
+            routerState.updatedAt
+
+    };
+
+}
+
+/* ============================================================
+ * SECTION 7 — GATEWAY ACCESS
+ * ============================================================
+ */
+
+/**
+ * Attach or replace the ExchangeGateway instance.
+ *
+ * @param {Object} exchangeGateway
+ * @returns {Object}
+ */
+function attachExchangeGateway(
+    exchangeGateway
+) {
+
+    const contract =
+        validateGatewayContract(
+            exchangeGateway
         );
 
-        return result;
+    if (
+        !contract.valid
+    ) {
 
-    } catch (error) {
+        return {
 
-        routerState.failedRoutes += 1;
+            success:
+                false,
+
+            attached:
+                false,
+
+            reason:
+                contract.reason
+
+        };
+
+    }
+
+    routerState.exchangeGateway =
+        exchangeGateway;
+
+    routerState.initialized =
+        true;
+
+    routerState.status =
+        ROUTER_STATUS.READY;
+
+    routerState.updatedAt =
+        now();
+
+    return {
+
+        success:
+            true,
+
+        attached:
+            true,
+
+        status:
+            ROUTER_STATUS.READY,
+
+        timestamp:
+            routerState.updatedAt
+
+    };
+
+}
+
+/**
+ * Return the currently attached ExchangeGateway.
+ *
+ * @returns {Object|null}
+ */
+function getExchangeGateway() {
+
+    return (
+        routerState.exchangeGateway ??
+        null
+    );
+
+}
+
+/* ============================================================
+ * SECTION 8 — STANDARDIZED ROUTING RESULT
+ * ============================================================
+ */
+
+/**
+ * Build a standardized routing result.
+ *
+ * @param {Object} data
+ * @returns {Object}
+ */
+function buildRoutingResult(
+    data = {}
+) {
+
+    return {
+
+        success:
+            data.success ??
+            false,
+
+        decision:
+            data.decision ??
+            ROUTING_DECISION.REJECT,
+
+        routed:
+            data.routed ??
+            false,
+
+        status:
+            data.status ??
+            ROUTER_STATUS.FAILED,
+
+        router:
+            ROUTER_NAME,
+
+        version:
+            ROUTER_VERSION,
+
+        routingType:
+            data.routingType ??
+            null,
+
+        routingId:
+            data.routingId ??
+            null,
+
+        orderId:
+            data.orderId ??
+            null,
+
+        transportId:
+            data.transportId ??
+            null,
+
+        executionId:
+            data.executionId ??
+            null,
+
+        gateway:
+            "ExchangeGateway",
+
+        gatewayResult:
+            data.gatewayResult ??
+            null,
+
+        reason:
+            data.reason ??
+            null,
+
+        error:
+            data.error ??
+            null,
+
+        timestamp:
+            data.timestamp ??
+            now()
+
+    };
+
+}
+
+/* ============================================================
+ * SECTION 9 — ORDER ROUTING
+ * ============================================================
+ */
+
+/**
+ * Route a normalized order through the actual
+ * ExchangeGateway.submitOrder(order) contract.
+ *
+ * The ExchangeGateway remains responsible for:
+ *
+ * • Order validation
+ * • Governance approval
+ * • Paper execution
+ * • Live execution
+ * • Exchange interaction
+ * • Execution statistics
+ * • Execution confirmation events
+ * • Execution failure events
+ *
+ * @param {Object} order
+ * @returns {Promise<Object>}
+ */
+async function routeOrder(
+    order
+) {
+
+    routerState.totalRequests++;
+
+    const routingId =
+        generateRoutingId();
+
+    const validation =
+        validateOrderRoute(
+            order
+        );
+
+    if (
+        !validation.valid
+    ) {
+
+        routerState.rejectedRequests++;
+
+        routerState.failedRoutes++;
 
         routerState.status =
             ROUTER_STATUS.FAILED;
 
-        routerState.updatedAt = now();
+        const result =
+            buildRoutingResult({
 
-        const result = {
+                success:
+                    false,
 
-            success: false,
+                decision:
+                    ROUTING_DECISION.REJECT,
 
-            decision: ROUTING_DECISION.REJECT,
+                routed:
+                    false,
 
-            routed: false,
+                status:
+                    ROUTER_STATUS.FAILED,
 
-            status: ROUTER_STATUS.FAILED,
+                routingType:
+                    ROUTING_TYPE.ORDER,
 
-            router: ROUTER_NAME,
+                routingId,
 
-            version: ROUTER_VERSION,
+                orderId:
+                    resolveOrderId(
+                        order
+                    ),
 
-            routingId,
+                reason:
+                    validation.reason
 
-            orderId,
+            });
 
-            gateway: gatewayName,
+        routerState.lastResult =
+            result;
 
-            reason: "GATEWAY_ROUTING_FAILED",
-
-            error: error.message,
-
-            timestamp: routerState.updatedAt
-
-        };
-
-        routerState.lastResult = result;
+        routerState.updatedAt =
+            result.timestamp;
 
         publishEvent(
-            "order_router:failed",
+
+            "order_router:rejected",
+
             result
+
         );
 
         return result;
+
     }
-}
 
-/* ============================================================
- * ROUTER STATUS
- * ============================================================
- */
+    if (
+        !routerState.exchangeGateway
+    ) {
 
-/**
- * Return current Order Router status.
- *
- * @returns {Object}
- */
-function getOrderRouterStatus() {
+        routerState.rejectedRequests++;
 
-    return {
+        routerState.failedRoutes++;
 
-        router: ROUTER_NAME,
+        routerState.status =
+            ROUTER_STATUS.FAILED;
 
-        version: ROUTER_VERSION,
+        const result =
+            buildRoutingResult({
 
-        initialized:
-            routerState.initialized,
+                success:
+                    false,
 
-        status:
-            routerState.status,
+                decision:
+                    ROUTING_DECISION.REJECT,
 
-        gatewayCount:
-            routerState.gateways.size,
+                routed:
+                    false,
 
-        registeredGateways:
-            Array.from(
-                routerState.gateways.keys()
-            ),
+                status:
+                    ROUTER_STATUS.FAILED,
 
-        totalRequests:
-            routerState.totalRequests,
+                routingType:
+                    ROUTING_TYPE.ORDER,
 
-        successfulRoutes:
-            routerState.successfulRoutes,
+                routingId,
 
-        failedRoutes:
-            routerState.failedRoutes,
+                orderId:
+                    resolveOrderId(
+                        order
+                    ),
 
-        rejectedRequests:
-            routerState.rejectedRequests,
+                reason:
+                    "EXCHANGE_GATEWAY_NOT_CONFIGURED"
 
-        lastRequestId:
-            routerState.lastRequestId,
+            });
 
-        lastRoute:
-            routerState.lastRoute,
+        routerState.lastResult =
+            result;
 
-        lastResult:
-            routerState.lastResult,
+        routerState.updatedAt =
+            result.timestamp;
 
-        updatedAt:
-            routerState.updatedAt
+        publishEvent(
 
-    };
-}
+            "order_router:rejected",
 
-/* ============================================================
- * ROUTER RESET
- * ============================================================
- */
+            result
 
-/**
- * Reset runtime routing state.
- *
- * This function clears runtime statistics and registered
- * gateways but preserves the Event Hub reference.
- *
- * @returns {Object}
- */
-function resetOrderRouter() {
+        );
 
-    routerState.initialized = false;
+        return result;
 
-    routerState.status =
-        ROUTER_STATUS.UNAVAILABLE;
+    }
 
-    routerState.gateways.clear();
+    if (
+        typeof routerState.exchangeGateway.submitOrder !==
+        "function"
+    ) {
 
-    routerState.totalRequests = 0;
+        routerState.rejectedRequests++;
 
-    routerState.successfulRoutes = 0;
+        routerState.failedRoutes++;
 
-    routerState.failedRoutes = 0;
+        routerState.status =
+            ROUTER_STATUS.FAILED;
 
-    routerState.rejectedRequests = 0;
+        const result =
+            buildRoutingResult({
 
-    routerState.lastRequestId = null;
+                success:
+                    false,
 
-    routerState.lastRoute = null;
+                decision:
+                    ROUTING_DECISION.REJECT,
 
-    routerState.lastResult = null;
-
-    routerState.updatedAt = now();
-
-    return {
-
-        success: true,
-
-        status: ROUTER_STATUS.UNAVAILABLE,
-
-        router: ROUTER_NAME,
-
-        timestamp: routerState.updatedAt
-
-    };
-}
-
-/* ============================================================
- * PUBLIC API
- * ============================================================
- */
-
-module.exports = {
-
-    ROUTER_NAME,
-
-    ROUTER_VERSION,
-
-    ROUTER_STATUS,
-
-    ROUTING_DECISION,
-
-    configureOrderRouter,
-
-    registerGateway,
-
-    unregisterGateway,
-
-    routeOrder,
-
-    getOrderRouterStatus,
-
-    resetOrderRouter
-
-};
+      
