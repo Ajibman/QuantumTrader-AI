@@ -398,4 +398,4 @@ export function returnExecutionFeedback(
         feedback: publicationResult.feedback
     };
 
-    }
+  }
