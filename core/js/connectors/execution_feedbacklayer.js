@@ -397,5 +397,5 @@ export function returnExecutionFeedback(
         published: publicationResult.published,
         feedback: publicationResult.feedback
     };
-
+  
   }
