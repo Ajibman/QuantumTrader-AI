@@ -1409,4 +1409,673 @@ async function routeOrder(
     }
 
      }
+I'm
+/* ============================================================
+ * SECTION 10 — TRANSPORT CONTRACT ROUTING
+ * ============================================================
+ */
 
+/**
+ * Route an ExchangeGateway transport contract.
+ *
+ * This method uses the actual gateway contract:
+ *
+ * ExchangeGateway.processTransportContract(transport)
+ *
+ * The ExchangeGateway then:
+ *
+ * 1. accepts the transport contract
+ * 2. extracts the execution package
+ * 3. creates the normalized order
+ * 4. calls submitOrder(order)
+ *
+ * @param {Object} transport
+ * @returns {Promise<Object>}
+ */
+async function routeTransportContract(
+    transport
+) {
+
+    routerState.totalRequests++;
+
+    const routingId =
+        generateRoutingId();
+
+    const validation =
+        validateTransportRoute(
+            transport
+        );
+
+    const transportId =
+        resolveTransportId(
+            transport
+        );
+
+    if (
+        !validation.valid
+    ) {
+
+        routerState.rejectedRequests++;
+
+        routerState.failedRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.FAILED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    false,
+
+                decision:
+                    ROUTING_DECISION.REJECT,
+
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.TRANSPORT,
+
+                routingId,
+
+                transportId,
+
+                reason:
+                    validation.reason
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:rejected",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+    if (
+        !routerState.exchangeGateway
+    ) {
+
+        routerState.rejectedRequests++;
+
+        routerState.failedRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.FAILED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    false,
+
+                decision:
+                    ROUTING_DECISION.REJECT,
+
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.TRANSPORT,
+
+                routingId,
+
+                transportId,
+
+                reason:
+                    "EXCHANGE_GATEWAY_NOT_CONFIGURED"
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:rejected",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+    if (
+        typeof routerState.exchangeGateway.processTransportContract !==
+        "function"
+    ) {
+
+        routerState.rejectedRequests++;
+
+        routerState.failedRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.FAILED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    false,
+
+                decision:
+                    ROUTING_DECISION.REJECT,
+
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.TRANSPORT,
+
+                routingId,
+
+                transportId,
+
+                reason:
+                    "EXCHANGE_GATEWAY_TRANSPORT_CONTRACT_UNAVAILABLE"
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:rejected",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+    routerState.status =
+        ROUTER_STATUS.ROUTING;
+
+    routerState.lastRoutingId =
+        routingId;
+
+    routerState.lastRoute = {
+
+        routingId,
+
+        routingType:
+            ROUTING_TYPE.TRANSPORT,
+
+        transportId,
+
+        startedAt:
+            now()
+
+    };
+
+    publishEvent(
+
+        "order_router:routing",
+
+        {
+
+            router:
+                ROUTER_NAME,
+
+            routingId,
+
+            routingType:
+                ROUTING_TYPE.TRANSPORT,
+
+            transportId,
+
+            timestamp:
+                now()
+
+        }
+
+    );
+
+    try {
+
+        /*
+         * EXACT EXCHANGE GATEWAY CONTRACT
+         *
+         * ExchangeGateway.processTransportContract(
+         *     transport
+         * )
+         */
+
+        const gatewayResult =
+            await routerState.exchangeGateway.processTransportContract(
+                transport
+            );
+
+        routerState.successfulRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.COMPLETED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    true,
+
+                decision:
+                    ROUTING_DECISION.ROUTE,
+
+                routed:
+                    true,
+
+                status:
+                    ROUTER_STATUS.COMPLETED,
+
+                routingType:
+                    ROUTING_TYPE.TRANSPORT,
+
+                routingId,
+
+                transportId,
+
+                executionId:
+                    gatewayResult?.orderId ??
+                    null,
+
+                gatewayResult
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:routed",
+
+            result
+
+        );
+
+        return result;
+
+    } catch (error) {
+
+        routerState.failedRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.FAILED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    false,
+
+                decision:
+                    ROUTING_DECISION.REJECT,
+
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.TRANSPORT,
+
+                routingId,
+
+                transportId,
+
+                reason:
+                    "EXCHANGE_GATEWAY_TRANSPORT_ROUTING_FAILED",
+
+                error:
+                    error.message ??
+                    String(error)
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:failed",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+}
+
+/* ============================================================
+ * SECTION 11 — UNIFIED ROUTING ENTRY
+ * ============================================================
+ */
+
+/**
+ * Unified routing entry point.
+ *
+ * Supported request types:
+ *
+ * {
+ *     type: "ORDER",
+ *     order: {...}
+ * }
+ *
+ * OR
+ *
+ * {
+ *     type: "TRANSPORT",
+ *     transport: {...}
+ * }
+ *
+ * @param {Object} request
+ * @returns {Promise<Object>}
+ */
+async function route(
+    request = {}
+) {
+
+    if (
+        !request ||
+        typeof request !== "object"
+    ) {
+
+        return buildRoutingResult({
+
+            reason:
+                "INVALID_ROUTING_REQUEST"
+
+        });
+
+    }
+
+    const type =
+        request.type ??
+        ROUTING_TYPE.ORDER;
+
+    if (
+        type ===
+        ROUTING_TYPE.TRANSPORT
+    ) {
+
+        return await routeTransportContract(
+
+            request.transport
+
+        );
+
+    }
+
+    if (
+        type ===
+        ROUTING_TYPE.ORDER
+    ) {
+
+        return await routeOrder(
+
+            request.order
+
+        );
+
+    }
+
+    return buildRoutingResult({
+
+        reason:
+            "UNSUPPORTED_ROUTING_TYPE"
+
+    });
+
+}
+
+/* ============================================================
+ * SECTION 12 — ROUTER STATUS
+ * ============================================================
+ */
+
+/**
+ * Return current Order Router status.
+ *
+ * @returns {Object}
+ */
+function getOrderRouterStatus() {
+
+    return {
+
+        router:
+            ROUTER_NAME,
+
+        version:
+            ROUTER_VERSION,
+
+        initialized:
+            routerState.initialized,
+
+        status:
+            routerState.status,
+
+        exchangeGatewayAttached:
+            Boolean(
+                routerState.exchangeGateway
+            ),
+
+        gatewayContract: {
+
+            submitOrder:
+                Boolean(
+
+                    routerState.exchangeGateway &&
+
+                    typeof routerState.exchangeGateway
+                        .submitOrder ===
+                    "function"
+
+                ),
+
+            processTransportContract:
+                Boolean(
+
+                    routerState.exchangeGateway &&
+
+                    typeof routerState.exchangeGateway
+                        .processTransportContract ===
+                    "function"
+
+                ),
+
+            acceptTransportContract:
+                Boolean(
+
+                    routerState.exchangeGateway &&
+
+                    typeof routerState.exchangeGateway
+                        .acceptTransportContract ===
+                    "function"
+
+                )
+
+        },
+
+        totalRequests:
+            routerState.totalRequests,
+
+        successfulRoutes:
+            routerState.successfulRoutes,
+
+        failedRoutes:
+            routerState.failedRoutes,
+
+        rejectedRequests:
+            routerState.rejectedRequests,
+
+        lastRoutingId:
+            routerState.lastRoutingId,
+
+        lastOrderId:
+            routerState.lastOrderId,
+
+        lastRoute:
+            routerState.lastRoute,
+
+        lastResult:
+            routerState.lastResult,
+
+        updatedAt:
+            routerState.updatedAt
+
+    };
+
+}
+
+/* ============================================================
+ * SECTION 13 — RESET
+ * ============================================================
+ */
+
+/**
+ * Reset router runtime state.
+ *
+ * The attached Event Hub and ExchangeGateway references are
+ * preserved because they represent runtime configuration.
+ *
+ * @returns {Object}
+ */
+function resetOrderRouter() {
+
+    routerState.totalRequests =
+        0;
+
+    routerState.successfulRoutes =
+        0;
+
+    routerState.failedRoutes =
+        0;
+
+    routerState.rejectedRequests =
+        0;
+
+    routerState.lastRoutingId =
+        null;
+
+    routerState.lastOrderId =
+        null;
+
+    routerState.lastRoute =
+        null;
+
+    routerState.lastResult =
+        null;
+
+    routerState.updatedAt =
+        now();
+
+    routerState.status =
+
+        routerState.exchangeGateway
+
+            ?
+
+        ROUTER_STATUS.READY
+
+            :
+
+        ROUTER_STATUS.UNAVAILABLE;
+
+    routerState.initialized =
+        Boolean(
+            routerState.exchangeGateway
+        );
+
+    return {
+
+        success:
+            true,
+
+        status:
+            routerState.status,
+
+        router:
+            ROUTER_NAME,
+
+        timestamp:
+            routerState.updatedAt
+
+    };
+
+     }
+
+/* ============================================================
+ * SECTION 14 — PUBLIC API
+ * ============================================================
+ */
+
+export {
+
+    ROUTER_NAME,
+
+    ROUTER_VERSION,
+
+    ROUTER_STATUS,
+
+    ROUTING_DECISION,
+
+    ROUTING_TYPE,
+
+    configureOrderRouter,
+
+    attachExchangeGateway,
+
+    getExchangeGateway,
+
+    routeOrder,
+
+    routeTransportContract,
+
+    route,
+
+    getOrderRouterStatus,
+
+    resetOrderRouter
+
+};
