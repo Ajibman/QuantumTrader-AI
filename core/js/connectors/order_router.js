@@ -1017,7 +1017,7 @@ function buildRoutingResult(
 
 }
 
-/* ============================================================
+ /* ============================================================
  * SECTION 9 — ORDER ROUTING
  * ============================================================
  */
@@ -1193,4 +1193,220 @@ async function routeOrder(
                 decision:
                     ROUTING_DECISION.REJECT,
 
-      
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.ORDER,
+
+                routingId,
+
+                orderId:
+                    resolveOrderId(
+                        order
+                    ),
+
+                reason:
+                    "EXCHANGE_GATEWAY_SUBMIT_ORDER_UNAVAILABLE"
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:rejected",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+    routerState.status =
+        ROUTER_STATUS.ROUTING;
+
+    routerState.lastRoutingId =
+        routingId;
+
+    routerState.lastOrderId =
+        resolveOrderId(
+            order
+        );
+
+    routerState.lastRoute = {
+
+        routingId,
+
+        routingType:
+            ROUTING_TYPE.ORDER,
+
+        orderId:
+            routerState.lastOrderId,
+
+        startedAt:
+            now()
+
+    };
+
+    publishEvent(
+
+        "order_router:routing",
+
+        {
+
+            router:
+                ROUTER_NAME,
+
+            routingId,
+
+            routingType:
+                ROUTING_TYPE.ORDER,
+
+            orderId:
+                routerState.lastOrderId,
+
+            timestamp:
+                now()
+
+        }
+
+    );
+
+    try {
+
+        /*
+         * EXACT EXCHANGE GATEWAY CONTRACT
+         *
+         * ExchangeGateway.submitOrder(order)
+         */
+
+        const gatewayResult =
+            await routerState.exchangeGateway.submitOrder(
+                order
+            );
+
+        routerState.successfulRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.COMPLETED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    true,
+
+                decision:
+                    ROUTING_DECISION.ROUTE,
+
+                routed:
+                    true,
+
+                status:
+                    ROUTER_STATUS.COMPLETED,
+
+                routingType:
+                    ROUTING_TYPE.ORDER,
+
+                routingId,
+
+                orderId:
+                    resolveOrderId(
+                        order
+                    ),
+
+                executionId:
+                    gatewayResult?.orderId ??
+                    null,
+
+                gatewayResult
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:routed",
+
+            result
+
+        );
+
+        return result;
+
+    } catch (error) {
+
+        routerState.failedRoutes++;
+
+        routerState.status =
+            ROUTER_STATUS.FAILED;
+
+        const result =
+            buildRoutingResult({
+
+                success:
+                    false,
+
+                decision:
+                    ROUTING_DECISION.REJECT,
+
+                routed:
+                    false,
+
+                status:
+                    ROUTER_STATUS.FAILED,
+
+                routingType:
+                    ROUTING_TYPE.ORDER,
+
+                routingId,
+
+                orderId:
+                    resolveOrderId(
+                        order
+                    ),
+
+                reason:
+                    "EXCHANGE_GATEWAY_SUBMISSION_FAILED",
+
+                error:
+                    error.message ??
+                    String(error)
+
+            });
+
+        routerState.lastResult =
+            result;
+
+        routerState.updatedAt =
+            result.timestamp;
+
+        publishEvent(
+
+            "order_router:failed",
+
+            result
+
+        );
+
+        return result;
+
+    }
+
+     }
+
