@@ -429,55 +429,55 @@ async processTransportContract(
 
      }
 
-  // ============================================================
-  // SECTION 7 — PAPER EXECUTION
-  // ============================================================
+    // ============================================================
+    // SECTION 7 — PAPER EXECUTION
+    // ============================================================
 
-async executePaperOrder(order) {
+    async executePaperOrder(order) {
 
-    const orderId = this.generateOrderId();
+        const orderId = this.generateOrderId();
 
-    const execution = {
+        const execution = {
 
-        orderId,
+            orderId,
 
-        mode: "PAPER",
+            mode: "PAPER",
 
-        exchange: "SIMULATOR",
+            exchange: "SIMULATOR",
 
-        status: "FILLED",
+            status: "FILLED",
 
-        symbol: order.symbol,
+            symbol: order.symbol,
 
-        side: order.side.toUpperCase(),
+            side: order.side.toUpperCase(),
 
-        quantity: order.quantity,
+            quantity: order.quantity,
 
-        price: order.price ?? null,
+            price: order.price ?? null,
 
-        timestamp: Date.now()
+            timestamp: Date.now()
 
-    };
+        };
 
-    this.completedOrders.set(
-        orderId,
-        execution
-    );
+        this.completedOrders.set(
+            orderId,
+            execution
+        );
 
-    this.executionHistory.push(
-        execution
-    );
+        this.executionHistory.push(
+            execution
+        );
 
-    this.executionStats.successful++;
+        this.executionStats.successful++;
 
-    this.broadcastExecution(
-        execution
-    );
+        this.broadcastExecutionConfirmation(
+            execution
+        );
 
-    return execution;
+        return execution;
 
-}
-
+    }
+    
     // ============================================================
     // SECTION 8 — LIVE EXECUTION
     // ============================================================
