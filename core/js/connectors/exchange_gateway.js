@@ -259,7 +259,7 @@ export class ExchangeGateway {
 
     }
 
-        // ============================================================
+    // ============================================================
     // SECTION 5 — ORDER VALIDATION
     // ============================================================
 
@@ -385,245 +385,460 @@ async processTransportContract(
     );
 
 }
-    
-    // ============================================================
-    // SECTION 6 — ORDER ROUTING
-    // ============================================================
 
-    async submitOrder(order) {
+// ============================================================
+// SECTION 6 — ORDER ROUTING
+// ============================================================
 
-        this.validateOrder(order);
+/**
+ * Submit an order for execution.
+ *
+ * IMPORTANT
+ * ---------
+ * ExchangeGateway is responsible for:
+ *
+ * • Order validation
+ * • Governance approval
+ * • Execution mode selection
+ * • Paper execution
+ * • Live execution
+ *
+ * ExchangeGateway does NOT:
+ *
+ * • Build execution confirmation contracts
+ * • Publish execution:confirmed
+ * • Build execution feedback contracts
+ * • Publish execution:feedback
+ *
+ * Those responsibilities belong to the
+ * Execution Confirmation Layer and
+ * Execution Feedback Layer.
+ *
+ * @param {Object} order
+ * @returns {Promise<Object>}
+ */
+async submitOrder(order) {
 
-        const approval =
-            await this.requestExecutionApproval(order);
+    this.validateOrder(order);
 
-        if (!approval.approved) {
+    const approval =
+        await this.requestExecutionApproval(order);
 
-            const error = new Error(
-                approval.reason ??
-                "Execution rejected by governance."
-            );
+    if (!approval.approved) {
 
-            this.executionStats.total++;
-            this.executionStats.failed++;
-
-            this.broadcastExecutionFailure(error, order);
-
-            throw error;
-
-        }
+        const error = new Error(
+            approval.reason ??
+            "Execution rejected by governance."
+        );
 
         this.executionStats.total++;
 
-        if (this.mode === "PAPER") {
+        this.executionStats.failed++;
 
-            this.executionStats.paper++;
+        this.broadcastExecutionFailure(
+            error,
+            order
+        );
 
-            return await this.executePaperOrder(order);
+        throw error;
 
-        }
+    }
 
-        this.executionStats.live++;
+    this.executionStats.total++;
 
-        return await this.executeLiveOrder(order);
+    /*
+     * --------------------------------------------------------
+     * PAPER EXECUTION
+     * --------------------------------------------------------
+     *
+     * The Gateway returns the raw execution result.
+     *
+     * Confirmation is handled upstream by the
+     * MetaSystemOrchestrator.
+     */
 
-     }
+    if (this.mode === "PAPER") {
 
-    // ============================================================
-    // SECTION 7 — PAPER EXECUTION
-    // ============================================================
+        this.executionStats.paper++;
 
-    async executePaperOrder(order) {
+        return await this.executePaperOrder(
+            order
+        );
 
-        const orderId = this.generateOrderId();
+    }
 
-        const execution = {
+    /*
+     * --------------------------------------------------------
+     * LIVE EXECUTION
+     * --------------------------------------------------------
+     */
 
-            orderId,
+    this.executionStats.live++;
 
-            mode: "PAPER",
+    return await this.executeLiveOrder(
+        order
+    );
 
-            exchange: "SIMULATOR",
+}
 
-            status: "FILLED",
 
-            symbol: order.symbol,
+// ============================================================
+// SECTION 7 — PAPER EXECUTION
+// ============================================================
 
-            side: order.side.toUpperCase(),
+/**
+ * Execute an order in PAPER mode.
+ *
+ * This function produces a raw execution result only.
+ *
+ * It does NOT publish execution:confirmed.
+ *
+ * The MetaSystemOrchestrator is responsible for passing
+ * the returned result to the Execution Confirmation Layer.
+ *
+ * @param {Object} order
+ * @returns {Promise<Object>}
+ */
+async executePaperOrder(order) {
 
-            quantity: order.quantity,
+    const orderId =
+        this.generateOrderId();
 
-            price: order.price ?? null,
+    const execution = {
 
-            timestamp: Date.now()
+        orderId,
+
+        mode:
+            "PAPER",
+
+        exchange:
+            "SIMULATOR",
+
+        status:
+            "FILLED",
+
+        symbol:
+            order.symbol,
+
+        side:
+            order.side.toUpperCase(),
+
+        quantity:
+            order.quantity,
+
+        price:
+            order.price ?? null,
+
+        timestamp:
+            Date.now()
+
+    };
+
+    /*
+     * Store raw execution result.
+     */
+
+    this.completedOrders.set(
+        orderId,
+        execution
+    );
+
+    this.executionHistory.push(
+        execution
+    );
+
+    this.executionStats.successful++;
+
+    /*
+     * IMPORTANT
+     * ----------
+     * No execution:confirmed event is emitted here.
+     *
+     * The execution result returns to the
+     * MetaSystemOrchestrator, which will invoke:
+     *
+     * confirmExecution(execution)
+     */
+
+    return execution;
+
+}
+
+
+// ============================================================
+// SECTION 8 — LIVE EXECUTION
+// ============================================================
+
+/**
+ * Execute an order in LIVE mode.
+ *
+ * This function produces a raw execution result only.
+ *
+ * It does NOT:
+ *
+ * • Publish execution:confirmed
+ * • Build confirmation contracts
+ * • Publish execution:feedback
+ *
+ * @param {Object} order
+ * @returns {Promise<Object>}
+ */
+async executeLiveOrder(order) {
+
+    const exchange =
+        this.getPrimaryExchange();
+
+    if (!exchange) {
+
+        const error = new Error(
+            "No primary exchange configured."
+        );
+
+        this.executionStats.failed++;
+
+        this.broadcastExecutionFailure(
+            error,
+            order
+        );
+
+        throw error;
+
+    }
+
+    if (
+        typeof exchange.executeOrder !==
+        "function"
+    ) {
+
+        const error = new Error(
+            "Exchange does not implement executeOrder()."
+        );
+
+        this.executionStats.failed++;
+
+        this.broadcastExecutionFailure(
+            error,
+            order
+        );
+
+        throw error;
+
+    }
+
+    try {
+
+        const execution =
+            await exchange.executeOrder(
+                order
+            );
+
+        /*
+         * Normalize the execution result.
+         */
+
+        const normalizedExecution = {
+
+            ...execution,
+
+            orderId:
+                execution?.orderId ??
+                this.generateOrderId(),
+
+            mode:
+                "LIVE",
+
+            symbol:
+                execution?.symbol ??
+                order.symbol,
+
+            side:
+                execution?.side ??
+                order.side.toUpperCase(),
+
+            quantity:
+                execution?.quantity ??
+                order.quantity,
+
+            price:
+                execution?.price ??
+                order.price ??
+                null,
+
+            timestamp:
+                execution?.timestamp ??
+                Date.now()
 
         };
 
+        const orderId =
+            normalizedExecution.orderId;
+
+        /*
+         * Store raw execution result.
+         */
+
         this.completedOrders.set(
             orderId,
-            execution
+            normalizedExecution
         );
 
         this.executionHistory.push(
-            execution
+            normalizedExecution
         );
 
         this.executionStats.successful++;
 
-        this.broadcastExecutionConfirmation(
-            execution
-        );
+        /*
+         * IMPORTANT
+         * ----------
+         * The old code called:
+         *
+         * this.broadcastExecution(execution)
+         *
+         * That method does not exist and has therefore been
+         * removed.
+         *
+         * The Gateway now returns the raw execution result.
+         *
+         * MetaSystemOrchestrator will pass it to:
+         *
+         * confirmExecution(normalizedExecution)
+         */
 
-        return execution;
+        return normalizedExecution;
 
-    }
-    
-    // ============================================================
-    // SECTION 8 — LIVE EXECUTION
-    // ============================================================
+    } catch (error) {
 
-    async executeLiveOrder(order) {
+        const orderId =
+            this.generateOrderId();
 
-        const exchange = this.getPrimaryExchange();
-
-        if (!exchange) {
-
-            throw new Error(
-                "No primary exchange configured."
-            );
-
-        }
-
-        if (typeof exchange.executeOrder !== "function") {
-
-            throw new Error(
-                "Exchange does not implement executeOrder()."
-            );
-
-        }
-
-        try {
-
-            const execution =
-                await exchange.executeOrder(order);
-
-            const orderId =
-                execution.orderId ??
-                this.generateOrderId();
-
-            execution.orderId = orderId;
-
-            execution.mode = "LIVE";
-
-            execution.timestamp ??= Date.now();
-
-            this.completedOrders.set(
-                orderId,
-                execution
-            );
-
-            this.executionHistory.push(execution);
-
-            this.executionStats.successful++;
-
-            this.broadcastExecution(execution);
-
-            return execution;
-
-        } catch (error) {
-
-            const orderId = this.generateOrderId();
-
-            this.failedOrders.set(orderId, {
+        this.failedOrders.set(
+            orderId,
+            {
 
                 orderId,
 
                 order,
 
-                error: error.message,
+                error:
+                    error?.message ??
+                    String(error),
 
-                timestamp: Date.now()
+                timestamp:
+                    Date.now()
 
-            });
-
-            this.executionStats.failed++;
-
-            this.broadcastExecutionFailure(
-                error,
-                order
-            );
-
-            throw error;
-
-        }
-
-    }
-
-// ============================================================
-    // SECTION 9 — ORDER MANAGEMENT
-    // ============================================================
-
-    getOrder(orderId) {
-
-        return (
-            this.completedOrders.get(orderId) ??
-            this.pendingOrders.get(orderId) ??
-            this.failedOrders.get(orderId) ??
-            null
+            }
         );
 
-    }
+        this.executionStats.failed++;
 
-    getExecutionHistory() {
+        this.broadcastExecutionFailure(
+            error,
+            order
+        );
 
-        return [...this.executionHistory];
-
-    }
-
-    clearExecutionHistory() {
-
-        this.executionHistory.length = 0;
+        throw error;
 
     }
 
-    // ============================================================
-    // SECTION 10 — EVENT BROADCASTING
-    // ============================================================
+}
 
-    broadcastExecutionConfirmation(execution) {
 
-        if (!this.eventHub) return;
+// ============================================================
+// SECTION 9 — ORDER MANAGEMENT
+// ============================================================
 
-        if (typeof this.eventHub.emit === "function") {
+getOrder(orderId) {
 
-            this.eventHub.emit(
-                "execution:confirmed",
-                execution
-            );
+    return (
+
+        this.completedOrders.get(
+            orderId
+        ) ??
+
+        this.pendingOrders.get(
+            orderId
+        ) ??
+
+        this.failedOrders.get(
+            orderId
+        ) ??
+
+        null
+
+    );
+
+}
+
+getExecutionHistory() {
+
+    return [
+        ...this.executionHistory
+    ];
+
+}
+
+clearExecutionHistory() {
+
+    this.executionHistory.length = 0;
+
+}
+    🌹=======🌹
+    
+// ============================================================
+// SECTION 10 — EVENT BROADCASTING
+// ============================================================
+
+/**
+ * Broadcast an execution failure event.
+ *
+ * Failure events are operational events and may be observed
+ * by the EventHub, Audit Engine, Health Engine, and other
+ * runtime observers.
+ *
+ * Successful execution confirmation is NOT broadcast here.
+ *
+ * Successful execution results are returned to the
+ * MetaSystemOrchestrator, which invokes the dedicated
+ * Execution Confirmation Layer.
+ */
+broadcastExecutionFailure(
+    error,
+    order = null
+) {
+
+    if (!this.eventHub) {
+
+        return;
+
+    }
+
+    if (
+        typeof this.eventHub.emit !==
+        "function"
+    ) {
+
+        return;
+
+    }
+
+    this.eventHub.emit(
+        "execution:failed",
+        {
+
+            order,
+
+            error:
+                error?.message ??
+                String(error),
+
+            timestamp:
+                Date.now()
 
         }
+    );
 
-    }
-
-    broadcastExecutionFailure(error, order = null) {
-
-        if (!this.eventHub) return;
-
-        if (typeof this.eventHub.emit === "function") {
-
-            this.eventHub.emit(
-                "execution:failed",
-                {
-                    order,
-                    error: error.message ?? String(error),
-                    timestamp: Date.now()
-                }
-            );
-
-        }
-
-    }
-
+}
     // ============================================================
     // SECTION 11 — DIAGNOSTICS
     // ============================================================
