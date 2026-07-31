@@ -587,20 +587,14 @@ export class MetaSystemOrchestrator {
          * for constructing the standardized confirmation.
          */
 
-        if (
+  if (executionResult) {
 
-            executionResult &&
+    confirmationResult =
+        confirmExecution(
+            executionResult
+        );
 
-            typeof this.confirmExecution === "function"
-
-        ) {
-
-            confirmationResult =
-                this.confirmExecution(
-                    executionResult
-                );
-
-        }
+}
 
         /*
          * ------------------------------------------------
@@ -620,23 +614,20 @@ export class MetaSystemOrchestrator {
 
         if (
 
-            confirmationResult &&
+    confirmationResult &&
 
-            confirmationResult.success &&
+    confirmationResult.success &&
 
-            confirmationResult.confirmation &&
+    confirmationResult.confirmation
 
-            typeof this.returnExecutionFeedback ===
-            "function"
+) {
 
-        ) {
+    feedbackResult =
+        returnExecutionFeedback(
+            confirmationResult.confirmation
+        );
 
-            feedbackResult =
-                this.returnExecutionFeedback(
-                    confirmationResult.confirmation
-                );
-
-        }
+}
 
         // ---------------------------------------------
         // 11. FINAL APPROVAL
