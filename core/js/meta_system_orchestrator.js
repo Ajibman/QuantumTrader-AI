@@ -423,12 +423,32 @@ export class MetaSystemOrchestrator {
             };
 
         }
-
+     
         // ---------------------------------------------
         // 10. ORDER ROUTING / TRANSPORT CONTRACT
         // ---------------------------------------------
 
         let executionResult = null;
+
+        let confirmationResult = null;
+
+        let feedbackResult = null;
+
+        /*
+         * ------------------------------------------------
+         * BUILD TRANSPORT CONTRACT
+         * ------------------------------------------------
+         *
+         * The orchestrator prepares the execution request
+         * from the already-approved strategy, decision,
+         * and allocation results.
+         *
+         * The Order Router is the official execution
+         * routing boundary.
+         *
+         * The orchestrator does NOT call the
+         * ExchangeGateway directly.
+         */
 
         if (
 
@@ -487,6 +507,12 @@ export class MetaSystemOrchestrator {
 
             };
 
+            /*
+             * ------------------------------------------------
+             * ORDER ROUTER
+             * ------------------------------------------------
+             */
+
             if (
 
                 typeof this.orderRouter.routeTransportContract ===
@@ -509,7 +535,8 @@ export class MetaSystemOrchestrator {
 
                     executed: false,
 
-                    status: "ORDER_ROUTER_UNAVAILABLE",
+                    status:
+                        "ORDER_ROUTER_UNAVAILABLE",
 
                     reason:
                         "routeTransportContract is not available."
@@ -534,12 +561,80 @@ export class MetaSystemOrchestrator {
 
                 executed: false,
 
-                status: "ORDER_ROUTER_UNAVAILABLE",
+                status:
+                    "ORDER_ROUTER_UNAVAILABLE",
 
                 reason:
                     "Order Router is required for live execution."
 
             };
+
+        }
+
+        /*
+         * ------------------------------------------------
+         * EXECUTION CONFIRMATION
+         * ------------------------------------------------
+         *
+         * The raw execution result returned by the
+         * execution path is handed to the dedicated
+         * confirmation layer.
+         *
+         * ExchangeGateway remains responsible for
+         * execution.
+         *
+         * ExecutionConfirmationLayer is responsible
+         * for constructing the standardized confirmation.
+         */
+
+        if (
+
+            executionResult &&
+
+            typeof this.confirmExecution === "function"
+
+        ) {
+
+            confirmationResult =
+                this.confirmExecution(
+                    executionResult
+                );
+
+        }
+
+        /*
+         * ------------------------------------------------
+         * EXECUTION FEEDBACK
+         * ------------------------------------------------
+         *
+         * A successfully constructed confirmation is
+         * handed to the dedicated feedback layer.
+         *
+         * The feedback layer is responsible for:
+         *
+         * • Validation
+         * • Processing
+         * • Feedback construction
+         * • Feedback publication
+         */
+
+        if (
+
+            confirmationResult &&
+
+            confirmationResult.success &&
+
+            confirmationResult.confirmation &&
+
+            typeof this.returnExecutionFeedback ===
+            "function"
+
+        ) {
+
+            feedbackResult =
+                this.returnExecutionFeedback(
+                    confirmationResult.confirmation
+                );
 
         }
 
@@ -557,7 +652,7 @@ export class MetaSystemOrchestrator {
 
             strategy.assetRoute !== null;
 
-        this.state.lastSignal = signal;
+             this.state.lastSignal = signal;
 
         this.metrics.completedCycles++;
 
@@ -596,6 +691,12 @@ export class MetaSystemOrchestrator {
 
                     executionResult,
 
+                    confirmation:
+                        confirmationResult,
+
+                    feedback:
+                        feedbackResult,
+
                     governance,
 
                     risk,
@@ -624,7 +725,7 @@ export class MetaSystemOrchestrator {
 
         }
 
-        return {
+             return {
 
             cycle:
                 this.state.cycle,
@@ -648,6 +749,12 @@ export class MetaSystemOrchestrator {
             execution,
 
             executionResult,
+
+            confirmation:
+                confirmationResult,
+
+            feedback:
+                feedbackResult,
 
             approved,
 
@@ -674,8 +781,6 @@ export class MetaSystemOrchestrator {
             }
 
         };
-
-    }
 
     // =====================================================
     // SECTION 3 — SYSTEM HEALTH & DIAGNOSTICS
