@@ -394,224 +394,44 @@ export class MetaSystemOrchestrator {
             };
 
         }
-
-        // ---------------------------------------------
-        // 10. ORDER ROUTING
-        // ---------------------------------------------
-        //
-        // The Orchestrator does NOT submit directly to
-        // ExchangeGateway.
-        //
-        // The Order Router is the controlled bridge.
-        //
-        // Execution Optimizer
-        //        ↓
-        // Order Router
-        //        ↓
-        // Transport Contract
-        //        ↓
-        // Exchange Gateway
-        //
-        // ---------------------------------------------
-
-        let executionResult = null;
-
-        if (this.mode === "LIVE") {
-
-            if (!this.orderRouter) {
-
-                this.metrics.failedCycles++;
-
-                return {
-
-                    status:
-                        "ORDER_ROUTER_UNAVAILABLE",
-
-                    approved: false,
-
-                    decision,
-
-                    allocation,
-
-                    risk,
-
-                    governance,
-
-                    execution,
-
-                    executionResult: null
-
-                };
-
-            }
-
-            const transportContract = {
-
-                transportId:
-                    `transport-${this.state.cycle}-${Date.now()}`,
-
-                route: {
-
-                    routeId:
-                        `route-${this.state.cycle}-${Date.now()}`,
-
-                    execution: {
-
-                        executionId:
-                            `execution-${this.state.cycle}-${Date.now()}`,
-
-                        signal: {
-
-                            symbol:
-                                strategy.symbol,
-
-                            side:
-                                decision.action,
-
-                            quantity:
-
-                                allocation.quantity ??
-                                allocation.positionSize ??
-                                allocation.units ??
-                                0,
-
-                            price:
-
-                                signal.price ??
-                                signal.marketData?.price
-
-                        }
-
-                    }
-
-                }
-
-            };
-
-            if (
-                typeof this.orderRouter
-                    .routeTransportContract !==
-                "function"
-            ) {
-
-                this.metrics.failedCycles++;
-
-                return {
-
-                    status:
-                        "ORDER_ROUTER_INTERFACE_UNAVAILABLE",
-
-                    approved: false,
-
-                    decision,
-
-                    allocation,
-
-                    risk,
-
-                    governance,
-
-                    execution,
-
-                    executionResult: null
-
-                };
-
-            }
-
-            executionResult =
-                await this.orderRouter
-                    .routeTransportContract(
-                        transportContract
-                    );
-
-        }
-
-        // ---------------------------------------------
-        // 11. FINAL APPROVAL
-        // ---------------------------------------------
-
-        const approved =
-
-            execution.approved &&
-
-            risk.approved &&
-
-            governance.approved &&
-
-            strategy.assetRoute !== null;
-
-        this.state.lastSignal = signal;
-
-        this.metrics.completedCycles++;
-
-        this.state.lastCycleAt = Date.now();
-
-        if (approved) {
-
-            this.metrics.successfulCycles++;
-
-        }
-
-        // ---------------------------------------------
-        // ORCHESTRATION COMPLETE EVENT
-        // ---------------------------------------------
-
-        if (this.eventHub?.emit) {
-
-            this.eventHub.emit(
-
-                "orchestrator:cycle:complete",
-
-                {
-
-                    cycle:
-                        this.state.cycle,
-
-                    approved,
-
-                    mode:
-                        this.mode,
-
-                    timestamp:
-                        Date.now(),
-
-                    execution,
-
-                    executionResult,
-
-                    governance,
-
-                    risk,
-
-                    strategy,
-
-                    summary: {
-
-                        action:
-                            decision.action,
-
-                        confidence:
-                            decision.confidence,
-
-                        assetRoute:
-                            strategy.assetRoute,
-
-                        executionMode:
-                            execution.mode
-
-                    }
-
-                }
-
-            );
-
-        }
+     
+// ---------------------------------------------
+// 10. ORDER ROUTING
+// ---------------------------------------------
+//
+// The Orchestrator does NOT construct the
+// Transport Contract.
+//
+// Execution responsibility remains:
+//
+// Execution Optimizer
+//        ↓
+// Order Router
+//        ↓
+// Transport Contract
+//        ↓
+// Exchange Gateway
+//
+// The Order Router is the single authoritative
+// boundary responsible for constructing,
+// validating, and routing the Transport Contract.
+//
+// ---------------------------------------------
+
+let executionResult = null;
+
+if (this.mode === "LIVE") {
+
+    if (!this.orderRouter) {
+
+        this.metrics.failedCycles++;
 
         return {
 
-            cycle:
-                this.state.cycle,
+            status:
+                "ORDER_ROUTER_UNAVAILABLE",
+
+            approved: false,
 
             decision,
 
@@ -621,46 +441,107 @@ export class MetaSystemOrchestrator {
 
             governance,
 
-            strategy,
-
-            logistics,
-
-            correlation,
-
-            connectivity,
-
             execution,
 
-            executionResult,
-
-            approved,
-
-            systemMode:
-                this.state.systemMode,
-
-            timestamp:
-                Date.now(),
-
-            summary: {
-
-                action:
-                    decision.action,
-
-                assetRoute:
-                    strategy.assetRoute,
-
-                executionMode:
-                    execution.mode,
-
-                confidence:
-                    decision.confidence
-
-            }
+            executionResult: null
 
         };
 
     }
 
+    // -----------------------------------------
+    // Execution Intent
+    // -----------------------------------------
+    //
+    // The Orchestrator supplies execution intent
+    // only. It does NOT manufacture transport IDs,
+    // route IDs, execution IDs, or the Transport
+    // Contract itself.
+    //
+    // The established Order Router remains the
+    // authoritative transport-contract boundary.
+    // -----------------------------------------
+
+    const executionIntent = {
+
+        signal: {
+
+            symbol:
+                strategy.symbol,
+
+            side:
+                decision.action,
+
+            quantity:
+
+                allocation.quantity ??
+                allocation.positionSize ??
+                allocation.units ??
+                0,
+
+            price:
+
+                signal.price ??
+                signal.marketData?.price
+
+        },
+
+        strategy,
+
+        decision,
+
+        allocation,
+
+        risk,
+
+        governance,
+
+        execution,
+
+        mode:
+            this.mode
+
+    };
+
+    if (
+        typeof this.orderRouter
+            .routeTransportContract !==
+        "function"
+    ) {
+
+        this.metrics.failedCycles++;
+
+        return {
+
+            status:
+                "ORDER_ROUTER_INTERFACE_UNAVAILABLE",
+
+            approved: false,
+
+            decision,
+
+            allocation,
+
+            risk,
+
+            governance,
+
+            execution,
+
+            executionResult: null
+
+        };
+
+    }
+
+    executionResult =
+        await this.orderRouter
+            .routeTransportContract(
+                executionIntent
+            );
+
+}
+    
     // =====================================================
     // SECTION 3 — SYSTEM HEALTH & DIAGNOSTICS
     // =====================================================
