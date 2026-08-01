@@ -587,14 +587,14 @@ export class MetaSystemOrchestrator {
          * for constructing the standardized confirmation.
          */
 
-  if (executionResult) {
+        if (executionResult) {
 
-    confirmationResult =
-        confirmExecution(
-            executionResult
-        );
+            confirmationResult =
+                confirmExecution(
+                    executionResult
+                );
 
-}
+        }
 
         /*
          * ------------------------------------------------
@@ -614,21 +614,22 @@ export class MetaSystemOrchestrator {
 
         if (
 
-    confirmationResult &&
+            confirmationResult &&
 
-    confirmationResult.success &&
+            confirmationResult.success &&
 
-    confirmationResult.confirmation
-
-) {
-
-    feedbackResult =
-        returnExecutionFeedback(
             confirmationResult.confirmation
-        );
 
-}
+        ) {
 
+            feedbackResult =
+                returnExecutionFeedback(
+                    confirmationResult.confirmation
+                );
+
+        }
+
+     
         // ---------------------------------------------
         // 11. FINAL APPROVAL
         // ---------------------------------------------
