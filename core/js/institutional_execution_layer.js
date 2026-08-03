@@ -1,109 +1,106 @@
-// ======================================================
+ // ======================================================
 // STAGE 20 — INSTITUTIONAL EXECUTION LAYER
-// VENUE-AGNOSTIC EXECUTION INFRASTRUCTURE
-// NO RETAIL BROKER DEPENDENCY
+// REGULATED DOWNSTREAM EXECUTION BOUNDARY
+// VENUE-AGNOSTIC
+// INSTITUTIONAL / LICENSED EXECUTION ONLY
+//
+// AUTHORITY RULES:
+// - Does NOT create orders
+// - Does NOT generate order IDs
+// - Does NOT select routes
+// - Does NOT select venues
+// - Does NOT make trading decisions
+// - Does NOT perform risk decisions
+// - Does NOT manufacture fills
+// - Does NOT bypass Order Router
+// - Does NOT bypass Exchange Gateway
+//
+// Receives an already-authorized, already-routed
+// execution contract and delegates execution downstream.
 // ======================================================
 
 export class InstitutionalExecutionLayer {
-  constructor() {
-    this.orderBook = [];
+  constructor({ executionAdapter = null } = {}) {
+    this.executionAdapter = executionAdapter;
     this.executionLog = [];
   }
 
   // =====================================================
-  // ORDER CREATION
+  // EXECUTION ENTRY POINT
+  // =====================================================
+  //
+  // The contract must already have been:
+  // 1. authorized upstream
+  // 2. routed by the authoritative Order Router
+  // 3. prepared for downstream transport by the
+  //    established execution pipeline
+  //
+  // This layer does NOT alter those decisions.
   // =====================================================
 
-  createOrder(signal, decision, executionPlan) {
+  async execute(executionContract) {
+    this._validateExecutionContract(executionContract);
+
+    if (!this.executionAdapter) {
+      throw new Error(
+        "InstitutionalExecutionLayer: no institutional execution adapter configured"
+      );
+    }
+
+    const result =
+      await this.executionAdapter.execute(executionContract);
+
+    this.executionLog.push({
+      executionContract,
+      result,
+      recordedAt: Date.now()
+    });
+
+    return result;
+  }
+
+  // =====================================================
+  // EXECUTION CONTRACT VALIDATION
+  // =====================================================
+
+  _validateExecutionContract(executionContract) {
+    if (!executionContract || typeof executionContract !== "object") {
+      throw new Error(
+        "InstitutionalExecutionLayer: invalid execution contract"
+      );
+    }
+
+    if (!executionContract.executionIntent) {
+      throw new Error(
+        "InstitutionalExecutionLayer: execution intent required"
+      );
+    }
+
+    if (!executionContract.route) {
+      throw new Error(
+        "InstitutionalExecutionLayer: authoritative route required"
+      );
+    }
+
+    if (!executionContract.transport) {
+      throw new Error(
+        "InstitutionalExecutionLayer: transport contract required"
+      );
+    }
+  }
+
+  // =====================================================
+  // ADAPTER STATUS
+  // =====================================================
+
+  getExecutionAdapterStatus() {
     return {
-      id: this._uuid(),
-      symbol: signal.symbol || "UNKNOWN",
-      side: decision.action,
-      confidence: decision.confidence,
-      size: executionPlan.size,
-      mode: executionPlan.mode,
-      price: signal.price ?? 0,
-      timestamp: Date.now(),
-      status: "PENDING"
+      configured: Boolean(this.executionAdapter),
+      institutionalOnly: true,
+      autonomousRouting: false,
+      autonomousOrderCreation: false,
+      autonomousFillGeneration: false
     };
-  }
-
-  // =====================================================
-  // ROUTING ENGINE (INSTITUTIONAL VENUES ONLY)
-  // =====================================================
-
-  route(order) {
-    const venue = this._selectVenue(order);
-
-    const routed = {
-      ...order,
-      venue,
-      routedAt: Date.now()
-    };
-
-    this.orderBook.push(routed);
-
-    return routed;
-  }
-
-  // =====================================================
-  // EXECUTION ENGINE (SIMULATED DMA / DARK POOL)
-  // =====================================================
-
-  execute(order) {
-    const impact = this._marketImpact(order.size);
-
-    const fillPrice =
-      order.price * (1 + (Math.random() - 0.5) * impact);
-
-    const filled = {
-      ...order,
-      fillPrice,
-      status: "FILLED",
-      executedAt: Date.now(),
-      slippage: impact
-    };
-
-    this.executionLog.push(filled);
-
-    return filled;
-  }
-
-  // =====================================================
-  // FULL PIPELINE
-  // =====================================================
-
-  process(signal, decision, executionPlan) {
-    const order = this.createOrder(signal, decision, executionPlan);
-    const routed = this.route(order);
-    return this.execute(routed);
-  }
-
-  // =====================================================
-  // VENUE SELECTION LOGIC (INSTITUTIONAL ONLY)
-  // =====================================================
-
-  _selectVenue(order) {
-    if (order.size > 0.8) return "DARK_POOL";
-    if (order.mode === "SHADOW_SIM") return "SIMULATION_NET";
-    if (order.mode === "PAPER_ONLY") return "INTERNAL_MATCH";
-    return "DMA_ROUTER";
-  }
-
-  // =====================================================
-  // MARKET IMPACT MODEL
-  // =====================================================
-
-  _marketImpact(size) {
-    return Math.min(0.0025, size * 0.0012);
-  }
-
-  // =====================================================
-  // UUID GENERATOR
-  // =====================================================
-
-  _uuid() {
-    return "ord_" + Math.random().toString(36).substring(2, 10);
   }
 
   // =====================================================
@@ -112,10 +109,7 @@ export class InstitutionalExecutionLayer {
 
   report() {
     return {
-      totalOrders: this.executionLog.length,
-      avgSlippage:
-        this.executionLog.reduce((s, e) => s + (e.slippage || 0), 0) /
-        (this.executionLog.length || 1)
+      totalExecutions: this.executionLog.length
     };
   }
 }
