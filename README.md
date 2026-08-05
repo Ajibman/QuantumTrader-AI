@@ -15,7 +15,7 @@ Preview
 Code
 
 Blame
-🌻🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️ QuantumTrader-AI Translate this PROJECT_UPFATES:
+🌻🕊️👉⚖️🌌🌍🔌🛅♾️💳💟♦️ QuantumTrader-AI Translate this PROJECT_UPDATES:
 
 https://translate.google.com/translate?sl=auto&tl=en&u=https://raw.githubusercontent.com/ajibman/QuantumTrader-AI/main/README.md
 
